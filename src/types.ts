@@ -37,6 +37,8 @@ export interface Formation {
   slug: string;
   title: string;
   domain: string;
+  thematic?: string;
+  specialty?: string;
   level: 'Débutant' | 'Intermédiaire' | 'Avancé' | 'Tous niveaux';
   modality: 'Présentiel' | 'En ligne' | 'Hybride';
   duration: string;

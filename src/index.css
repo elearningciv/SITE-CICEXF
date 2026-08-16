@@ -1,8 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Mattone";
+  src: url("https://db.onlinewebfonts.com/t/d8db8f47ba018fa69ea764e521074e64.woff2") format("woff2"),
+       url("https://db.onlinewebfonts.com/t/d8db8f47ba018fa69ea764e521074e64.woff") format("woff"),
+       url("https://db.onlinewebfonts.com/t/d8db8f47ba018fa69ea764e521074e64.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  --font-sans: "Georgia", Georgia, serif;
-  --font-display: "Georgia", Georgia, serif;
+  --font-sans: "Mattone", "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-display: "Mattone", "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-serif: "Georgia", Georgia, serif;
   
   --color-brand-blue: #003B6F;
@@ -11,6 +22,8 @@
   --color-brand-emerald: #8A2E1C;
   --color-brand-emerald-dark: #54150A;
   --color-brand-emerald-light: #B84F3D;
+
+  --variant-dark: class;
 }
 
 /* Custom Scrollbars */
@@ -54,17 +67,66 @@ html {
 }
 
 body, button, input, select, textarea {
-  font-family: "Georgia", Georgia, serif !important;
+  font-family: "Mattone", "Space Grotesk", "Inter", system-ui, sans-serif !important;
 }
 
 body {
   background-color: #f8fafc;
-  color: #0f172a;
+  color: #000000 !important;
 }
 
 .dark body {
   background-color: #020817;
-  color: #f1f5f9;
+  color: #ffffff !important;
+}
+
+/* Force all headings to use Mattone and default to bien noire in light mode / white in dark mode */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Mattone", "Space Grotesk", "Inter", system-ui, sans-serif !important;
+  color: #000000;
+}
+
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: #ffffff;
+}
+
+/* Ensure all paragraph text, list items and common description texts
+   have the exact same size as the specialty description of 'formations'
+   (14.5px on mobile, 15.5px on desktop) and are bien noire (pure black) by default,
+   while letting explicit Tailwind colors (like text-white) and font-sizes (like text-xs)
+   override them naturally without force. */
+p, li {
+  font-family: "Mattone", "Space Grotesk", "Inter", system-ui, sans-serif !important;
+  font-size: 14.5px;
+  font-weight: 500;
+  color: #000000;
+  line-height: 1.625;
+}
+
+@media (min-width: 640px) {
+  p, li {
+    font-size: 15.5px;
+  }
+}
+
+/* Ensure standard body/description slate or gray classes applied to paragraphs and lists
+   default to pure black / pure white instead of muted gray, without using !important to preserve layout flexibility. */
+p.text-slate-500, p.text-slate-600, p.text-slate-700, p.text-slate-800, p.text-slate-900,
+p.text-gray-500, p.text-gray-600, p.text-gray-700, p.text-gray-800,
+li.text-slate-500, li.text-slate-600, li.text-slate-700, li.text-slate-800, li.text-slate-900,
+li.text-gray-500, li.text-gray-600, li.text-gray-700, li.text-gray-800 {
+  color: #000000;
+}
+
+.dark p, .dark li {
+  color: #ffffff;
+}
+
+.dark p.text-slate-500, .dark p.text-slate-600, .dark p.text-slate-700, .dark p.text-slate-800, .dark p.text-slate-900,
+.dark p.text-gray-500, .dark p.text-gray-600, .dark p.text-gray-700, .dark p.text-gray-800,
+.dark li.text-slate-500, .dark li.text-slate-600, .dark li.text-slate-700, .dark li.text-slate-800, .dark li.text-slate-900,
+.dark li.text-gray-500, .dark li.text-gray-600, .dark li.text-gray-700, .dark li.text-gray-800 {
+  color: #ffffff;
 }
 
 /* Animations */
@@ -128,4 +190,383 @@ body {
   text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;
   border-color: transparent !important;
 }
+
+/* Hide scrollbar for all browsers */
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+}
+.scrollbar-none {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+/* Style overrides for formations and accompagnements views to ensure pristine readability with black text on light backgrounds */
+#formations-view, #accompagnements-view, #about-view {
+  background-color: #f8fafc !important;
+}
+
+/* Force backgrounds of sections, cards, sub-cards and inner boxes on Home view and others to be light/white */
+#formations-view [id^="domain-card-"],
+#formations-view [id^="sub-point-card-"],
+#formations-view .bg-white,
+#formations-view .bg-slate-50,
+#formations-view .bg-slate-50\/50,
+#accompagnements-view [id^="major-line-card-"],
+#accompagnements-view [id^="sub-point-card-"],
+#accompagnements-view .bg-white,
+#accompagnements-view .bg-slate-50\/30,
+#accompagnements-view .bg-white\/70,
+#home-view #business-poles,
+#home-view #why-choose-us,
+#home-view #testimonials-carousel,
+#home-view #social-proof-band,
+#home-view #partners-section,
+#home-view #flagship-training-highlight,
+#home-view #partner-carousel,
+#home-view #recent-news-preview,
+#home-view #business-poles .bg-white,
+#home-view #why-choose-us .bg-white,
+#home-view #testimonials-carousel .bg-white,
+#home-view #recent-news-preview article {
+  background-color: #ffffff !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+/* Force light gray background for specific sections and contextual cards/boxes */
+#formations-view .bg-slate-50,
+#formations-view .bg-slate-50\/50,
+#formations-view .bg-brand-blue\/5,
+#accompagnements-view .bg-slate-50\/30,
+#accompagnements-view .bg-emerald-50\/20,
+#home-view #business-poles,
+#home-view #why-choose-us,
+#home-view #testimonials-carousel,
+#home-view #social-proof-band,
+#home-view #partners-section,
+#home-view #recent-news-preview article {
+  background-color: #f8fafc !important;
+  border-color: rgba(226, 232, 240, 0.8) !important;
+}
+
+/* Force headings, paragraphs, lists and spans on light backgrounds to be black for maximum professional contrast */
+#formations-view h1,
+#formations-view h2,
+#formations-view h3,
+#formations-view h4,
+#formations-view h5,
+#formations-view h6,
+#formations-view p,
+#formations-view li,
+#formations-view span,
+#accompagnements-view h1,
+#accompagnements-view h2,
+#accompagnements-view h3,
+#accompagnements-view h4,
+#accompagnements-view h5,
+#accompagnements-view h6,
+#accompagnements-view p,
+#accompagnements-view li,
+#accompagnements-view span,
+#realisations-view h1,
+#realisations-view h2,
+#realisations-view h3,
+#realisations-view h4,
+#realisations-view h5,
+#realisations-view h6,
+#realisations-view p,
+#realisations-view li,
+#realisations-view span:not(.text-white):not(.text-slate-300):not(.text-slate-200),
+#news-view h1,
+#news-view h2,
+#news-view h3,
+#news-view h4,
+#news-view h5,
+#news-view h6,
+#news-view p,
+#news-view li,
+#news-view span:not(.text-white):not(.text-slate-300):not(.text-slate-200),
+#home-view #business-poles h1, #home-view #business-poles h2, #home-view #business-poles h3, #home-view #business-poles h4, #home-view #business-poles h5, #home-view #business-poles h6, #home-view #business-poles p, #home-view #business-poles li, #home-view #business-poles span,
+#home-view #flagship-training-highlight h1, #home-view #flagship-training-highlight h2, #home-view #flagship-training-highlight h3, #home-view #flagship-training-highlight h4, #home-view #flagship-training-highlight h5, #home-view #flagship-training-highlight h6, #home-view #flagship-training-highlight p, #home-view #flagship-training-highlight li, #home-view #flagship-training-highlight span,
+#home-view #why-choose-us h1, #home-view #why-choose-us h2, #home-view #why-choose-us h3, #home-view #why-choose-us h4, #home-view #why-choose-us h5, #home-view #why-choose-us h6, #home-view #why-choose-us p, #home-view #why-choose-us li, #home-view #why-choose-us span,
+#home-view #partner-carousel h1, #home-view #partner-carousel h2, #home-view #partner-carousel h3, #home-view #partner-carousel h4, #home-view #partner-carousel h5, #home-view #partner-carousel h6, #home-view #partner-carousel p, #home-view #partner-carousel li, #home-view #partner-carousel span,
+#home-view #testimonials-carousel h1, #home-view #testimonials-carousel h2, #home-view #testimonials-carousel h3, #home-view #testimonials-carousel h4, #home-view #testimonials-carousel h5, #home-view #testimonials-carousel h6, #home-view #testimonials-carousel p, #home-view #testimonials-carousel li, #home-view #testimonials-carousel span,
+#home-view #recent-news-preview h1, #home-view #recent-news-preview h2, #home-view #recent-news-preview h3, #home-view #recent-news-preview h4, #home-view #recent-news-preview h5, #home-view #recent-news-preview h6, #home-view #recent-news-preview p, #home-view #recent-news-preview li, #home-view #recent-news-preview span,
+#home-view #social-proof-band h1, #home-view #social-proof-band h2, #home-view #social-proof-band h3, #home-view #social-proof-band h4, #home-view #social-proof-band h5, #home-view #social-proof-band h6, #home-view #social-proof-band p, #home-view #social-proof-band li, #home-view #social-proof-band span,
+#home-view #partners-section h1, #home-view #partners-section h2, #home-view #partners-section h3, #home-view #partners-section h4, #home-view #partners-section h5, #home-view #partners-section h6, #home-view #partners-section p, #home-view #partners-section li, #home-view #partners-section span,
+#about-view h1,
+#about-view h2:not(.text-brown-value),
+#about-view h3,
+#about-view h4:not(.text-brown-value),
+#about-view h5,
+#about-view h6,
+#about-view p:not(.text-brown-value),
+#about-view li,
+#about-view span:not(.text-white):not(.text-brand-emerald):not(.text-brand-blue):not([class*="bg-brand"]):not([class*="text-emerald"]):not([class*="text-violet"]):not([class*="text-purple"]):not(.text-brown-value) {
+  color: #000000 !important;
+}
+
+#about-view .text-brown-value {
+  color: #7c2d12 !important; /* Elegant marron / dark amber brown */
+}
+.dark #about-view .text-brown-value {
+  color: #f97316 !important; /* Orange/brown in dark mode for better contrast */
+}
+
+#home-view #business-poles .text-brown-value,
+#home-view #why-choose-us .text-brown-value,
+#home-view #business-poles h3.text-brown-value,
+#home-view #why-choose-us h3.text-brown-value,
+#home-view #business-poles h4.text-brown-value,
+#home-view #why-choose-us h4.text-brown-value,
+#home-view #business-poles p.text-brown-value,
+#home-view #why-choose-us p.text-brown-value {
+  color: #7c2d12 !important;
+}
+.dark #home-view #business-poles .text-brown-value,
+.dark #home-view #why-choose-us .text-brown-value,
+.dark #home-view #business-poles h3.text-brown-value,
+.dark #home-view #why-choose-us h3.text-brown-value,
+.dark #home-view #business-poles h4.text-brown-value,
+.dark #home-view #why-choose-us h4.text-brown-value,
+.dark #home-view #business-poles p.text-brown-value,
+.dark #home-view #why-choose-us p.text-brown-value {
+  color: #f97316 !important;
+}
+
+/* EXCEPTIONS: Ensure text on dark containers, absolute cover overlays, or elements explicitly marked text-white remain light */
+#formations-view .bg-slate-900 h1,
+#formations-view .bg-slate-900 h2,
+#formations-view .bg-slate-900 h3,
+#formations-view .bg-slate-900 h4,
+#formations-view .bg-slate-900 p,
+#formations-view .bg-slate-900 span,
+#formations-view .bg-slate-900 li,
+#formations-view .bg-gradient-to-r h1,
+#formations-view .bg-gradient-to-r h2,
+#formations-view .bg-gradient-to-r h3,
+#formations-view .bg-gradient-to-r h4,
+#formations-view .bg-gradient-to-r p,
+#formations-view .bg-gradient-to-r span,
+#formations-view .bg-gradient-to-r li,
+#formations-view .absolute h1,
+#formations-view .absolute h2,
+#formations-view .absolute h3,
+#formations-view .absolute h4,
+#formations-view .absolute p,
+#formations-view .absolute span,
+#formations-view .absolute li,
+#accompagnements-view .bg-slate-900 h1,
+#accompagnements-view .bg-slate-900 h2,
+#accompagnements-view .bg-slate-900 h3,
+#accompagnements-view .bg-slate-900 h4,
+#accompagnements-view .bg-slate-900 p,
+#accompagnements-view .bg-slate-900 span,
+#accompagnements-view .bg-slate-900 li,
+#accompagnements-view .bg-gradient-to-r h1,
+#accompagnements-view .bg-gradient-to-r h2,
+#accompagnements-view .bg-gradient-to-r h3,
+#accompagnements-view .bg-gradient-to-r h4,
+#accompagnements-view .bg-gradient-to-r p,
+#accompagnements-view .bg-gradient-to-r span,
+#accompagnements-view .bg-gradient-to-r li,
+#accompagnements-view .absolute h1,
+#accompagnements-view .absolute h2,
+#accompagnements-view .absolute h3,
+#accompagnements-view .absolute h4,
+#accompagnements-view .absolute p,
+#accompagnements-view .absolute span,
+#accompagnements-view .absolute li,
+#formations-view .text-white,
+#formations-view .text-white-force,
+#accompagnements-view .text-white,
+#accompagnements-view .text-white-force,
+#formations-view [class*="text-slate-300"],
+#accompagnements-view [class*="text-slate-300"],
+#formations-view [class*="text-slate-200"],
+#accompagnements-view [class*="text-slate-200"],
+#formations-view [class*="text-white/80"],
+#accompagnements-view [class*="text-white/80"],
+#home-view .text-white,
+#home-view .text-white-force,
+#home-view [class*="text-slate-300"],
+#home-view [class*="text-slate-200"],
+#home-view [class*="text-white/80"],
+#home-view button span,
+#home-view button,
+#home-view #social-proof-band span,
+#realisations-view .bg-slate-900 h1,
+#realisations-view .bg-slate-900 h2,
+#realisations-view .bg-slate-900 h3,
+#realisations-view .bg-slate-900 h4,
+#realisations-view .bg-slate-900 p,
+#realisations-view .bg-slate-900 span,
+#realisations-view .bg-slate-900 li,
+#realisations-view .bg-gradient-to-r h1,
+#realisations-view .bg-gradient-to-r h2,
+#realisations-view .bg-gradient-to-r h3,
+#realisations-view .bg-gradient-to-r h4,
+#realisations-view .bg-gradient-to-r p,
+#realisations-view .bg-gradient-to-r span,
+#realisations-view .bg-gradient-to-r li,
+#realisations-view .absolute h1,
+#realisations-view .absolute h2,
+#realisations-view .absolute h3,
+#realisations-view .absolute h4,
+#realisations-view .absolute p,
+#realisations-view .absolute span,
+#realisations-view .absolute li,
+#news-view .bg-slate-900 h1,
+#news-view .bg-slate-900 h2,
+#news-view .bg-slate-900 h3,
+#news-view .bg-slate-900 h4,
+#news-view .bg-slate-900 p,
+#news-view .bg-slate-900 span,
+#news-view .bg-slate-900 li,
+#news-view .bg-slate-950 h1,
+#news-view .bg-slate-950 h2,
+#news-view .bg-slate-950 h3,
+#news-view .bg-slate-950 h4,
+#news-view .bg-slate-950 p,
+#news-view .bg-slate-950 span,
+#news-view .bg-slate-950 li,
+#news-view .bg-gradient-to-r h1,
+#news-view .bg-gradient-to-r h2,
+#news-view .bg-gradient-to-r h3,
+#news-view .bg-gradient-to-r h4,
+#news-view .bg-gradient-to-r p,
+#news-view .bg-gradient-to-r span,
+#news-view .bg-gradient-to-r li,
+#news-view .absolute h1,
+#news-view .absolute h2,
+#news-view .absolute h3,
+#news-view .absolute h4,
+#news-view .absolute p,
+#news-view .absolute span,
+#news-view .absolute li,
+#realisations-view .text-white,
+#realisations-view .text-white-force,
+#news-view .text-white,
+#news-view .text-white-force,
+#realisations-view [class*="text-slate-300"],
+#news-view [class*="text-slate-300"],
+#realisations-view [class*="text-slate-200"],
+#news-view [class*="text-slate-200"],
+#realisations-view [class*="text-white/80"],
+#news-view [class*="text-white/80"] {
+  color: #ffffff !important;
+}
+
+/* Make sure specific decorative or status text inside cards is properly colored */
+#accompagnements-view .text-brand-emerald,
+#formations-view .text-brand-emerald {
+  color: #8A2E1C !important;
+}
+
+#accompagnements-view .text-brand-blue,
+#formations-view .text-brand-blue {
+  color: #003B6F !important;
+}
+
+/* Keep the bullet text inside operational objectives and key points perfectly readable */
+#accompagnements-view [id^="sub-point-card-"] li,
+#accompagnements-view [id^="sub-point-card-"] span:not(.text-white) {
+  color: #000000 !important;
+}
+
+/* OVERRIDE: Ensure that text meant to be white on top of images is forced to white, even inside bg-white or bg-slate-50 containers */
+#formations-view [id^="sub-point-card-"] h3,
+#formations-view [id^="sub-point-card-"] h3.text-white,
+#formations-view [id^="sub-point-card-"] h4.text-white,
+#formations-view [id^="sub-point-card-"] span.text-white,
+#formations-view [id^="sub-point-card-"] .text-white,
+#formations-view .bg-white h1.text-white,
+#formations-view .bg-white h3.text-white,
+#formations-view .bg-white span.text-white,
+#formations-view h1.text-white,
+#formations-view h3.text-white,
+#formations-view span.text-white,
+#formations-view p.text-white,
+#accompagnements-view [id^="sub-point-card-"] h3.text-white,
+#accompagnements-view [id^="sub-point-card-"] h4.text-white,
+#accompagnements-view [id^="sub-point-card-"] span.text-white,
+#accompagnements-view [id^="sub-point-card-"] .text-white,
+#accompagnements-view .bg-white h1.text-white,
+#accompagnements-view .bg-white h3.text-white,
+#accompagnements-view .bg-white span.text-white,
+#accompagnements-view h1.text-white,
+#accompagnements-view h3.text-white,
+#accompagnements-view span.text-white,
+#accompagnements-view p.text-white,
+#formations-view .absolute .text-white,
+#formations-view .absolute h1,
+#formations-view .absolute h2,
+#formations-view .absolute h3,
+#formations-view .absolute h4,
+#formations-view .absolute p,
+#formations-view .absolute span,
+#formations-view .absolute strong,
+#accompagnements-view .absolute .text-white,
+#accompagnements-view .absolute h1,
+#accompagnements-view .absolute h2,
+#accompagnements-view .absolute h3,
+#accompagnements-view .absolute h4,
+#accompagnements-view .absolute p,
+#accompagnements-view .absolute span,
+#accompagnements-view .absolute strong,
+.absolute .text-white,
+.absolute h1.text-white,
+.absolute h2.text-white,
+.absolute h3.text-white,
+.absolute p.text-white,
+.absolute span.text-white,
+.absolute div.text-white,
+.absolute [class*="text-white"],
+.absolute [class*="text-slate-100"],
+.absolute [class*="text-slate-200"],
+.absolute [class*="text-slate-300"],
+.text-white,
+.text-white-force {
+  color: #ffffff !important;
+}
+
+/* Ensure dark mode properly resets these views to have light text instead of pure black */
+.dark #formations-view h1,
+.dark #formations-view h2,
+.dark #formations-view h3,
+.dark #formations-view h4,
+.dark #formations-view h5,
+.dark #formations-view h6,
+.dark #formations-view p,
+.dark #formations-view li,
+.dark #formations-view span,
+.dark #accompagnements-view h1,
+.dark #accompagnements-view h2,
+.dark #accompagnements-view h3,
+.dark #accompagnements-view h4,
+.dark #accompagnements-view h5,
+.dark #accompagnements-view h6,
+.dark #accompagnements-view p,
+.dark #accompagnements-view li,
+.dark #accompagnements-view span,
+.dark #realisations-view h1,
+.dark #realisations-view h2,
+.dark #realisations-view h3,
+.dark #realisations-view h4,
+.dark #realisations-view h5,
+.dark #realisations-view h6,
+.dark #realisations-view p,
+.dark #realisations-view li,
+.dark #realisations-view span,
+.dark #news-view h1,
+.dark #news-view h2,
+.dark #news-view h3,
+.dark #news-view h4,
+.dark #news-view h5,
+.dark #news-view h6,
+.dark #news-view p,
+.dark #news-view li,
+.dark #news-view span {
+  color: #ffffff !important;
+}
+
 

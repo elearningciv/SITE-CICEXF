@@ -1,0 +1,90 @@
+{
+  "collections": {
+    "visits": {
+      "description": "Records all visits to the website including page loads and active tab views, storing timestamps, visitor IDs, and user emails if known.",
+      "schema": {
+        "visitorId": "string",
+        "sessionId": "string",
+        "timestamp": "timestamp",
+        "email": "string | null",
+        "userAgent": "string",
+        "page": "string"
+      },
+      "indexes": [
+        {
+          "fields": [
+            { "fieldPath": "timestamp", "order": "DESCENDING" }
+          ]
+        }
+      ]
+    },
+    "subscribers": {
+      "description": "Stores emails of users who subscribed to the newsletter or contacted the cabinet, including subscription state and last visit dates.",
+      "schema": {
+        "email": "string",
+        "visitorId": "string",
+        "subscribedAt": "timestamp",
+        "lastVisitAt": "timestamp",
+        "isSubscribed": "boolean"
+      },
+      "indexes": [
+        {
+          "fields": [
+            { "fieldPath": "subscribedAt", "order": "DESCENDING" }
+          ]
+        }
+      ]
+    },
+    "formations": {
+      "description": "Stores user-managed training programs, which are rendered live on the website catalog.",
+      "schema": {
+        "id": "string",
+        "slug": "string",
+        "title": "string",
+        "domain": "string",
+        "level": "string",
+        "modality": "string",
+        "duration": "string",
+        "price": "string",
+        "isFeatured": "boolean",
+        "featuredImage": "string",
+        "shortDescription": "string",
+        "context": "string",
+        "objectives": "array",
+        "resultsExpected": "array",
+        "targetPublic": "array",
+        "prerequisites": "array",
+        "createdAt": "timestamp"
+      }
+    },
+    "blog_posts": {
+      "description": "Stores articles and news posts displayed on the actualités (blog) section.",
+      "schema": {
+        "id": "string",
+        "slug": "string",
+        "title": "string",
+        "category": "string",
+        "readTime": "string",
+        "date": "string",
+        "author": "object",
+        "excerpt": "string",
+        "content": "string",
+        "imageUrl": "string",
+        "isFeatured": "boolean",
+        "tags": "array",
+        "guidePdfUrl": "string",
+        "createdAt": "timestamp"
+      }
+    },
+    "partners": {
+      "description": "Stores institutional partners and their logos shown on the partners section.",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "logoUrl": "string",
+        "category": "string",
+        "createdAt": "timestamp"
+      }
+    }
+  }
+}

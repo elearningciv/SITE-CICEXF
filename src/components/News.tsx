@@ -3,7 +3,11 @@ import { Search, BookOpen, Clock, FileText, CheckCircle, ArrowRight, CornerDownR
 import { BLOG_POSTS } from '../data';
 import { BlogPost } from '../types';
 
-export default function News() {
+interface NewsProps {
+  blogPosts?: BlogPost[];
+}
+
+export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
   const [selectedArticle, setSelectedArticle] = useState<BlogPost | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tous');
@@ -55,7 +59,7 @@ export default function News() {
     }
   };
 
-  const filteredPosts = BLOG_POSTS.filter(post => {
+  const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     

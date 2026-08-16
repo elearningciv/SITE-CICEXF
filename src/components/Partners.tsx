@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { ShieldCheck, UploadCloud, FileText, CheckCircle, Mail, Globe, Users, Briefcase, PlusCircle, ArrowRight, Lock, AlertCircle } from 'lucide-react';
 import { PARTNERS } from '../data';
+import { Partner } from '../types';
 
-export default function Partners() {
+interface PartnersProps {
+  partners?: Partner[];
+}
+
+export default function Partners({ partners = PARTNERS }: PartnersProps) {
   const [partnerType, setPartnerType] = useState<'consultant' | 'institution'>('consultant');
   
   // Consultant Form states
@@ -134,7 +139,7 @@ export default function Partners() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8 items-center text-center">
-            {PARTNERS.map(part => (
+            {partners.map(part => (
               <div key={part.id} className="group flex flex-col items-center space-y-3 p-4 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-100 dark:border-slate-800">
                 <img
                   src={part.logoUrl}

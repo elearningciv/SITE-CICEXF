@@ -40,11 +40,11 @@ export default function About() {
   };
 
   return (
-    <div id="about-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans">
+    <div id="about-view" className="py-8 bg-slate-50 dark:bg-slate-950 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Breadcrumb Banner */}
-        <div className="mb-12">
+        <div className="mb-6">
           <nav className="flex text-xs font-semibold text-slate-400 mb-2">
             <span>CICEXF</span>
             <span className="mx-2">/</span>
@@ -57,78 +57,92 @@ export default function About() {
         </div>
 
         {/* 1. Vision, Mission & Goals */}
-        <div className="space-y-16 mb-24">
-          {/* Row 1: Vision & Mission (2 high-contrast columns with lovely illustrations and matching icons) */}
-          <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <div className="space-y-10 mb-12">
+          {/* Row 1: Vision, Mission & Objectif (3 high-contrast columns matching values layout) */}
+          <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             
             {/* Card Left: Notre Vision */}
-            <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800 shadow-md flex flex-col justify-between space-y-6 transition-all hover:shadow-lg hover:border-brand-blue/30 relative overflow-hidden group">
+            <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-all hover:shadow-md hover:border-brand-blue/30 relative overflow-hidden group min-h-[220px]">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-300"></div>
               
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-blue/10 dark:bg-brand-blue/20 text-brand-blue dark:text-blue-400 flex items-center justify-center shadow-inner shrink-0">
-                    <Compass className="w-6 h-6 text-brand-blue dark:text-blue-300 animate-spin-slow" />
-                  </div>
-                  <div>
-                    <span className="block text-[10px] font-extrabold text-brand-blue dark:text-blue-400 uppercase tracking-widest">ORIENTATION</span>
-                    <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Notre Vision d'Excellence</h2>
-                  </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Compass className="w-6 h-6 text-[#7c2d12] dark:text-amber-500 animate-spin-slow" />
                 </div>
-                
-                <div className="border-l-4 border-brand-blue pl-4 my-4">
-                  <p className="font-display text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed italic">
-                    « Devenir une référence internationale incontournable en expertise et ingénierie de solutions innovantes »
-                  </p>
-                </div>
-                
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
-                  Le CICEXF aspire à redéfinir la consultance et le renforcement des capacités en Afrique et à l'échelle globale, en combinant méthodologies scientifiques rigoureuses et technologies numériques d'avenir pour hisser nos bénéficiaires aux plus hauts standards internationaux.
+                <span className="block text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">ORIENTATION</span>
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-4">
+                  Notre Vision d'Excellence
+                </h4>
+              </div>
+
+              <div className="flex-grow flex flex-col justify-center my-4 text-center">
+                <p className="font-display text-base sm:text-lg font-black text-black dark:text-white leading-relaxed italic">
+                  « Devenir une référence internationale incontournable en expertise et ingénierie de solutions innovantes »
                 </p>
               </div>
               
-              <div className="pt-4 flex items-center text-xs font-bold text-brand-blue dark:text-blue-300 gap-1.5 border-t border-slate-100 dark:border-slate-800/60">
-                <Sparkles className="w-4 h-4 text-brand-emerald" />
+              <div className="pt-3 mt-4 flex items-center justify-center text-[11px] font-bold text-slate-500 dark:text-slate-400 gap-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                <Sparkles className="w-3.5 h-3.5 text-brand-emerald" />
                 <span>Modernité, Innovation &amp; Standard Global</span>
               </div>
             </div>
-
-            {/* Card Right: Notre Mission */}
-            <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800 shadow-md flex flex-col justify-between space-y-6 transition-all hover:shadow-lg hover:border-brand-emerald/30 relative overflow-hidden group">
+ 
+            {/* Card Middle: Notre Mission */}
+            <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-all hover:shadow-md hover:border-brand-emerald/30 relative overflow-hidden group min-h-[220px]">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-emerald/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-300"></div>
               
-              <div className="space-y-4">
-                <div className="flex items-center space-x-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-emerald/10 dark:bg-brand-emerald/20 text-brand-emerald dark:text-brand-emerald-light flex items-center justify-center shadow-inner shrink-0">
-                    <Target className="w-6 h-6 text-brand-emerald" />
-                  </div>
-                  <div>
-                    <span className="block text-[10px] font-extrabold text-brand-emerald uppercase tracking-widest">IMPACT DE TERRAIN</span>
-                    <h2 className="font-display text-lg font-bold text-slate-900 dark:text-white">Notre Mission Opérationnelle</h2>
-                  </div>
+              <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Target className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
                 </div>
-                
-                <div className="border-l-4 border-brand-emerald pl-4 my-4">
-                  <p className="font-display text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed italic">
-                    « Accompagner les organisations et les professionnels dans l'optimisation de leurs performances et leur succès »
-                  </p>
-                </div>
-                
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
-                  Nous structurons des démarches d'accompagnement pragmatiques et de haut niveau, outillons les leaders de demain et apportons des réponses concrètes, durables et scientifiquement éprouvées aux problématiques majeures des territoires et des organisations.
+                <span className="block text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">IMPACT DE TERRAIN</span>
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-4">
+                  Notre Mission Opérationnelle
+                </h4>
+              </div>
+
+              <div className="flex-grow flex flex-col justify-center my-4 text-center">
+                <p className="font-display text-base sm:text-lg font-black text-black dark:text-white leading-relaxed italic">
+                  « Accompagner les organisations et les professionnels dans l'optimisation de leurs performances et leur succès »
                 </p>
               </div>
               
-              <div className="pt-4 flex items-center text-xs font-bold text-brand-emerald dark:text-brand-emerald-light gap-1.5 border-t border-slate-100 dark:border-slate-800/60">
-                <CheckCircle2 className="w-4 h-4 text-brand-blue" />
+              <div className="pt-3 mt-4 flex items-center justify-center text-[11px] font-bold text-slate-500 dark:text-slate-400 gap-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                <CheckCircle2 className="w-3.5 h-3.5 text-brand-blue" />
                 <span>Rigueur technique &amp; Résultats mesurables</span>
+              </div>
+            </div>
+ 
+            {/* Card Right: Notre Objectif */}
+            <div className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col justify-between transition-all hover:shadow-md hover:border-violet-500/30 relative overflow-hidden group min-h-[220px]">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-300"></div>
+              
+              <div className="flex flex-col items-center text-center">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <TrendingUp className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <span className="block text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">VALEUR ET CAPACITÉS</span>
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-4">
+                  Notre Objectif Majeur
+                </h4>
+              </div>
+
+              <div className="flex-grow flex flex-col justify-center my-4 text-center">
+                <p className="font-display text-base sm:text-lg font-black text-black dark:text-white leading-relaxed italic">
+                  « Renforcer les capacités des organisations et les individus en proposant des solutions intégrées en formation en ingénierie et en consultance afin d’améliorer leur performance et de soutenir un développement durable »
+                </p>
+              </div>
+              
+              <div className="pt-3 mt-4 flex items-center justify-center text-[11px] font-bold text-slate-500 dark:text-slate-400 gap-1.5 border-t border-slate-100 dark:border-slate-800/60">
+                <BookOpen className="w-3.5 h-3.5 text-brand-emerald" />
+                <span>Performance &amp; Développement Durable</span>
               </div>
             </div>
             
           </section>
-
+ 
           {/* Row 2: Strategic Objectives (Beautiful 4 columns grid, perfectly redistributing space with interesting illustrative icons) */}
-          <section className="space-y-8">
+          <section className="space-y-6">
             <div className="text-center max-w-2xl mx-auto space-y-2">
               <span className="text-[10px] uppercase font-extrabold text-brand-emerald bg-brand-emerald/10 px-3 py-1 rounded-full tracking-widest">
                 PLAN D'ACTION DIRECTE
@@ -140,88 +154,88 @@ export default function About() {
                 Découvrez les quatre piliers fondamentaux guidant l'ensemble de nos interventions pour transformer durablement les écosystèmes professionnels.
               </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+ 
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
               
               {/* Objective 1 */}
-              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/65 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 group">
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                    <GraduationCap className="w-5.5 h-5.5" />
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+                <div className="flex-grow flex flex-col items-center justify-start space-y-3 w-full">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-1 shrink-0 shadow-sm">
+                    <GraduationCap className="w-6 h-6 text-[#7c2d12]" />
                   </div>
-                  <h4 className="font-bold text-sm sm:text-[14px] text-slate-900 dark:text-slate-100 leading-snug">
-                    Programmes de Formation Innovants
+                  <h4 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
+                    PROGRAMMES DE FORMATION INNOVANTS
                   </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
+                  <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                     Concevoir des curriculums de formation d'excellence en adéquation étroite et continue avec les besoins opérationnels immédiats des entreprises et des gouvernements.
                   </p>
                 </div>
-                <div className="text-[10px] font-mono text-amber-600 dark:text-amber-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-50 dark:border-slate-850">
+                <div className="w-full text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-100 dark:border-slate-800/60 mt-4">
                   Axe Pédagogique
                 </div>
               </div>
-
+  
               {/* Objective 2 */}
-              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/65 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 group">
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                    <TrendingUp className="w-5.5 h-5.5" />
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+                <div className="flex-grow flex flex-col items-center justify-start space-y-3 w-full">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-1 shrink-0 shadow-sm">
+                    <TrendingUp className="w-6 h-6 text-[#7c2d12]" />
                   </div>
-                  <h4 className="font-bold text-sm sm:text-[14px] text-slate-900 dark:text-slate-100 leading-snug">
-                    Compétitivité &amp; Performance
+                  <h4 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
+                    COMPÉTITIVITÉ &amp; PERFORMANCE
                   </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
+                  <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                     Analyser, auditer, optimiser et informatiser les processus managériaux et opérationnels pour accroître drastiquement la valeur ajoutée métier des organisations.
                   </p>
                 </div>
-                <div className="text-[10px] font-mono text-blue-600 dark:text-blue-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-50 dark:border-slate-850">
+                <div className="w-full text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-100 dark:border-slate-800/60 mt-4">
                   Performance Métier
                 </div>
               </div>
-
+  
               {/* Objective 3 */}
-              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/65 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 group">
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                    <Zap className="w-5.5 h-5.5" />
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+                <div className="flex-grow flex flex-col items-center justify-start space-y-3 w-full">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-1 shrink-0 shadow-sm">
+                    <Zap className="w-6 h-6 text-[#7c2d12]" />
                   </div>
-                  <h4 className="font-bold text-sm sm:text-[14px] text-slate-900 dark:text-slate-100 leading-snug">
-                    Développement Durable
+                  <h4 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
+                    DÉVELOPPEMENT DURABLE
                   </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
+                  <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                     Intégrer les méthodologies de transition écologique, de management QHSE rigoureux et de responsabilité sociétale (RSE) dans les schémas stratégiques d'activité.
                   </p>
                 </div>
-                <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-50 dark:border-slate-850">
+                <div className="w-full text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-100 dark:border-slate-800/60 mt-4">
                   Solutions Durables
                 </div>
               </div>
-
+  
               {/* Objective 4 */}
-              <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/65 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-4 group">
-                <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-xl bg-violet-500/10 dark:bg-violet-500/20 text-violet-600 dark:text-violet-400 flex items-center justify-center shrink-0">
-                    <Map className="w-5.5 h-5.5" />
+              <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+                <div className="flex-grow flex flex-col items-center justify-start space-y-3 w-full">
+                  <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-1 shrink-0 shadow-sm">
+                    <Map className="w-6 h-6 text-[#7c2d12]" />
                   </div>
-                  <h4 className="font-bold text-sm sm:text-[14px] text-slate-900 dark:text-slate-100 leading-snug">
-                    Ingénierie des Territoires
+                  <h4 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
+                    INGÉNIERIE DES TERRITOIRES
                   </h4>
-                  <p className="text-xs text-slate-700 dark:text-slate-200 font-sans leading-relaxed text-justify">
+                  <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                     Planifier l'aménagement spatial intelligent, administrer les systèmes SIG complexes et outiller les collectivités décentralisées pour un développement endogène fort.
                   </p>
                 </div>
-                <div className="text-[10px] font-mono text-violet-600 dark:text-violet-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-50 dark:border-slate-850">
+                <div className="w-full text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider pt-2 border-t border-slate-100 dark:border-slate-800/60 mt-4">
                   Développement Local
                 </div>
               </div>
-
+ 
             </div>
           </section>
         </div>
 
         {/* 2. Brand Core Values */}
-        <section id="values-grid" className="py-12 mb-20">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+        <section id="values-grid" className="py-6 mb-10">
+          <div className="text-center max-w-3xl mx-auto mb-6">
             <h3 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
               Les 5 Valeurs Cardinales du CICEXF
             </h3>
@@ -230,157 +244,167 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 text-center font-sans">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 text-center font-sans">
             
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-800 text-brand-blue flex items-center justify-center mb-3">
-                <Award className="w-5 h-5 text-brand-emerald" />
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between min-h-[220px]">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                <Award className="w-6 h-6 text-brand-emerald" />
               </div>
-              <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider mb-1">Excellence</h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                Dépasser continuellement les objectifs fixés avec un soin ultime du détail.
-              </p>
+              <div className="flex-grow flex flex-col justify-start space-y-2 w-full">
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase">Excellence</h4>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
+                  Dépasser continuellement les objectifs fixés avec un soin ultime du détail.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-slate-800 text-brand-emerald flex items-center justify-center mb-3">
-                <Shield className="w-5 h-5" />
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between min-h-[220px]">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                <Shield className="w-6 h-6 text-brand-blue" />
               </div>
-              <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider mb-1">Rigueur</h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                Précision méthodologique rigide et scientificité de chaque instant.
-              </p>
+              <div className="flex-grow flex flex-col justify-start space-y-2 w-full">
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase">Rigueur</h4>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
+                  Précision méthodologique rigide et scientificité de chaque instant.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-slate-800 text-brand-blue flex items-center justify-center mb-3">
-                <Users className="w-5 h-5" />
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between min-h-[220px]">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                <Users className="w-6 h-6 text-brand-emerald" />
               </div>
-              <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider mb-1">Transparence</h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                Clarté contractuelle totale et communication honnête sur les enjeux.
-              </p>
+              <div className="flex-grow flex flex-col justify-start space-y-2 w-full">
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase">Transparence</h4>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
+                  Clarté contractuelle totale et communication honnête sur les enjeux.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col items-center">
-              <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-slate-800 text-brand-emerald flex items-center justify-center mb-3">
-                <Building className="w-5 h-5" />
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col items-center justify-between min-h-[220px]">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                <Building className="w-6 h-6 text-brand-blue" />
               </div>
-              <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider mb-1">Redevabilité</h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                Responsabilité entière des résultats et de la pérennité de nos appuis.
-              </p>
+              <div className="flex-grow flex flex-col justify-start space-y-2 w-full">
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase">Redevabilité</h4>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
+                  Responsabilité entière des résultats et de la pérennité de nos appuis.
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-sm flex flex-col col-span-2 lg:col-span-1 items-center">
-              <div className="w-10 h-10 rounded-full bg-purple-50 dark:bg-slate-800 text-purple-600 flex items-center justify-center mb-3">
-                <Target className="w-5 h-5" />
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm flex flex-col col-span-1 sm:col-span-2 lg:col-span-1 items-center justify-between min-h-[220px]">
+              <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                <Target className="w-6 h-6 text-purple-600" />
               </div>
-              <h4 className="font-bold text-xs text-slate-900 dark:text-white uppercase tracking-wider mb-1">Innovation</h4>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">
-                Créativité disruptive et adoption précoce des meilleures technologies.
-              </p>
+              <div className="flex-grow flex flex-col justify-start space-y-2 w-full">
+                <h4 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase">Innovation</h4>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
+                  Créativité disruptive et adoption précoce des meilleures technologies.
+                </p>
+              </div>
             </div>
 
           </div>
         </section>
 
         {/* 3. Interactive Organigramme flow */}
-        <section id="interactive-flowchart" className="py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm mb-20">
-          <div className="max-w-3xl mx-auto text-center mb-10">
-            <h3 className="font-display text-xl font-extrabold text-slate-900 dark:text-white">
+        <section id="interactive-flowchart" className="py-6 bg-white dark:bg-slate-900 rounded-xl border border-slate-200/50 dark:border-slate-800 p-5 sm:p-6 shadow-sm mb-10">
+          <div className="max-w-3xl mx-auto text-center mb-5">
+            <h3 className="font-display text-lg font-extrabold text-slate-900 dark:text-white">
               Gouvernance &amp; Organigramme Interactif
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1leading-relaxed font-sans">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed font-sans">
               Le CICEXF est structuré selon les standards d'indépendance de gouvernance des grands cabinets internationaux. Cliquez sur les structures pour explorer leurs prérogatives.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             {/* flowchart map visualization */}
-            <div className="lg:col-span-7 flex flex-col items-center space-y-4">
+            <div className="lg:col-span-7 flex flex-col items-center space-y-3">
               
               {/* Assembly General */}
               <button
                 id="node-ag"
                 onClick={() => setSelectedNode('AG')}
-                className={`w-64 py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase text-center transition-all ${selectedNode === 'AG' ? 'bg-brand-blue-dark text-white ring-4 ring-brand-emerald/30 border-transparent shadow-lg' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                className={`w-64 py-2 rounded-xl border font-bold text-[11px] tracking-wider uppercase text-center transition-all ${selectedNode === 'AG' ? 'bg-brand-blue-dark text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
               >
                 Assemblée Générale (AG)
               </button>
 
-              <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-800"></div>
+              <div className="w-0.5 h-3.5 bg-slate-300 dark:bg-slate-800"></div>
 
               {/* Board */}
               <button
                 id="node-ca"
                 onClick={() => setSelectedNode('CA')}
-                className={`w-64 py-2.5 rounded-xl border font-bold text-xs tracking-wider uppercase text-center transition-all ${selectedNode === 'CA' ? 'bg-brand-blue-dark text-white ring-4 ring-brand-emerald/30 border-transparent shadow-lg' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                className={`w-64 py-2 rounded-xl border font-bold text-[11px] tracking-wider uppercase text-center transition-all ${selectedNode === 'CA' ? 'bg-brand-blue-dark text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
               >
                 Conseil d'Administration (CA)
               </button>
 
-              <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-800"></div>
+              <div className="w-0.5 h-3.5 bg-slate-300 dark:bg-slate-800"></div>
 
               {/* DG */}
               <button
                 id="node-dg"
                 onClick={() => setSelectedNode('DG')}
-                className={`w-64 py-3 rounded-xl border font-bold text-sm uppercase text-center transition-all ${selectedNode === 'DG' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-lg' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                className={`w-64 py-2.5 rounded-xl border font-bold text-xs uppercase text-center transition-all ${selectedNode === 'DG' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
               >
                 Direction Générale (DG)
               </button>
 
-              <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-800"></div>
+              <div className="w-0.5 h-3.5 bg-slate-300 dark:bg-slate-800"></div>
 
               {/* DGA */}
               <button
                 id="node-dga"
                 onClick={() => setSelectedNode('DGA')}
-                className={`w-64 py-2.5 rounded-xl border font-bold text-xs uppercase text-center transition-all ${selectedNode === 'DGA' ? 'bg-brand-emerald text-white ring-4 ring-brand-blue/30 border-transparent shadow-lg' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                className={`w-64 py-2 rounded-xl border font-bold text-[11px] uppercase text-center transition-all ${selectedNode === 'DGA' ? 'bg-brand-emerald text-white ring-4 ring-brand-blue/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
               >
                 Direction Générale Adjointe (DGA)
               </button>
 
-              <div className="w-0.5 h-4 bg-slate-300 dark:bg-slate-800"></div>
+              <div className="w-0.5 h-3.5 bg-slate-300 dark:bg-slate-800"></div>
 
               {/* Split Row for operational Poles */}
-              <div className="flex space-x-4">
+              <div className="flex space-x-3">
                 <button
                   id="node-pole-consultance"
                   onClick={() => setSelectedNode('Consultance')}
-                  className={`w-40 py-3 rounded-xl border font-bold text-[10px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Consultance' ? 'bg-slate-900 text-white border-transparent ring-2 ring-brand-emerald' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                  className={`w-36 py-2.5 rounded-xl border font-bold text-[9px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Consultance' ? 'bg-slate-900 text-white border-transparent ring-2 ring-brand-emerald' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
                 >
                   Pôle Consultance
                 </button>
                 <button
                   id="node-pole-formation"
                   onClick={() => setSelectedNode('Formation')}
-                  className={`w-40 py-3 rounded-xl border font-bold text-[10px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Formation' ? 'bg-slate-900 text-white border-transparent ring-2 ring-brand-emerald' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                  className={`w-36 py-2.5 rounded-xl border font-bold text-[9px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Formation' ? 'bg-slate-900 text-white border-transparent ring-2 ring-brand-emerald' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
                 >
-                  Pôle Formation (Académie)
+                  Pôle Formation
                 </button>
               </div>
 
             </div>
 
             {/* Selected Node explanations Card */}
-            <div className="lg:col-span-5 bg-slate-50 dark:bg-slate-850 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 space-y-4">
-              <span className="text-[10px] uppercase font-bold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded">
+            <div className="lg:col-span-5 bg-slate-50 dark:bg-slate-850 p-4.5 rounded-xl border border-slate-200/50 dark:border-slate-800 space-y-3 shadow-inner">
+              <span className="text-[9px] uppercase font-bold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded">
                 Détails de l'Organigramme
               </span>
-              <h4 className="font-display text-lg font-bold text-slate-900 dark:text-white">
+              <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 {organigrammeData[selectedNode].title}
               </h4>
-              <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
                 Responsable : {organigrammeData[selectedNode].role}
               </p>
-              <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+              <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed font-sans">
                 {organigrammeData[selectedNode].desc}
               </p>
-              <div className="pt-2 flex items-center space-x-1 text-xs font-bold text-brand-blue dark:text-brand-emerald-light">
-                <CheckCircle2 className="w-4 h-4 text-brand-emerald" />
+              <div className="pt-1.5 flex items-center space-x-1 text-xs font-bold text-brand-blue dark:text-brand-emerald-light">
+                <CheckCircle2 className="w-3.5 h-3.5 text-brand-emerald" />
                 <span>Rôle audité et conforme ISO 9001</span>
               </div>
             </div>
@@ -389,8 +413,8 @@ export default function About() {
         </section>
 
         {/* 4. Leadership & Executive Dirigeants team */}
-        <section id="leadership-team" className="py-12 mb-20">
-          <div className="text-center max-w-3xl mx-auto mb-16">
+        <section id="leadership-team" className="py-6 mb-10">
+          <div className="text-center max-w-3xl mx-auto mb-6">
             <h3 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
               Une Direction d'Excellence &amp; d'Expérience
             </h3>
@@ -399,33 +423,33 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {TEAM_MEMBERS.map(member => (
-              <div key={member.id} className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-full group">
-                <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+              <div key={member.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/60 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col h-full group">
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                   <img
                     src={member.photoUrl}
                     alt={member.name}
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
                   />
-                  <div className="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <div className="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                     {member.category}
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-grow space-y-3">
+                <div className="p-4.5 flex flex-col flex-grow space-y-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-display text-base font-bold text-slate-900 dark:text-white">{member.name}</h4>
-                      <p className="text-[11px] font-bold text-brand-emerald mt-0.5">{member.role}</p>
+                      <h4 className="font-display text-sm sm:text-base font-bold text-slate-900 dark:text-white">{member.name}</h4>
+                      <p className="text-[10px] font-bold text-brand-emerald mt-0.5">{member.role}</p>
                     </div>
                     {member.linkedinUrl && (
                       <a href={member.linkedinUrl} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-brand-blue transition-colors">
-                        <Linkedin className="w-4 h-4" />
+                        <Linkedin className="w-3.5 h-3.5" />
                       </a>
                     )}
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans leading-relaxed flex-grow">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-sans leading-relaxed flex-grow text-justify">
                     {member.bio}
                   </p>
                 </div>
@@ -435,7 +459,7 @@ export default function About() {
         </section>
 
         {/* 5. Head Office Location in Cocody Palmeraie */}
-        <section id="office-location" className="py-12">
+        <section id="office-location" className="py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Map explanation info block */}
@@ -467,7 +491,7 @@ export default function About() {
             </div>
 
             {/* Custom Premium High-Contrast Map representation */}
-            <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 overflow-hidden shadow-lg h-[400px] flex flex-col">
+            <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200/50 dark:border-slate-800 overflow-hidden shadow-lg h-[340px] flex flex-col">
               
               {/* Map header control bar */}
               <div className="bg-slate-50 dark:bg-slate-850 px-4 py-3 border-b border-slate-150 dark:border-slate-800 flex justify-between items-center text-xs">

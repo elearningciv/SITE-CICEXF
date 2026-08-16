@@ -9,7 +9,13 @@ import Realisations from './components/Realisations';
 import News from './components/News';
 import Contact from './components/Contact';
 import Partners from './components/Partners';
+import AdminPanel from './components/AdminPanel';
+import { trackVisit } from './lib/tracker';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from './firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS } from './data';
 
 const NAVIGATION_ORDER = [
   'home',
@@ -18,7 +24,6 @@ const NAVIGATION_ORDER = [
   'formations',
   'realisations',
   'news',
-  'partners',
   'contact'
 ];
 
@@ -29,7 +34,6 @@ const TAB_LABELS: Record<string, string> = {
   formations: 'Formations',
   realisations: 'Réalisations',
   news: 'Actualités',
-  partners: 'Partenaires',
   contact: 'Contact'
 };
 
@@ -38,8 +42,93 @@ export default function App() {
   const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
   const [preselectedDomain, setPreselectedDomain] = useState<string>('Consultance');
   
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(true);
+  
+  // Real-time synced content states
+  const [formations, setFormations] = useState<any[]>(FORMATIONS);
+  const [blogPosts, setBlogPosts] = useState<any[]>(BLOG_POSTS);
+  const [partners, setPartners] = useState<any[]>(PARTNERS);
+
+  // Sync content with Firestore in real-time
+  useEffect(() => {
+    const unsubFormations = onSnapshot(collection(db, 'formations'), (snapshot) => {
+      const dbFormations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Overwrite static entries with same ID if exists, otherwise append
+      const merged = [...dbFormations, ...FORMATIONS.filter(f => !dbFormations.some(df => df.id === f.id))];
+      setFormations(merged);
+    }, (err) => {
+      console.error("Error syncing formations:", err);
+    });
+
+    const unsubBlog = onSnapshot(collection(db, 'blog_posts'), (snapshot) => {
+      const dbBlog = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const merged = [...dbBlog, ...BLOG_POSTS.filter(p => !dbBlog.some(dp => dp.id === p.id))];
+      
+      // Sort posts to ensure newly added courses/articles appear on top
+      const getPostTime = (post: any) => {
+        if (post.createdAt) {
+          if (typeof post.createdAt.toDate === 'function') {
+            return post.createdAt.toDate().getTime();
+          }
+          if (post.createdAt.seconds) {
+            return post.createdAt.seconds * 1000;
+          }
+          return new Date(post.createdAt).getTime();
+        }
+        if (post.date) {
+          const months: { [key: string]: number } = {
+            janvier: 0, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5,
+            juillet: 6, aout: 7, septembre: 8, octobre: 9, novembre: 10, decembre: 11,
+            janv: 0, fevr: 1, avr: 3, jul: 6, sept: 8, oct: 9, nov: 10, dec: 11
+          };
+          const parts = post.date.toLowerCase().replace(/é/g, 'e').replace(/û/g, 'u').split(' ');
+          if (parts.length === 3) {
+            const day = parseInt(parts[0], 10);
+            const monthStr = parts[1];
+            const year = parseInt(parts[2], 10);
+            const month = months[monthStr] !== undefined ? months[monthStr] : 5;
+            return new Date(year, month, day).getTime();
+          }
+        }
+        return 0;
+      };
+
+      const sorted = merged.sort((a, b) => getPostTime(b) - getPostTime(a));
+      setBlogPosts(sorted);
+    }, (err) => {
+      console.error("Error syncing blog posts:", err);
+    });
+
+    const unsubPartners = onSnapshot(collection(db, 'partners'), (snapshot) => {
+      const dbPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const merged = [...dbPartners, ...PARTNERS.filter(p => !dbPartners.some(dp => dp.id === p.id))];
+      setPartners(merged);
+    }, (err) => {
+      console.error("Error syncing partners:", err);
+    });
+
+    return () => {
+      unsubFormations();
+      unsubBlog();
+      unsubPartners();
+    };
+  }, []);
+
+  // Track Admin log state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      // Free access is active, but we can still track sign-ins if desired
+      if (user && user.email === 'elearningciv@gmail.com') {
+        setIsAdminLoggedIn(true);
+      } else {
+        setIsAdminLoggedIn(true); // Keep active for free access
+      }
+    });
+    return unsubscribe;
+  }, []);
+
   // Theme state
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const [brandTheme, setBrandTheme] = useState<'classic' | 'emerald' | 'tech'>('classic');
 
   // Back to top scroll state
@@ -93,20 +182,56 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Simple global search handler which routes users to catalog or blog based on matches
+  // Track page and tab visits automatically in Firebase Firestore
+  useEffect(() => {
+    trackVisit(activeTab);
+  }, [activeTab]);
+
+  // Smart global search handler which routes users dynamically to matched formations, domains, or pages
   const handleGlobalSearch = (query: string) => {
-    const q = query.toLowerCase();
-    if (q.includes('data') || q.includes('analyst') || q.includes('kobo') || q.includes('formation') || q.includes('cours')) {
-      if (q.includes('data') || q.includes('analyst')) {
-        setSelectedDomainId('data-analyst');
-      }
+    const q = query.toLowerCase().trim();
+    if (!q) return;
+
+    // 1. Check partner query first
+    if (q.includes('parten') || q.includes('expert') || q.includes('cv')) {
+      setActiveTab('home');
+      setSelectedDomainId(null);
+      setTimeout(() => {
+        const el = document.getElementById('partners-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 150);
+      return;
+    }
+
+    // 2. Look for matching formation
+    const matchedF = formations.find(f => 
+      f.title.toLowerCase().includes(q) || 
+      (f.shortDescription && f.shortDescription.toLowerCase().includes(q)) ||
+      (f.domain && f.domain.toLowerCase().includes(q))
+    );
+    if (matchedF) {
       setActiveTab('formations');
-    } else if (q.includes('audit') || q.includes('conseil') || q.includes('strateg') || q.includes('intervent') || q.includes('accompagn')) {
+      setSelectedDomainId(matchedF.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 3. Look for matching domain or subdomain
+    const matchedD = DOMAINS_INTERVENTION.find(d => 
+      d.title.toLowerCase().includes(q) || 
+      (d.shortDescription && d.shortDescription.toLowerCase().includes(q)) ||
+      (d.subDomains && d.subDomains.some(sub => sub.title.toLowerCase().includes(q)))
+    );
+    if (matchedD) {
       setActiveTab('accompagnements');
-    } else if (q.includes('actu') || q.includes('blog') || q.includes('publi') || q.includes('guide')) {
+      setSelectedDomainId(matchedD.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // 4. Default keyword match routing
+    if (q.includes('actu') || q.includes('blog') || q.includes('publi') || q.includes('guide')) {
       setActiveTab('news');
-    } else if (q.includes('parten') || q.includes('expert') || q.includes('cv')) {
-      setActiveTab('partners');
     } else {
       setActiveTab('contact');
     }
@@ -131,7 +256,7 @@ export default function App() {
   const renderActivePage = () => {
     switch (activeTab) {
       case 'home':
-        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} />;
+        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} formations={formations} blogPosts={blogPosts} partners={partners} />;
       case 'about':
         return <About />;
       case 'accompagnements':
@@ -144,17 +269,19 @@ export default function App() {
           />
         );
       case 'formations':
-        return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} />;
+        return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} />;
       case 'realisations':
-        return <Realisations />;
+        return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} />;
       case 'news':
-        return <News />;
+        return <News blogPosts={blogPosts} />;
       case 'partners':
-        return <Partners />;
+        return <Partners partners={partners} />;
       case 'contact':
         return <Contact preselectedDomain={preselectedDomain} setPreselectedDomain={setPreselectedDomain} />;
+      case 'admin':
+        return <AdminPanel />;
       default:
-        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} />;
+        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} formations={formations} blogPosts={blogPosts} partners={partners} />;
     }
   };
 
@@ -172,6 +299,8 @@ export default function App() {
         brandTheme={brandTheme}
         setBrandTheme={setBrandTheme}
         onSearch={handleGlobalSearch}
+        isAdminLoggedIn={isAdminLoggedIn}
+        formations={formations}
       />
 
       {/* Main content viewport */}

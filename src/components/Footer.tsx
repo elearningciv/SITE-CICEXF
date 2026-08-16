@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Facebook, Linkedin, Youtube, ArrowUp, Send, CheckCircle } from 'lucide-react';
+import { Mail, Phone, MapPin, Facebook, Linkedin, Youtube, ArrowUp, Send, CheckCircle, Key } from 'lucide-react';
+import { trackSubscription } from '../lib/tracker';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
@@ -11,24 +12,40 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
   const [subscribed, setSubscribed] = useState(false);
 
   const handleLinkClick = (tab: string, domainId: string | null = null) => {
-    setActiveTab(tab);
-    setSelectedDomainId(domainId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (tab === 'partners') {
+      setActiveTab('home');
+      setSelectedDomainId(null);
+      setTimeout(() => {
+        const el = document.getElementById('partners-section');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      setActiveTab(tab);
+      setSelectedDomainId(domainId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
-      setSubscribed(true);
-      setTimeout(() => {
-        setEmail('');
-        setSubscribed(false);
-      }, 4000);
+      try {
+        await trackSubscription(email);
+        setSubscribed(true);
+        setTimeout(() => {
+          setEmail('');
+          setSubscribed(false);
+        }, 4000);
+      } catch (err) {
+        console.error('Subscription track error:', err);
+      }
     }
   };
 
   return (
-    <footer id="institutional-footer" className="bg-[#020817] text-slate-300 border-t border-white/10 pt-16 pb-8 relative overflow-hidden">
+    <footer id="institutional-footer" className="bg-[#020817] text-white border-t border-white/10 pt-16 pb-8 relative overflow-hidden">
       {/* Visual background details */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl -z-10 animate-pulse-slow"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-brand-emerald/5 rounded-full blur-3xl -z-10"></div>
@@ -46,10 +63,10 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
                 CIC<span className="text-brand-emerald">EXF</span>
               </span>
             </div>
-            <p className="text-xs text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs text-white leading-relaxed font-sans">
               Cabinet International de Consultance, d'Expertise et de Formation. Solutions de haut niveau pour l'accompagnement des organisations et la formation de cadres d'excellence.
             </p>
-            <div className="pt-2 text-[10px] text-slate-500 space-y-1 border-t border-slate-900">
+            <div className="pt-2 text-[10px] text-white/90 space-y-1 border-t border-white/10">
               <p>Récépissé N°25343/GTCA/RC/2025</p>
               <p>N°IDU CI-2025-0058238 N</p>
               <p>Cocody Palmeraie, Abidjan</p>
@@ -61,34 +78,34 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
             <h4 className="text-sm font-bold text-white uppercase tracking-wider border-l-2 border-brand-emerald pl-2.5">
               Navigation
             </h4>
-            <ul className="space-y-2 text-xs font-semibold">
+            <ul className="space-y-2 text-xs font-semibold text-white">
               <li>
-                <button onClick={() => handleLinkClick('home')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('home')} className="hover:text-brand-emerald transition-colors text-white">
                   Accueil
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('about')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('about')} className="hover:text-brand-emerald transition-colors text-white">
                   Qui sommes-nous (Cabinet)
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('formations')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('formations')} className="hover:text-brand-emerald transition-colors text-white">
                   Nos Formations
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('realisations')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('realisations')} className="hover:text-brand-emerald transition-colors text-white">
                   Nos Réalisations
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('news')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('news')} className="hover:text-brand-emerald transition-colors text-white">
                   Actualités &amp; Publications
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('partners')} className="hover:text-brand-emerald transition-colors">
+                <button onClick={() => handleLinkClick('partners')} className="hover:text-brand-emerald transition-colors text-white">
                   Espace Partenaires
                 </button>
               </li>
@@ -100,21 +117,21 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
             <h4 className="text-sm font-bold text-white uppercase tracking-wider border-l-2 border-brand-emerald pl-2.5">
               Nous Contacter
             </h4>
-            <ul className="space-y-3 text-xs leading-relaxed">
+            <ul className="space-y-3 text-xs leading-relaxed text-white">
               <li className="flex items-start">
                 <MapPin className="w-4 h-4 text-brand-emerald mr-2.5 shrink-0 mt-0.5" />
-                <span>Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, Abidjan, Côte d'Ivoire</span>
+                <span className="text-white">Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, Abidjan, Côte d'Ivoire</span>
               </li>
               <li className="flex items-center">
                 <Phone className="w-4 h-4 text-brand-emerald mr-2.5 shrink-0" />
-                <div className="flex flex-col">
-                  <a href="tel:+2250574222246" className="hover:text-white transition-colors">+225 05 74 22 22 46</a>
-                  <a href="tel:+2250701970065" className="hover:text-white transition-colors">+225 07 01 97 00 65</a>
+                <div className="flex flex-col text-white">
+                  <a href="tel:+2250574222246" className="hover:text-brand-emerald transition-colors text-white">+225 05 74 22 22 46</a>
+                  <a href="tel:+2250701970065" className="hover:text-brand-emerald transition-colors text-white">+225 07 01 97 00 65</a>
                 </div>
               </li>
               <li className="flex items-center">
                 <Mail className="w-4 h-4 text-brand-emerald mr-2.5 shrink-0" />
-                <a href="mailto:elearningciv@gmail.com" className="hover:text-white transition-colors break-all">elearningciv@gmail.com</a>
+                <a href="mailto:elearningciv@gmail.com" className="hover:text-brand-emerald transition-colors text-white break-all">elearningciv@gmail.com</a>
               </li>
             </ul>
           </div>
@@ -124,7 +141,7 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
             <h4 className="text-sm font-bold text-white uppercase tracking-wider border-l-2 border-brand-emerald pl-2.5">
               Lettre d'Information
             </h4>
-            <p className="text-xs text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs text-white leading-relaxed font-sans">
               Abonnez-vous pour recevoir les calendriers des prochaines sessions de formation et nos analyses stratégiques de pointe.
             </p>
             {subscribed ? (
@@ -160,28 +177,28 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
                 href="https://www.facebook.com/CabinetCICEXF"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-brand-blue flex items-center justify-center hover:text-white transition-all duration-200"
+                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-brand-blue flex items-center justify-center text-white hover:text-white transition-all duration-200"
                 title="Suivez CICEXF sur Facebook"
               >
-                <Facebook className="w-4 h-4" />
+                <Facebook className="w-4 h-4 text-white" />
               </a>
               <a
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-brand-blue flex items-center justify-center hover:text-white transition-all duration-200"
+                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-brand-blue flex items-center justify-center text-white hover:text-white transition-all duration-200"
                 title="Suivez CICEXF sur LinkedIn"
               >
-                <Linkedin className="w-4 h-4" />
+                <Linkedin className="w-4 h-4 text-white" />
               </a>
               <a
                 href="https://youtube.com"
                 target="_blank"
                 rel="noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-red-600 flex items-center justify-center hover:text-white transition-all duration-200"
+                className="w-8 h-8 rounded-full bg-slate-900 hover:bg-red-600 flex items-center justify-center text-white hover:text-white transition-all duration-200"
                 title="Abonnez-vous à notre chaîne YouTube"
               >
-                <Youtube className="w-4 h-4" />
+                <Youtube className="w-4 h-4 text-white" />
               </a>
             </div>
           </div>
@@ -189,14 +206,23 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
         </div>
 
         {/* Legal Mentions and Certifications Footer */}
-        <div className="border-t border-slate-900 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-[11px] text-slate-500 font-medium">
+        <div className="border-t border-white/10 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center text-[11px] text-white font-medium">
           <p>© {new Date().getFullYear()} CICEXF. Tous droits réservés.</p>
-          <div className="flex space-x-4 mt-4 md:mt-0">
-            <a href="#mentions" className="hover:text-slate-300 transition-colors">Mentions Légales</a>
-            <span className="text-slate-850">|</span>
-            <a href="#confidentiality" className="hover:text-slate-300 transition-colors">Politique de Confidentialité</a>
-            <span className="text-slate-850">|</span>
-            <span className="text-brand-emerald">Conçu selon les standards WCAG Accessibilité</span>
+          <div className="flex flex-wrap gap-2 md:space-x-4 mt-4 md:mt-0 items-center justify-center md:justify-end">
+            <a href="#mentions" className="hover:text-brand-emerald transition-colors text-white">Mentions Légales</a>
+            <span className="text-white/20">|</span>
+            <a href="#confidentiality" className="hover:text-brand-emerald transition-colors text-white">Politique de Confidentialité</a>
+            <span className="text-white/20">|</span>
+            <span className="text-brand-emerald font-semibold">Conçu selon les standards WCAG Accessibilité</span>
+            <span className="text-white/20">|</span>
+            <button 
+              onClick={() => { setActiveTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="hover:text-brand-emerald text-white transition-colors font-bold flex items-center space-x-1 cursor-pointer"
+              title="Espace Administrateur"
+            >
+              <Key className="w-3 h-3 text-white" />
+              <span className="text-white hover:text-brand-emerald">Administration</span>
+            </button>
           </div>
         </div>
       </div>

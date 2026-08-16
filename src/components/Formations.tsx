@@ -346,7 +346,48 @@ function getDeepPresentation(sub: any) {
   return { contexte, argumentsSolides, plusValue };
 }
 
-function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, isLarge }: any) {
+function generateUniformDescription(sub: any) {
+  const title = sub.title || "";
+  
+  const p1 = `Dans un contexte de transformation accélérée, la maîtrise opérationnelle de la spécialité "${title}" représente un levier majeur de compétitivité. Les organisations publiques et privées font face à des défis d'agilité et de conformité qui imposent de moderniser leurs processus opérationnels. Ce module apporte les réponses stratégiques indispensables pour anticiper les mutations sectorielles et sécuriser l'alignement des ressources sur les priorités de développement de votre entité.`;
+  
+  const p2 = `Ce parcours d'excellence permet d'atteindre des standards de performance élevés grâce à des objectifs d'apprentissage concrets et directement opérationnels. Les participants acquièrent la capacité de concevoir des cadres méthodologiques structurés, de piloter des indicateurs de réussite précis et de modéliser des solutions innovantes. L'accent est mis sur l'aide à la décision stratégique pour garantir des résultats à fort impact.`;
+  
+  let keySkills = "";
+  if (sub.keyPoints && sub.keyPoints.length > 0) {
+    const cleanedPoints = sub.keyPoints.slice(0, 2).map((kp: string) => {
+      let text = kp.replace(/^\s*-\s*/, '').trim();
+      if (text.length > 0) {
+        text = text.charAt(0).toLowerCase() + text.slice(1);
+      }
+      return text;
+    });
+    keySkills = ` l'acquisition de compétences clés telles que ${cleanedPoints.join(', ')}`;
+  } else {
+    keySkills = " l'acquisition de compétences clés indispensables au management de projets d'envergure";
+  }
+  
+  const softwareLabel = sub.software && sub.software.length > 0
+    ? `, ainsi que la prise en main d'outils spécialisés comme ${sub.software.slice(0, 2).join(' et ')}`
+    : "";
+  
+  const p3 = `La formation met l'accent sur${keySkills}${softwareLabel}. Notre démarche andragogique s'appuie sur une pédagogie active et participative, combinant de manière équilibrée des exposés interactifs, des ateliers de simulation pratiques de haut niveau et des résolutions de cas d'études sectoriels.`;
+  
+  const expertiseText = sub.expertiseLevel 
+    ? ` Ce parcours est conçu pour valider un niveau de qualification de type : ${sub.expertiseLevel}.` 
+    : "";
+  
+  const p4 = `L'accompagnement du CICEXF garantit un transfert de compétences optimal avec un retour sur investissement mesurable pour l'organisation.${expertiseText} À l'issue du cursus, les diplômés disposent de tous les atouts nécessaires pour occuper des postes à haute responsabilité stratégique, piloter des réformes structurelles d'envergure ou agir en qualité d'experts référents.`;
+
+  return [
+    { title: "Contexte et Défis", text: p1 },
+    { title: "Objectifs de Performance", text: p2 },
+    { title: "Compétences et Méthodologies", text: p3 },
+    { title: "Valeur Ajoutée et Débouchés", text: p4 }
+  ];
+}
+
+function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, isLarge, onSelectDomain, currentDomainId }: any) {
   const [activeCardTab, setActiveCardTab] = useState<'info' | 'objectives' | 'results' | 'opportunities' | 'plus'>('info');
   const data = getTailoredDataForAxis(sub.title, sub);
 
@@ -376,161 +417,22 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
           </div>
         )}
 
-        <div className="px-6 sm:px-8 pb-4 space-y-6 lg:overflow-y-auto lg:flex-grow lg:flex-1 scrollbar-thin pr-2 pt-4">
-          {/* Section 1: Presentation & Value */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Contexte & Enjeux */}
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-850 space-y-2">
-              <span className="text-[9px] font-extrabold text-brand-emerald uppercase tracking-widest block">
-                Contexte &amp; Enjeux Stratégiques
-              </span>
-              <p className="text-[11.5px] text-slate-700 dark:text-slate-300 leading-relaxed font-sans text-justify">
-                {getDeepPresentation(sub).contexte}
+        <div className="px-6 py-6 sm:px-8 space-y-5 lg:overflow-y-auto lg:flex-grow lg:flex-1 scrollbar-thin pr-2 text-justify">
+          <div className="space-y-4.5">
+            {generateUniformDescription(sub).map((p, idx) => (
+              <p key={idx} className="text-[14.5px] sm:text-[15.5px] text-slate-950 dark:text-slate-50 font-medium leading-relaxed">
+                <strong className="text-black dark:text-white font-extrabold uppercase tracking-wider block sm:inline mr-1.5">
+                  {p.title} :
+                </strong>
+                {p.text}
               </p>
-            </div>
-
-            {/* Valeur Ajoutée */}
-            <div className="p-4 rounded-2xl bg-brand-blue/5 dark:bg-blue-950/20 border border-brand-blue/10 space-y-2 flex flex-col justify-between">
-              <div>
-                <span className="text-[9px] font-extrabold text-brand-blue dark:text-blue-450 uppercase tracking-widest block">
-                  Valeur Ajoutée CICEXF
-                </span>
-                <p className="text-[11.5px] text-slate-700 dark:text-slate-355 leading-relaxed text-justify italic font-medium mt-1">
-                  "{getDeepPresentation(sub).plusValue}"
-                </p>
-              </div>
-              
-              {sub.expertiseLevel && (
-                <div className="flex items-center space-x-2 pt-2 border-t border-slate-100 dark:border-slate-800">
-                  <span className="text-[8.5px] font-bold text-slate-400 uppercase tracking-widest">Niveau Visé :</span>
-                  <span className="bg-brand-emerald/15 text-brand-emerald text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase">
-                    {sub.expertiseLevel}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Section 2: Objectives & Key Skills */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Objectives */}
-            <div className="space-y-3 p-4 rounded-2xl border border-slate-150 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
-              <span className="block text-[9.5px] font-bold text-brand-emerald uppercase tracking-widest">
-                Objectifs d'Apprentissage Clés
-              </span>
-              <div className="space-y-2">
-                {data.objectives.map((obj, oIdx) => (
-                  <div key={oIdx} className="flex items-start text-[11px]">
-                    <div className="w-4 h-4 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center text-[9px] font-bold mr-2 shrink-0 mt-0.5 shadow-sm">
-                      {oIdx + 1}
-                    </div>
-                    <span className="text-slate-700 dark:text-slate-300 font-medium leading-normal text-left">
-                      {obj}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Key Skills & Tools */}
-            <div className="space-y-3 p-4 rounded-2xl border border-slate-150 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm flex flex-col justify-between">
-              <div className="space-y-2.5">
-                <span className="block text-[9.5px] font-bold text-slate-400 uppercase tracking-widest">
-                  Compétences d'Excellence Enseignées
-                </span>
-                {sub.keyPoints && sub.keyPoints.length > 0 ? (
-                  <div className="space-y-2 text-[10.5px]">
-                    {sub.keyPoints.map((kp, kpIdx) => (
-                      <div key={kpIdx} className="flex items-start text-slate-600 dark:text-slate-400">
-                        <CheckCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                        <span className="leading-snug font-medium">{kp}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[10.5px] text-slate-400 italic">Méthodologies professionnelles de pointe adaptées au continent africain.</p>
-                )}
-              </div>
-
-              {sub.software && sub.software.length > 0 && (
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
-                  <span className="block text-[8.5px] font-bold text-slate-400 uppercase tracking-widest">Logiciels &amp; Outils de Pointe :</span>
-                  <div className="flex flex-wrap gap-1 font-mono">
-                    {sub.software.map((sw, swIdx) => (
-                      <span
-                        key={swIdx}
-                        className="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[9px] font-semibold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-750"
-                      >
-                        {sw}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Section 3: Deliverables / Results & Opportunities */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Results / Deliverables */}
-            <div className="space-y-3 p-4 rounded-2xl border border-slate-150 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
-              <span className="block text-[9.5px] font-bold text-brand-blue dark:text-blue-400 uppercase tracking-widest">
-                Résultats de Fin de Cursus &amp; Livrables
-              </span>
-              <div className="space-y-2">
-                {data.results.map((res, rIdx) => (
-                  <div key={rIdx} className="flex items-start text-[11px]">
-                    <CheckSquare className="w-3.5 h-3.5 text-brand-emerald mr-2.5 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 dark:text-slate-350 font-semibold leading-normal text-left">
-                      {res}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Opportunities */}
-            <div className="space-y-3 p-4 rounded-2xl border border-slate-150 dark:border-slate-800/80 bg-white dark:bg-slate-900 shadow-sm">
-              <span className="block text-[9.5px] font-bold text-purple-500 uppercase tracking-widest">
-                Débouchés &amp; Carrières Visés
-              </span>
-              <div className="space-y-2">
-                {data.opportunities.slice(0, 3).map((opp, opIdx) => (
-                  <div key={opIdx} className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-850 flex items-start space-x-2.5 hover:border-brand-emerald/20 transition-all text-[11px]">
-                    <Briefcase className="w-3.5 h-3.5 text-brand-emerald shrink-0 mt-0.5" />
-                    <span className="font-bold text-slate-800 dark:text-slate-200 text-left leading-tight">
-                      {opp}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Section 4: Extra Axes (Projet & Accompagnement) */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-150 dark:border-slate-850">
-            <span className="block text-[9px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">
-              Piliers de Réussite CICEXF
-            </span>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {data.extraAxes.map((axe, axIdx) => (
-                <div key={axIdx} className="space-y-0.5">
-                  <span className="block text-[10px] font-extrabold text-brand-emerald uppercase tracking-wider flex items-center">
-                    <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald mr-2" />
-                    {axe.label}
-                  </span>
-                  <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
-                    {axe.value}
-                  </p>
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
 
         {/* Quick scroll-to-form button */}
         <div 
-          className="p-6 bg-slate-50/50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-850 flex items-center justify-between mt-auto"
+          className="p-6 bg-slate-50/50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-850 flex items-center justify-between mt-auto shrink-0"
         >
           <span className="text-[10px] text-slate-400 font-sans uppercase">CICEXF Certifié</span>
           <button
@@ -663,7 +565,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             {/* Structured developed context */}
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-2">
               <span className="text-[9px] font-extrabold text-brand-emerald uppercase tracking-widest block">Contexte &amp; Enjeux Stratégiques</span>
-              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-sans text-justify">
+              <p className="text-sm text-slate-950 dark:text-slate-50 leading-relaxed font-sans text-justify font-medium">
                 {getDeepPresentation(sub).contexte}
               </p>
             </div>
@@ -673,7 +575,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             {/* Added Plus-Value block */}
             <div className="p-4 rounded-2xl bg-brand-blue/5 dark:bg-blue-950/20 border border-brand-blue/10 space-y-1">
               <span className="text-[9px] font-extrabold text-brand-blue dark:text-blue-450 uppercase tracking-widest block">Valeur Ajoutée CICEXF</span>
-              <p className="text-[11.5px] text-slate-700 dark:text-slate-355 leading-relaxed text-justify italic font-medium">
+              <p className="text-[13px] text-slate-950 dark:text-slate-50 leading-relaxed text-justify italic font-semibold">
                 "{getDeepPresentation(sub).plusValue}"
               </p>
             </div>
@@ -728,7 +630,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                 Qu'allez-vous maîtriser durant cette formation ?
               </h4>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-slate-950 dark:text-slate-50 font-bold leading-relaxed font-sans">
               Ces objectifs opérationnels garantissent un transfert de compétences d'impact immédiat en entreprise :
             </p>
             <div className="space-y-3 pt-1">
@@ -737,7 +639,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                   <div className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center text-[10px] font-bold mr-3 shrink-0 mt-0.5">
                     {oIdx + 1}
                   </div>
-                  <span className="text-[11px] font-medium text-slate-700 dark:text-slate-300 leading-relaxed text-left">
+                  <span className="text-[13px] font-semibold text-slate-950 dark:text-slate-50 leading-relaxed text-left">
                     {obj}
                   </span>
                 </div>
@@ -754,14 +656,14 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                 Ce avec quoi vous repartez concrètement :
               </h4>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-slate-950 dark:text-slate-50 font-bold leading-relaxed font-sans">
               Le cabinet d'élite CICEXF s'engage sur l'excellence andragogique. Les résultats tangibles incluent :
             </p>
             <div className="space-y-3 pt-1">
               {data.results.map((res, rIdx) => (
                 <div key={rIdx} className="flex items-start">
                   <CheckSquare className="w-4 h-4 text-brand-emerald mr-3 shrink-0 mt-0.5" />
-                  <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300 leading-relaxed text-left">
+                  <span className="text-[13px] font-semibold text-slate-950 dark:text-slate-50 leading-relaxed text-left">
                     {res}
                   </span>
                 </div>
@@ -778,14 +680,14 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                 Perspectives et débouchés de carrière :
               </h4>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs sm:text-sm text-slate-950 dark:text-slate-50 font-bold leading-relaxed font-sans">
               Cette spécialité de pointe ouvre des perspectives de carrière immédiates au plan national et international :
             </p>
             <div className="space-y-2 pt-1">
               {data.opportunities.map((opp, opIdx) => (
                 <div key={opIdx} className="p-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-start space-x-2 hover:border-brand-emerald/30 transition-all">
                   <Briefcase className="w-3.5 h-3.5 text-brand-emerald shrink-0 mt-0.5" />
-                  <span className="text-[10.5px] font-bold text-slate-800 dark:text-slate-200 text-left leading-snug">
+                  <span className="text-[11.5px] font-extrabold text-slate-950 dark:text-slate-50 text-left leading-snug">
                     {opp}
                   </span>
                 </div>
@@ -809,7 +711,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald mr-2" />
                     {axe.label}
                   </span>
-                  <p className="text-[10px] text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                  <p className="text-[11px] text-slate-950 dark:text-slate-50 font-semibold leading-relaxed text-justify">
                     {axe.value}
                   </p>
                 </div>
@@ -863,6 +765,7 @@ interface FormationsProps {
   setSelectedDomainId: (id: string | null) => void;
   setActiveTab: (tab: string) => void;
   defaultSubTab?: 'domains' | 'axes' | 'certifications';
+  formations?: Formation[];
 }
 
 const domainIllustrations: Record<string, string> = {
@@ -887,10 +790,10 @@ const ROMAN_THEMATICS = [
   "VIII. ACCOMPAGNEMENT TECHNIQUE ET INSTITUTIONNEL"
 ];
 
-export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab }: FormationsProps) {
+export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS }: FormationsProps) {
   // Determine if outer routing requires a specific tab or selection
   const matchedFormation = selectedDomainId
-    ? FORMATIONS.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
+    ? formations.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
     : null;
   const isOuterCert = !!matchedFormation;
   const matchedOuterDomain = selectedDomainId && !matchedFormation
@@ -943,7 +846,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       setSelectedFormation(null);
     } else {
       const foundFormation = selectedDomainId
-        ? FORMATIONS.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
+        ? formations.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
         : null;
 
       if (foundFormation) {
@@ -960,6 +863,32 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       }
     }
   }, [selectedDomainId]);
+
+  // Handle specialty selection from the header's brown sub-navigation band
+  useEffect(() => {
+    const handleSelectSpecialty = (e: Event) => {
+      const customEvent = e as CustomEvent<{ domainId: string; index: number }>;
+      if (customEvent && customEvent.detail) {
+        const { domainId, index } = customEvent.detail;
+        const found = DOMAINS_INTERVENTION.find(d => d.id === domainId);
+        if (found) {
+          setActiveSubTab('domains');
+          setSelectedDomainObj(found);
+          setActiveSubIdx(index);
+          
+          setTimeout(() => {
+            const el = document.getElementById('domain-specialties-header');
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }, 150);
+        }
+      }
+    };
+
+    window.addEventListener('select-specialty', handleSelectSpecialty);
+    return () => window.removeEventListener('select-specialty', handleSelectSpecialty);
+  }, []);
 
   // Filters state for catalog
   const [searchQuery, setSearchQuery] = useState('');
@@ -1267,7 +1196,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   };
 
   // Filter certified courses
-  const filteredFormations = FORMATIONS.filter(f => {
+  const filteredFormations = formations.filter(f => {
     const matchesSearch = f.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           f.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -1294,21 +1223,12 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   };
 
   return (
-    <div id="formations-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="formations-view" className="pt-6 pb-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Breadcrumbs Navigation */}
-        <div className="mb-6">
-          <nav className="flex text-[10px] sm:text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-            <span>CICEXF</span>
-            <span className="mx-2">/</span>
-            <span className="text-brand-emerald">Académie &amp; Ingénierie de Formation</span>
-          </nav>
-        </div>
-
         {/* -------------------- DUAL TAB NAVIGATION -------------------- */}
         {!selectedFormation && !selectedDomainObj && (
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-12 space-y-4">
+          <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-6 space-y-3">
             <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
               Académie d'Excellence CICEXF
             </h1>
@@ -1325,11 +1245,11 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
         {/*                           SUB-TAB 1: DOMAINS VIEW                          */}
         {/* -------------------------------------------------------------------------- */}
         {activeSubTab === 'domains' && (
-          <div className="space-y-12">
+          <div className="space-y-8">
             
             {/* 1.1 List of Training Domains (If none selected) */}
             {!selectedDomainObj ? (
-              <div className="space-y-10 animate-in fade-in duration-300">
+              <div className="space-y-8 animate-in fade-in duration-300">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {DOMAINS_INTERVENTION.map((domain, index) => {
                     // Skip or include all based on index
@@ -1342,32 +1262,34 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-emerald/40 transition-all flex flex-col justify-between cursor-pointer group h-full relative overflow-hidden"
                       >
                         {/* Domain Cover Image */}
-                        <div className="relative h-44 w-full overflow-hidden">
+                        <div className="relative h-48 w-full overflow-hidden">
                           <img
                             src={domain.subDomains[0]?.imageUrl || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80"}
                             alt={domain.title}
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
                           
-                          {/* Elegant corner index number */}
-                          <div className="absolute top-4 right-4 font-mono font-bold text-xs text-white bg-slate-900/65 backdrop-blur-md px-2.5 py-1 rounded-lg">
-                            {displayNum}
+                          {/* Title and Badge on image */}
+                          <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
+                            <span className="self-start font-mono font-bold text-[9px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                              Domaine {displayNum}
+                            </span>
+                            <h3 className="font-display font-extrabold text-[12px] sm:text-[13.5px] text-white leading-tight drop-shadow-md">
+                              {domain.title}
+                            </h3>
                           </div>
-                          
+
                           {/* Floating Icon */}
-                          <div className="absolute -bottom-5 left-6 p-3 bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800 text-brand-emerald group-hover:bg-brand-emerald group-hover:text-white transition-all shadow-md">
-                            {renderIcon(domain.iconName, "w-6 h-6")}
+                          <div className="absolute top-4 left-4 p-2 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 text-white shadow-sm">
+                            {renderIcon(domain.iconName, "w-4 h-4")}
                           </div>
                         </div>
 
-                        <div className="p-6 pt-8 space-y-4 flex-grow flex flex-col justify-between">
+                        <div className="p-6 flex-grow flex flex-col justify-between">
                           <div className="space-y-2">
-                            <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white leading-snug group-hover:text-brand-emerald transition-colors line-clamp-2">
-                              {domain.title}
-                            </h3>
-                            <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans leading-relaxed line-clamp-3 text-justify">
+                            <p className="text-[11px] text-slate-650 dark:text-slate-350 font-sans leading-relaxed line-clamp-3 text-justify">
                               {domain.shortDescription}
                             </p>
                           </div>
@@ -1408,34 +1330,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             ) : (
               // 1.2 Detailed view for selected General Training Domain
               <div className="space-y-12 animate-in fade-in duration-300 font-sans">
-                {/* Back Link & Direct Dropdown Navigation */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm">
-                  <button
-                    onClick={handleBackToDomains}
-                    id="btn-back-to-domains"
-                    className="inline-flex items-center space-x-2 text-xs font-bold text-slate-700 dark:text-slate-350 hover:text-brand-emerald transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>Retourner aux Domaines de Formation</span>
-                  </button>
-
-                  <div className="flex items-center space-x-2 w-full md:w-auto">
-                    <span className="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider shrink-0">Passer au domaine :</span>
-                    <select
-                      value={selectedDomainObj.id}
-                      onChange={(e) => {
-                        const found = DOMAINS_INTERVENTION.find(d => d.id === e.target.value);
-                        if (found) handleSelectDomainObj(found);
-                      }}
-                      className="w-full md:w-64 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 focus:border-brand-emerald outline-none cursor-pointer"
-                    >
-                      {DOMAINS_INTERVENTION.map((domain) => (
-                        <option key={domain.id} value={domain.id}>{domain.title}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
+                
                 {/* Beautiful Modern Domain Hero Header with top image banner */}
                 <div className="relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800">
                   <img
@@ -1459,7 +1354,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                   <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/50 dark:border-slate-800 shadow-sm flex flex-col justify-center">
                     <h3 className="text-xs uppercase font-extrabold tracking-widest text-brand-emerald mb-2">Présentation générale</h3>
-                    <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-sans font-medium leading-relaxed text-justify">
+                    <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
                       {selectedDomainObj.description}
                     </p>
                   </div>
@@ -1496,6 +1391,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                       {selectedDomainObj.subDomains.map((sub, sIdx) => (
                         <div
                           key={sIdx}
+                          id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
                           onClick={() => {
                             setActiveSubIdx(sIdx);
                             const el = document.getElementById('domain-specialties-header');
@@ -1527,10 +1423,6 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                               {sub.title}
                             </h3>
 
-                            <p className="text-[11px] text-slate-350 line-clamp-2 leading-relaxed font-sans font-medium text-justify">
-                              {sub.description}
-                            </p>
-
                             <div className="pt-2.5 flex items-center justify-between border-t border-white/10 mt-1">
                               <span className="text-[9.5px] text-brand-emerald font-bold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform duration-300">
                                 <span>Découvrir la spécialité</span>
@@ -1548,7 +1440,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     </div>
                   ) : (
                     /* Active Split Screen View */
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-stretch animate-in fade-in duration-300 lg:h-[880px]">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-stretch animate-in fade-in duration-300">
                       {/* Left side: Wide View of the Selected Specialty */}
                       <div className="lg:col-span-8 flex flex-col h-full min-h-0">
                         <div className="flex items-center justify-between mb-4 shrink-0">
@@ -1568,12 +1460,17 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             setCorpInterest={setCorpInterest}
                             renderIcon={renderIcon}
                             isLarge={true}
+                            onSelectDomain={(domain: any) => {
+                              setSelectedDomainObj(domain);
+                              setActiveSubIdx(0);
+                            }}
+                            currentDomainId={selectedDomainObj.id}
                           />
                         </div>
                       </div>
 
                       {/* Right side: specialties list and form in a unified height-matched column */}
-                      <div className="lg:col-span-4 flex flex-col h-full min-h-0 gap-4 lg:overflow-y-auto pr-1.5 scrollbar-thin">
+                      <div className="lg:col-span-4 flex flex-col h-full min-h-0 gap-4">
                         
                         {/* Spécialités list card */}
                         <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 shadow-sm space-y-3 shrink-0">
@@ -1586,7 +1483,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             </p>
                           </div>
 
-                          <div className="space-y-2 lg:max-h-[220px] lg:overflow-y-auto scrollbar-thin pr-0.5">
+                          <div className="space-y-2">
                             {selectedDomainObj.subDomains.map((sub, sIdx) => {
                               const isCurrent = sIdx === activeSubIdx;
                               return (
@@ -2102,7 +1999,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                     {sub.title.replace(/^\d+\.\s*/, '')}
                                   </h4>
                                   {!isExpanded && (
-                                    <p className="text-xs text-slate-550 dark:text-slate-400 font-sans line-clamp-1">
+                                    <p className="text-xs sm:text-sm text-black dark:text-white font-bold font-sans line-clamp-1">
                                       {sub.description}
                                     </p>
                                   )}
@@ -2139,7 +2036,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                         <span className="block text-[10px] font-extrabold text-brand-emerald uppercase tracking-wider">
                                           Présentation Générale de l'Axe :
                                         </span>
-                                        <p className="text-xs sm:text-[13px] text-slate-700 dark:text-slate-350 leading-relaxed font-sans text-justify">
+                                        <p className="text-sm sm:text-base text-black dark:text-white leading-relaxed font-sans text-justify font-bold">
                                           {sub.description}
                                         </p>
                                       </div>
@@ -2150,7 +2047,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                         </span>
                                         <ul className="space-y-1.5 font-sans text-xs">
                                           {axisData.objectives.map((obj: string, oIdx: number) => (
-                                            <li key={oIdx} className="flex items-start text-slate-600 dark:text-slate-400">
+                                            <li key={oIdx} className="flex items-start text-black dark:text-white">
                                               <span className="text-brand-emerald mr-2 mt-0.5">•</span>
                                               <span className="leading-relaxed text-[11.5px]">{obj}</span>
                                             </li>
@@ -2164,7 +2061,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                         </span>
                                         <ul className="space-y-1.5 font-sans text-xs">
                                           {axisData.results.map((res: string, rIdx: number) => (
-                                            <li key={rIdx} className="flex items-start text-slate-600 dark:text-slate-400">
+                                            <li key={rIdx} className="flex items-start text-black dark:text-white">
                                               <span className="text-brand-blue mr-2 mt-0.5">✓</span>
                                               <span className="leading-relaxed text-[11.5px]">{res}</span>
                                             </li>
@@ -2182,7 +2079,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                           </span>
                                           <div className="space-y-1.5 text-xs">
                                             {sub.keyPoints.map((kp: string, kpIdx: number) => (
-                                              <div key={kpIdx} className="flex items-start text-slate-700 dark:text-slate-350 bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800 p-2 rounded-xl">
+                                              <div key={kpIdx} className="flex items-start text-black dark:text-white bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800 p-2 rounded-xl">
                                                 <CheckSquare className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0 mt-0.5" />
                                                 <span className="leading-snug text-[11px] font-semibold">{kp}</span>
                                               </div>
@@ -2197,7 +2094,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                         </span>
                                         <ul className="space-y-1.5 font-sans text-xs">
                                           {axisData.opportunities.map((opp: string, pIdx: number) => (
-                                            <li key={pIdx} className="flex items-start text-slate-600 dark:text-slate-400">
+                                            <li key={pIdx} className="flex items-start text-black dark:text-white">
                                               <span className="text-slate-400 mr-2 mt-0.5">»</span>
                                               <span className="leading-relaxed text-[11px]">{opp}</span>
                                             </li>

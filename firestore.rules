@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper to check if the authenticated user is the designated administrator
+    function isAdmin() {
+      return request.auth != null && request.auth.token.email == 'elearningciv@gmail.com';
+    }
+
+    // Visits collection
+    match /visits/{visitId} {
+      allow read, write: if true;
+    }
+
+    // Subscribers collection
+    match /subscribers/{subscriberId} {
+      allow read, write: if true;
+    }
+
+    // Formations (Dynamic course listings)
+    match /formations/{formationId} {
+      allow read, write: if true;
+    }
+
+    // Blog Posts / Actualités (Dynamic publications)
+    match /blog_posts/{postId} {
+      allow read, write: if true;
+    }
+
+    // Partners (Dynamic company trust logos)
+    match /partners/{partnerId} {
+      allow read, write: if true;
+    }
+  }
+}

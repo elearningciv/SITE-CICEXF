@@ -1,10 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Camera, Layers, Award, Users, CheckCircle, ChevronRight, X, Play, Quote, Star, MessageSquare } from 'lucide-react';
 import { PROJECTS, TESTIMONIALS } from '../data';
 
-export default function Realisations() {
+interface RealisationsProps {
+  selectedDomainId?: string | null;
+  setSelectedDomainId?: (id: string | null) => void;
+}
+
+export default function Realisations({ selectedDomainId, setSelectedDomainId }: RealisationsProps) {
   const [activeCaseStudy, setActiveCaseStudy] = useState<string>('p1');
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedDomainId) {
+      if (selectedDomainId === 'ing-formation' || selectedDomainId === 'data-gouvernance') {
+        setActiveCaseStudy('p3');
+      } else if (selectedDomainId === 'ing-territoriale' || selectedDomainId === 'ing-informatique') {
+        setActiveCaseStudy('p2');
+      } else {
+        setActiveCaseStudy('p1');
+      }
+    }
+  }, [selectedDomainId]);
 
   const selectedProject = PROJECTS.find(p => p.id === activeCaseStudy) || PROJECTS[0];
 
@@ -86,7 +103,14 @@ export default function Realisations() {
             {PROJECTS.map(proj => (
               <button
                 key={proj.id}
-                onClick={() => setActiveCaseStudy(proj.id)}
+                onClick={() => {
+                  setActiveCaseStudy(proj.id);
+                  if (setSelectedDomainId) {
+                    if (proj.id === 'p1') setSelectedDomainId('ing-financiere');
+                    else if (proj.id === 'p2') setSelectedDomainId('ing-territoriale');
+                    else if (proj.id === 'p3') setSelectedDomainId('ing-formation');
+                  }
+                }}
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                   activeCaseStudy === proj.id
                     ? 'bg-brand-blue text-white shadow dark:bg-brand-emerald dark:text-white'

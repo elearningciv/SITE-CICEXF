@@ -1,13 +1,24 @@
 import { useState, useEffect } from 'react';
 import { ArrowRight, BookOpen, Award, Users, FileText, CheckCircle2, Star, Quote, ChevronRight, Zap, Target, TrendingUp, Cpu } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION, TESTIMONIALS, PARTNERS, BLOG_POSTS } from '../data';
+import { Formation, BlogPost, Partner } from '../types';
+import Partners from './Partners';
 
 interface HomeProps {
   setActiveTab: (tab: string) => void;
   setSelectedDomainId: (id: string | null) => void;
+  formations?: Formation[];
+  blogPosts?: BlogPost[];
+  partners?: Partner[];
 }
 
-export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
+export default function Home({ 
+  setActiveTab, 
+  setSelectedDomainId,
+  formations = FORMATIONS,
+  blogPosts = BLOG_POSTS,
+  partners = PARTNERS
+}: HomeProps) {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
   // Counter states to simulate count-up animation
@@ -64,7 +75,7 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
             <span className="text-[11px] font-bold tracking-wider uppercase text-slate-200">Cabinet Certifié &amp; International</span>
           </div>
 
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] max-w-5xl mx-auto">
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] max-w-5xl mx-auto text-white">
             Des solutions <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] to-brand-emerald">innovantes</span> pour renforcer les compétences, accompagner les organisations et accélérer le développement durable.
           </h1>
 
@@ -104,63 +115,66 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             
             {/* Pole 1: Consultance */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 relative group overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-brand-blue"></div>
-              <div className="w-12 h-12 bg-blue-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-brand-blue mb-6 group-hover:scale-110 transition-transform">
-                <Target className="w-6 h-6" />
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Target className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
+                  Pôle Consultance
+                </h3>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
+                  Nous accompagnons les gouvernements, communes, entreprises et ONG dans la formulation stratégique de politiques, l'analyse d'impact et la structuration organisationnelle agile.
+                </p>
               </div>
-              <h3 className="font-display text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Pôle Consultance
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6 font-sans">
-                Nous accompagnons les gouvernements, communes, entreprises et ONG dans la formulation stratégique de politiques, l'analyse d'impact et la structuration organisationnelle agile.
-              </p>
               <button
                 onClick={() => handleDomainClick('ingenierie-formation')}
-                className="text-brand-blue dark:text-blue-400 font-bold text-xs flex items-center group-hover:translate-x-1.5 transition-transform"
+                className="text-brand-blue dark:text-blue-400 font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
               >
                 Explorer la consultance <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
 
             {/* Pole 2: Expertise */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 relative group overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-brand-emerald"></div>
-              <div className="w-12 h-12 bg-emerald-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-brand-emerald mb-6 group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-6 h-6" />
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <TrendingUp className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
+                  Pôle Expertise Technique
+                </h3>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
+                  Audit financier de pointe, ingénierie de projets complexes, diagnostics d'impact environnemental QHSE et modélisation géospatiale (SIG) de territoires.
+                </p>
               </div>
-              <h3 className="font-display text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Pôle Expertise Technique
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6 font-sans">
-                Audit financier de pointe, ingénierie de projets complexes, diagnostics d'impact environnemental QHSE et modélisation géospatiale (SIG) de territoires.
-              </p>
               <button
                 onClick={() => handleDomainClick('ingenierie-financiere')}
-                className="text-brand-emerald dark:text-brand-emerald-light font-bold text-xs flex items-center group-hover:translate-x-1.5 transition-transform"
+                className="text-brand-emerald dark:text-brand-emerald-light font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
               >
                 Découvrir nos expertises <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
 
             {/* Pole 3: Formation */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 relative group overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-brand-blue to-brand-emerald"></div>
-              <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center text-brand-emerald mb-6 group-hover:scale-110 transition-transform">
-                <BookOpen className="w-6 h-6 text-indigo-500" />
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <BookOpen className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
+                  Pôle Formation
+                </h3>
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
+                  Des programmes de haut niveau, certifiants et axés sur les compétences pratiques. Formez vos collaborateurs à la data science, au QHSE et à la finance décisionnelle.
+                </p>
               </div>
-              <h3 className="font-display text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Pôle Formation
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-6 font-sans">
-                Des programmes de haut niveau, certifiants et axés sur les compétences pratiques. Formez vos collaborateurs à la data science, au QHSE et à la finance décisionnelle.
-              </p>
               <button
                 onClick={() => handleNavClick('formations')}
-                className="text-indigo-500 dark:text-indigo-400 font-bold text-xs flex items-center group-hover:translate-x-1.5 transition-transform"
+                className="text-indigo-500 dark:text-indigo-400 font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
               >
                 Accéder au catalogue <ChevronRight className="w-4 h-4 ml-1" />
               </button>
@@ -226,7 +240,7 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
               <div className="absolute -inset-2 bg-gradient-to-r from-brand-blue to-brand-emerald rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity"></div>
               <div className="relative bg-slate-100 rounded-2xl overflow-hidden aspect-[4/3] shadow-lg">
                 <img
-                  src={FORMATIONS[0].featuredImage}
+                  src={formations[0]?.featuredImage || FORMATIONS[0].featuredImage}
                   alt="Formation Data Analyst d'Excellence CICEXF"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -306,93 +320,93 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             
             {/* Card 1: Expertise reconnue */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <Award className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Award className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Expertise internationale reconnue
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Une équipe pluridisciplinaire d'universitaires et d'experts de haut niveau rompus aux exigences des institutions multilatérales.
                 </p>
               </div>
             </div>
 
             {/* Card 2: Consultants certifiés */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <Users className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Users className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Consultants certifiés de l'industrie
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Tous nos formateurs et experts métiers détiennent des certifications de niveau mondial (ISO, PMP, AWS, Microsoft, ITIL).
                 </p>
               </div>
             </div>
 
             {/* Card 3: Approche pratique */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <Zap className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Zap className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Approche pratique orientée résultats
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Pas de cours magistraux stériles. Notre pédagogie repose sur l'apprentissage par résolution de cas d'entreprise concrets.
                 </p>
               </div>
             </div>
 
             {/* Card 4: Accompagnement personnalisé */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <CheckCircle2 className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <CheckCircle2 className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Accompagnement personnalisé permanent
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Nous suivons chaque auditeur et chaque organisation étape par étape, y compris dans le cadre du support post-intervention.
                 </p>
               </div>
             </div>
 
             {/* Card 5: Innovation */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <Cpu className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Cpu className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Innovation technologique continue
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Nous intégrons en continu l'intelligence artificielle générative et les derniers outils numériques d'analyse.
                 </p>
               </div>
             </div>
 
             {/* Card 6: Excellence */}
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-200/50 dark:border-slate-800 flex items-start space-x-4">
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 dark:bg-slate-800 shrink-0 flex items-center justify-center text-brand-emerald">
-                <Award className="w-5 h-5" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white">
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
+              <div className="flex-grow flex flex-col items-center justify-start w-full">
+                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
+                  <Award className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+                </div>
+                <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Culture de l'Excellence absolue
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
+                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed">
                   Inspiré par les standards des plus grands cabinets mondiaux, nous appliquons une rigueur et une redevabilité totales.
                 </p>
               </div>
@@ -409,7 +423,7 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
             Ils nous font confiance à l'échelle internationale
           </p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center opacity-70">
-            {PARTNERS.map(partner => (
+            {partners.map(partner => (
               <div key={partner.id} className="flex flex-col items-center space-y-2 grayscale hover:grayscale-0 transition-all cursor-pointer">
                 <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex items-center justify-center p-1.5">
                   <img src={partner.logoUrl} alt={partner.name} referrerPolicy="no-referrer" className="object-cover w-full h-full rounded" />
@@ -501,9 +515,9 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {BLOG_POSTS.slice(0, 3).map(post => (
-              <article key={post.id} className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl overflow-hidden border border-slate-200/40 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full group">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {blogPosts.slice(0, 3).map(post => (
+              <article key={post.id} className="bg-slate-50 dark:bg-slate-900/60 rounded-xl overflow-hidden border border-slate-200/40 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full group">
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
                     src={post.imageUrl}
@@ -511,13 +525,13 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute top-4 left-4 bg-brand-emerald text-white text-[10px] font-bold px-2.5 py-1 rounded">
+                  <div className="absolute top-3 left-3 bg-brand-emerald text-white text-[9px] font-bold px-2 py-0.5 rounded">
                     {post.category}
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-grow space-y-3">
-                  <span className="text-[10px] font-bold text-slate-400">{post.date} • {post.readTime}</span>
-                  <h3 className="font-display text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-blue-400 line-clamp-2 transition-colors">
+                <div className="p-4.5 flex flex-col flex-grow space-y-2">
+                  <span className="text-[9px] font-bold text-slate-400">{post.date} • {post.readTime}</span>
+                  <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-blue-400 line-clamp-2 transition-colors">
                     {post.title}
                   </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 font-sans leading-relaxed flex-grow">
@@ -581,10 +595,15 @@ export default function Home({ setActiveTab, setSelectedDomainId }: HomeProps) {
         </div>
       </section>
 
+      {/* Partners section integrated into Accueil page */}
+      <div id="partners-section" className="border-t border-slate-100 dark:border-slate-900">
+        <Partners />
+      </div>
+
       {/* 10. Floating Prompt Footer Banner to Call Action */}
       <section className="bg-gradient-to-r from-brand-blue-dark via-slate-900 to-slate-950 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <h3 className="font-display text-2xl font-extrabold">
+          <h3 className="font-display text-2xl font-extrabold text-white">
             Accélérez la Transformation de Votre Organisation Dès Aujourd'hui
           </h3>
           <p className="text-xs text-slate-300 max-w-2xl mx-auto leading-relaxed">

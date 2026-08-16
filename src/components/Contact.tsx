@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Facebook, Linkedin, Youtube, Send, MessageSquare, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { trackSubscription } from '../lib/tracker';
 
 interface ContactProps {
   preselectedDomain: string; // Preselected category ('Formation', 'Consultance', 'Expertise', etc.)
@@ -50,6 +51,9 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
     } else {
       setErrors({});
       setSuccess(true);
+      
+      // Save subscription and identity in tracker
+      trackSubscription(email, true);
       
       // Simulate API send
       setTimeout(() => {
