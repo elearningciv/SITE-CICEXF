@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Facebook, Linkedin, Youtube, Send, MessageSquare, ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
 import { trackSubscription } from '../lib/tracker';
+import { saveProspect } from '../lib/prospects';
 
 interface ContactProps {
   preselectedDomain: string; // Preselected category ('Formation', 'Consultance', 'Expertise', etc.)
@@ -54,6 +55,17 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
       
       // Save subscription and identity in tracker
       trackSubscription(email, true);
+
+      // Enregistrer le prospect dans la base pour export Excel administrateur
+      saveProspect({
+        name,
+        email,
+        phone,
+        type: 'Contact / Renseignement',
+        target: category || 'Demande Générale',
+        notes: message,
+        channel: 'En ligne'
+      });
       
       // Simulate API send
       setTimeout(() => {
@@ -67,31 +79,31 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
   };
 
   return (
-    <div id="contact-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="contact-view" className="py-6 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page title banner */}
-        <div className="mb-12">
-          <nav className="flex text-xs font-semibold text-slate-400 mb-2">
+        <div className="mb-6">
+          <nav className="flex text-xs font-semibold text-slate-400 mb-1.5">
             <span>CICEXF</span>
             <span className="mx-2">/</span>
             <span className="text-brand-emerald">Contact</span>
           </nav>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Contactez Notre Secrétariat Technique
           </h1>
-          <div className="w-16 h-1.5 bg-brand-emerald mt-4 rounded-full"></div>
-          <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 max-w-2xl font-semibold uppercase tracking-widest">
+          <div className="w-16 h-1 bg-brand-emerald mt-2 rounded-full"></div>
+          <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 max-w-2xl font-semibold uppercase tracking-widest">
             Entrez en relation avec nos conseillers ou demandez une cotation d'expertise
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Left Column: Contact Coordinates & Channels */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-5 space-y-6">
             
-            <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm space-y-6">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
               <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 Coordonnées Officielles du Siège
               </h3>
@@ -105,7 +117,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-slate-200">Adresse du Siège :</h4>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-slate-600 dark:text-slate-300 mt-1">
                       Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, 3ème étage, Abidjan, Côte d'Ivoire
                     </p>
                   </div>
@@ -118,11 +130,11 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-slate-200">Numéros Directs :</h4>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
-                      Secrétariat : <a href="tel:+2250574222246" className="hover:underline text-slate-700 dark:text-slate-300 font-semibold">+225 05 74 22 22 46</a>
+                    <p className="text-slate-600 dark:text-slate-300 mt-1">
+                      Secrétariat : <a href="tel:+2250574222246" className="hover:underline text-slate-800 dark:text-slate-200 font-bold">+225 05 74 22 22 46</a>
                     </p>
-                    <p className="text-slate-500 dark:text-slate-400 mt-0.5">
-                      Admissions : <a href="tel:+2250701970065" className="hover:underline text-slate-700 dark:text-slate-300 font-semibold">+225 07 01 97 00 65</a>
+                    <p className="text-slate-600 dark:text-slate-300 mt-0.5">
+                      Admissions : <a href="tel:+2250701970065" className="hover:underline text-slate-800 dark:text-slate-200 font-bold">+225 07 01 97 00 65</a>
                     </p>
                   </div>
                 </div>
@@ -134,8 +146,8 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-slate-200">Messagerie Électronique :</h4>
-                    <p className="text-slate-500 dark:text-slate-400 mt-1">
-                      <a href="mailto:elearningciv@gmail.com" className="hover:underline font-semibold break-all text-slate-700 dark:text-slate-300">elearningciv@gmail.com</a>
+                    <p className="text-slate-600 dark:text-slate-300 mt-1">
+                      <a href="mailto:elearningciv@gmail.com" className="hover:underline font-bold break-all text-slate-800 dark:text-slate-200">elearningciv@gmail.com</a>
                     </p>
                   </div>
                 </div>
@@ -207,13 +219,13 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
           </div>
 
           {/* Right Column: Smart Contact Form */}
-          <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-md">
+          <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 sm:p-7 shadow-md">
             
-            <div className="border-b border-slate-100 dark:border-slate-800 pb-4 mb-6">
+            <div className="border-b border-slate-100 dark:border-slate-800 pb-3 mb-5">
               <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 Soumettre un Formulaire de Demande
               </h3>
-              <p className="text-[11px] text-slate-400 font-sans mt-1">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-0.5">
                 Indiquez le service concerné afin que votre message soit routé vers le bon pôle d'ingénierie (Consultance, Expertise, Formation).
               </p>
             </div>
@@ -224,7 +236,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                   <CheckCircle2 className="w-5 h-5 text-brand-emerald" />
                   <span className="font-bold">Demande d'Accompagnement Reçue !</span>
                 </div>
-                <p className="font-sans leading-relaxed text-[11px] text-slate-600 dark:text-slate-400">
+                <p className="font-sans leading-relaxed text-[11px] text-slate-600 dark:text-slate-300">
                   Merci <strong>{name}</strong>. Votre message a été enregistré avec succès et routé vers le pôle <strong>{category}</strong> de notre cabinet. Un expert technique vous contactera par email (<strong>{email}</strong>) ou téléphone sous un délai de 24 heures ouvrées.
                 </p>
                 <button
@@ -240,7 +252,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name field */}
                   <div className="space-y-1.5">
-                    <label className="block font-bold text-slate-600 dark:text-slate-350">Nom complet ou Institution :</label>
+                    <label className="block font-bold text-slate-700 dark:text-slate-200">Nom complet ou Institution :</label>
                     <input
                       id="contact-input-name"
                       type="text"
@@ -260,7 +272,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
 
                   {/* Phone field */}
                   <div className="space-y-1.5">
-                    <label className="block font-bold text-slate-600 dark:text-slate-350">Numéro de Téléphone :</label>
+                    <label className="block font-bold text-slate-700 dark:text-slate-200">Numéro de Téléphone :</label>
                     <input
                       id="contact-input-phone"
                       type="tel"
@@ -281,7 +293,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
 
                 {/* Email field */}
                 <div className="space-y-1.5">
-                  <label className="block font-bold text-slate-600 dark:text-slate-350">Adresse de Courrier Électronique :</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-200">Adresse de Courrier Électronique :</label>
                   <input
                     id="contact-input-email"
                     type="email"
@@ -301,7 +313,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
 
                 {/* Subject selection (Formation, Consultance, Expertise, Partenariat ou Autre) */}
                 <div className="space-y-1.5">
-                  <label className="block font-bold text-slate-600 dark:text-slate-350">Objet principal de la demande :</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-200">Objet principal de la demande :</label>
                   <select
                     id="contact-input-subject"
                     value={category}
@@ -318,11 +330,11 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
 
                 {/* Message text area */}
                 <div className="space-y-1.5">
-                  <label className="block font-bold text-slate-600 dark:text-slate-350">Description de votre besoin :</label>
+                  <label className="block font-bold text-slate-700 dark:text-slate-200">Description de votre besoin :</label>
                   <textarea
                     id="contact-input-message"
                     required
-                    rows={5}
+                    rows={4}
                     placeholder="Veuillez décrire brièvement votre situation, les défis actuels de votre structure et les résultats que vous attendez."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}

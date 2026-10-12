@@ -54,6 +54,7 @@ export interface Formation {
   program?: { module: string; details: string[] }[];
   sessions?: TrainingSession[];
   faq?: FAQItem[];
+  createdAt?: any;
 }
 
 export interface Project {

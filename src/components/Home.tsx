@@ -1,8 +1,13 @@
-import { useState, useEffect } from 'react';
-import { ArrowRight, BookOpen, Award, Users, FileText, CheckCircle2, Star, Quote, ChevronRight, Zap, Target, TrendingUp, Cpu } from 'lucide-react';
-import { FORMATIONS, DOMAINS_INTERVENTION, TESTIMONIALS, PARTNERS, BLOG_POSTS } from '../data';
-import { Formation, BlogPost, Partner } from '../types';
-import Partners from './Partners';
+import { useState, useEffect, useRef } from 'react';
+import { 
+  ArrowRight, BookOpen, Award, Users, CheckCircle2, 
+  ChevronRight, Zap, Target, TrendingUp, Cpu, MapPin, Building2, 
+  Compass, ShieldCheck, Layers, Calendar, Clock, Sparkles, AlertCircle
+} from 'lucide-react';
+import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS } from '../data';
+import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
+import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.jpg';
+import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.jpg';
 
 interface HomeProps {
   setActiveTab: (tab: string) => void;
@@ -10,6 +15,7 @@ interface HomeProps {
   formations?: Formation[];
   blogPosts?: BlogPost[];
   partners?: Partner[];
+  accompagnements?: DomainIntervention[];
 }
 
 export default function Home({ 
@@ -17,36 +23,59 @@ export default function Home({
   setSelectedDomainId,
   formations = FORMATIONS,
   blogPosts = BLOG_POSTS,
-  partners = PARTNERS
+  partners = PARTNERS,
+  accompagnements = DOMAINS_INTERVENTION
 }: HomeProps) {
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
-
+  const currentDomains = accompagnements && accompagnements.length > 0 ? accompagnements : DOMAINS_INTERVENTION;
   // Counter states to simulate count-up animation
   const [professionalsFormed, setProfessionalsFormed] = useState(0);
   const [missionsCompleted, setMissionsCompleted] = useState(0);
   const [partnersCount, setPartnersCount] = useState(0);
   const [satisfactionRate, setSatisfactionRate] = useState(0);
+  const [hasCounted, setHasCounted] = useState(false);
+  const countersSectionRef = useRef<HTMLDivElement>(null);
 
+  // Trigger smooth count-up animation when user scrolls into the counters section
   useEffect(() => {
-    const duration = 2000;
-    const steps = 50;
-    const stepTime = duration / steps;
-    let step = 0;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !hasCounted) {
+          setHasCounted(true);
+          const duration = 2000;
+          const steps = 60;
+          const stepTime = duration / steps;
+          let step = 0;
 
-    const timer = setInterval(() => {
-      step++;
-      setProfessionalsFormed(Math.min(Math.floor((2000 / steps) * step), 2000));
-      setMissionsCompleted(Math.min(Math.floor((150 / steps) * step), 150));
-      setPartnersCount(Math.min(Math.floor((50 / steps) * step), 50));
-      setSatisfactionRate(Math.min(Math.floor((95 / steps) * step), 95));
+          const timer = setInterval(() => {
+            step++;
+            const progress = step / steps;
+            // Ease-out cubic animation for realistic acceleration and soft stop
+            const ease = 1 - Math.pow(1 - progress, 3);
+            setProfessionalsFormed(Math.round(2000 * ease));
+            setMissionsCompleted(Math.round(150 * ease));
+            setPartnersCount(Math.round(50 * ease));
+            setSatisfactionRate(Math.round(95 * ease));
 
-      if (step >= steps) {
-        clearInterval(timer);
-      }
-    }, stepTime);
+            if (step >= steps) {
+              setProfessionalsFormed(2000);
+              setMissionsCompleted(150);
+              setPartnersCount(50);
+              setSatisfactionRate(95);
+              clearInterval(timer);
+            }
+          }, stepTime);
+        }
+      },
+      { threshold: 0.15 }
+    );
 
-    return () => clearInterval(timer);
-  }, []);
+    if (countersSectionRef.current) {
+      observer.observe(countersSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasCounted]);
 
   const handleDomainClick = (id: string) => {
     setSelectedDomainId(id);
@@ -61,166 +90,155 @@ export default function Home({
 
   return (
     <div id="home-view" className="relative font-sans overflow-hidden">
-      {/* 1. Cinematic Hero Section */}
-      <section id="hero-banner" className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 bg-gradient-to-b from-[#020817] via-[#020817] to-[#020817]/90 text-white overflow-hidden">
-        {/* Dynamic decorative vector backgrounds */}
-        <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#009966 0.7px, transparent 0.7px)', backgroundSize: '24px 24px' }}></div>
-        <div className="absolute inset-0 grid-pattern opacity-10"></div>
-        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-brand-blue/30 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-emerald/20 rounded-full blur-3xl"></div>
+      {/* 1. Humanized Executive Hero Section */}
+      <section id="hero-banner" className="relative flex items-center pt-8 pb-7 sm:pt-10 sm:pb-8 bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+        {/* Subtle executive architectural backdrop */}
+        <div className="absolute inset-0 opacity-40 dark:opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#cbd5e1 0.7px, transparent 0.7px)', backgroundSize: '24px 24px' }}></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue/5 dark:bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-emerald/5 dark:bg-brand-emerald/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="inline-flex items-center space-x-2 bg-white/10 dark:bg-slate-800/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 mb-8 animate-in fade-in slide-in-from-top duration-700">
-            <span className="w-2 h-2 rounded-full bg-brand-emerald animate-pulse"></span>
-            <span className="text-[11px] font-bold tracking-wider uppercase text-slate-200">Cabinet Certifié &amp; International</span>
-          </div>
-
-          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] max-w-5xl mx-auto text-white">
-            Des solutions <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] to-brand-emerald">innovantes</span> pour renforcer les compétences, accompagner les organisations et accélérer le développement durable.
-          </h1>
-
-          <p className="mt-6 text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-sans font-light leading-relaxed">
-            Le <strong className="font-semibold text-white">CICEXF</strong> est le partenaire stratégique de référence internationale pour les institutions publiques, les entreprises privées et les professionnels exigeants en quête d'excellence.
-          </p>
-
-          <div className="mt-10 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button
-              id="hero-cta-formations"
-              onClick={() => handleNavClick('formations')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl text-sm font-bold tracking-wide transition-all text-white bg-gradient-to-r from-[#B84F3D] to-brand-emerald hover:shadow-lg hover:shadow-brand-emerald/20 hover:scale-[1.02] cursor-pointer"
-            >
-              Découvrir nos formations
-            </button>
-            <button
-              id="hero-cta-accompagnement"
-              onClick={() => handleNavClick('contact')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl text-sm font-bold tracking-wide transition-all text-white bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-slate-500 cursor-pointer"
-            >
-              Demander un accompagnement
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Key Business Poles (3 Cards) */}
-      <section id="business-poles" className="py-20 bg-slate-50 dark:bg-slate-900/40 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-display text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Une Synergie de 3 Pôles d'Activités Majeurs
-            </h2>
-            <div className="w-16 h-1 bg-brand-emerald mx-auto mt-4 rounded-full"></div>
-            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest">
-              L'expertise globale au service de votre performance
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-2 sm:py-3">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
             
-            {/* Pole 1: Consultance */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
-              <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Target className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
-                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
-                  Pôle Consultance
-                </h3>
-                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
-                  Nous accompagnons les gouvernements, communes, entreprises et ONG dans la formulation stratégique de politiques, l'analyse d'impact et la structuration organisationnelle agile.
-                </p>
+            {/* Left Column: Human Editorial Value Proposition */}
+            <div className="lg:col-span-7 space-y-4 text-left">
+              {/* Institutional Official Kicker */}
+              <div className="inline-flex items-center space-x-2 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 shadow-xs">
+                <ShieldCheck className="w-3.5 h-3.5 text-brand-emerald shrink-0" />
+                <span className="text-[10px] sm:text-[10.5px] font-bold tracking-wider uppercase text-black dark:text-white">
+                  Cabinet International d'Expertise &middot; Agrément N°25343/GTCA/RC/2025
+                </span>
               </div>
-              <button
-                onClick={() => handleDomainClick('ingenierie-formation')}
-                className="text-brand-blue dark:text-blue-400 font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
-              >
-                Explorer la consultance <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
+
+              {/* Authentic Human-Centered Headline */}
+              <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight leading-[1.15] text-black dark:text-white">
+                Développer le potentiel humain, structurer la gouvernance et accélérer la réussite de vos organisations.
+              </h1>
+
+              {/* Subtitle with Real Mission Proximity */}
+              <p className="text-xs sm:text-sm text-black dark:text-white max-w-2xl font-sans font-medium leading-relaxed">
+                Le <strong className="font-bold text-black dark:text-white">CICEXF</strong> réunit des experts de haut rang, des universitaires et des praticiens chevronnés pour accompagner les institutions publiques, les grandes entreprises et les bailleurs internationaux en Afrique de l'Ouest.
+              </p>
+
+              {/* CTAs */}
+              <div className="pt-1 flex flex-col sm:flex-row items-stretch sm:items-center space-y-2.5 sm:space-y-0 sm:space-x-3">
+                <button
+                  id="hero-cta-formations"
+                  onClick={() => handleNavClick('formations')}
+                  className="px-6 py-2.5 rounded-xl text-xs sm:text-[13px] font-bold tracking-wide transition-all text-white bg-brand-emerald hover:bg-brand-emerald-dark hover:shadow-lg hover:shadow-brand-emerald/25 hover:scale-[1.02] cursor-pointer flex items-center justify-center space-x-2 shadow-md"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Découvrir nos formations certifiantes</span>
+                </button>
+                <button
+                  id="hero-cta-accompagnement"
+                  onClick={() => handleNavClick('contact')}
+                  className="px-6 py-2.5 rounded-xl text-xs sm:text-[13px] font-bold tracking-wide transition-all text-white bg-brand-emerald hover:bg-brand-emerald-dark hover:shadow-lg hover:shadow-brand-emerald/25 hover:scale-[1.02] cursor-pointer flex items-center justify-center space-x-2 shadow-md"
+                >
+                  <Users className="w-4 h-4 text-white" />
+                  <span>Échanger avec un conseiller expert</span>
+                </button>
+              </div>
+
+              {/* Human Impact Badges Row */}
+              <div className="pt-3 border-t border-slate-200 dark:border-white/10 grid grid-cols-3 gap-3 text-black dark:text-white max-w-xl">
+                <div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-black dark:text-white">+2000</div>
+                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Cadres formés</div>
+                </div>
+                <div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-brand-emerald dark:text-brand-emerald-light">+150</div>
+                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Missions réussies</div>
+                </div>
+                <div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-amber-600 dark:text-amber-400">95%</div>
+                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Satisfaction client</div>
+                </div>
+              </div>
             </div>
 
-            {/* Pole 2: Expertise */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
-              <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <TrendingUp className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
+            {/* Right Column: Authentic Human Portrait Anchor */}
+            <div className="lg:col-span-5 relative flex justify-center">
+              <div className="relative w-full max-w-sm sm:max-w-md">
+                {/* Subtle warm glow frame */}
+                <div className="absolute -inset-2 bg-gradient-to-tr from-brand-emerald/15 to-brand-blue/15 rounded-3xl blur-xl opacity-70 pointer-events-none"></div>
+                
+                {/* Main Portrait Card */}
+                <div className="relative rounded-2xl overflow-hidden border-2 border-slate-200/80 dark:border-white/15 bg-slate-900 shadow-xl group">
+                  <img
+                    src={heroExecutiveImg}
+                    alt="Dr. Kouassi Marc-Aurèle - Directeur Général CICEXF"
+                    className="w-full h-[280px] sm:h-[320px] md:h-[340px] object-cover object-top group-hover:scale-103 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#021324] via-[#021324]/30 to-transparent"></div>
+                  
+                  {/* Executive Credential Overlay Box */}
+                  <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-slate-950/85 backdrop-blur-md border border-white/15 shadow-lg">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className="w-2 h-2 rounded-full bg-brand-emerald"></span>
+                      <span className="text-[9.5px] uppercase font-bold tracking-wider text-brand-emerald-light font-mono">
+                        Direction Générale &middot; Siège Abidjan
+                      </span>
+                    </div>
+                    <h3 className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
+                      Dr. Kouassi Marc-Aurèle
+                    </h3>
+                    <p className="text-[10.5px] text-slate-300 font-medium">
+                      Directeur Général &amp; Associé Gérant
+                    </p>
+                    <p className="text-[9.5px] italic text-slate-400 mt-1.5 border-t border-white/10 pt-1.5 leading-relaxed">
+                      &laquo; L'excellence technique n'a de valeur que si elle transforme durablement la trajectoire des hommes et des organisations. &raquo;
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
-                  Pôle Expertise Technique
-                </h3>
-                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
-                  Audit financier de pointe, ingénierie de projets complexes, diagnostics d'impact environnemental QHSE et modélisation géospatiale (SIG) de territoires.
-                </p>
               </div>
-              <button
-                onClick={() => handleDomainClick('ingenierie-financiere')}
-                className="text-brand-emerald dark:text-brand-emerald-light font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
-              >
-                Découvrir nos expertises <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
-            </div>
-
-            {/* Pole 3: Formation */}
-            <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group">
-              <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <BookOpen className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
-                <h3 className="text-brown-value font-display font-extrabold text-base sm:text-lg tracking-wider uppercase mb-2">
-                  Pôle Formation
-                </h3>
-                <p className="text-xs sm:text-[13px] text-black dark:text-slate-100 font-semibold leading-relaxed mb-4">
-                  Des programmes de haut niveau, certifiants et axés sur les compétences pratiques. Formez vos collaborateurs à la data science, au QHSE et à la finance décisionnelle.
-                </p>
-              </div>
-              <button
-                onClick={() => handleNavClick('formations')}
-                className="text-indigo-500 dark:text-indigo-400 font-bold text-xs flex items-center justify-center group-hover:translate-x-1 transition-transform border-t border-slate-100 dark:border-slate-800/60 w-full pt-3 mt-2"
-              >
-                Accéder au catalogue <ChevronRight className="w-4 h-4 ml-1" />
-              </button>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* 3. Simulated Count-Up Statistics Area */}
-      <section id="counters-section" className="py-16 bg-slate-900 dark:bg-[#003B6F]/10 text-white relative border-y border-white/5 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      {/* 2. Simulated Count-Up Statistics Area with white background */}
+      <section 
+        id="counters-section" 
+        ref={countersSectionRef}
+        className="py-5 sm:py-6 bg-white dark:bg-slate-900 relative border-b border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
             
-            <div className="space-y-2">
-              <h4 className="font-display text-4xl sm:text-5xl font-extrabold text-brand-emerald">
+            <div className="space-y-1">
+              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
                 +{professionalsFormed}
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
                 Professionnels formés de haut niveau
               </p>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="font-display text-4xl sm:text-5xl font-extrabold text-[#38bdf8]">
+            <div className="space-y-1">
+              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
                 +{missionsCompleted}
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
                 Missions d'envergure réalisées
               </p>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="font-display text-4xl sm:text-5xl font-extrabold text-brand-emerald">
+            <div className="space-y-1">
+              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
                 +{partnersCount}
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
                 Partenaires institutionnels et bailleurs
               </p>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="font-display text-4xl sm:text-5xl font-extrabold text-amber-400">
+            <div className="space-y-1">
+              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
                 {satisfactionRate}%
               </h4>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
                 Taux de satisfaction des participants
               </p>
             </div>
@@ -229,75 +247,86 @@ export default function Home({
         </div>
       </section>
 
-      {/* 4. Flagship Training Spotlight: Data Analyst */}
-      <section id="flagship-training-highlight" className="py-24 bg-white dark:bg-slate-950 relative">
+      {/* 4. Flagship Training Spotlight: Data Analyst (Immersion Humaine & Pratique) */}
+      <section id="flagship-training-highlight" className="py-10 bg-white dark:bg-slate-950 relative border-b border-slate-100 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             
-            {/* Visual Media with Badges */}
+            {/* Visual Media with Boardroom Consulting Team Photo */}
             <div className="lg:col-span-5 relative group">
-              <div className="absolute -inset-2 bg-gradient-to-r from-brand-blue to-brand-emerald rounded-2xl opacity-20 blur-xl group-hover:opacity-30 transition-opacity"></div>
-              <div className="relative bg-slate-100 rounded-2xl overflow-hidden aspect-[4/3] shadow-lg">
+              <div className="absolute -inset-2 bg-gradient-to-r from-brand-blue/20 to-brand-emerald/20 rounded-2xl opacity-40 blur-lg group-hover:opacity-60 transition-opacity"></div>
+              <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-[16/10] sm:aspect-[4/3] bg-slate-900 border border-slate-200/60 dark:border-slate-800">
                 <img
-                  src={formations[0]?.featuredImage || FORMATIONS[0].featuredImage}
-                  alt="Formation Data Analyst d'Excellence CICEXF"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  src={consultingTeamImg}
+                  alt="Équipe d'experts et apprenants en session d'analyse de données - CICEXF Abidjan"
+                  className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                 />
-                <div className="absolute top-4 left-4 bg-brand-blue-dark text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider">
-                  Formation Phare
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                <div className="absolute top-4 left-4 bg-[#002447] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md">
+                  Formation Phare &middot; Mentoring Direct
+                </div>
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <p className="text-[11px] font-bold text-white drop-shadow-sm">
+                    Atelier interactif en salle exécutive &middot; Siège CICEXF Abidjan
+                  </p>
+                  <p className="text-[9.5px] text-slate-300">
+                    Étude de cas sur des données réelles d'organisations ouest-africaines
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Information Column */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center space-x-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-brand-emerald dark:text-brand-emerald-light px-3 py-1 rounded-full text-xs font-bold">
-                <Cpu className="w-3.5 h-3.5" />
-                <span>Nouveau parcours d'excellence</span>
-              </div>
-
+            <div className="lg:col-span-7 space-y-5">
               <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight">
                 Data Analyst : Maîtrise complète de la collecte, de la préparation et de la visualisation des données
               </h2>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
-                Devenez l'expert technique dont toutes les organisations modernes ont besoin. Ce parcours unique de 6 semaines vous propulse de l'ingénierie de collecte mobile de terrain avec <strong>KoboCollect</strong> à l'automatisation par l'<strong>Intelligence Artificielle</strong>, en passant par <strong>Power Pivot (DAX)</strong> et <strong>Python</strong>.
+              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
+                Devenez l'expert technique incontournable dont toutes les organisations modernes ont besoin. Ce parcours de 6 semaines est dispensé par des <strong>consultants seniors en activité</strong>. Vous passez de l'ingénierie de collecte mobile sur le terrain avec <strong>KoboCollect</strong> à l'automatisation décisionnelle par l'<strong>Intelligence Artificielle</strong>, <strong>Power BI (DAX)</strong> et <strong>Python</strong>.
               </p>
 
-              <div className="grid grid-cols-2 gap-4 border-t border-slate-100 dark:border-slate-800 pt-6">
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Durée :</h4>
-                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1">6 semaines (120 heures)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-slate-100 dark:border-slate-800 pt-5">
+                <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Durée</h4>
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">6 semaines (120 h)</p>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Modalité :</h4>
-                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1">Hybride (Présentiel &amp; Zoom)</p>
+                <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Modalité</h4>
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">Hybride (Abidjan &amp; Zoom)</p>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Niveau :</h4>
-                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-1">Professionnel (Intermédiaire)</p>
+                <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Encadrement</h4>
+                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">Consultant Senior dédié</p>
                 </div>
-                <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tarif préférentiel :</h4>
-                  <p className="text-xs font-bold text-brand-emerald mt-1">450 000 FCFA (Facilités)</p>
+                <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
+                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tarif</h4>
+                  <p className="text-xs font-bold text-brand-emerald mt-0.5">450 000 FCFA (Facilités)</p>
                 </div>
               </div>
 
-              <div className="pt-4 flex flex-col sm:flex-row gap-4">
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
                   id="spotlight-learn-more"
                   onClick={() => {
-                    // Navigate to Data Analyst page
-                    setSelectedDomainId('data-analyst'); // Handled specially as training ID in routing
+                    setSelectedDomainId('data-analyst');
                     setActiveTab('formations');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
-                  className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-xl text-xs font-bold transition-colors flex items-center justify-center space-x-2"
+                  className="px-6 py-3 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-2 shadow-sm hover:scale-[1.02]"
                 >
-                  <span>Consulter le programme détaillé</span>
+                  <span>Consulter le syllabus &amp; Candidater</span>
                   <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveTab('contact');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-6 py-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold transition-colors flex items-center justify-center"
+                >
+                  <span>Demander un entretien d'orientation</span>
                 </button>
               </div>
             </div>
@@ -307,15 +336,15 @@ export default function Home({
       </section>
 
       {/* 5. Pourquoi choisir CICEXF (6 cards) */}
-      <section id="why-choose-us" className="py-24 bg-slate-50 dark:bg-slate-900/40 relative">
+      <section id="why-choose-us" className="py-10 bg-white dark:bg-slate-950 relative border-b border-slate-100 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-display text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <div className="text-center max-w-3xl mx-auto mb-8">
+            <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Pourquoi Accorder Votre Confiance au CICEXF ?
             </h2>
-            <div className="w-16 h-1 bg-brand-emerald mx-auto mt-4 rounded-full"></div>
-            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest">
+            <div className="w-16 h-1 bg-brand-emerald mx-auto mt-3 rounded-full"></div>
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest">
               L'engagement permanent pour l'excellence technique
             </p>
           </div>
@@ -416,148 +445,128 @@ export default function Home({
         </div>
       </section>
 
-      {/* 6. Partner Carousel Section */}
-      <section id="partner-carousel" className="py-16 bg-white dark:bg-slate-950 border-t border-b border-slate-100 dark:border-slate-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-10">
-            Ils nous font confiance à l'échelle internationale
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center opacity-70">
-            {partners.map(partner => (
-              <div key={partner.id} className="flex flex-col items-center space-y-2 grayscale hover:grayscale-0 transition-all cursor-pointer">
-                <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden flex items-center justify-center p-1.5">
-                  <img src={partner.logoUrl} alt={partner.name} referrerPolicy="no-referrer" className="object-cover w-full h-full rounded" />
-                </div>
-                <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400">{partner.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Testimonials Slider */}
-      <section id="testimonials-carousel" className="py-24 bg-slate-50 dark:bg-slate-900/40 relative">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-              Ce que Disent nos Participants et Clients
-            </h2>
-            <div className="w-16 h-1 bg-brand-emerald mx-auto mt-4 rounded-full"></div>
-          </div>
-
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-200/50 dark:border-slate-800 shadow-xl relative overflow-hidden">
-            <div className="absolute top-6 right-6 text-brand-emerald/10 dark:text-brand-emerald/5">
-              <Quote className="w-24 h-24 rotate-180" />
-            </div>
-
-            <div className="relative z-10 flex flex-col items-center text-center space-y-6">
-              <div className="flex space-x-1 justify-center">
-                {[...Array(TESTIMONIALS[activeTestimonial].rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-
-              <p className="text-sm sm:text-base italic text-slate-600 dark:text-slate-300 font-serif leading-relaxed max-w-3xl">
-                "{TESTIMONIALS[activeTestimonial].text}"
-              </p>
-
-              <div className="flex items-center space-x-4">
-                <img
-                  src={TESTIMONIALS[activeTestimonial].avatarUrl}
-                  alt={TESTIMONIALS[activeTestimonial].name}
-                  referrerPolicy="no-referrer"
-                  className="w-12 h-12 rounded-full object-cover border-2 border-brand-emerald"
-                />
-                <div className="text-left">
-                  <h4 className="font-bold text-sm text-slate-900 dark:text-white">
-                    {TESTIMONIALS[activeTestimonial].name}
-                  </h4>
-                  <p className="text-[11px] text-slate-400 font-medium">
-                    {TESTIMONIALS[activeTestimonial].role} — {TESTIMONIALS[activeTestimonial].organization}
-                  </p>
-                </div>
-              </div>
-
-              {/* Slider Dots */}
-              <div className="flex space-x-2 pt-4">
-                {TESTIMONIALS.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setActiveTestimonial(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${activeTestimonial === index ? 'bg-brand-emerald w-6' : 'bg-slate-300 dark:bg-slate-700'}`}
-                    aria-label={`Témoignage ${index + 1}`}
-                  ></button>
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Recent News Highlight */}
-      <section id="recent-news-preview" className="py-24 bg-white dark:bg-slate-950">
+      {/* 8. Formations en Cours & Prochaines Sessions (Actualités des Formations) */}
+      <section id="recent-news-preview" className="py-12 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8">
             <div>
-              <h2 className="font-display text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Dernières Analyses et Actualités du Cabinet
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-550/10 text-red-650 dark:text-red-400 border border-red-500/20 text-xs font-bold uppercase tracking-wider mb-2">
+                <span className="w-2 h-2 rounded-full bg-red-600 animate-ping"></span>
+                <span>Actualités des Formations &amp; Sessions</span>
+              </div>
+              <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Formations en cours et sessions démarrant bientôt
               </h2>
-              <div className="w-16 h-1 bg-brand-emerald mt-4 rounded-full"></div>
+              <div className="w-16 h-1 bg-brand-emerald mt-3 rounded-full"></div>
+              <p className="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl font-medium">
+                Retrouvez les programmes actifs et les prochaines cohortes ouvertes aux inscriptions pour accélérer votre trajectoire professionnelle.
+              </p>
             </div>
             <button
-              onClick={() => handleNavClick('news')}
-              className="mt-4 md:mt-0 text-brand-emerald font-bold text-xs flex items-center hover:underline"
+              onClick={() => handleNavClick('formations')}
+              className="mt-4 md:mt-0 px-4 py-2 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl font-bold text-xs flex items-center shadow-sm hover:scale-102 transition-all"
             >
-              Consulter tout le blog <ArrowRight className="w-4 h-4 ml-1" />
+              Voir toutes les formations ({formations.length}) <ArrowRight className="w-4 h-4 ml-1.5" />
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {blogPosts.slice(0, 3).map(post => (
-              <article key={post.id} className="bg-slate-50 dark:bg-slate-900/60 rounded-xl overflow-hidden border border-slate-200/40 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full group">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <img
-                    src={post.imageUrl}
-                    alt={post.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 left-3 bg-brand-emerald text-white text-[9px] font-bold px-2 py-0.5 rounded">
-                    {post.category}
+            {formations.slice(0, 3).map((f, idx) => {
+              // Status label depending on index
+              const isOngoing = idx === 0;
+              const isStartingSoon = idx === 1;
+              const statusBadge = isOngoing 
+                ? { label: "Session en cours &middot; Inscriptions clôturées", bg: "bg-amber-500 text-white" }
+                : isStartingSoon
+                  ? { label: "Démarrage imminent &middot; Dernières places", bg: "bg-red-600 text-white animate-pulse" }
+                  : { label: "Nouvelle cohorte ouverte &middot; Candidatures", bg: "bg-brand-emerald text-white" };
+
+              return (
+                <article key={f.id} className="bg-slate-50 dark:bg-slate-900/60 rounded-2xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col h-full group hover:-translate-y-1">
+                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                    <img
+                      src={f.featuredImage}
+                      alt={f.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
+                    <div className={`absolute top-3 left-3 text-[10px] font-black uppercase px-2.5 py-1 rounded-lg shadow-md ${statusBadge.bg}`}>
+                      <span dangerouslySetInnerHTML={{ __html: statusBadge.label }} />
+                    </div>
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-[11px] font-bold">
+                      <span className="bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
+                        {f.modality}
+                      </span>
+                      <span className="text-brand-emerald-light drop-shadow-md">
+                        {f.price}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4.5 flex flex-col flex-grow space-y-2">
-                  <span className="text-[9px] font-bold text-slate-400">{post.date} • {post.readTime}</span>
-                  <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-blue-400 line-clamp-2 transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-3 font-sans leading-relaxed flex-grow">
-                    {post.excerpt}
-                  </p>
-                  <button
-                    onClick={() => {
-                      // Spefically view this post
-                      setActiveTab('news');
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className="text-brand-blue dark:text-brand-emerald-light font-bold text-xs flex items-center mt-2 group-hover:underline"
-                  >
-                    Lire la suite →
-                  </button>
-                </div>
-              </article>
-            ))}
+
+                  <div className="p-5 flex flex-col flex-grow space-y-3">
+                    <div className="flex items-center space-x-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      <Clock className="w-3.5 h-3.5 text-brand-emerald" />
+                      <span>{f.duration}</span>
+                      <span>&bull;</span>
+                      <span className="text-brand-blue dark:text-blue-400 font-bold">{f.level}</span>
+                    </div>
+
+                    <h3 className="font-display text-sm sm:text-base font-extrabold text-slate-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-blue-400 line-clamp-2 transition-colors">
+                      {f.title}
+                    </h3>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 font-sans leading-relaxed flex-grow">
+                      {f.shortDescription}
+                    </p>
+
+                    {/* Next sessions preview */}
+                    {f.sessions && f.sessions.length > 0 && (
+                      <div className="pt-2 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400 space-y-1">
+                        <div className="flex items-center font-bold text-slate-800 dark:text-slate-200">
+                          <Calendar className="w-3.5 h-3.5 mr-1.5 text-brand-emerald" />
+                          <span>Prochaine session :</span>
+                        </div>
+                        <p className="text-slate-700 dark:text-slate-300 font-medium pl-5">
+                          {f.sessions[0].date} ({f.sessions[0].location})
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="pt-2 flex items-center justify-between">
+                      <button
+                        onClick={() => {
+                          setSelectedDomainId(f.id);
+                          setActiveTab('formations');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="text-brand-blue dark:text-brand-emerald-light font-bold text-xs flex items-center hover:underline cursor-pointer"
+                      >
+                        Voir le programme détaillé &rarr;
+                      </button>
+                      <button
+                        onClick={() => {
+                          setActiveTab('contact');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-brand-emerald/10 text-brand-emerald hover:bg-brand-emerald hover:text-white text-xs font-bold transition-all cursor-pointer"
+                      >
+                        Postuler
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* 9. Social Proof Training Band with Real-looking Slides */}
-      <section id="social-proof-band" className="py-16 bg-slate-50 dark:bg-slate-900/20 border-t border-slate-100 dark:border-slate-900">
+      <section id="social-proof-band" className="py-8 bg-white dark:bg-slate-950 border-t border-slate-100 dark:border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="text-center max-w-2xl mx-auto mb-6">
             <h3 className="font-display text-lg font-bold text-slate-800 dark:text-slate-200">
               Immersion au cœur de nos sessions de formation
             </h3>
@@ -591,31 +600,6 @@ export default function Home({
                 <span className="text-[10px] font-bold text-white">Remise officielle des certificats</span>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Partners section integrated into Accueil page */}
-      <div id="partners-section" className="border-t border-slate-100 dark:border-slate-900">
-        <Partners />
-      </div>
-
-      {/* 10. Floating Prompt Footer Banner to Call Action */}
-      <section className="bg-gradient-to-r from-brand-blue-dark via-slate-900 to-slate-950 text-white py-16">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <h3 className="font-display text-2xl font-extrabold text-white">
-            Accélérez la Transformation de Votre Organisation Dès Aujourd'hui
-          </h3>
-          <p className="text-xs text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Que vous soyez une entité publique planifiant son aménagement territorial, une entreprise industrielle cherchant à auditer ses processus QHSE, ou un professionnel aspirant à maîtriser la Business Intelligence.
-          </p>
-          <div className="flex justify-center">
-            <button
-              onClick={() => handleNavClick('contact')}
-              className="px-8 py-3.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white font-bold rounded-xl text-xs tracking-wider uppercase transition-colors"
-            >
-              Prendre rendez-vous avec un de nos experts
-            </button>
           </div>
         </div>
       </section>

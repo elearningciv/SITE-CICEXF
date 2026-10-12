@@ -35,6 +35,32 @@
         }
       ]
     },
+    "prospects": {
+      "description": "Stores all prospects, form submissions and registrations (online, WhatsApp, or email) to allow the administrator to contact them and export to Excel.",
+      "schema": {
+        "id": "string",
+        "name": "string",
+        "email": "string",
+        "phone": "string",
+        "type": "string",
+        "target": "string",
+        "session": "string",
+        "modality": "string",
+        "company": "string",
+        "participants": "string",
+        "notes": "string",
+        "channel": "string",
+        "status": "string",
+        "createdAt": "timestamp"
+      },
+      "indexes": [
+        {
+          "fields": [
+            { "fieldPath": "createdAt", "order": "DESCENDING" }
+          ]
+        }
+      ]
+    },
     "formations": {
       "description": "Stores user-managed training programs, which are rendered live on the website catalog.",
       "schema": {

@@ -31,6 +31,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { DOMAINS_INTERVENTION } from '../data';
+import { DomainIntervention } from '../types';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../data/accompanimentEnrichments';
 
 interface InterventionsProps {
@@ -38,14 +39,17 @@ interface InterventionsProps {
   setSelectedDomainId: (id: string | null) => void;
   setActiveTab: (tab: string) => void;
   setPreselectedDomain: (domain: string) => void;
+  domains?: DomainIntervention[];
 }
 
 export default function Interventions({
   selectedDomainId,
   setSelectedDomainId,
   setActiveTab,
-  setPreselectedDomain
+  setPreselectedDomain,
+  domains
 }: InterventionsProps) {
+  const allDomains = domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION;
 
   // Handle specialty selection from the header's brown sub-navigation band
   useEffect(() => {
@@ -125,29 +129,18 @@ export default function Interventions({
     'ing-accompagnement': 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
   };
 
-  const selectedDomainObj = DOMAINS_INTERVENTION.find(d => d.id === selectedDomainId) || null;
+  const selectedDomainObj = allDomains.find(d => d.id === selectedDomainId) || null;
 
   return (
-    <div id="accompagnements-view" className="pt-6 pb-16 bg-slate-50 dark:bg-slate-50 font-sans min-h-screen">
+    <div id="accompagnements-view" className="pt-4 pb-8 bg-white dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* 1. List of Accompanying Domains (If none selected) */}
         {!selectedDomainObj ? (
-          <div className="space-y-8 animate-in fade-in duration-300">
-            {/* Header section matching Formations layout */}
-            <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-10 space-y-3">
-              <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-900 tracking-tight leading-none">
-                Offres d'Ingénierie &amp; d'Accompagnement Technique
-              </h1>
-              <div className="w-16 h-1 bg-brand-emerald rounded-full"></div>
-              <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-900 font-sans font-medium leading-relaxed max-w-2xl">
-                Accompagnez la transformation de votre organisation grâce à l'expertise de pointe du CICEXF à travers nos grands pôles de conseil stratégique et technique.
-              </p>
-            </div>
-
+          <div className="space-y-6 animate-in fade-in duration-300">
             {/* Grid display of all major domains simultaneously */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {DOMAINS_INTERVENTION.map((domain, index) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {allDomains.map((domain, index) => {
                 const displayNum = `0${index + 1}`;
                 return (
                   <div
@@ -157,7 +150,7 @@ export default function Interventions({
                       setSelectedDomainId(domain.id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="bg-white dark:bg-white rounded-xl border border-slate-250 dark:border-slate-300 shadow-sm hover:shadow-xl hover:border-brand-emerald/40 transition-all flex flex-col justify-between cursor-pointer group h-full relative overflow-hidden"
+                    className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-black/30 dark:hover:border-white/30 transition-all flex flex-col justify-between cursor-pointer group h-full relative overflow-hidden"
                   >
                     {/* Domain Cover Image with text overlay in white */}
                     <div className="relative h-40 w-full overflow-hidden">
@@ -187,20 +180,20 @@ export default function Interventions({
 
                     <div className="p-4 flex-grow flex flex-col justify-between">
                       <div className="space-y-2">
-                        <p className="text-[11px] text-black dark:text-black font-sans font-medium leading-relaxed line-clamp-3 text-justify">
+                        <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3 text-justify">
                           {domain.shortDescription}
                         </p>
                       </div>
                     </div>
 
-                    <div className="px-4 pb-4 pt-3 border-t border-slate-100 dark:border-slate-200 flex justify-between items-center text-[11px]">
-                      <span className="font-bold text-slate-900 dark:text-slate-900 flex items-center">
-                        <Layers className="w-3.5 h-3.5 mr-1 text-brand-emerald" />
-                        {domain.subDomains.length} axes
+                    <div className="px-4 pb-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px]">
+                      <span className="font-bold text-black dark:text-white flex items-center">
+                        <Layers className="w-3.5 h-3.5 mr-1 text-black dark:text-white" />
+                        {domain.subDomains?.length || 0} axes
                       </span>
-                      <span className="font-bold text-brand-emerald flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                      <span className="font-extrabold text-black dark:text-white flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
                         <span>Découvrir</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-3.5 h-3.5 text-black dark:text-white" />
                       </span>
                     </div>
                   </div>
@@ -209,7 +202,7 @@ export default function Interventions({
             </div>
 
             {/* General Contact banner under grid */}
-            <div className="bg-slate-900 text-white p-8 rounded-3xl flex flex-col md:flex-row justify-between items-center gap-6 shadow-md border border-slate-800">
+            <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-6 shadow-md border border-slate-800">
               <div className="space-y-1.5 text-center md:text-left">
                 <h4 className="font-display font-bold text-base text-white">Vous souhaitez obtenir un accompagnement sur-mesure ?</h4>
                 <p className="text-xs text-slate-300 dark:text-slate-300 font-sans leading-relaxed">Le cabinet CICEXF déploie ses experts pour auditer vos structures et conseiller vos directions techniques.</p>
@@ -219,7 +212,7 @@ export default function Interventions({
                   setActiveTab('contact');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="px-6 py-3.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white font-bold rounded-xl text-xs uppercase tracking-wider shrink-0 transition-all cursor-pointer shadow-lg hover:shadow-brand-emerald/20"
+                className="px-6 py-3 bg-brand-emerald hover:bg-brand-emerald-dark text-white font-bold rounded-xl text-xs uppercase tracking-wider shrink-0 transition-all cursor-pointer shadow-lg hover:shadow-brand-emerald/20"
               >
                 Prendre contact
               </button>
@@ -227,7 +220,7 @@ export default function Interventions({
           </div>
         ) : (
           // 2. Detailed view for selected General Accompanying Domain
-          <div className="space-y-12 animate-in fade-in duration-300 font-sans">
+          <div className="space-y-6 animate-in fade-in duration-300 font-sans">
             
             {/* Back Button to list of domains */}
             <div>
@@ -236,9 +229,9 @@ export default function Interventions({
                   setSelectedDomainId(null);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="inline-flex items-center space-x-2 text-[11px] font-bold text-slate-900 dark:text-slate-900 hover:text-brand-emerald hover:bg-slate-100 dark:hover:bg-slate-100 transition-all py-1.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-300 bg-white dark:bg-white shadow-sm cursor-pointer active:scale-95"
+                className="inline-flex items-center space-x-2 text-[11px] font-bold text-slate-800 dark:text-slate-200 hover:text-brand-emerald dark:hover:text-brand-emerald-light hover:bg-slate-100 dark:hover:bg-slate-800 transition-all py-1.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
               >
-                <ArrowLeft className="w-3.5 h-3.5 text-slate-900" />
+                <ArrowLeft className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
                 <span>Retourner aux domaines d'accompagnement</span>
               </button>
             </div>
@@ -264,9 +257,9 @@ export default function Interventions({
 
             {/* Description & KPI Card */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              <div className="lg:col-span-8 bg-white dark:bg-white rounded-xl p-5 border border-slate-200/50 dark:border-slate-300 shadow-sm flex flex-col justify-center">
-                <h3 className="text-[10px] uppercase font-extrabold tracking-widest text-brand-emerald mb-1">Présentation du pôle d'excellence</h3>
-                <p className="text-xs text-black dark:text-black font-sans font-semibold leading-relaxed text-justify">
+              <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-center">
+                <h3 className="text-[10px] uppercase font-extrabold tracking-widest text-black dark:text-brand-emerald-light mb-1">Présentation du pôle d'excellence</h3>
+                <p className="text-xs sm:text-[13px] text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
                   {selectedDomainObj.description}
                 </p>
               </div>
@@ -289,10 +282,10 @@ export default function Interventions({
             {/* Sub-domains (axes) grid representation */}
             <div className="space-y-6">
               <div className="space-y-1 text-center max-w-xl mx-auto">
-                <h2 className="font-display text-lg sm:text-xl font-extrabold text-slate-900 dark:text-slate-900 tracking-tight">
+                <h2 className="font-display text-lg sm:text-xl font-extrabold text-black dark:text-white tracking-tight">
                   Axes d'Accompagnement Technique &amp; Composantes
                 </h2>
-                <p className="text-[9px] uppercase font-bold text-brand-emerald tracking-widest">
+                <p className="text-[9px] uppercase font-bold text-black dark:text-brand-emerald-light tracking-widest">
                   Découvrez la structure opérationnelle et les compétences clés associées :
                 </p>
               </div>
@@ -311,12 +304,12 @@ export default function Interventions({
                     <div
                       key={sIdx}
                       id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
-                      className="bg-white dark:bg-white rounded-xl overflow-hidden border border-slate-200/50 dark:border-slate-300 shadow-sm flex flex-col justify-between group h-full transition-all duration-300 hover:shadow-lg"
+                      className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between group h-full transition-all duration-300 hover:shadow-lg"
                     >
                       <div>
                         {/* Sub-element/Minor line image */}
                         {finalImageUrl && (
-                          <div className="relative h-36 w-full overflow-hidden bg-slate-100 dark:bg-slate-100">
+                          <div className="relative h-36 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                             <img
                               src={finalImageUrl}
                               alt={sub.title}
@@ -342,22 +335,22 @@ export default function Interventions({
                         )}
 
                         <div className="p-4 sm:p-5 space-y-3">
-                          <p className="text-xs text-black dark:text-black leading-relaxed font-sans font-medium text-justify">
+                          <p className="text-xs text-black dark:text-white leading-relaxed font-sans font-medium text-justify">
                             {finalDescription}
                           </p>
 
                           {/* Operational Objectives */}
                           {objectives && objectives.length > 0 && (
-                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-200 space-y-1.5">
-                              <span className="text-[9px] font-extrabold text-brand-emerald dark:text-brand-emerald uppercase tracking-widest flex items-center">
-                                <Target className="w-3 h-3 mr-1 shrink-0" />
+                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                              <span className="text-[9px] font-extrabold text-black dark:text-brand-emerald-light uppercase tracking-widest flex items-center">
+                                <Target className="w-3 h-3 mr-1 shrink-0 text-brand-emerald" />
                                 Objectifs opérationnels
                               </span>
                               <div className="grid grid-cols-1 gap-1">
                                 {objectives.map((obj, oIdx) => (
-                                  <div key={oIdx} className="flex items-start text-black dark:text-black">
+                                  <div key={oIdx} className="flex items-start text-black dark:text-white">
                                     <CheckCircle className="w-3 h-3 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                                    <span className="leading-snug text-[10.5px] font-semibold font-sans">{obj}</span>
+                                    <span className="leading-snug text-[10.5px] font-medium font-sans text-black dark:text-white">{obj}</span>
                                   </div>
                                 ))}
                               </div>
@@ -366,12 +359,12 @@ export default function Interventions({
 
                           {/* Expected Changes and Transformation */}
                           {expectedChanges && (
-                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-100 border border-slate-200 dark:border-slate-300 space-y-0.5">
-                              <span className="text-[9px] font-extrabold text-brand-blue dark:text-brand-blue uppercase tracking-widest flex items-center">
-                                <Award className="w-3 h-3 mr-1 shrink-0" />
+                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
+                              <span className="text-[9px] font-extrabold text-black dark:text-sky-400 uppercase tracking-widest flex items-center">
+                                <Award className="w-3 h-3 mr-1 shrink-0 text-brand-blue" />
                                 Impact pour l'entité
                               </span>
-                              <p className="text-[10.5px] text-black dark:text-black leading-relaxed font-sans font-bold text-justify">
+                              <p className="text-[10.5px] text-black dark:text-white leading-relaxed font-sans font-semibold text-justify">
                                 {expectedChanges}
                               </p>
                             </div>
@@ -379,15 +372,15 @@ export default function Interventions({
 
                           {/* Associated Key Skills (original keyPoints) */}
                           {sub.keyPoints && sub.keyPoints.length > 0 && (
-                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-200 space-y-1">
-                              <span className="block text-[8.5px] font-extrabold text-slate-900 dark:text-slate-900 uppercase tracking-widest">
+                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                              <span className="block text-[8.5px] font-extrabold text-black dark:text-white uppercase tracking-widest">
                                 Savoir-faire clé associés :
                               </span>
                               <div className="flex flex-wrap gap-1">
                                 {sub.keyPoints.slice(0, 3).map((point, pIdx) => (
                                   <span
                                     key={pIdx}
-                                    className="bg-slate-100 dark:bg-slate-100 text-slate-900 dark:text-slate-900 text-[8.5px] font-bold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-300"
+                                    className="bg-slate-100 dark:bg-slate-800 text-black dark:text-white text-[8.5px] font-semibold px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700"
                                   >
                                     {point}
                                   </span>
@@ -399,14 +392,14 @@ export default function Interventions({
                       </div>
 
                       {/* Card Action Footer */}
-                      <div className="p-4 bg-slate-50 dark:bg-slate-50 border-t border-slate-100 dark:border-slate-200 flex items-center justify-between">
-                        <span className="text-[9px] text-slate-800 dark:text-slate-800 font-bold font-sans uppercase">Expert CICEXF</span>
+                      <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                        <span className="text-[9px] text-black dark:text-white font-bold font-sans uppercase">Expert CICEXF</span>
                         <button
                           onClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
-                          className="px-3 py-1.5 bg-white dark:bg-white border border-slate-200 dark:border-slate-300 hover:bg-brand-emerald hover:text-white dark:hover:bg-brand-emerald text-slate-900 dark:text-slate-900 rounded-lg text-[9px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
+                          className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-brand-emerald hover:text-white dark:hover:bg-brand-emerald text-black dark:text-white rounded-lg text-[9px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
                         >
                           <span>Demander</span>
-                          <ChevronRight className="w-3 h-3 text-slate-900" />
+                          <ChevronRight className="w-3 h-3 text-slate-600 dark:text-slate-300 group-hover:text-white" />
                         </button>
                       </div>
                     </div>
@@ -417,14 +410,14 @@ export default function Interventions({
 
             {/* Concrete examples of recent accompaniments */}
             {selectedDomainObj.examples && selectedDomainObj.examples.length > 0 && (
-              <div className="bg-white dark:bg-white rounded-xl p-4 sm:p-5 border border-slate-200 dark:border-slate-300 shadow-sm space-y-3">
-                <h3 className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-900 flex items-center">
+              <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <h3 className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-black dark:text-white flex items-center">
                   <Briefcase className="w-4 h-4 mr-2 text-brand-emerald" />
                   Exemples d'accompagnements récents réalisés
                 </h3>
                 <ul className="space-y-2 text-xs leading-relaxed">
                   {selectedDomainObj.examples.map((ex, exIdx) => (
-                    <li key={exIdx} className="flex items-start text-black dark:text-black font-sans font-medium">
+                    <li key={exIdx} className="flex items-start text-black dark:text-white font-sans font-semibold">
                       <CornerDownRight className="w-3.5 h-3.5 text-brand-emerald mr-2.5 shrink-0 mt-0.5" />
                       <span>{ex}</span>
                     </li>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Search, Sun, Moon, Sparkles, BookOpen, MapPin, Globe, Phone, GraduationCap, Layers, Award, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
-import { DOMAINS_INTERVENTION, FORMATIONS } from '../data';
-import { Formation } from '../types';
+import { Menu, X, ChevronDown, Search, Sun, Moon, Sparkles, BookOpen, MapPin, Globe, Phone, Mail, GraduationCap, Layers, Award, ChevronLeft, ChevronRight, Lock, Play, Pause } from 'lucide-react';
+import { DOMAINS_INTERVENTION, FORMATIONS, BLOG_POSTS } from '../data';
+import { Formation, DomainIntervention, BlogPost } from '../types';
 
 interface HeaderProps {
   activeTab: string;
@@ -15,6 +15,8 @@ interface HeaderProps {
   onSearch: (query: string) => void;
   isAdminLoggedIn?: boolean;
   formations?: Formation[];
+  domains?: DomainIntervention[];
+  blogPosts?: BlogPost[];
 }
 
 export default function Header({
@@ -28,7 +30,9 @@ export default function Header({
   setBrandTheme,
   onSearch,
   isAdminLoggedIn,
-  formations = FORMATIONS
+  formations = FORMATIONS,
+  domains = DOMAINS_INTERVENTION,
+  blogPosts = BLOG_POSTS
 }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
@@ -38,18 +42,64 @@ export default function Header({
   const [scrolled, setScrolled] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isAutoScrolling, setIsAutoScrolling] = useState<boolean>(true);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const manualPauseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      scrollContainerRef.current.scrollBy({ left: -280, behavior: 'smooth' });
     }
+    // Pause auto-scroll briefly during manual click so it does not conflict
+    if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
+    manualPauseTimerRef.current = setTimeout(() => {
+      // resume if still active
+    }, 2500);
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      scrollContainerRef.current.scrollBy({ left: 280, behavior: 'smooth' });
     }
+    if (manualPauseTimerRef.current) clearTimeout(manualPauseTimerRef.current);
+    manualPauseTimerRef.current = setTimeout(() => {
+      // resume if still active
+    }, 2500);
   };
+
+  // Ultra-fluid, zero-jank, crash-proof continuous auto-scrolling ticker
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || !isAutoScrolling || isHovered) return;
+
+    let animationFrameId: number;
+    let lastTimestamp = performance.now();
+    // Brisk, readable speed (65 pixels per second) - no snail crawling, no lagging
+    const SPEED_PPS = 65;
+
+    const step = (now: number) => {
+      // Cap elapsed to avoid jumps if browser tab was backgrounded/inactive
+      const elapsed = Math.min(now - lastTimestamp, 100);
+      lastTimestamp = now;
+
+      if (container && container.scrollWidth > container.clientWidth) {
+        const delta = (SPEED_PPS * elapsed) / 1000;
+        container.scrollLeft += delta;
+
+        // Tripled list loop: seamless reset by subtracting 1/3 when past the threshold
+        const oneThird = container.scrollWidth / 3;
+        if (oneThird > 50 && container.scrollLeft >= oneThird * 2) {
+          container.scrollLeft -= oneThird;
+        }
+      }
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [isAutoScrolling, isHovered, blogPosts, activeTab]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -133,7 +183,7 @@ export default function Header({
   }> = [];
 
   if (queryNormalized.length >= 2) {
-    DOMAINS_INTERVENTION.forEach(d => {
+    domains.forEach(d => {
       const dTitleMatch = d.title.toLowerCase().includes(queryNormalized);
       const dDescMatch = d.description.toLowerCase().includes(queryNormalized);
       const dShortMatch = d.shortDescription?.toLowerCase().includes(queryNormalized);
@@ -184,138 +234,122 @@ export default function Header({
             {/* Logo */}
             <div
               id="header-logo"
-              className="flex items-center space-x-3 cursor-pointer group"
+              className="flex items-center space-x-2.5 cursor-pointer group shrink-0"
               onClick={() => handleNavClick('home')}
             >
-              <div className="w-12 h-12 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+              <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-105 transition-transform duration-300 shrink-0">
                 CX
               </div>
-              <div>
+              <div className="shrink-0">
                 <div className="flex items-center">
-                  <span className="font-display font-extrabold text-xl tracking-tight text-brand-blue dark:text-blue-400">
+                  <span className="font-display font-extrabold text-lg tracking-tight text-brand-blue dark:text-blue-400">
                     CIC
                   </span>
-                  <span className="font-display font-extrabold text-xl tracking-tight text-brand-emerald dark:text-brand-emerald-light">
+                  <span className="font-display font-extrabold text-lg tracking-tight text-brand-emerald dark:text-brand-emerald-light">
                     EXF
                   </span>
                 </div>
-                <p className="text-[9px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-semibold font-sans">
-                  Expertise &amp; Consultance
+                <p className="text-[7.5px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold font-mono">
+                  Agrément N°25343/GTCA/RC/2025
                 </p>
               </div>
             </div>
 
-            {/* Controls Row */}
-            <div className="flex items-center space-x-3">
-              {/* Utility Icons & Custom Themes Controls */}
-              <div id="header-controls" className="hidden lg:flex items-center space-x-3">
-                {/* Search Toggle */}
-                <button
-                  id="search-btn-toggle"
-                  onClick={() => setSearchOpen(!searchOpen)}
-                  className="p-2 rounded-lg text-slate-500 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
-                  title="Rechercher sur le site"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
+            {/* Mobile Controls placed directly where WhatsApp was, matching Image 2: Search + Red MENU Button */}
+            <div id="header-mobile-actions" className="flex items-center space-x-2 shrink-0">
+              {/* Search Toggle Button (Image 2) */}
+              <button
+                id="search-mobile-btn"
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-200 border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+                aria-label="Rechercher"
+                title="Rechercher sur le site"
+              >
+                <Search className="w-5 h-5 text-red-600 dark:text-red-500 stroke-[2.4]" />
+              </button>
 
-                {/* Theme Customizer Switcher */}
-                <div className="relative group/theme">
-                  <button
-                    id="theme-btn-customizer"
-                    className="p-2 rounded-lg text-slate-500 hover:text-brand-blue dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center space-x-0.5 cursor-pointer"
-                    title="Thème de la marque"
-                  >
-                    <Sparkles className="w-4 h-4 text-brand-emerald" />
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                  <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-[#020817] rounded-xl shadow-xl border border-slate-100 dark:border-white/10 p-2.5 hidden group-hover/theme:block z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                    <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Palette de Marque</span>
-                    
-                    <button
-                      onClick={() => setBrandTheme('classic')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'classic' ? 'bg-slate-100 dark:bg-white/10 text-brand-blue dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-[#003B6F]"></span>
-                      <span className="w-3 h-3 rounded-full bg-[#8A2E1C] -ml-1"></span>
-                      <span>Bleu & Marron</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBrandTheme('emerald')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'emerald' ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald dark:text-brand-emerald-light' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-[#009966]"></span>
-                      <span>Vert Émeraude</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBrandTheme('tech')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'tech' ? 'bg-slate-100 dark:bg-white/10 text-cyan-500 dark:text-cyan-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-cyan-600"></span>
-                      <span>Deep Tech Slate</span>
-                    </button>
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Mobile Hamburger Button */}
-              <div className="flex items-center space-x-2 lg:hidden">
-                <button
-                  id="search-mobile-btn"
-                  onClick={() => setSearchOpen(!searchOpen)}
-                  className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  <Search className="w-5 h-5" />
-                </button>
-                <button
-                  id="mobile-hamburger-btn"
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                >
-                  {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-                </button>
-              </div>
+              {/* Red MENU Button (Image 2) */}
+              <button
+                id="mobile-hamburger-btn"
+                onClick={() => setIsOpen(!isOpen)}
+                className="h-10 px-3.5 sm:px-4 rounded-2xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-red-500 active:scale-95 cursor-pointer shrink-0"
+                aria-label="Menu principal"
+                title="Menu principal"
+              >
+                {isOpen ? (
+                  <X className="w-5 h-5 text-white stroke-[3]" />
+                ) : (
+                  <Menu className="w-5 h-5 text-white stroke-[3]" />
+                )}
+                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
+                  {isOpen ? 'FERMER' : 'MENU'}
+                </span>
+              </button>
             </div>
           </div>
         </div>
 
         {/* Desktop Blue Bar Navigation (Bande bleue statique de haute visibilité) */}
         <div className="hidden lg:block bg-brand-blue-dark py-2 border-t border-b border-[#001830] shadow-md relative z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full px-2 sm:px-4 lg:px-5 xl:px-8">
             <div className="flex items-center justify-between">
-              {/* Logo and Agrément sur la même bande */}
+              {/* Logo and Agrément sur la même bande - Calé tout à gauche pour libérer l'espace nav */}
               <div
                 id="bar-logo-container"
-                className="flex items-center space-x-3 cursor-pointer group shrink-0 mr-10 xl:mr-16"
+                className="flex items-center space-x-2 xl:space-x-2.5 cursor-pointer group shrink-0 mr-2 lg:mr-3"
                 onClick={() => handleNavClick('home')}
               >
-                <div className="w-10 h-10 bg-gradient-to-br from-white/10 to-white/5 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white/10">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 bg-gradient-to-br from-white/10 to-white/5 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm xl:text-base shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white/10 shrink-0">
                   CX
                 </div>
-                <div>
+                <div className="shrink-0">
                   <div className="flex items-center">
-                    <span className="font-display font-black text-sm tracking-wider text-white">
+                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-white">
                       CIC
                     </span>
-                    <span className="font-display font-black text-sm tracking-wider text-brand-emerald-light">
+                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-brand-emerald-light">
                       EXF
                     </span>
                   </div>
-                  <p className="text-[8.5px] font-bold text-slate-300 dark:text-slate-300 font-mono leading-none mt-0.5">
+                  <p className="text-[7px] lg:text-[7.5px] xl:text-[8.5px] font-bold text-slate-300 dark:text-slate-300 font-mono leading-none mt-0.5 whitespace-nowrap">
                     Agrément N°25343/GTCA/RC/2025
                   </p>
                 </div>
               </div>
 
-              {/* Navigation principal de la bande */}
-              <nav id="desktop-nav" className="flex items-center justify-end space-x-1 lg:space-x-0.5 xl:space-x-1.5 flex-grow ml-auto pl-8 lg:pl-12">
+              {/* Boutons WhatsApp et Mail directs du CICEXF placés devant Agrément N°25343/GTCA/RC/2025 pour nous contacter directement */}
+              <div id="direct-header-contacts" className="flex items-center space-x-1.5 lg:space-x-2 shrink-0 mr-auto">
+                <a
+                  href="https://wa.me/2250701970065"
+                  target="_blank"
+                  rel="noreferrer"
+                  id="direct-header-whatsapp-btn"
+                  className="inline-flex items-center space-x-1.5 bg-[#25D366] hover:bg-[#1eb857] text-white px-2 lg:px-2.5 py-1 xl:py-1.5 rounded-lg text-[10px] xl:text-[11px] font-black tracking-wide shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  title="Contacter directement le CICEXF par WhatsApp (+225 07 01 97 00 65)"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
+                    <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-2.18-.553-1.895-.783-3.117-2.73-3.212-2.856-.095-.127-.77-1.026-.77-1.956 0-.931.488-1.388.662-1.579.174-.191.381-.239.508-.239.127 0 .254.001.365.006.117.005.275-.044.43.328.159.381.54 1.319.587 1.415.048.095.079.206.016.333-.063.127-.095.206-.191.317-.095.111-.202.249-.289.334-.095.095-.195.199-.084.39.111.191.494.814 1.059 1.318.729.649 1.343.85 1.534.945.191.095.302.079.413-.048.111-.127.476-.556.603-.746.127-.19.254-.159.429-.095.174.063 1.111.524 1.302.619.191.095.317.143.365.222.048.079.048.46-.096.865z" />
+                  </svg>
+                  <span>WhatsApp</span>
+                </a>
+
+                <a
+                  href="mailto:elearningciv@gmail.com"
+                  id="direct-header-mail-btn"
+                  className="inline-flex items-center space-x-1.5 bg-white/15 hover:bg-white/25 text-white border border-white/20 px-2 lg:px-2.5 py-1 xl:py-1.5 rounded-lg text-[10px] xl:text-[11px] font-black tracking-wide shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  title="Écrire par email à elearningciv@gmail.com"
+                >
+                  <Mail className="w-3.5 h-3.5 shrink-0 text-cyan-300" />
+                  <span>Mail</span>
+                </a>
+              </div>
+
+              {/* Navigation principale de la bande - Sans overflow-hidden pour que Accueil et Qui sommes-nous restent toujours 100% visibles */}
+              <nav id="desktop-nav" className="flex items-center space-x-1 lg:space-x-1.5 xl:space-x-2.5 shrink-0 ml-auto">
                 <button
                   id="nav-home"
                   onClick={() => handleNavClick('home')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-2 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
                     activeTab === 'home'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -327,7 +361,7 @@ export default function Header({
                 <button
                   id="nav-about"
                   onClick={() => handleNavClick('about')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-2 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
                     activeTab === 'about'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -339,7 +373,7 @@ export default function Header({
                 <button
                   id="nav-accompagnements"
                   onClick={() => handleNavClick('accompagnements')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'accompagnements'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -352,7 +386,7 @@ export default function Header({
                 <button
                   id="nav-formations"
                   onClick={() => handleNavClick('formations')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'formations'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -360,10 +394,11 @@ export default function Header({
                 >
                   Formations
                 </button>
-                        <button
+
+                <button
                   id="nav-realisations"
                   onClick={() => handleNavClick('realisations')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'realisations'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -375,7 +410,7 @@ export default function Header({
                 <button
                   id="nav-news"
                   onClick={() => handleNavClick('news')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1.5 ${
+                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
                     activeTab === 'news'
                       ? 'bg-red-600 text-white shadow-md scale-105'
                       : 'bg-red-500/10 text-red-200 border border-red-500/30 hover:bg-red-500/25 hover:text-white hover:scale-105 active:scale-95'
@@ -391,7 +426,7 @@ export default function Header({
                 <button
                   id="nav-contact"
                   onClick={() => handleNavClick('contact')}
-                  className={`lg:px-3 xl:px-4.5 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-2 lg:px-2.5 xl:px-4 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'contact'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'bg-brand-emerald text-white hover:bg-brand-emerald-light hover:scale-105 active:scale-95'
@@ -403,7 +438,7 @@ export default function Header({
                 <button
                   id="nav-admin"
                   onClick={() => handleNavClick('admin')}
-                  className={`lg:px-2.5 xl:px-4 py-2 rounded-xl text-[12px] lg:text-[11px] xl:text-[12.5px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1.5 ${
+                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
                     activeTab === 'admin'
                       ? 'bg-white text-emerald-600 shadow-md scale-105 font-black'
                       : isAdminLoggedIn
@@ -411,13 +446,13 @@ export default function Header({
                         : 'text-white/75 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
                   }`}
                 >
-                  <Lock className="w-3.5 h-3.5 shrink-0" />
+                  <Lock className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" />
                   <span>Admin</span>
                 </button>
               </nav>
 
               {/* Controls on the blue bar */}
-              <div id="bar-controls" className="flex items-center space-x-2 ml-5 pl-5 border-l border-white/20 shrink-0">
+              <div id="bar-controls" className="flex items-center space-x-1.5 ml-2 pl-2 xl:ml-4 xl:pl-4 border-l border-white/20 shrink-0">
                 {/* Search Toggle */}
                 <button
                   id="bar-search-btn-toggle"
@@ -472,117 +507,95 @@ export default function Header({
           </div>
         </div>
 
-        {/* Persistent Immobile Sub-navigation for Themes/Thématiques */}
-        {(activeTab === 'formations' || activeTab === 'accompagnements' || activeTab === 'realisations') && (
-          <div className="border-t border-b border-[#5C3725] dark:border-[#2F1A10] bg-[#45281A] dark:bg-[#21110A] py-1 sm:py-1.5 shadow-md">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Persistent Auto-scrolling News Ticker for Actualités (Défilement des actualités uniquement) */}
+        {activeTab !== 'admin' && (
+          <div className="border-t border-b border-[#B84F3D]/40 dark:border-[#380D06] bg-brand-emerald dark:bg-[#54150A] py-1 sm:py-1.5 shadow-md transition-colors">
+            <div className="w-full px-2 sm:px-4 lg:px-5 xl:px-8">
               <div className="flex items-center space-x-1.5 py-0.5">
-                {/* Short intro label */}
-                <span className="text-[10px] sm:text-[11px] uppercase font-black text-white tracking-wider shrink-0 mr-1.5 flex items-center space-x-1 sm:space-x-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse shrink-0"></span>
-                  <span>{selectedDomainId ? 'Spécialités :' : 'Thématiques :'}</span>
-                </span>
+                {/* Intro label with pulse indicator */}
+                <div 
+                  className="flex items-center space-x-1 sm:space-x-1.5 shrink-0 mr-1.5 cursor-pointer group"
+                  onClick={() => {
+                    setActiveTab('news');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  title="Voir toutes les actualités"
+                >
+                  <span className="relative flex h-2 w-2 shrink-0">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                  </span>
+                  <span className="text-[10px] sm:text-[11px] uppercase font-black text-white tracking-wider whitespace-nowrap group-hover:text-amber-200 transition-colors">
+                    Actualités :
+                  </span>
+                </div>
+
+                {/* Auto-scroll Play / Pause Toggle Button */}
+                <button
+                  onClick={() => setIsAutoScrolling(!isAutoScrolling)}
+                  className={`p-1 sm:p-1.5 rounded-lg text-white hover:scale-110 active:scale-95 border transition-all duration-200 cursor-pointer shrink-0 flex items-center justify-center ${
+                    isAutoScrolling
+                      ? 'bg-red-600/90 hover:bg-red-600 border-red-500 shadow-sm'
+                      : 'bg-white/15 hover:bg-white/25 border-white/25 shadow-sm'
+                  }`}
+                  title={isAutoScrolling ? "Mettre en pause le défilement automatique" : "Activer le défilement automatique"}
+                >
+                  {isAutoScrolling ? <Pause className="w-3 h-3 text-white" /> : <Play className="w-3 h-3 text-white" />}
+                </button>
 
                 {/* Previous (Left) button */}
                 <button
                   onClick={scrollLeft}
-                  className="p-1 rounded-lg bg-[#5C3725] hover:bg-[#724630] text-white hover:scale-110 active:scale-90 border border-[#6F442E] shadow-sm cursor-pointer shrink-0 transition-all duration-200"
-                  title="Précédent"
+                  className="p-1 sm:p-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white hover:scale-110 active:scale-90 border border-white/25 shadow-sm cursor-pointer shrink-0 transition-all duration-200"
+                  title="Faire défiler vers la gauche"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
                 
-                {/* Scrollable Container */}
+                {/* Scrollable Container with Hover Detection (Tripled List of Actualités) */}
                 <div 
                   ref={scrollContainerRef}
-                  className="flex-grow flex items-center space-x-1.5 py-0.5 overflow-x-auto scrollbar-none scroll-smooth"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  onTouchStart={() => setIsHovered(true)}
+                  onTouchEnd={() => setTimeout(() => setIsHovered(false), 2000)}
+                  className="flex-grow flex items-center space-x-2 py-0.5 overflow-x-auto scrollbar-none"
                 >
-                  {/* Back to Thématiques button if a domain is selected */}
-                  {selectedDomainId && (
-                    <button
-                      onClick={() => {
-                        setSelectedDomainId(null);
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                      }}
-                      className="px-2.5 py-1 sm:py-1.5 rounded-lg text-[10.5px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 shrink-0 border border-brand-emerald/45 bg-brand-emerald/15 hover:bg-brand-emerald/25 text-brand-emerald-light flex items-center space-x-1 cursor-pointer"
-                    >
-                      <ChevronLeft className="w-3 h-3" />
-                      <span>← Thématiques</span>
-                    </button>
-                  )}
-
-                  {!selectedDomainId ? (
-                    // Default state: List 8 Thématiques
-                    DOMAINS_INTERVENTION.map((domain, index) => {
-                      const isSelected = selectedDomainId === domain.id;
-                      
-                      // Clean up or shorten title slightly if needed for better fit
-                      let shortTitle = domain.title;
-                      if (domain.title.toLowerCase().startsWith("ingénierie de ")) {
-                        shortTitle = domain.title.substring(14).trim();
-                      } else if (domain.title.toLowerCase().startsWith("ingénierie ")) {
-                        shortTitle = domain.title.substring(11).trim();
-                      }
-                      // Capitalize first letter
-                      shortTitle = shortTitle.charAt(0).toUpperCase() + shortTitle.slice(1);
-
-                      return (
-                        <button
-                          key={domain.id}
-                          onClick={() => {
-                            setSelectedDomainId(domain.id);
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                          }}
-                          style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
-                          className={`px-3 py-1 sm:py-1.5 rounded-lg text-[10.5px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 shrink-0 border flex items-center space-x-1.5 cursor-pointer transform-gpu will-change-transform ${
-                            isSelected
-                              ? 'bg-white text-[#45281A] border-transparent shadow-md scale-105 font-extrabold'
-                              : 'bg-white/10 text-white border-white/15 hover:bg-white/20 hover:scale-105 active:scale-95'
-                          }`}
-                        >
-                          <span className={`font-mono text-[8px] sm:text-[8.5px] px-1 py-0.2 rounded font-bold shrink-0 ${isSelected ? 'bg-brand-emerald text-white' : 'bg-white/15 text-white'}`}>
-                            0{index + 1}
+                  {[...blogPosts, ...blogPosts, ...blogPosts].map((post, index) => {
+                    return (
+                      <button
+                        key={`${post.id}-${index}`}
+                        onClick={() => {
+                          setActiveTab('news');
+                          const event = new CustomEvent('select-article', { detail: { postId: post.id } });
+                          window.dispatchEvent(event);
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        style={{ backfaceVisibility: 'hidden', transform: 'translateZ(0)' }}
+                        className="px-3 py-1 sm:py-1.5 rounded-lg text-[10.5px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 shrink-0 border border-white/20 bg-white/10 hover:bg-white/25 hover:scale-105 active:scale-95 text-white flex items-center space-x-2 cursor-pointer transform-gpu will-change-transform shadow-sm"
+                        title={`Lire l'actualité : ${post.title}`}
+                      >
+                        <span className="font-mono text-[8px] sm:text-[8.5px] px-1.5 py-0.5 rounded font-black shrink-0 bg-red-600 text-white uppercase tracking-wider shadow-xs">
+                          {post.category || 'INFO'}
+                        </span>
+                        <span className="whitespace-nowrap font-bold text-white/95 hover:text-white">
+                          {post.title}
+                        </span>
+                        {post.date && (
+                          <span className="text-[9px] text-white/70 font-mono hidden sm:inline shrink-0">
+                            • {post.date}
                           </span>
-                          <span className="whitespace-nowrap font-semibold">{shortTitle}</span>
-                        </button>
-                      );
-                    })
-                  ) : (
-                    // Selected state: List Specialties (subDomains) of active domain
-                    (() => {
-                      const activeDomain = DOMAINS_INTERVENTION.find(d => d.id === selectedDomainId);
-                      if (!activeDomain) return null;
-
-                      return activeDomain.subDomains.map((sub, sIdx) => {
-                        const cleanTitle = sub.title.replace(/^\d+\.\s*/, '');
-                        return (
-                          <button
-                            key={sIdx}
-                            onClick={() => {
-                              // Scroll to or activate the specialty via event
-                              const event = new CustomEvent('select-specialty', {
-                                detail: { domainId: activeDomain.id, index: sIdx }
-                              });
-                              window.dispatchEvent(event);
-                            }}
-                            className="px-3 py-1 sm:py-1.5 rounded-lg text-[10.5px] sm:text-[11px] font-bold tracking-wide transition-all duration-200 shrink-0 border bg-white text-[#45281A] border-transparent hover:bg-white/95 hover:scale-105 active:scale-95 cursor-pointer flex items-center space-x-1.5 shadow-sm"
-                          >
-                            <span className="font-mono text-[8px] sm:text-[8.5px] px-1 py-0.2 bg-brand-emerald text-white rounded font-bold shrink-0">
-                              0{sIdx + 1}
-                            </span>
-                            <span className="whitespace-nowrap font-semibold">{cleanTitle}</span>
-                          </button>
-                        );
-                      });
-                    })()
-                  )}
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Next (Right) button */}
                 <button
                   onClick={scrollRight}
-                  className="p-1 rounded-lg bg-[#5C3725] hover:bg-[#724630] text-white hover:scale-110 active:scale-90 border border-[#6F442E] shadow-sm cursor-pointer shrink-0 transition-all duration-200"
-                  title="Suivant"
+                  className="p-1 sm:p-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white hover:scale-110 active:scale-90 border border-white/25 shadow-sm cursor-pointer shrink-0 transition-all duration-200"
+                  title="Faire défiler vers la droite"
                 >
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
@@ -594,6 +607,29 @@ export default function Header({
         {/* Mobile Slide-out Menu */}
         {isOpen && (
           <div id="mobile-menu" className="lg:hidden bg-white dark:bg-[#020817] border-t border-slate-100 dark:border-white/10 shadow-xl py-4 px-4 space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
+            {/* Quick Contact Buttons inside Mobile Menu */}
+            <div className="grid grid-cols-2 gap-2 pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
+              <a
+                href="https://wa.me/2250701970065"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold shadow-sm active:scale-95 transition-all"
+                title="WhatsApp direct (+225 07 01 97 00 65)"
+              >
+                <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                  <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-2.18-.553-1.895-.783-3.117-2.73-3.212-2.856-.095-.127-.77-1.026-.77-1.956 0-.931.488-1.388.662-1.579.174-.191.381-.239.508-.239.127 0 .254.001.365.006.117.005.275-.044.43.328.159.381.54 1.319.587 1.415.048.095.079.206.016.333-.063.127-.095.206-.191.317-.095.111-.202.249-.289.334-.095.095-.195.199-.084.39.111.191.494.814 1.059 1.318.729.649 1.343.85 1.534.945.191.095.302.079.413-.048.111-.127.476-.556.603-.746.127-.19.254-.159.429-.095.174.063 1.111.524 1.302.619.191.095.317.143.365.222.048.079.048.46-.096.865z" />
+                </svg>
+                <span>WhatsApp</span>
+              </a>
+              <a
+                href="mailto:elearningciv@gmail.com"
+                className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold shadow-sm active:scale-95 transition-all"
+                title="Email direct (elearningciv@gmail.com)"
+              >
+                <Mail className="w-4 h-4 text-brand-blue dark:text-cyan-400 shrink-0" />
+                <span>Email</span>
+              </a>
+            </div>
             <button
               onClick={() => handleNavClick('home')}
               className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'home' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}

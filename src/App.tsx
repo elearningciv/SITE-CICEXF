@@ -13,9 +13,10 @@ import AdminPanel from './components/AdminPanel';
 import { trackVisit } from './lib/tracker';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
-import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS } from './data';
+import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS, PROJECTS } from './data';
+import { Formation, DomainIntervention, Project, BlogPost } from './types';
 
 const NAVIGATION_ORDER = [
   'home',
@@ -46,69 +47,158 @@ export default function App() {
   
   // Real-time synced content states
   const [formations, setFormations] = useState<any[]>(FORMATIONS);
+  const [accompagnements, setAccompagnements] = useState<any[]>(DOMAINS_INTERVENTION);
+  const [realisations, setRealisations] = useState<any[]>(PROJECTS);
   const [blogPosts, setBlogPosts] = useState<any[]>(BLOG_POSTS);
   const [partners, setPartners] = useState<any[]>(PARTNERS);
 
   // Sync content with Firestore in real-time
   useEffect(() => {
+    let deletedMap = {
+      formations: [] as string[],
+      accompagnements: [] as string[],
+      realisations: [] as string[],
+      blog_posts: [] as string[]
+    };
+
+    let latestDbFormations: any[] = [];
+    let latestDbAccompagnements: any[] = [];
+    let latestDbRealisations: any[] = [];
+    let latestDbBlog: any[] = [];
+    let latestDbPartners: any[] = [];
+
+    const cleanEntityTitle = (title: string) => {
+      if (!title) return '';
+      return title
+        .replace(/^Nouvelle\s+Formation\s+d['’]Excellence\s*[:\-–—]?\s*/i, '')
+        .replace(/Nouvelle\s+Formation\s+d['’]Excellence\s*[:\-–—]?\s*/gi, '')
+        .trim();
+    };
+
+    const recomputeAll = () => {
+      // 1. Formations
+      const getFormationTime = (item: any) => {
+        if (item.createdAt) {
+          if (typeof item.createdAt.toDate === 'function') return item.createdAt.toDate().getTime();
+          if (item.createdAt.seconds) return item.createdAt.seconds * 1000;
+          return new Date(item.createdAt).getTime();
+        }
+        return 0;
+      };
+      const sortedDbFormations = [...latestDbFormations].sort((a, b) => getFormationTime(b) - getFormationTime(a));
+      const mergedFormations = [...sortedDbFormations, ...FORMATIONS.filter(f => !sortedDbFormations.some(df => df.id === f.id))].map(f => ({
+        ...f,
+        title: cleanEntityTitle(f.title)
+      }));
+      setFormations(mergedFormations.filter(f => !deletedMap.formations.includes(f.id)));
+
+      // 2. Accompagnements
+      const mergedAccomp = [...latestDbAccompagnements, ...DOMAINS_INTERVENTION.filter(d => !latestDbAccompagnements.some(da => da.id === d.id))];
+      setAccompagnements(mergedAccomp.filter(d => !deletedMap.accompagnements.includes(d.id)));
+
+      // 3. Realisations
+      const mergedReal = [...latestDbRealisations, ...PROJECTS.filter(p => !latestDbRealisations.some(dr => dr.id === p.id))];
+      setRealisations(mergedReal.filter(p => !deletedMap.realisations.includes(p.id)));
+
+      // 4. Blog Posts
+      const getPostTime = (post: any) => {
+        if (post.createdAt) {
+          if (typeof post.createdAt.toDate === 'function') return post.createdAt.toDate().getTime();
+          if (post.createdAt.seconds) return post.createdAt.seconds * 1000;
+          return new Date(post.createdAt).getTime();
+        }
+        return 0;
+      };
+      const sortedDbBlog = [...latestDbBlog].sort((a, b) => getPostTime(b) - getPostTime(a));
+      const mergedBlog = [...sortedDbBlog, ...BLOG_POSTS.filter(p => !sortedDbBlog.some(dp => dp.id === p.id))].map(p => ({
+        ...p,
+        title: cleanEntityTitle(p.title)
+      }));
+      setBlogPosts(mergedBlog.filter(p => !deletedMap.blog_posts.includes(p.id)));
+
+      // 5. Partners
+      const mergedPart = [...latestDbPartners, ...PARTNERS.filter(p => !latestDbPartners.some(dp => dp.id === p.id))];
+      setPartners(mergedPart);
+    };
+
+    // Listen to deleted items
+    const unsubDeleted = onSnapshot(doc(db, 'app_settings', 'deleted_items'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        deletedMap = {
+          formations: data.deletedFormationIds || [],
+          accompagnements: data.deletedAccompagnementIds || [],
+          realisations: data.deletedRealisationIds || [],
+          blog_posts: data.deletedBlogPostIds || []
+        };
+      }
+      recomputeAll();
+    }, (err) => {
+      console.warn("Deleted items config init:", err);
+    });
+
     const unsubFormations = onSnapshot(collection(db, 'formations'), (snapshot) => {
-      const dbFormations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // Overwrite static entries with same ID if exists, otherwise append
-      const merged = [...dbFormations, ...FORMATIONS.filter(f => !dbFormations.some(df => df.id === f.id))];
-      setFormations(merged);
+      latestDbFormations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      snapshot.docs.forEach(async (d) => {
+        const data = d.data();
+        if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
+          const cleaned = cleanEntityTitle(data.title);
+          try {
+            await updateDoc(doc(db, 'formations', d.id), { title: cleaned });
+          } catch (e) {
+            console.warn("Auto-clean formation title in DB:", e);
+          }
+        }
+      });
+      recomputeAll();
     }, (err) => {
       console.error("Error syncing formations:", err);
     });
 
-    const unsubBlog = onSnapshot(collection(db, 'blog_posts'), (snapshot) => {
-      const dbBlog = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const merged = [...dbBlog, ...BLOG_POSTS.filter(p => !dbBlog.some(dp => dp.id === p.id))];
-      
-      // Sort posts to ensure newly added courses/articles appear on top
-      const getPostTime = (post: any) => {
-        if (post.createdAt) {
-          if (typeof post.createdAt.toDate === 'function') {
-            return post.createdAt.toDate().getTime();
-          }
-          if (post.createdAt.seconds) {
-            return post.createdAt.seconds * 1000;
-          }
-          return new Date(post.createdAt).getTime();
-        }
-        if (post.date) {
-          const months: { [key: string]: number } = {
-            janvier: 0, fevrier: 1, mars: 2, avril: 3, mai: 4, juin: 5,
-            juillet: 6, aout: 7, septembre: 8, octobre: 9, novembre: 10, decembre: 11,
-            janv: 0, fevr: 1, avr: 3, jul: 6, sept: 8, oct: 9, nov: 10, dec: 11
-          };
-          const parts = post.date.toLowerCase().replace(/é/g, 'e').replace(/û/g, 'u').split(' ');
-          if (parts.length === 3) {
-            const day = parseInt(parts[0], 10);
-            const monthStr = parts[1];
-            const year = parseInt(parts[2], 10);
-            const month = months[monthStr] !== undefined ? months[monthStr] : 5;
-            return new Date(year, month, day).getTime();
-          }
-        }
-        return 0;
-      };
+    const unsubAccomp = onSnapshot(collection(db, 'accompagnements'), (snapshot) => {
+      latestDbAccompagnements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      recomputeAll();
+    }, (err) => {
+      console.error("Error syncing accompagnements:", err);
+    });
 
-      const sorted = merged.sort((a, b) => getPostTime(b) - getPostTime(a));
-      setBlogPosts(sorted);
+    const unsubReal = onSnapshot(collection(db, 'realisations'), (snapshot) => {
+      latestDbRealisations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      recomputeAll();
+    }, (err) => {
+      console.error("Error syncing realisations:", err);
+    });
+
+    const unsubBlog = onSnapshot(collection(db, 'blog_posts'), (snapshot) => {
+      latestDbBlog = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      snapshot.docs.forEach(async (d) => {
+        const data = d.data();
+        if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
+          const cleaned = cleanEntityTitle(data.title);
+          try {
+            await updateDoc(doc(db, 'blog_posts', d.id), { title: cleaned });
+          } catch (e) {
+            console.warn("Auto-clean blog title in DB:", e);
+          }
+        }
+      });
+      recomputeAll();
     }, (err) => {
       console.error("Error syncing blog posts:", err);
     });
 
     const unsubPartners = onSnapshot(collection(db, 'partners'), (snapshot) => {
-      const dbPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const merged = [...dbPartners, ...PARTNERS.filter(p => !dbPartners.some(dp => dp.id === p.id))];
-      setPartners(merged);
+      latestDbPartners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      recomputeAll();
     }, (err) => {
       console.error("Error syncing partners:", err);
     });
 
     return () => {
+      unsubDeleted();
       unsubFormations();
+      unsubAccomp();
+      unsubReal();
       unsubBlog();
       unsubPartners();
     };
@@ -256,7 +346,16 @@ export default function App() {
   const renderActivePage = () => {
     switch (activeTab) {
       case 'home':
-        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} formations={formations} blogPosts={blogPosts} partners={partners} />;
+        return (
+          <Home
+            setActiveTab={setActiveTab}
+            setSelectedDomainId={setSelectedDomainId}
+            formations={formations}
+            blogPosts={blogPosts}
+            partners={partners}
+            accompagnements={accompagnements}
+          />
+        );
       case 'about':
         return <About />;
       case 'accompagnements':
@@ -266,12 +365,13 @@ export default function App() {
             setSelectedDomainId={setSelectedDomainId}
             setActiveTab={setActiveTab}
             setPreselectedDomain={setPreselectedDomain}
+            domains={accompagnements}
           />
         );
       case 'formations':
         return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} />;
       case 'realisations':
-        return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} />;
+        return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} projects={realisations} />;
       case 'news':
         return <News blogPosts={blogPosts} />;
       case 'partners':
@@ -279,9 +379,26 @@ export default function App() {
       case 'contact':
         return <Contact preselectedDomain={preselectedDomain} setPreselectedDomain={setPreselectedDomain} />;
       case 'admin':
-        return <AdminPanel />;
+        return (
+          <AdminPanel
+            formations={formations}
+            accompagnements={accompagnements}
+            realisations={realisations}
+            blogPosts={blogPosts}
+            partners={partners}
+          />
+        );
       default:
-        return <Home setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} formations={formations} blogPosts={blogPosts} partners={partners} />;
+        return (
+          <Home
+            setActiveTab={setActiveTab}
+            setSelectedDomainId={setSelectedDomainId}
+            formations={formations}
+            blogPosts={blogPosts}
+            partners={partners}
+            accompagnements={accompagnements}
+          />
+        );
     }
   };
 
@@ -301,6 +418,8 @@ export default function App() {
         onSearch={handleGlobalSearch}
         isAdminLoggedIn={isAdminLoggedIn}
         formations={formations}
+        domains={accompagnements}
+        blogPosts={blogPosts}
       />
 
       {/* Main content viewport */}
@@ -310,41 +429,41 @@ export default function App() {
         </div>
 
         {/* Smart Page Navigation Switcher */}
-        <div id="smart-page-navigator" className="border-t border-slate-200/60 dark:border-slate-850 bg-slate-100/30 dark:bg-slate-950/10 py-10 mt-12">
+        <div id="smart-page-navigator" className="border-t border-slate-200/60 dark:border-slate-850 bg-slate-100/30 dark:bg-slate-950/10 py-4 mt-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               
               {/* Left Button - Previous Page */}
               <button
                 onClick={() => handleTabChange(prevTab)}
-                className="group w-full sm:w-auto flex items-center space-x-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-brand-blue/30 dark:hover:border-brand-emerald/30 transition-all duration-300 text-left cursor-pointer active:scale-98"
+                className="group w-full sm:w-auto flex items-center space-x-3 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-brand-blue/30 dark:hover:border-brand-emerald/30 transition-all duration-300 text-left cursor-pointer active:scale-98"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 group-hover:text-brand-blue dark:group-hover:text-brand-emerald-light transition-colors shrink-0">
-                  <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+                <div className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-500 group-hover:text-brand-blue dark:group-hover:text-brand-emerald-light transition-colors shrink-0">
+                  <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 </div>
                 <div>
-                  <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest font-sans">
                     Page précédente
                   </span>
-                  <span className="block text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-blue dark:group-hover:text-brand-emerald-light transition-colors">
+                  <span className="block text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-blue dark:group-hover:text-brand-emerald-light transition-colors">
                     {TAB_LABELS[prevTab]}
                   </span>
                 </div>
               </button>
 
               {/* Middle decorative text/indicator */}
-              <div className="hidden md:flex flex-col items-center justify-center text-center">
-                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+              <div className="flex flex-col items-center justify-center text-center py-1">
+                <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">
                   Navigation
                 </span>
-                <div className="flex items-center space-x-1.5 mt-1.5">
+                <div className="flex items-center space-x-1.5 mt-1">
                   {NAVIGATION_ORDER.map((tab) => (
                     <button
                       key={tab}
                       onClick={() => handleTabChange(tab)}
-                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                      className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
                         activeTab === tab
-                          ? 'w-7 bg-brand-blue dark:bg-brand-emerald'
+                          ? 'w-6 bg-brand-blue dark:bg-brand-emerald'
                           : 'bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600'
                       }`}
                       title={`Aller à ${TAB_LABELS[tab]}`}
@@ -356,18 +475,18 @@ export default function App() {
               {/* Right Button - Next Page */}
               <button
                 onClick={() => handleTabChange(nextTab)}
-                className="group w-full sm:w-auto flex items-center justify-between sm:justify-start space-x-4 p-4 rounded-2xl bg-gradient-to-r from-brand-blue to-brand-blue-light dark:from-brand-emerald dark:to-brand-emerald-light text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-right cursor-pointer active:scale-98"
+                className="group w-full sm:w-auto flex items-center justify-between sm:justify-start space-x-3 p-3 rounded-xl bg-gradient-to-r from-brand-blue to-brand-blue-light dark:from-brand-emerald dark:to-brand-emerald-light text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-right cursor-pointer active:scale-98"
               >
-                <div className="order-2 sm:order-none sm:mr-4 text-left">
-                  <span className="block text-[10px] font-bold text-white/75 uppercase tracking-widest font-sans">
+                <div className="order-2 sm:order-none sm:mr-3 text-left">
+                  <span className="block text-[9px] font-bold text-white/75 uppercase tracking-widest font-sans">
                     Page suivante
                   </span>
-                  <span className="block text-sm font-bold text-white group-hover:underline">
+                  <span className="block text-xs font-bold text-white group-hover:underline">
                     {TAB_LABELS[nextTab]}
                   </span>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white shrink-0">
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </button>
 

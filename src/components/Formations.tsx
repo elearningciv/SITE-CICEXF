@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Search, SlidersHorizontal, BookOpen, Clock, BarChart, GraduationCap, 
   MapPin, CheckCircle, Calendar, Send, HelpCircle, ArrowLeft, Terminal, 
   AlertCircle, TrendingUp, Cpu, Map, ShieldAlert, FileSpreadsheet, Layers, 
   Users, CheckSquare, CornerDownRight, ChevronRight, Briefcase, Building2,
-  FileText, MessageSquare
+  FileText, MessageSquare, Compass, Sparkles, Filter, X, ChevronDown, Check
 } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION } from '../data';
 import { Formation, DomainIntervention, SubDomain } from '../types';
+import { saveProspect } from '../lib/prospects';
 
 export function getTailoredDataForAxis(title: string, sub: any) {
   const t = title.toLowerCase();
@@ -586,7 +587,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                 <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Compétences d'Excellence Enseignées :</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   {sub.keyPoints.map((kp, kpIdx) => (
-                    <div key={kpIdx} className="flex items-start text-slate-600 dark:text-slate-400">
+                    <div key={kpIdx} className="flex items-start text-black dark:text-white">
                       <CheckCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0 mt-0.5" />
                       <span className="leading-snug text-[10.5px] font-medium">{kp}</span>
                     </div>
@@ -802,7 +803,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
   // Active sub-tab state: 'domains', 'axes', or 'certifications'
   const [activeSubTab, setActiveSubTab] = useState<'domains' | 'axes' | 'certifications'>(
-    defaultSubTab || (isOuterCert ? 'certifications' : 'domains')
+    defaultSubTab || 'certifications'
   );
 
   // Sync with prop if it changes externally
@@ -895,6 +896,21 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   const [selectedDomain, setSelectedDomain] = useState('Tous');
   const [selectedLevel, setSelectedLevel] = useState('Tous');
   const [selectedModality, setSelectedModality] = useState('Tous');
+  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close filter dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target as Node)) {
+        setIsFilterDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Timeline Module expansion index
   const [expandedModule, setExpandedModule] = useState<number>(0);
@@ -1013,6 +1029,19 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     } else {
       setErrors({});
       setSubmitSuccess(true);
+
+      // Enregistrement automatique du prospect en base de données pour export Excel
+      saveProspect({
+        name: formName,
+        email: formEmail,
+        phone: formPhone,
+        type: 'Candidature Formation',
+        target: selectedFormation?.title || 'Formation Certifiante',
+        session: formSession,
+        modality: selectedFormation?.modality || 'Présentiel',
+        channel: 'En ligne'
+      });
+
       setTimeout(() => {
         setFormName('');
         setFormEmail('');
@@ -1054,6 +1083,20 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     } else {
       setCorpErrors({});
       setCorpSuccess(true);
+
+      // Enregistrement automatique du prospect entreprise en base de données
+      saveProspect({
+        name: corpName,
+        email: corpEmail,
+        phone: corpPhone,
+        company: corpCompany || 'Non spécifiée',
+        participants: 'Intra-entreprise',
+        type: 'Demande Entreprise',
+        target: corpInterest || 'Demande Intra-Entreprise',
+        modality: 'Sur-mesure',
+        channel: 'En ligne'
+      });
+
       setTimeout(() => {
         setCorpCompany('');
         setCorpName('');
@@ -1093,6 +1136,19 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       }
 
       setErrors({});
+
+      // Enregistrement automatique du prospect en base de données pour export Excel
+      saveProspect({
+        name: formName,
+        email: formEmail,
+        phone: formPhone,
+        type: 'Inscription Individuelle',
+        target: currentSpecialty,
+        session: formSession,
+        modality: formModality,
+        channel: 'WhatsApp'
+      });
+
       const message = `Bonjour CICEXF,\n\nJe souhaite m'inscrire à la spécialité suivante :\n*${currentSpecialty}*\n\nVoici mes coordonnées d'inscription :\n- *Nom & Prénom :* ${formName}\n- *Email :* ${formEmail}\n- *Téléphone (WhatsApp) :* ${formPhone}\n- *Session souhaitée :* ${formSession}\n- *Modalité :* ${formModality}`;
       const encoded = encodeURIComponent(message);
       window.open(`https://wa.me/2250701970065?text=${encoded}`, '_blank');
@@ -1122,6 +1178,21 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       }
 
       setCorpErrors({});
+
+      // Enregistrement automatique du prospect entreprise en base de données pour export Excel
+      saveProspect({
+        name: corpName,
+        email: corpEmail,
+        phone: corpPhone,
+        company: corpCompany,
+        participants: String(corpParticipants),
+        type: 'Demande Entreprise',
+        target: currentSpecialty,
+        session: 'Sur-mesure',
+        modality: corpModality,
+        channel: 'WhatsApp'
+      });
+
       const message = `Bonjour CICEXF,\n\nNous souhaitons obtenir un devis pour la spécialité suivante :\n*${currentSpecialty}*\n\nVoici les informations de notre organisation :\n- *Entreprise / Organisme :* ${corpCompany}\n- *Nom du contact :* ${corpName}\n- *Email professionnel :* ${corpEmail}\n- *Téléphone :* ${corpPhone}\n- *Nombre de participants :* ${corpParticipants}\n- *Modalité souhaitée :* ${corpModality}`;
       const encoded = encodeURIComponent(message);
       window.open(`https://wa.me/2250701970065?text=${encoded}`, '_blank');
@@ -1159,6 +1230,19 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       }
 
       setErrors({});
+
+      // Enregistrement automatique du prospect en base de données pour export Excel
+      saveProspect({
+        name: formName,
+        email: formEmail,
+        phone: formPhone,
+        type: 'Inscription Individuelle',
+        target: currentSpecialty,
+        session: formSession,
+        modality: formModality,
+        channel: 'Email'
+      });
+
       const subject = `Inscription Individuelle - ${currentSpecialty}`;
       const body = `Bonjour CICEXF,\n\nJe souhaite m'inscrire à la spécialité suivante :\n${currentSpecialty}\n\nVoici mes coordonnées d'inscription :\n- Nom & Prénom : ${formName}\n- Email : ${formEmail}\n- Téléphone (WhatsApp) : ${formPhone}\n- Session souhaitée : ${formSession}\n- Modalité : ${formModality}`;
       window.location.href = `mailto:elearningciv@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1188,6 +1272,21 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       }
 
       setCorpErrors({});
+
+      // Enregistrement automatique du prospect entreprise en base de données pour export Excel
+      saveProspect({
+        name: corpName,
+        email: corpEmail,
+        phone: corpPhone,
+        company: corpCompany,
+        participants: String(corpParticipants),
+        type: 'Demande Entreprise',
+        target: currentSpecialty,
+        session: 'Sur-mesure',
+        modality: corpModality,
+        channel: 'Email'
+      });
+
       const subject = `Demande de Devis - ${currentSpecialty}`;
       const body = `Bonjour CICEXF,\n\nNous souhaitons obtenir un devis pour la spécialité suivante :\n${currentSpecialty}\n\nVoici les informations de notre organisation :\n- Entreprise / Organisme : ${corpCompany}\n- Nom du contact : ${corpName}\n- Email professionnel : ${corpEmail}\n- Téléphone : ${corpPhone}\n- Nombre de participants : ${corpParticipants}\n- Modalité souhaitée : ${corpModality}`;
       window.location.href = `mailto:elearningciv@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -1195,12 +1294,32 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     }
   };
 
+  // Unique domains dynamically extracted from available formations that have courses
+  const availableDomains = [
+    'Tous',
+    ...Array.from(
+      new Set(
+        formations
+          .map(f => f.domain || f.thematic)
+          .filter((d): d is string => Boolean(d && d.trim()))
+      )
+    )
+  ];
+
   // Filter certified courses
   const filteredFormations = formations.filter(f => {
-    const matchesSearch = f.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          f.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch = !q || 
+                          f.title?.toLowerCase().includes(q) || 
+                          f.shortDescription?.toLowerCase().includes(q) ||
+                          f.domain?.toLowerCase().includes(q) ||
+                          (f.specialty && f.specialty.toLowerCase().includes(q));
     
-    const matchesDomain = selectedDomain === 'Tous' || f.domain.includes(selectedDomain);
+    const matchesDomain = selectedDomain === 'Tous' || 
+      (f.domain && f.domain.toLowerCase().includes(selectedDomain.toLowerCase())) ||
+      (selectedDomain && f.domain && selectedDomain.toLowerCase().includes(f.domain.toLowerCase())) ||
+      (f.thematic && f.thematic.toLowerCase().includes(selectedDomain.toLowerCase()));
+
     const matchesLevel = selectedLevel === 'Tous' || f.level === selectedLevel;
     const matchesModality = selectedModality === 'Tous' || f.modality === selectedModality;
 
@@ -1223,21 +1342,166 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   };
 
   return (
-    <div id="formations-view" className="pt-6 pb-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="formations-view" className="pt-4 pb-8 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* -------------------- DUAL TAB NAVIGATION -------------------- */}
+        {/* -------------------- UNIFIED TOP TOOLBAR: DROPDOWN FILTER + SEARCH + FORMATIONS COUNT -------------------- */}
         {!selectedFormation && !selectedDomainObj && (
-          <div className="flex flex-col items-center text-center max-w-3xl mx-auto mb-6 space-y-3">
-            <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">
-              Académie d'Excellence CICEXF
-            </h1>
-            <div className="w-16 h-1 bg-brand-emerald rounded-full"></div>
-            <p className="text-xs sm:text-sm text-slate-550 dark:text-slate-400 font-sans leading-relaxed max-w-2xl">
-              Développez vos compétences stratégiques à travers nos grands pôles d'ingénierie thématiques ou certifiez vos équipes avec nos cursus professionnels de haut niveau.
-            </p>
+          <div className="mb-5 w-full animate-in fade-in duration-300">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-2 sm:p-2.5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+              
+              {/* 1. Bouton de filtre en liste déroulante (placé avant le bouton de recherche) */}
+              <div className="relative shrink-0" ref={filterDropdownRef}>
+                <button
+                  type="button"
+                  id="formations-filter-dropdown-btn"
+                  onClick={() => setIsFilterDropdownOpen(prev => !prev)}
+                  className={`w-full md:w-auto flex items-center justify-between space-x-2.5 px-4 py-2.5 sm:py-3 rounded-2xl border text-xs font-bold transition-all cursor-pointer ${
+                    selectedDomain !== 'Tous'
+                      ? 'bg-brand-emerald text-white border-brand-emerald shadow-md'
+                      : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-brand-emerald/50 hover:text-brand-emerald'
+                  }`}
+                  title="Filtrer les formations par thématique"
+                >
+                  <div className="flex items-center space-x-2 truncate">
+                    <Filter className={`w-4 h-4 shrink-0 ${selectedDomain !== 'Tous' ? 'text-white' : 'text-brand-emerald'}`} />
+                    <span className="truncate max-w-[150px] sm:max-w-[200px] xl:max-w-[240px]">
+                      {selectedDomain === 'Tous' ? 'Filtrer par thématique' : selectedDomain}
+                    </span>
+                  </div>
+                  <ChevronDown className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isFilterDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
 
+                {/* Dropdown Menu */}
+                {isFilterDropdownOpen && (
+                  <div className="absolute left-0 mt-2 w-72 sm:w-80 md:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                        Thématiques de formation
+                      </span>
+                      {selectedDomain !== 'Tous' && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedDomain('Tous');
+                            setIsFilterDropdownOpen(false);
+                          }}
+                          className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors cursor-pointer"
+                        >
+                          Réinitialiser
+                        </button>
+                      )}
+                    </div>
 
+                    <div className="max-h-80 overflow-y-auto p-1.5 space-y-1">
+                      {availableDomains.map((theme) => {
+                        const isSelected = selectedDomain === theme;
+                        const count = theme === 'Tous'
+                          ? formations.length
+                          : formations.filter(f => 
+                              f.domain === theme || 
+                              f.thematic === theme || 
+                              (f.domain && f.domain.toLowerCase().includes(theme.toLowerCase()))
+                            ).length;
+
+                        return (
+                          <button
+                            key={theme}
+                            type="button"
+                            onClick={() => {
+                              setSelectedDomain(theme);
+                              setIsFilterDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs transition-all flex items-center justify-between cursor-pointer group ${
+                              isSelected
+                                ? 'bg-brand-emerald text-white font-bold shadow-sm'
+                                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white font-medium'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2 truncate pr-2">
+                              {isSelected ? (
+                                <Check className="w-3.5 h-3.5 shrink-0 text-white" />
+                              ) : (
+                                <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 shrink-0 group-hover:bg-brand-emerald" />
+                              )}
+                              <span className="truncate">{theme === 'Tous' ? 'Toutes les thématiques' : theme}</span>
+                            </div>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold shrink-0 ${
+                              isSelected
+                                ? 'bg-white/20 text-white'
+                                : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-brand-emerald/10 group-hover:text-brand-emerald'
+                            }`}>
+                              {count}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* 2. Champ et Bouton de recherche */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+                className="flex items-center gap-2 flex-1 min-w-[200px]"
+              >
+                <div className="relative flex-1 flex items-center pl-2">
+                  <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
+                  <input
+                    id="formations-main-search-input"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Rechercher une formation, compétence..."
+                    className="w-full bg-transparent border-none outline-none text-xs sm:text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:ring-0"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white px-2 py-1 mr-1 cursor-pointer transition-colors"
+                      title="Effacer la recherche"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  id="formations-search-btn"
+                  className="px-4 py-2 sm:px-5 sm:py-2.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white text-xs font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer flex items-center space-x-1.5 shadow-md hover:scale-105 active:scale-95 shrink-0"
+                >
+                  <Search className="w-3.5 h-3.5 shrink-0" />
+                  <span>Rechercher</span>
+                </button>
+              </form>
+
+              {/* 3. Mention "X formations disponibles" sur la même ligne en haut */}
+              <div className="flex items-center justify-center space-x-2 px-3.5 py-2 sm:py-2.5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60 rounded-2xl shrink-0">
+                <BookOpen className="w-4 h-4 text-brand-emerald shrink-0" />
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-200 whitespace-nowrap">
+                  <strong className="text-brand-emerald font-mono text-sm mr-1">{filteredFormations.length}</strong>
+                  formation{filteredFormations.length > 1 ? 's' : ''} disponible{filteredFormations.length > 1 ? 's' : ''}
+                </span>
+                {(selectedDomain !== 'Tous' || searchQuery) && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedDomain('Tous');
+                      setSearchQuery('');
+                    }}
+                    className="text-slate-400 hover:text-red-500 ml-1 cursor-pointer transition-colors"
+                    title="Réinitialiser"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+
+            </div>
           </div>
         )}
 
@@ -1289,20 +1553,20 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
                         <div className="p-6 flex-grow flex flex-col justify-between">
                           <div className="space-y-2">
-                            <p className="text-[11px] text-slate-650 dark:text-slate-350 font-sans leading-relaxed line-clamp-3 text-justify">
+                            <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3 text-justify">
                               {domain.shortDescription}
                             </p>
                           </div>
                         </div>
 
                         <div className="px-6 pb-6 pt-4 border-t border-slate-50 dark:border-slate-800/60 flex justify-between items-center text-xs">
-                          <span className="font-bold text-slate-400 flex items-center">
-                            <Layers className="w-3.5 h-3.5 mr-1 text-brand-emerald" />
+                          <span className="font-bold text-black dark:text-white flex items-center">
+                            <Layers className="w-3.5 h-3.5 mr-1 text-black dark:text-white" />
                             {domain.subDomains.length} spécialités clés
                           </span>
-                          <span className="font-bold text-brand-emerald flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                          <span className="font-extrabold text-black dark:text-white flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
                             <span>Découvrir</span>
-                            <ChevronRight className="w-4 h-4" />
+                            <ChevronRight className="w-4 h-4 text-black dark:text-white" />
                           </span>
                         </div>
                       </div>
@@ -1329,7 +1593,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
               </div>
             ) : (
               // 1.2 Detailed view for selected General Training Domain
-              <div className="space-y-12 animate-in fade-in duration-300 font-sans">
+              <div className="space-y-6 animate-in fade-in duration-300 font-sans">
                 
                 {/* Beautiful Modern Domain Hero Header with top image banner */}
                 <div className="relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800">
@@ -1856,10 +2120,90 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   )}
                 </div>
 
+                {/* Related Certified Formations in this Domain */}
+                {(() => {
+                  const relatedFormations = formations.filter(f => 
+                    (f.domain && (
+                      f.domain.toLowerCase().includes(selectedDomainObj.title.toLowerCase()) ||
+                      selectedDomainObj.title.toLowerCase().includes(f.domain.toLowerCase())
+                    )) ||
+                    (f.thematic && (
+                      f.thematic.toLowerCase().includes(selectedDomainObj.title.toLowerCase()) ||
+                      selectedDomainObj.title.toLowerCase().includes(f.thematic.toLowerCase())
+                    ))
+                  );
 
+                  if (relatedFormations.length === 0) return null;
 
+                  return (
+                    <div className="pt-10 border-t border-slate-200/60 dark:border-slate-800/60 space-y-6">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-brand-emerald">
+                            Programmes Certifiants Rattachés
+                          </span>
+                          <h3 className="text-lg sm:text-xl font-display font-extrabold text-slate-900 dark:text-white">
+                            Formations d'Excellence dans ce Pôle ({relatedFormations.length})
+                          </h3>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setActiveSubTab('certifications');
+                            setSelectedDomainObj(null);
+                          }}
+                          className="text-xs font-bold text-brand-emerald hover:underline flex items-center space-x-1 cursor-pointer"
+                        >
+                          <span>Voir tout le catalogue</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {relatedFormations.map(rf => (
+                          <div
+                            key={rf.id}
+                            onClick={() => {
+                              setActiveSubTab('certifications');
+                              setSelectedFormation(rf);
+                              setSelectedDomainObj(null);
+                              window.scrollTo({ top: 0, behavior: 'smooth' });
+                            }}
+                            className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-lg hover:border-brand-emerald/40 transition-all flex flex-col justify-between p-5 space-y-4 cursor-pointer group"
+                          >
+                            <div className="space-y-2.5">
+                              <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase">
+                                <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1 text-brand-emerald" /> {rf.duration}</span>
+                                <span className="text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded font-bold">{rf.modality}</span>
+                              </div>
+                              <h4 className="font-display font-bold text-sm text-slate-900 dark:text-white line-clamp-2 group-hover:text-brand-emerald transition-colors">
+                                {rf.title}
+                              </h4>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">
+                                {rf.shortDescription}
+                              </p>
+                            </div>
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                              <span className="font-bold text-xs text-brand-emerald font-mono">{rf.price}</span>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setActiveSubTab('certifications');
+                                  setSelectedFormation(rf);
+                                  setSelectedDomainObj(null);
+                                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                                }}
+                                className="px-3 py-1.5 bg-brand-emerald text-white text-xs font-bold rounded-xl hover:bg-brand-emerald-light transition-all flex items-center space-x-1 cursor-pointer"
+                              >
+                                <span>Voir le cursus</span>
+                                <ChevronRight className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
@@ -2206,7 +2550,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             
             {/* 2.1 Course Details View */}
             {selectedFormation ? (
-              <div className="space-y-12 animate-in fade-in duration-300">
+              <div className="space-y-6 animate-in fade-in duration-300">
                 {/* Back Link */}
                 <button
                   onClick={handleBackToCatalog}
@@ -2222,7 +2566,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   <div className="absolute inset-0 grid-pattern opacity-10"></div>
                   <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-emerald/10 rounded-full blur-3xl"></div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-8 sm:p-12 items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-8 items-center">
                     <div className="lg:col-span-7 space-y-5">
                       <span className="bg-brand-emerald text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
                         Certifications d'Excellence CICEXF
@@ -2262,14 +2606,14 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 </div>
 
                 {/* Core Syllabus Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                   
                   {/* Left elements */}
-                  <div className="lg:col-span-8 space-y-8">
+                  <div className="lg:col-span-8 space-y-5">
                     
                     {/* Contexte & Enjeux */}
                     {selectedFormation.context && (
-                      <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
+                      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-3">
                         <h3 className="font-display text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
                           Contexte et Enjeux de la Formation
                         </h3>
@@ -2280,7 +2624,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     )}
 
                     {/* Objectifs & Resultats Attendus */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       {selectedFormation.objectives && (
                         <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
                           <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">Objectifs d'Apprentissage :</h4>
@@ -2504,9 +2848,16 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                               className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.session ? 'border-red-500' : 'border-slate-200 dark:border-slate-850'}`}
                             >
                               <option value="">-- Choisir une date --</option>
-                              {selectedFormation.sessions?.map((s, idx) => (
-                                <option key={idx} value={s.date}>{s.date} ({s.location})</option>
-                              ))}
+                              {(selectedFormation.sessions && selectedFormation.sessions.length > 0) ? (
+                                selectedFormation.sessions.map((s, idx) => (
+                                  <option key={idx} value={s.date}>{s.date} ({s.location})</option>
+                                ))
+                              ) : (
+                                <>
+                                  <option value="Session ouverte - Inscriptions en cours">Session ouverte - Inscriptions en cours (Abidjan & En ligne)</option>
+                                  <option value="Session sur-mesure / Intra-entreprise">Session sur-mesure / Intra-entreprise (Sur site ou Hybride)</option>
+                                </>
+                              )}
                             </select>
                             {errors.session && <span className="text-[10px] text-red-500">{errors.session}</span>}
                           </div>
@@ -2562,123 +2913,63 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
               </div>
             ) : (
-              // 2.2 Filterable Certified Course Catalog Grid
-              <div className="space-y-12 animate-in fade-in duration-300">
-                
-                {/* Advanced Filtering Options Bar */}
-                <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                  
-                  <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <div className="w-full md:flex-grow bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-3 py-2.5 flex items-center">
-                      <Search className="w-4 h-4 text-slate-400 mr-2" />
-                      <input
-                        id="catalog-search-input"
-                        type="text"
-                        placeholder="Rechercher une certification d'excellence..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-transparent border-none outline-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-450"
-                      />
-                    </div>
-                    
-                    <button
-                      onClick={() => {
-                        setSearchQuery('');
-                        setSelectedDomain('Tous');
-                        setSelectedLevel('Tous');
-                        setSelectedModality('Tous');
-                      }}
-                      className="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shrink-0"
-                    >
-                      Réinitialiser
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                    {/* Domain Select */}
-                    <div className="space-y-1.5">
-                      <label className="font-bold text-slate-500 uppercase tracking-wider text-[10px]">Filtrer par Thème :</label>
-                      <select
-                        id="filter-domain-select"
-                        value={selectedDomain}
-                        onChange={(e) => setSelectedDomain(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-3 py-2 outline-none"
-                      >
-                        <option value="Tous">Tous les thèmes</option>
-                        <option value="Informatique">Informatique &amp; BI</option>
-                        <option value="QHSE">Ingénierie QHSE</option>
-                        <option value="Finance">Ingénierie Financière</option>
-                        <option value="SIG">Développement Territorial / SIG</option>
-                        <option value="Audit">Audit &amp; Stratégie</option>
-                      </select>
-                    </div>
-
-                    {/* Level Select */}
-                    <div className="space-y-1.5">
-                      <label className="font-bold text-slate-500 uppercase tracking-wider text-[10px]">Niveau requis :</label>
-                      <select
-                        id="filter-level-select"
-                        value={selectedLevel}
-                        onChange={(e) => setSelectedLevel(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-3 py-2 outline-none"
-                      >
-                        <option value="Tous">Tous les niveaux</option>
-                        <option value="Débutant">Débutant</option>
-                        <option value="Intermédiaire">Intermédiaire</option>
-                        <option value="Avancé">Avancé</option>
-                        <option value="Tous niveaux">Tous niveaux</option>
-                      </select>
-                    </div>
-
-                    {/* Modality Select */}
-                    <div className="space-y-1.5">
-                      <label className="font-bold text-slate-500 uppercase tracking-wider text-[10px]">Modalité de cours :</label>
-                      <select
-                        id="filter-modality-select"
-                        value={selectedModality}
-                        onChange={(e) => setSelectedModality(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-lg px-3 py-2 outline-none"
-                      >
-                        <option value="Tous">Toutes les modalités</option>
-                        <option value="Présentiel">Présentiel</option>
-                        <option value="En ligne">En ligne</option>
-                        <option value="Hybride">Hybride</option>
-                      </select>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Course Cards Catalog Grid */}
+              // 2.2 Certified Course Catalog Grid (Full Width)
+              <div className="animate-in fade-in duration-300">
+                {/* Formation Cards Grid */}
                 {filteredFormations.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {filteredFormations.map(formation => (
                       <div
                         key={formation.id}
                         id={`formation-card-${formation.id}`}
-                        className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all flex flex-col h-full group"
+                        className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-emerald/40 transition-all flex flex-col h-full group cursor-pointer"
+                        onClick={() => handleSelectFormation(formation)}
                       >
-                        <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
+                        {/* Clickable Image */}
+                        <div 
+                          className="relative aspect-[16/10] bg-slate-100 overflow-hidden cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectFormation(formation);
+                          }}
+                          title={`Cliquer pour afficher les détails de la formation : ${formation.title}`}
+                        >
                           <img
                             src={formation.featuredImage}
                             alt={formation.title}
                             referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                           />
-                          <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md text-white text-[9px] font-bold px-3 py-1 rounded-full uppercase">
+                          <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[8.5px] font-bold px-2.5 py-1 rounded-full uppercase">
                             {formation.domain}
                           </div>
-                          {formation.isFeatured && (
-                            <div className="absolute top-4 right-4 bg-brand-emerald text-white text-[9px] font-bold px-2.5 py-1 rounded uppercase tracking-wider">
-                              Sélection Phare
-                            </div>
-                          )}
+                          <div className="absolute top-3 right-3 flex items-center space-x-1">
+                            {(formation.id.startsWith('f-') || formation.createdAt) && (
+                              <div className="bg-amber-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md flex items-center space-x-1">
+                                <Sparkles className="w-2.5 h-2.5" />
+                                <span>Nouveau</span>
+                              </div>
+                            )}
+                            {formation.isFeatured && (
+                              <div className="bg-brand-emerald text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                                ★ Phare
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="p-6 flex flex-col flex-grow space-y-4">
-                          <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+                        {/* Clickable Text under the image */}
+                        <div 
+                          className="p-5 sm:p-6 flex flex-col flex-grow space-y-3 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectFormation(formation);
+                          }}
+                          title={`Cliquer pour afficher les détails de la formation : ${formation.title}`}
+                        >
+                          <div className="flex justify-between text-[9.5px] font-bold text-slate-400 uppercase">
                             <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1 text-brand-emerald" /> {formation.duration}</span>
-                            <span>{formation.modality}</span>
+                            <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded">{formation.modality}</span>
                           </div>
 
                           <h3 className="font-display text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 group-hover:text-brand-emerald transition-colors">
@@ -2689,14 +2980,17 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             {formation.shortDescription}
                           </p>
 
-                          <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                            <span className="font-bold text-sm text-brand-emerald font-mono">{formation.price}</span>
+                          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                            <span className="font-bold text-xs sm:text-sm text-brand-emerald font-mono">{formation.price}</span>
                             <button
-                              onClick={() => handleSelectFormation(formation)}
-                              className="px-4 py-2 bg-slate-50 dark:bg-slate-800 hover:bg-brand-emerald hover:text-white dark:hover:bg-brand-emerald text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center space-x-1"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectFormation(formation);
+                              }}
+                              className="px-3.5 py-1.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl text-xs font-bold transition-all flex items-center space-x-1 cursor-pointer shadow-sm hover:scale-105 active:scale-95"
                             >
                               <span>Voir le programme</span>
-                              <ChevronRight className="w-4 h-4" />
+                              <ChevronRight className="w-3.5 h-3.5" />
                             </button>
                           </div>
                         </div>
@@ -2705,25 +2999,22 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   </div>
                 ) : (
                   <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center border border-slate-200/50 dark:border-slate-800 shadow-sm max-w-lg mx-auto space-y-4 animate-in fade-in">
-                    <SlidersHorizontal className="w-12 h-12 text-slate-300 mx-auto animate-bounce" />
+                    <SlidersHorizontal className="w-12 h-12 text-slate-300 mx-auto" />
                     <h3 className="font-display text-base font-bold text-slate-800 dark:text-slate-200">Aucune formation trouvée</h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      Aucun cursus ne correspond exactement à vos critères de recherche actuels. Veuillez essayer en réinitialisant les filtres de recherche.
+                      Aucun cursus ne correspond exactement à vos critères de recherche actuels. Veuillez essayer en réinitialisant les critères.
                     </p>
                     <button
                       onClick={() => {
                         setSearchQuery('');
                         setSelectedDomain('Tous');
-                        setSelectedLevel('Tous');
-                        setSelectedModality('Tous');
                       }}
-                      className="px-5 py-2 bg-brand-emerald text-white text-xs font-bold rounded-xl"
+                      className="px-5 py-2.5 bg-brand-emerald text-white text-xs font-bold rounded-xl cursor-pointer shadow-md hover:bg-brand-emerald-dark transition-all"
                     >
-                      Réinitialiser tous les filtres
+                      Réinitialiser les critères
                     </button>
                   </div>
                 )}
-
               </div>
             )}
 

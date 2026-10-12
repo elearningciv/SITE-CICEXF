@@ -17,6 +17,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    // Prospects / Form Submissions (Inscriptions, Devis, Contact)
+    match /prospects/{prospectId} {
+      allow read, write: if true;
+    }
+
     // Formations (Dynamic course listings)
     match /formations/{formationId} {
       allow read, write: if true;
@@ -29,6 +34,21 @@ service cloud.firestore {
 
     // Partners (Dynamic company trust logos)
     match /partners/{partnerId} {
+      allow read, write: if true;
+    }
+
+    // Accompagnements (Domaines d'intervention / Services)
+    match /accompagnements/{domainId} {
+      allow read, write: if true;
+    }
+
+    // Réalisations (Projets & Chantiers menés)
+    match /realisations/{realisationId} {
+      allow read, write: if true;
+    }
+
+    // Paramètres d'application et éléments supprimés
+    match /app_settings/{settingId} {
       allow read, write: if true;
     }
   }

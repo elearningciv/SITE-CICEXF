@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Camera, Layers, Award, Users, CheckCircle, ChevronRight, X, Play, Quote, Star, MessageSquare } from 'lucide-react';
 import { PROJECTS, TESTIMONIALS } from '../data';
+import { Project } from '../types';
 
 interface RealisationsProps {
   selectedDomainId?: string | null;
   setSelectedDomainId?: (id: string | null) => void;
+  projects?: Project[];
 }
 
-export default function Realisations({ selectedDomainId, setSelectedDomainId }: RealisationsProps) {
-  const [activeCaseStudy, setActiveCaseStudy] = useState<string>('p1');
+export default function Realisations({ selectedDomainId, setSelectedDomainId, projects }: RealisationsProps) {
+  const allProjects = projects && projects.length > 0 ? projects : PROJECTS;
+  const [activeCaseStudy, setActiveCaseStudy] = useState<string>(allProjects[0]?.id || 'p1');
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,12 +21,12 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
       } else if (selectedDomainId === 'ing-territoriale' || selectedDomainId === 'ing-informatique') {
         setActiveCaseStudy('p2');
       } else {
-        setActiveCaseStudy('p1');
+        setActiveCaseStudy(allProjects[0]?.id || 'p1');
       }
     }
-  }, [selectedDomainId]);
+  }, [selectedDomainId, allProjects]);
 
-  const selectedProject = PROJECTS.find(p => p.id === activeCaseStudy) || PROJECTS[0];
+  const selectedProject = allProjects.find(p => p.id === activeCaseStudy) || allProjects[0] || PROJECTS[0];
 
   const galleryImages = [
     { url: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80", title: "Atelier de formation Data Analyst à Abidjan" },
@@ -35,72 +38,56 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
   ];
 
   return (
-    <div id="realisations-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="realisations-view" className="py-6 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header Breadcrumb Banner */}
-        <div className="mb-12">
-          <nav className="flex text-xs font-semibold text-slate-400 mb-2">
-            <span>CICEXF</span>
-            <span className="mx-2">/</span>
-            <span className="text-brand-emerald">Nos réalisations</span>
-          </nav>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            Un tour en arrière : Impact &amp; Réalisations
-          </h1>
-          <div className="w-16 h-1.5 bg-brand-emerald mt-4 rounded-full"></div>
-          <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 max-w-2xl font-semibold uppercase tracking-widest">
-            Mesure scientifique de notre empreinte et revues de nos grands chantiers accomplis
-          </p>
-        </div>
-
         {/* 1. Global Impact Stats Panels */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm flex items-center space-x-4">
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-slate-800 text-brand-emerald flex items-center justify-center shrink-0">
               <Users className="w-6 h-6" />
             </div>
             <div>
               <span className="block font-bold text-2xl text-slate-900 dark:text-white">+2 000</span>
-              <span className="block text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Cadres formés certifiés</span>
+              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Cadres formés certifiés</span>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm flex items-center space-x-4">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
             <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-slate-800 text-brand-blue flex items-center justify-center shrink-0">
               <Layers className="w-6 h-6 text-brand-emerald" />
             </div>
             <div>
               <span className="block font-bold text-2xl text-slate-900 dark:text-white">+150</span>
-              <span className="block text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Missions d'envergure menées</span>
+              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Missions d'envergure menées</span>
             </div>
           </div>
 
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm flex items-center space-x-4">
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
             <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-slate-800 text-purple-500 flex items-center justify-center shrink-0">
               <Award className="w-6 h-6" />
             </div>
             <div>
               <span className="block font-bold text-2xl text-slate-900 dark:text-white">+50</span>
-              <span className="block text-[11px] text-slate-400 font-semibold uppercase tracking-wider">Partenariats institutionnels</span>
+              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Partenariats institutionnels</span>
             </div>
           </div>
         </section>
 
         {/* 2. Advanced Case Studies Explorer (Études de cas) */}
-        <section id="case-studies" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm p-8 mb-16">
-          <div className="mb-8 border-b border-slate-100 dark:border-slate-800 pb-4">
+        <section id="case-studies" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 mb-8">
+          <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">
             <h3 className="font-display text-xl font-extrabold text-slate-900 dark:text-white">
               Analyses de Cas d'École &amp; Projets de Référence
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
               Sélectionnez une étude de cas pour observer notre démarche de résolution de problèmes complexes.
             </p>
           </div>
 
           {/* horizontal selector tabs */}
-          <div className="flex flex-wrap gap-2.5 mb-8">
-            {PROJECTS.map(proj => (
+          <div className="flex flex-wrap gap-2.5 mb-6">
+            {allProjects.map(proj => (
               <button
                 key={proj.id}
                 onClick={() => {
@@ -114,7 +101,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
                   activeCaseStudy === proj.id
                     ? 'bg-brand-blue text-white shadow dark:bg-brand-emerald dark:text-white'
-                    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                 }`}
               >
                 {proj.title.split(':')[0]} {/* Shorten name for tab button */}
@@ -212,23 +199,23 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
         </section>
 
         {/* 3. Immersive Photo Gallery with Lightbox */}
-        <section id="photo-gallery-section" className="py-12 mb-16">
-          <div className="text-center max-w-3xl mx-auto mb-12">
-            <h3 className="font-display text-2xl font-extrabold text-slate-900 dark:text-white">
+        <section id="photo-gallery-section" className="py-6 mb-8">
+          <div className="text-center max-w-3xl mx-auto mb-6">
+            <h3 className="font-display text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
               Galerie d'Images de nos Récents Travaux
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-1.5 font-semibold">
+            <p className="text-xs text-slate-600 dark:text-slate-300 uppercase tracking-widest mt-1 font-semibold">
               Des moments forts capturés en salle et sur le terrain
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {galleryImages.map((img, idx) => (
               <div
                 key={idx}
                 id={`gallery-item-${idx}`}
                 onClick={() => setLightboxImage(img.url)}
-                className="relative group rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+                className="relative group rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 dark:bg-slate-800 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
               >
                 <img
                   src={img.url}
@@ -242,7 +229,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
                     <Camera className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-white font-sans">{img.title}</h4>
-                  <span className="text-[9px] text-slate-350 mt-0.5 uppercase tracking-wider">Agrandir la photo</span>
+                  <span className="text-[9px] text-slate-200 mt-0.5 uppercase tracking-wider">Agrandir la photo</span>
                 </div>
               </div>
             ))}
@@ -250,8 +237,8 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId }: 
         </section>
 
         {/* 4. Alumni Testimonials Segment (Témoignages d'anciens participants) */}
-        <section id="alumni-testimonials" className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 shadow-xl mb-16">
-          <div className="max-w-3xl mx-auto text-center mb-12">
+        <section id="alumni-testimonials" className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl mb-8">
+          <div className="max-w-3xl mx-auto text-center mb-6">
             <div className="inline-flex items-center space-x-1.5 bg-brand-emerald/10 text-brand-emerald px-3 py-1 rounded-full text-xs font-bold mb-3">
               <MessageSquare className="w-4 h-4" />
               <span>La voix de nos diplômés</span>

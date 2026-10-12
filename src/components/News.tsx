@@ -12,6 +12,22 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tous');
 
+  // Listen to select-article event from the ticker
+  React.useEffect(() => {
+    const handleSelectArticleEvent = (e: any) => {
+      const postId = e.detail?.postId;
+      if (postId) {
+        const found = blogPosts.find(p => p.id === postId || p.slug === postId);
+        if (found) {
+          setSelectedArticle(found);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    };
+    window.addEventListener('select-article', handleSelectArticleEvent);
+    return () => window.removeEventListener('select-article', handleSelectArticleEvent);
+  }, [blogPosts]);
+
   // Lead capture state
   const [leadName, setLeadName] = useState('');
   const [leadEmail, setLeadEmail] = useState('');
@@ -72,12 +88,12 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
   });
 
   return (
-    <div id="news-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="news-view" className="py-6 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* ------------------ VIEW 1: FULL EXPANDED ARTICLE VIEW ------------------ */}
         {selectedArticle ? (
-          <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-200">
+          <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
             {/* Back button */}
             <button
               onClick={handleCloseArticle}
@@ -209,23 +225,11 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
           </div>
         ) : (
           /* ------------------ VIEW 2: FILTERABLE LIST & SEARCH ------------------ */
-          <div className="space-y-12 animate-in fade-in duration-200">
-            
-            {/* Header Title block */}
-            <div className="text-center max-w-3xl mx-auto">
-              <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                Actualités &amp; Publications Institutionnelles
-              </h1>
-              <div className="w-16 h-1.5 bg-brand-emerald mx-auto mt-4 rounded-full"></div>
-              <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest leading-relaxed">
-                Analyses stratégiques, avis d'experts, actualités des formations et guides téléchargeables
-              </p>
-            </div>
-
+          <div className="space-y-6 animate-in fade-in duration-200">
             {/* Search and Category Filtering Tools */}
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
               {/* text search input bar */}
-              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2.5 flex items-center max-w-md mx-auto">
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 flex items-center max-w-md mx-auto">
                 <Search className="w-4 h-4 text-slate-400 mr-2" />
                 <input
                   id="blog-search-bar"
@@ -238,15 +242,15 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
               </div>
 
               {/* category horizontal scrolling pills list */}
-              <div className="flex flex-wrap gap-2 justify-center pt-2">
+              <div className="flex flex-wrap gap-2 justify-center pt-1">
                 {categoriesList.map(category => (
                   <button
                     key={category}
                     onClick={() => setActiveCategory(category)}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                    className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${
                       activeCategory === category
                         ? 'bg-brand-emerald text-white'
-                        : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
                     }`}
                   >
                     {category}
@@ -257,13 +261,13 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
 
             {/* Article Grid layout */}
             {filteredPosts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredPosts.map(post => (
                   <article
                     key={post.id}
                     id={`blog-card-${post.id}`}
                     onClick={() => handleOpenArticle(post)}
-                    className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/50 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all flex flex-col h-full cursor-pointer group"
+                    className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:scale-[1.01] transition-all flex flex-col h-full cursor-pointer group"
                   >
                     <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
                       <img
@@ -277,8 +281,8 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                       </div>
                     </div>
 
-                    <div className="p-6 flex flex-col flex-grow space-y-3">
-                      <div className="text-[10px] font-bold text-slate-450 dark:text-slate-500">
+                    <div className="p-5 flex flex-col flex-grow space-y-2.5">
+                      <div className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
                         <span>{post.date} • {post.readTime}</span>
                       </div>
                       
@@ -286,14 +290,14 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                         {post.title}
                       </h3>
 
-                      <p className="text-xs text-slate-550 dark:text-slate-400 leading-relaxed font-sans line-clamp-3 flex-grow font-light">
+                      <p className="text-xs text-slate-700 dark:text-slate-200 leading-relaxed font-sans line-clamp-3 flex-grow font-normal">
                         {post.excerpt}
                       </p>
 
-                      <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px] font-bold">
+                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px] font-bold">
                         <span className="text-brand-blue dark:text-brand-emerald-light group-hover:underline">Lire l'article entier →</span>
                         {post.guidePdfUrl && (
-                          <span className="text-slate-400 flex items-center text-[10px]"><Download className="w-3.5 h-3.5 mr-1" /> PDF inclus</span>
+                          <span className="text-slate-600 dark:text-slate-300 flex items-center text-[10px]"><Download className="w-3.5 h-3.5 mr-1" /> PDF inclus</span>
                         )}
                       </div>
                     </div>
@@ -304,7 +308,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
               <div className="bg-white dark:bg-slate-900 rounded-3xl p-12 text-center border border-slate-200/50 dark:border-slate-800 shadow-sm max-w-lg mx-auto space-y-4">
                 <HelpCircle className="w-12 h-12 text-slate-300 mx-auto" />
                 <h3 className="font-display text-base font-bold text-slate-800 dark:text-slate-200">Aucun article trouvé</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Aucune publication ne correspond à vos mots-clés ou filtres de catégorie actuels.
                 </p>
                 <button
@@ -320,7 +324,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
             )}
 
             {/* Newsletter & generic lead capture block */}
-            <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 border border-slate-800 shadow-lg relative overflow-hidden max-w-4xl mx-auto">
+            <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-lg relative overflow-hidden max-w-4xl mx-auto">
               <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-blue/10 rounded-full blur-2xl"></div>
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
@@ -332,7 +336,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                   <h3 className="font-display text-base sm:text-lg font-bold text-white">
                     Recevoir les Calendriers &amp; Guides trimestriels
                   </h3>
-                  <p className="text-[11px] text-slate-400 leading-relaxed font-sans font-light">
+                  <p className="text-[11px] text-slate-300 leading-relaxed font-sans font-normal">
                     Rejoignez plus de 1 500 professionnels abonnés et recevez directement dans votre boîte de messagerie nos guides thématiques sur le QHSE, les SIG, et le management stratégique.
                   </p>
                 </div>

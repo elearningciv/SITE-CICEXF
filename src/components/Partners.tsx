@@ -108,32 +108,32 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
   };
 
   return (
-    <div id="partners-view" className="py-16 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
+    <div id="partners-view" className="py-6 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Page Title banner */}
-        <div className="mb-12">
+        <div className="mb-6">
           <nav className="flex text-xs font-semibold text-slate-400 mb-2">
             <span>CICEXF</span>
             <span className="mx-2">/</span>
             <span className="text-brand-emerald">Espace Partenaires</span>
           </nav>
-          <h1 className="font-display text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Écosystème &amp; Espace Partenaires
           </h1>
-          <div className="w-16 h-1.5 bg-brand-emerald mt-4 rounded-full"></div>
-          <p className="mt-4 text-xs text-slate-500 dark:text-slate-400 max-w-2xl font-semibold uppercase tracking-widest">
+          <div className="w-16 h-1.5 bg-brand-emerald mt-3 rounded-full"></div>
+          <p className="mt-3 text-xs text-slate-600 dark:text-slate-300 max-w-2xl font-semibold uppercase tracking-widest">
             Rejoignez notre réseau de formateurs certifiés ou accédez à notre portail institutionnel
           </p>
         </div>
 
         {/* 1. Global Trust Partners display grid */}
-        <section id="our-partners" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm mb-16">
-          <div className="mb-8 border-b pb-4 border-slate-100 dark:border-slate-800">
+        <section id="our-partners" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm mb-8">
+          <div className="mb-6 border-b pb-3 border-slate-100 dark:border-slate-800">
             <h3 className="font-display text-xl font-extrabold text-slate-900 dark:text-white">
               Ils Nous Font Confiance à l'International
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
               Les institutions multilatérales, ministères publics et groupes privés qui collaborent avec le CICEXF.
             </p>
           </div>
