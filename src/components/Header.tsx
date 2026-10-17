@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ChevronDown, Search, Sun, Moon, Sparkles, BookOpen, MapPin, Globe, Phone, Mail, GraduationCap, Layers, Award, ChevronLeft, ChevronRight, Lock, Play, Pause } from 'lucide-react';
+import { Menu, X, ChevronDown, Search, Sun, Moon, Sparkles, BookOpen, MapPin, Globe, Phone, Mail, GraduationCap, Layers, Award, ChevronLeft, ChevronRight, Lock, Play, Pause, ArrowRight, Bot } from 'lucide-react';
 import { DOMAINS_INTERVENTION, FORMATIONS, BLOG_POSTS } from '../data';
 import { Formation, DomainIntervention, BlogPost } from '../types';
+import AiAssistantModal from './AiAssistantModal';
 
 interface HeaderProps {
   activeTab: string;
@@ -38,6 +39,7 @@ export default function Header({
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [formationsMenuOpen, setFormationsMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [aiModalOpen, setAiModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
@@ -255,8 +257,20 @@ export default function Header({
               </div>
             </div>
 
-            {/* Mobile Controls placed directly where WhatsApp was, matching Image 2: Search + Red MENU Button */}
-            <div id="header-mobile-actions" className="flex items-center space-x-2 shrink-0">
+            {/* Mobile Controls: Intelligent Assistant + Search + Red MENU Button */}
+            <div id="header-mobile-actions" className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+              {/* Bouton Intelligent Mobile - Posez vos questions au Conseiller IA */}
+              <button
+                id="ai-mobile-btn"
+                onClick={() => setAiModalOpen(true)}
+                className="h-10 px-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white shadow-sm flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
+                aria-label="Conseiller Intelligent"
+                title="Conseiller Intelligent CICEXF - Posez une question"
+              >
+                <Sparkles className="w-4 h-4 text-amber-200 fill-current animate-pulse" />
+                <span className="text-[11px] font-black uppercase tracking-wider text-white">IA</span>
+              </button>
+
               {/* Search Toggle Button (Image 2) */}
               <button
                 id="search-mobile-btn"
@@ -435,24 +449,37 @@ export default function Header({
                   Contact
                 </button>
 
-                <button
-                  id="nav-admin"
-                  onClick={() => handleNavClick('admin')}
-                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
-                    activeTab === 'admin'
-                      ? 'bg-white text-emerald-600 shadow-md scale-105 font-black'
-                      : isAdminLoggedIn
-                        ? 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/25 hover:text-white hover:scale-105 active:scale-95'
-                        : 'text-white/75 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  <Lock className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" />
-                  <span>Admin</span>
-                </button>
+                {/* Admin Tab - Visible uniquement pour les administrateurs connectés (elearningciv@gmail.com et cabinetcicexf@gmail.com) */}
+                {isAdminLoggedIn && (
+                  <button
+                    id="nav-admin"
+                    onClick={() => handleNavClick('admin')}
+                    className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                      activeTab === 'admin'
+                        ? 'bg-white text-emerald-600 shadow-md scale-105 font-black'
+                        : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/25 hover:text-white hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    <Lock className="w-3 h-3 xl:w-3.5 xl:h-3.5 shrink-0" />
+                    <span>Admin</span>
+                  </button>
+                )}
               </nav>
 
               {/* Controls on the blue bar */}
               <div id="bar-controls" className="flex items-center space-x-1.5 ml-2 pl-2 xl:ml-4 xl:pl-4 border-l border-white/20 shrink-0">
+                {/* Bouton Intelligent CICEXF - Posez vos questions */}
+                <button
+                  id="bar-ai-btn"
+                  onClick={() => setAiModalOpen(true)}
+                  className="px-2 lg:px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
+                  title="Conseiller Intelligent CICEXF - Posez vos questions sur les formations et expertises"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-current animate-pulse" />
+                  <span className="hidden xl:inline tracking-wide font-black">Conseiller IA</span>
+                  <span className="xl:hidden font-black">IA</span>
+                </button>
+
                 {/* Search Toggle */}
                 <button
                   id="bar-search-btn-toggle"
@@ -680,17 +707,16 @@ export default function Header({
               Contactez-nous
             </button>
 
-            <button
-              onClick={() => handleNavClick('admin')}
-              className={`w-full flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-bold transition-all ${
-                isAdminLoggedIn
-                  ? 'text-white bg-emerald-650 hover:bg-emerald-700 shadow-md'
-                  : 'text-slate-700 dark:text-slate-350 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-200 dark:hover:bg-slate-850'
-              }`}
-            >
-              <Lock className="w-4 h-4 shrink-0" />
-              <span>{isAdminLoggedIn ? "Administration (Console)" : "Espace Admin"}</span>
-            </button>
+            {/* Mobile Admin Nav Button - Visible uniquement pour les administrateurs connectés (elearningciv@gmail.com et cabinetcicexf@gmail.com) */}
+            {isAdminLoggedIn && (
+              <button
+                onClick={() => handleNavClick('admin')}
+                className="w-full flex items-center justify-center space-x-2 py-2.5 rounded-lg text-sm font-bold transition-all text-white bg-emerald-600 hover:bg-emerald-700 shadow-md cursor-pointer"
+              >
+                <Lock className="w-4 h-4 shrink-0" />
+                <span>Administration (Console)</span>
+              </button>
+            )}
 
             {/* Mobile Theme Switcher */}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between px-4 text-xs font-semibold text-slate-500">
@@ -728,6 +754,31 @@ export default function Header({
                 <X className="w-5 h-5" />
               </button>
             </form>
+
+            {/* Bannière Conseiller Intelligent dans la recherche */}
+            <div className="bg-gradient-to-r from-amber-500/15 via-brand-emerald/10 to-brand-blue/15 px-4 py-3 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                  <Sparkles className="w-4 h-4 fill-current" />
+                </div>
+                <div>
+                  <p className="text-xs font-black text-slate-900 dark:text-white leading-tight">
+                    Une question précise ? Posez-la au Conseiller Intelligent
+                  </p>
+                  <p className="text-[10.5px] text-slate-500 dark:text-slate-400">
+                    Réponses détaillées et ciblées sur chaque information de tous les onglets (Formations, Accompagnement, Réalisations, Tarifs...)
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => { setSearchOpen(false); setAiModalOpen(true); }}
+                className="px-3 py-1.5 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark text-white text-xs font-bold shadow-sm transition-all flex items-center justify-center space-x-1.5 cursor-pointer shrink-0"
+              >
+                <span>Poser une question</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
             <div className="p-4 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-50 dark:border-white/5">
               <span>Suggestions rapides : </span>
               <button type="button" onClick={() => { setSearchQuery('Data Analyst'); }} className="mx-1 px-2.5 py-1 rounded bg-slate-100 dark:bg-white/10 hover:bg-brand-emerald hover:text-white transition-colors">Data Analyst</button>
@@ -831,6 +882,13 @@ export default function Header({
           </div>
         </div>
       )}
+
+      {/* Interactive Intelligent AI Assistant Modal */}
+      <AiAssistantModal
+        isOpen={aiModalOpen}
+        onClose={() => setAiModalOpen(false)}
+        onNavigate={(tab) => handleNavClick(tab)}
+      />
     </>
   );
 }

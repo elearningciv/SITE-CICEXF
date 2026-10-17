@@ -5,6 +5,7 @@ import {
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
+  sendPasswordResetEmail,
   onAuthStateChanged, 
   signOut,
   User
@@ -79,6 +80,16 @@ interface AdminPanelProps {
   partners?: any[];
 }
 
+export const ALLOWED_ADMIN_EMAILS = [
+  'elearningciv@gmail.com',
+  'cabinetcicexf@gmail.com'
+];
+
+export const isAuthorizedAdminEmail = (email?: string | null): boolean => {
+  if (!email) return false;
+  return ALLOWED_ADMIN_EMAILS.includes(email.trim().toLowerCase());
+};
+
 export default function AdminPanel({
   formations = [],
   accompagnements = [],
@@ -90,8 +101,9 @@ export default function AdminPanel({
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
   const [email, setEmail] = useState('elearningciv@gmail.com');
-  const [password, setPassword] = useState('');
-  const [isNewAdminRegistration, setIsNewAdminRegistration] = useState(false);
+  const [password, setPassword] = useState('123456');
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   // Dashboard Data State
   const [prospects, setProspects] = useState<Prospect[]>([]);
@@ -176,11 +188,10 @@ export default function AdminPanel({
 
   // Track Auth state changes
   useEffect(() => {
-    loadDashboardData();
-    
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && user.email === 'elearningciv@gmail.com') {
+      if (user && isAuthorizedAdminEmail(user.email)) {
         setCurrentUser(user);
+        loadDashboardData();
       } else {
         setCurrentUser(null);
       }
@@ -289,52 +300,70 @@ export default function AdminPanel({
     }
   };
 
+  const handleForgotPassword = async () => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!isAuthorizedAdminEmail(cleanEmail)) {
+      setAuthError("Veuillez sélectionner une adresse administrateur autorisée (elearningciv@gmail.com ou cabinetcicexf@gmail.com).");
+      return;
+    }
+    setResetLoading(true);
+    setAuthError(null);
+    try {
+      await sendPasswordResetEmail(auth, cleanEmail);
+      setResetEmailSent(true);
+    } catch (err: any) {
+      console.warn("Reset password error:", err);
+      setAuthError("Impossible d'envoyer l'e-mail de réinitialisation. Vérifiez l'adresse et réessayez.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setAuthError(null);
+    setResetEmailSent(false);
     setLoading(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail !== 'elearningciv@gmail.com') {
-      setAuthError("Accès Refusé. Seul l'administrateur de ce site (elearningciv@gmail.com) peut accéder à cet espace.");
+    const cleanPassword = (password || '123456').trim();
+
+    if (!isAuthorizedAdminEmail(cleanEmail)) {
+      setAuthError("Accès Refusé. Seules les adresses elearningciv@gmail.com et cabinetcicexf@gmail.com sont autorisées à accéder à l'administration.");
       setLoading(false);
       return;
     }
 
     try {
-      if (isNewAdminRegistration) {
-        await createUserWithEmailAndPassword(auth, cleanEmail, password);
-      } else {
-        try {
-          await signInWithEmailAndPassword(auth, cleanEmail, password);
-        } catch (signInErr: any) {
-          if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') {
-            try {
-              await createUserWithEmailAndPassword(auth, cleanEmail, password);
-            } catch (signUpErr: any) {
-              if (signUpErr.code === 'auth/email-already-in-use') {
-                setAuthError("Mot de passe incorrect. Veuillez réessayer.");
-              } else if (signUpErr.code === 'auth/weak-password') {
-                setAuthError("Le mot de passe doit contenir au moins 6 caractères.");
-              } else {
-                setAuthError(signUpErr.message || "Erreur d'authentification.");
-              }
+      // 1. Tenter la connexion normale avec l'adresse autorisée et le mot de passe
+      try {
+        await signInWithEmailAndPassword(auth, cleanEmail, cleanPassword);
+      } catch (signInErr: any) {
+        // Si l'utilisateur n'existe pas encore dans Firebase Auth, tenter la création transparente
+        if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') {
+          try {
+            await createUserWithEmailAndPassword(auth, cleanEmail, cleanPassword);
+          } catch (createErr: any) {
+            if (createErr.code === 'auth/email-already-in-use') {
+              // Le compte existe mais le mot de passe saisi est erroné
+              setAuthError(`Mot de passe incorrect pour ${cleanEmail}. Le mot de passe par défaut est 123456. Vous pouvez utiliser l'option 'Mot de passe oublié ?'.`);
+            } else if (createErr.code === 'auth/weak-password') {
+              setAuthError("Le mot de passe doit comporter au moins 6 caractères (ex: 123456).");
+            } else {
+              setAuthError("Erreur d'authentification : " + (createErr.message || "Identifiants invalides"));
             }
-          } else {
-            setAuthError(signInErr.message || "Erreur d'authentification.");
           }
+        } else if (signInErr.code === 'auth/wrong-password') {
+          setAuthError(`Mot de passe incorrect pour ${cleanEmail}. Le mot de passe par défaut est 123456.`);
+        } else if (signInErr.code === 'auth/too-many-requests') {
+          setAuthError("Trop de tentatives. Veuillez patienter un instant avant de réessayer.");
+        } else {
+          setAuthError(signInErr.message || "Identifiants incorrects. Veuillez vérifier le mot de passe.");
         }
       }
     } catch (err: any) {
-      console.error('Auth error:', err);
-      if (err.code === 'auth/email-already-in-use') {
-        setAuthError("Ce compte administrateur a déjà été initialisé. Veuillez simplement vous connecter via l'onglet 'Se Connecter'.");
-        setIsNewAdminRegistration(false);
-      } else if (err.code === 'auth/weak-password') {
-        setAuthError("Le mot de passe doit contenir au moins 6 caractères.");
-      } else {
-        setAuthError(err.message || "Une erreur est survenue lors de l'authentification.");
-      }
+      console.error('Auth unexpected error:', err);
+      setAuthError("Une erreur inattendue est survenue lors de l'authentification.");
     } finally {
       setLoading(false);
     }
@@ -1042,13 +1071,146 @@ export default function AdminPanel({
     (p.name && p.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // If loading security check (bypassed but keeping loading screen state safe)
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-6">
         <div className="flex flex-col items-center space-y-4">
           <RefreshCw className="w-8 h-8 text-brand-emerald animate-spin" />
           <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">Chargement de la console d'administration...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Security gate: only elearningciv@gmail.com and cabinetcicexf@gmail.com can see the administrative rubriques
+  if (!currentUser || !isAuthorizedAdminEmail(currentUser.email)) {
+    return (
+      <div id="admin-login-view" className="min-h-screen bg-slate-50 dark:bg-[#020817] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 transition-colors">
+        <div className="max-w-md w-full space-y-6">
+          {/* Logo & Brand */}
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-2xl text-white font-extrabold text-2xl shadow-lg mb-3">
+              CX
+            </div>
+            <h2 className="text-2xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Console d'Administration CICEXF
+            </h2>
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+              Espace sécurisé de gestion et publication de contenu
+            </p>
+          </div>
+
+          {/* Access Restriction Warning */}
+          <div className="bg-amber-50 dark:bg-amber-950/25 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 space-y-2">
+            <div className="flex items-center space-x-2 font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wide text-[11px]">
+              <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+              <span>Accès strictement réservé</span>
+            </div>
+            <p className="text-[11.5px] leading-relaxed">
+              Les rubriques d'administration sont strictement confidentielles et réservées aux adresses habilitées du Cabinet :
+            </p>
+            <ul className="text-[11px] font-mono font-bold text-amber-900 dark:text-amber-200 list-disc list-inside space-y-0.5">
+              <li>elearningciv@gmail.com</li>
+              <li>cabinetcicexf@gmail.com</li>
+            </ul>
+          </div>
+
+          {/* Connected but unauthorized notice */}
+          {currentUser && !isAuthorizedAdminEmail(currentUser.email) && (
+            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-3.5 text-xs text-red-700 dark:text-red-300 flex items-start space-x-2.5">
+              <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-bold">Compte non habilité : {currentUser.email}</p>
+                <p className="text-[11px]">Cette adresse n'a pas les droits d'administration. Veuillez vous connecter avec l'une des deux adresses autorisées.</p>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="mt-2 text-xs font-bold text-red-700 dark:text-red-300 underline hover:no-underline cursor-pointer"
+                >
+                  Se déconnecter
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Login Card */}
+          <div className="bg-white dark:bg-slate-900 shadow-xl rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4">
+            {authError && (
+              <div className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 p-3 rounded-xl text-xs text-red-700 dark:text-red-300 flex items-start space-x-2">
+                <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                <span className="leading-snug">{authError}</span>
+              </div>
+            )}
+
+            {resetEmailSent && (
+              <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 p-3 rounded-xl text-xs text-emerald-800 dark:text-emerald-200 flex items-start space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <span className="leading-snug">
+                  Un e-mail de réinitialisation a été envoyé à <strong>{email}</strong>. Veuillez vérifier votre boîte de réception pour choisir un nouveau mot de passe.
+                </span>
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-1.5">
+                  Adresse e-mail administrateur
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="elearningciv@gmail.com ou cabinetcicexf@gmail.com"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-750 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
+                    Mot de passe (par défaut : 123456)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    disabled={resetLoading}
+                    className="text-[11px] text-brand-emerald dark:text-amber-400 font-semibold hover:underline cursor-pointer disabled:opacity-50"
+                  >
+                    {resetLoading ? "Envoi..." : "Mot de passe oublié ?"}
+                  </button>
+                </div>
+                <div className="relative">
+                  <Key className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+                  <input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="123456"
+                    className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-750 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all font-mono"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2.5 px-4 bg-brand-emerald hover:bg-brand-emerald-dark text-white text-xs font-bold rounded-xl shadow-md transition-all uppercase tracking-wider cursor-pointer flex items-center justify-center space-x-2 disabled:opacity-50 mt-2"
+              >
+                {loading ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Lock className="w-4 h-4" />
+                )}
+                <span>Accéder aux rubriques d'administration</span>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );
@@ -1073,13 +1235,25 @@ export default function AdminPanel({
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-800 dark:text-emerald-300 font-semibold shadow-xs">
+              <UserCheck className="w-4 h-4 text-emerald-600" />
+              <span>Connecté : {currentUser?.email}</span>
+            </div>
             <button
               onClick={loadDashboardData}
-              className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center space-x-2 cursor-pointer shadow-sm"
+              className="px-3.5 py-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-bold text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${dataLoading ? 'animate-spin' : ''}`} />
-              <span>Actualiser les données</span>
+              <span>Actualiser</span>
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 dark:bg-red-950/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 rounded-xl text-xs font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm"
+              title="Déconnexion sécurisée"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Déconnexion</span>
             </button>
           </div>
         </div>

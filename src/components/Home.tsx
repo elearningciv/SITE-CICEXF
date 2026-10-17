@@ -28,10 +28,10 @@ export default function Home({
 }: HomeProps) {
   const currentDomains = accompagnements && accompagnements.length > 0 ? accompagnements : DOMAINS_INTERVENTION;
   // Counter states to simulate count-up animation
-  const [professionalsFormed, setProfessionalsFormed] = useState(0);
-  const [missionsCompleted, setMissionsCompleted] = useState(0);
-  const [partnersCount, setPartnersCount] = useState(0);
-  const [satisfactionRate, setSatisfactionRate] = useState(0);
+  const [professionalsFormed, setProfessionalsFormed] = useState(2000);
+  const [missionsCompleted, setMissionsCompleted] = useState(150);
+  const [partnersCount, setPartnersCount] = useState(50);
+  const [satisfactionRate, setSatisfactionRate] = useState(95);
   const [hasCounted, setHasCounted] = useState(false);
   const countersSectionRef = useRef<HTMLDivElement>(null);
 
@@ -198,47 +198,47 @@ export default function Home({
         </div>
       </section>
 
-      {/* 2. Simulated Count-Up Statistics Area with white background */}
+      {/* 2. Count-Up Statistics Area matching Image 2 with reduced height */}
       <section 
         id="counters-section" 
         ref={countersSectionRef}
-        className="py-5 sm:py-6 bg-white dark:bg-slate-900 relative border-b border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden"
+        className="py-3.5 sm:py-4 lg:py-4.5 bg-brand-emerald dark:bg-[#54150A] text-white relative border-y border-[#B84F3D]/30 dark:border-[#380D06] shadow-md overflow-hidden transition-colors"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 text-center items-start">
             
-            <div className="space-y-1">
-              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
+            <div className="space-y-0.5 flex flex-col items-center justify-center">
+              <h4 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight drop-shadow-sm leading-none">
                 +{professionalsFormed}
               </h4>
-              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
+              <p className="text-[11px] sm:text-xs text-white font-medium max-w-[210px] leading-snug">
                 Professionnels formés de haut niveau
               </p>
             </div>
 
-            <div className="space-y-1">
-              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
+            <div className="space-y-0.5 flex flex-col items-center justify-center">
+              <h4 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight drop-shadow-sm leading-none">
                 +{missionsCompleted}
               </h4>
-              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
-                Missions d'envergure réalisées
+              <p className="text-[11px] sm:text-xs text-white font-medium max-w-[210px] leading-snug">
+                Missions d’envergure réalisées
               </p>
             </div>
 
-            <div className="space-y-1">
-              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
+            <div className="space-y-0.5 flex flex-col items-center justify-center">
+              <h4 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight drop-shadow-sm leading-none">
                 +{partnersCount}
               </h4>
-              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
+              <p className="text-[11px] sm:text-xs text-white font-medium max-w-[210px] leading-snug">
                 Partenaires institutionnels et bailleurs
               </p>
             </div>
 
-            <div className="space-y-1">
-              <h4 className="font-display text-3xl sm:text-4xl font-black text-black dark:text-white tracking-tight drop-shadow-sm">
+            <div className="space-y-0.5 flex flex-col items-center justify-center">
+              <h4 className="font-display text-2xl sm:text-3xl lg:text-[34px] font-black text-white tracking-tight drop-shadow-sm leading-none">
                 {satisfactionRate}%
               </h4>
-              <p className="text-xs sm:text-[13px] text-black dark:text-slate-200 font-bold">
+              <p className="text-[11px] sm:text-xs text-white font-medium max-w-[210px] leading-snug">
                 Taux de satisfaction des participants
               </p>
             </div>
@@ -354,9 +354,6 @@ export default function Home({
             {/* Card 1: Expertise reconnue */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Award className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Expertise internationale reconnue
                 </h3>
@@ -369,9 +366,6 @@ export default function Home({
             {/* Card 2: Consultants certifiés */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Users className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Consultants certifiés de l'industrie
                 </h3>
@@ -384,9 +378,6 @@ export default function Home({
             {/* Card 3: Approche pratique */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Zap className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Approche pratique orientée résultats
                 </h3>
@@ -399,9 +390,6 @@ export default function Home({
             {/* Card 4: Accompagnement personnalisé */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <CheckCircle2 className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Accompagnement personnalisé permanent
                 </h3>
@@ -414,9 +402,6 @@ export default function Home({
             {/* Card 5: Innovation */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Cpu className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Innovation technologique continue
                 </h3>
@@ -429,9 +414,6 @@ export default function Home({
             {/* Card 6: Excellence */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border-2 border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-md transition-all flex flex-col justify-between items-center text-center group">
               <div className="flex-grow flex flex-col items-center justify-start w-full">
-                <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-950/40 text-[#7c2d12] flex items-center justify-center mb-4 shrink-0 shadow-sm">
-                  <Award className="w-6 h-6 text-[#7c2d12] dark:text-amber-500" />
-                </div>
                 <h3 className="text-brown-value font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase mb-2">
                   Culture de l'Excellence absolue
                 </h3>

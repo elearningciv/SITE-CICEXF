@@ -9,7 +9,7 @@ import Realisations from './components/Realisations';
 import News from './components/News';
 import Contact from './components/Contact';
 import Partners from './components/Partners';
-import AdminPanel from './components/AdminPanel';
+import AdminPanel, { isAuthorizedAdminEmail } from './components/AdminPanel';
 import { trackVisit } from './lib/tracker';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase';
@@ -43,7 +43,7 @@ export default function App() {
   const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
   const [preselectedDomain, setPreselectedDomain] = useState<string>('Consultance');
   
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(true);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   
   // Real-time synced content states
   const [formations, setFormations] = useState<any[]>(FORMATIONS);
@@ -207,11 +207,10 @@ export default function App() {
   // Track Admin log state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // Free access is active, but we can still track sign-ins if desired
-      if (user && user.email === 'elearningciv@gmail.com') {
+      if (user && isAuthorizedAdminEmail(user.email)) {
         setIsAdminLoggedIn(true);
       } else {
-        setIsAdminLoggedIn(true); // Keep active for free access
+        setIsAdminLoggedIn(false);
       }
     });
     return unsubscribe;
