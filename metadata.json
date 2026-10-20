@@ -1,7 +1,9 @@
 {
   "name": "CICEXF - Cabinet International d'Expertise",
   "description": "Portail institutionnel haut de gamme du Cabinet International de Consultance, d'Expertise et de Formation (CICEXF) - Solutions de consultance, expertise et formation d'excellence.",
-  "requestFramePermissions": [],
+  "requestFramePermissions": [
+    "microphone"
+  ],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
   ]

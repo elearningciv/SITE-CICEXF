@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ChevronDown, Search, Sun, Moon, Sparkles, BookOpen, MapPin, Globe, Phone, Mail, GraduationCap, Layers, Award, ChevronLeft, ChevronRight, Lock, Play, Pause, ArrowRight, Bot } from 'lucide-react';
 import { DOMAINS_INTERVENTION, FORMATIONS, BLOG_POSTS } from '../data';
 import { Formation, DomainIntervention, BlogPost } from '../types';
-import AiAssistantModal from './AiAssistantModal';
 
 interface HeaderProps {
   activeTab: string;
@@ -18,6 +17,8 @@ interface HeaderProps {
   formations?: Formation[];
   domains?: DomainIntervention[];
   blogPosts?: BlogPost[];
+  aiModalOpen?: boolean;
+  setAiModalOpen?: (open: boolean) => void;
 }
 
 export default function Header({
@@ -33,13 +34,17 @@ export default function Header({
   isAdminLoggedIn,
   formations = FORMATIONS,
   domains = DOMAINS_INTERVENTION,
-  blogPosts = BLOG_POSTS
+  blogPosts = BLOG_POSTS,
+  aiModalOpen: externalAiModalOpen,
+  setAiModalOpen: externalSetAiModalOpen
 }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [formationsMenuOpen, setFormationsMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [internalAiModalOpen, setInternalAiModalOpen] = useState(false);
+  const aiModalOpen = externalAiModalOpen !== undefined ? externalAiModalOpen : internalAiModalOpen;
+  const setAiModalOpen = externalSetAiModalOpen || setInternalAiModalOpen;
   const [searchQuery, setSearchQuery] = useState('');
   const [scrolled, setScrolled] = useState(false);
 
@@ -883,12 +888,6 @@ export default function Header({
         </div>
       )}
 
-      {/* Interactive Intelligent AI Assistant Modal */}
-      <AiAssistantModal
-        isOpen={aiModalOpen}
-        onClose={() => setAiModalOpen(false)}
-        onNavigate={(tab) => handleNavClick(tab)}
-      />
     </>
   );
 }

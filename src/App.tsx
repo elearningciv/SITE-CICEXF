@@ -10,11 +10,13 @@ import News from './components/News';
 import Contact from './components/Contact';
 import Partners from './components/Partners';
 import AdminPanel, { isAuthorizedAdminEmail } from './components/AdminPanel';
+import AdilineChatbot from './components/AdilineChatbot';
+import adilineAvatar from './assets/images/adiline_avatar_1792359280949.jpg';
 import { trackVisit } from './lib/tracker';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
-import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS, PROJECTS } from './data';
 import { Formation, DomainIntervention, Project, BlogPost } from './types';
 
@@ -42,6 +44,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
   const [preselectedDomain, setPreselectedDomain] = useState<string>('Consultance');
+  const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
   
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   
@@ -353,6 +356,7 @@ export default function App() {
             blogPosts={blogPosts}
             partners={partners}
             accompagnements={accompagnements}
+            onOpenAssistant={() => setIsAiModalOpen(true)}
           />
         );
       case 'about':
@@ -396,6 +400,7 @@ export default function App() {
             blogPosts={blogPosts}
             partners={partners}
             accompagnements={accompagnements}
+            onOpenAssistant={() => setIsAiModalOpen(true)}
           />
         );
     }
@@ -419,6 +424,8 @@ export default function App() {
         formations={formations}
         domains={accompagnements}
         blogPosts={blogPosts}
+        aiModalOpen={isAiModalOpen}
+        setAiModalOpen={setIsAiModalOpen}
       />
 
       {/* Main content viewport */}
@@ -512,28 +519,61 @@ export default function App() {
         </button>
       )}
 
-      {/* Floating WhatsApp chat bubble */}
-      <div id="whatsapp-bubble-group" className="fixed bottom-6 right-6 z-40 flex flex-col items-end space-y-2 font-sans text-xs">
+      {/* Floating Channels & Chatbot Widgets */}
+      <div id="floating-actions-group" className="fixed bottom-6 right-6 z-40 flex flex-col items-end space-y-3 font-sans text-xs">
         
         {/* Animated prompt helper */}
         {showWaPrompt && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-xl shadow-xl max-w-[210px] relative animate-pulse flex flex-col space-y-1">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl shadow-2xl max-w-[240px] relative flex flex-col space-y-1.5 animate-in fade-in slide-in-from-bottom-2">
             <button
               onClick={() => setShowWaPrompt(false)}
-              className="absolute top-1 right-1 text-slate-400 hover:text-slate-600"
+              className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
               aria-label="Fermer la suggestion"
             >
-              <X className="w-3 h-3" />
+              <X className="w-3.5 h-3.5" />
             </button>
-            <div className="flex items-center space-x-1.5 text-brand-emerald font-bold text-[10px] uppercase">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Assistance en ligne</span>
+            <div className="flex items-center space-x-1.5 text-brand-blue dark:text-cyan-400 font-bold text-[11px] uppercase tracking-wide">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Conseiller IA & Direct</span>
             </div>
-            <p className="text-[10px] text-slate-600 dark:text-slate-350 leading-tight">
-              Des questions sur les tarifs ou inscriptions ? Discutez en direct !
+            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+              Une question sur nos formations, tarifs ou accompagnements ? Posez-la à notre Conseiller IA ou échangez sur WhatsApp !
             </p>
           </div>
         )}
+
+        {/* Floating ADILINE Virtual Assistant Button */}
+        <button
+          type="button"
+          id="floating-adiline-btn"
+          onClick={() => setIsAiModalOpen(true)}
+          className="p-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-blue via-indigo-900 to-[#8A2E1C] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all group cursor-pointer border border-white/25 hover:shadow-brand-blue/30"
+          aria-label="Ouvrir ADILINE - Assistante virtuelle"
+          title="Discuter avec ADILINE, assistante virtuelle du cabinet"
+        >
+          <div className="relative flex items-center justify-center">
+            <img 
+              src={adilineAvatar} 
+              alt="ADILINE" 
+              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform"
+            />
+            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
+            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full" />
+          </div>
+          <div className="flex flex-col text-left ml-2.5 pr-1">
+            <div className="flex items-center space-x-1.5">
+              <span className="font-extrabold text-[13px] whitespace-nowrap tracking-wide leading-tight text-white">
+                ADILINE
+              </span>
+              <span className="px-1.5 py-0.2 text-[8.5px] font-black bg-white/20 text-white rounded-full uppercase tracking-wider">
+                En ligne
+              </span>
+            </div>
+            <span className="text-[10.5px] text-blue-100/90 font-medium leading-tight">
+              Assistante virtuelle
+            </span>
+          </div>
+        </button>
 
         {/* Core WhatsApp Button linking directly */}
         <a
@@ -541,17 +581,28 @@ export default function App() {
           target="_blank"
           rel="noreferrer"
           id="floating-whatsapp-btn"
-          className="p-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-108 active:scale-95 transition-all group"
+          className="p-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all group"
           aria-label="Ouvrir le chat WhatsApp"
           title="Assistance WhatsApp directe"
         >
-          <MessageSquare className="w-6 h-6" />
+          <MessageSquare className="w-5 h-5" />
           <span className="max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-2 transition-all duration-300 font-bold text-[11px] whitespace-nowrap">
-            WhatsApp Direct
+            WhatsApp Direct (+225 07 01 97 00 65)
           </span>
         </a>
       </div>
 
+      {/* ADILINE Virtual Assistant Component */}
+      <AdilineChatbot
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        onNavigateTab={(tab, itemId) => {
+          handleTabChange(tab);
+          if (itemId && tab === 'formations') {
+            setSelectedDomainId(itemId);
+          }
+        }}
+      />
     </div>
   );
 }

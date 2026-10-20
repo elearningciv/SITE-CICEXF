@@ -8,6 +8,7 @@ import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS } from '../data'
 import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
 import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.jpg';
 import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.jpg';
+import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.jpg';
 
 interface HomeProps {
   setActiveTab: (tab: string) => void;
@@ -16,6 +17,7 @@ interface HomeProps {
   blogPosts?: BlogPost[];
   partners?: Partner[];
   accompagnements?: DomainIntervention[];
+  onOpenAssistant?: () => void;
 }
 
 export default function Home({ 
@@ -24,7 +26,8 @@ export default function Home({
   formations = FORMATIONS,
   blogPosts = BLOG_POSTS,
   partners = PARTNERS,
-  accompagnements = DOMAINS_INTERVENTION
+  accompagnements = DOMAINS_INTERVENTION,
+  onOpenAssistant
 }: HomeProps) {
   const currentDomains = accompagnements && accompagnements.length > 0 ? accompagnements : DOMAINS_INTERVENTION;
   // Counter states to simulate count-up animation
@@ -243,6 +246,65 @@ export default function Home({
               </p>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* ADILINE Virtual Assistant Presentation & Orientation Section */}
+      <section id="adiline-assistant-showcase" className="py-8 sm:py-10 bg-gradient-to-br from-slate-900 via-slate-950 to-[#021324] text-white relative overflow-hidden border-y border-slate-800">
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-blue/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-emerald/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="bg-slate-800/60 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl flex flex-col lg:flex-row items-center gap-8 justify-between">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
+              <div className="relative shrink-0">
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-brand-emerald/50 shadow-xl ring-4 ring-brand-emerald/20">
+                  <img src={adilineAvatar} alt="ADILINE - Assistante Virtuelle d'Accueil" className="w-full h-full object-cover" />
+                </div>
+                <span className="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow border border-white/20 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  En ligne
+                </span>
+              </div>
+
+              <div className="space-y-2 max-w-xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/30 border border-brand-blue/40 text-[11px] font-semibold text-blue-200">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>Assistante d'Accueil &amp; Conseillère d'Orientation</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold font-display text-white">
+                  Bonjour, je m'appelle <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-300">ADILINE</span>
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                  Ma raison d'être : vous orienter vers la formation certifiante adaptée à votre carrière, vous renseigner sur nos tarifs officiels en FCFA, calculer vos devis proforma avec remises et vous mettre en relation directe avec les experts du <strong>CICEXF</strong>.
+                </p>
+                <div className="flex flex-wrap gap-2 pt-1 text-[11px] text-slate-400 justify-center sm:justify-start">
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">🎯 Orientation personnalisée</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">📊 Devis instantané</span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">🎙️ Échange vocal &amp; écrit</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto shrink-0">
+              <button
+                onClick={onOpenAssistant}
+                id="home-open-adiline-btn"
+                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-brand-blue to-teal-600 hover:from-blue-600 hover:to-teal-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-brand-blue/30 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-cyan-200" />
+                <span>Poser une question à ADILINE</span>
+              </button>
+              <a
+                href="https://wa.me/2250701970065?text=Bonjour%20ADILINE%20et%20CICEXF,%20je%20souhaite%20des%20renseignements"
+                target="_blank"
+                rel="noreferrer"
+                className="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-white/10 text-white font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-center"
+              >
+                <span>WhatsApp Direct (+225 07 01 97 00 65)</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
