@@ -23,7 +23,16 @@
   --color-brand-emerald-dark: #54150A;
   --color-brand-emerald-light: #B84F3D;
 
-  --variant-dark: class;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Custom Scrollbars */

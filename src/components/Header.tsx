@@ -21,6 +21,17 @@ interface HeaderProps {
   setAiModalOpen?: (open: boolean) => void;
 }
 
+const MOBILE_TABS = [
+  { id: 'home', label: 'Accueil' },
+  { id: 'about', label: 'À propos' },
+  { id: 'accompagnements', label: 'Accompagnements' },
+  { id: 'formations', label: 'Formations' },
+  { id: 'realisations', label: 'Réalisations' },
+  { id: 'news', label: 'Actualités' },
+  { id: 'partners', label: 'Partenaires' },
+  { id: 'contact', label: 'Contact' },
+];
+
 export default function Header({
   activeTab,
   setActiveTab,
@@ -234,79 +245,104 @@ export default function Header({
       {/* Main Sticky Header */}
       <header
         id="main-header"
-        className="sticky top-0 z-40 transition-all duration-300 bg-white lg:bg-transparent dark:bg-[#020817] lg:dark:bg-transparent shadow-lg lg:shadow-none border-b border-slate-200 lg:border-b-0 dark:border-slate-800/80"
+        className="sticky top-0 z-40 transition-all duration-300 bg-white shadow-sm border-b border-slate-200"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:hidden">
-          <div className="flex justify-between items-center py-3 sm:py-3.5">
+        {/* Mobile Top Bar */}
+        <div className="w-full px-3 py-2.5 lg:hidden bg-white border-b border-slate-100">
+          <div className="flex justify-between items-center">
             {/* Logo */}
             <div
               id="header-logo"
-              className="flex items-center space-x-2.5 cursor-pointer group shrink-0"
+              className="flex items-center space-x-2 cursor-pointer group shrink-0"
               onClick={() => handleNavClick('home')}
             >
-              <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-105 transition-transform duration-300 shrink-0">
+              <div className="w-8.5 h-8.5 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:scale-105 transition-transform shrink-0">
                 CX
               </div>
               <div className="shrink-0">
-                <div className="flex items-center">
-                  <span className="font-display font-extrabold text-lg tracking-tight text-brand-blue dark:text-blue-400">
+                <div className="flex items-center leading-none">
+                  <span className="font-display font-extrabold text-base tracking-tight text-brand-blue">
                     CIC
                   </span>
-                  <span className="font-display font-extrabold text-lg tracking-tight text-brand-emerald dark:text-brand-emerald-light">
+                  <span className="font-display font-extrabold text-base tracking-tight text-brand-emerald">
                     EXF
                   </span>
                 </div>
-                <p className="text-[7.5px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold font-mono">
+                <p className="text-[7.5px] uppercase tracking-wider text-slate-500 font-bold font-mono mt-0.5">
                   Agrément N°25343/GTCA/RC/2025
                 </p>
               </div>
             </div>
 
             {/* Mobile Controls: Intelligent Assistant + Search + Red MENU Button */}
-            <div id="header-mobile-actions" className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+            <div id="header-mobile-actions" className="flex items-center space-x-1.5 shrink-0">
               {/* Bouton Intelligent Mobile - Posez vos questions au Conseiller IA */}
               <button
                 id="ai-mobile-btn"
                 onClick={() => setAiModalOpen(true)}
-                className="h-10 px-2.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white shadow-sm flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
+                className="h-8.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
                 aria-label="Conseiller Intelligent"
                 title="Conseiller Intelligent CICEXF - Posez une question"
               >
-                <Sparkles className="w-4 h-4 text-amber-200 fill-current animate-pulse" />
-                <span className="text-[11px] font-black uppercase tracking-wider text-white">IA</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-current animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-wider text-white">IA</span>
               </button>
 
-              {/* Search Toggle Button (Image 2) */}
+              {/* Search Toggle Button */}
               <button
                 id="search-mobile-btn"
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 hover:bg-slate-200 border border-slate-200/80 dark:border-slate-700 shadow-sm flex items-center justify-center transition-all active:scale-95 cursor-pointer"
+                className="w-8.5 h-8.5 rounded-xl bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200 shadow-xs flex items-center justify-center transition-all active:scale-95 cursor-pointer"
                 aria-label="Rechercher"
                 title="Rechercher sur le site"
               >
-                <Search className="w-5 h-5 text-red-600 dark:text-red-500 stroke-[2.4]" />
+                <Search className="w-4 h-4 text-red-600 stroke-[2.4]" />
               </button>
 
-              {/* Red MENU Button (Image 2) */}
+              {/* Red MENU Button */}
               <button
                 id="mobile-hamburger-btn"
                 onClick={() => setIsOpen(!isOpen)}
-                className="h-10 px-3.5 sm:px-4 rounded-2xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black shadow-md hover:shadow-lg transition-all flex items-center space-x-1.5 border border-red-500 active:scale-95 cursor-pointer shrink-0"
+                className="h-8.5 px-2.5 sm:px-3 rounded-xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-black shadow-sm transition-all flex items-center space-x-1 border border-red-500 active:scale-95 cursor-pointer shrink-0"
                 aria-label="Menu principal"
                 title="Menu principal"
               >
                 {isOpen ? (
-                  <X className="w-5 h-5 text-white stroke-[3]" />
+                  <X className="w-4 h-4 text-white stroke-[3]" />
                 ) : (
-                  <Menu className="w-5 h-5 text-white stroke-[3]" />
+                  <Menu className="w-4 h-4 text-white stroke-[3]" />
                 )}
-                <span className="text-xs sm:text-sm font-black uppercase tracking-wider text-white">
+                <span className="text-[11px] font-black uppercase tracking-wider text-white">
                   {isOpen ? 'FERMER' : 'MENU'}
                 </span>
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Visible Tabs Navigation Strip - Directly visible on mobile phones! */}
+        <nav
+          id="mobile-tabs-menu"
+          aria-label="Menu des onglets mobile"
+          className="lg:hidden bg-white border-b border-slate-200 shadow-xs px-2 py-2 overflow-x-auto no-scrollbar scroll-smooth flex items-center space-x-1.5"
+        >
+          {MOBILE_TABS.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleNavClick(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center space-x-1 shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-brand-blue text-white shadow-sm ring-2 ring-brand-blue/30 scale-102'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 border border-slate-200/60'
+                }`}
+              >
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </nav>
 
         {/* Desktop Blue Bar Navigation (Bande bleue statique de haute visibilité) */}
         <div className="hidden lg:block bg-brand-blue-dark py-2 border-t border-b border-[#001830] shadow-md relative z-30">

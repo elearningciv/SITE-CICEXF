@@ -8,7 +8,6 @@ import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS } from '../data'
 import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
 import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.jpg';
 import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.jpg';
-import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.jpg';
 
 interface HomeProps {
   setActiveTab: (tab: string) => void;
@@ -94,11 +93,11 @@ export default function Home({
   return (
     <div id="home-view" className="relative font-sans overflow-hidden">
       {/* 1. Humanized Executive Hero Section */}
-      <section id="hero-banner" className="relative flex items-center pt-8 pb-7 sm:pt-10 sm:pb-8 bg-white dark:bg-slate-900 text-slate-900 dark:text-white overflow-hidden border-b border-slate-200/80 dark:border-slate-800">
+      <section id="hero-banner" className="relative flex items-center pt-8 pb-7 sm:pt-10 sm:pb-8 bg-white text-slate-900 overflow-hidden border-b border-slate-200">
         {/* Subtle executive architectural backdrop */}
-        <div className="absolute inset-0 opacity-40 dark:opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#cbd5e1 0.7px, transparent 0.7px)', backgroundSize: '24px 24px' }}></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue/5 dark:bg-brand-blue/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-emerald/5 dark:bg-brand-emerald/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#cbd5e1 0.7px, transparent 0.7px)', backgroundSize: '24px 24px' }}></div>
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-blue/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-brand-emerald/5 rounded-full blur-3xl pointer-events-none"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-2 sm:py-3">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
@@ -106,21 +105,21 @@ export default function Home({
             {/* Left Column: Human Editorial Value Proposition */}
             <div className="lg:col-span-7 space-y-4 text-left">
               {/* Institutional Official Kicker */}
-              <div className="inline-flex items-center space-x-2 bg-slate-100 dark:bg-slate-800/80 backdrop-blur-md px-3 py-1 rounded-full border border-slate-300 dark:border-slate-700 shadow-xs">
+              <div className="inline-flex items-center space-x-2 bg-slate-50 px-3 py-1 rounded-full border border-slate-200 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-brand-emerald shrink-0" />
-                <span className="text-[10px] sm:text-[10.5px] font-bold tracking-wider uppercase text-black dark:text-white">
+                <span className="text-[10px] sm:text-[10.5px] font-bold tracking-wider uppercase text-slate-800">
                   Cabinet International d'Expertise &middot; Agrément N°25343/GTCA/RC/2025
                 </span>
               </div>
 
               {/* Authentic Human-Centered Headline */}
-              <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight leading-[1.15] text-black dark:text-white">
+              <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[40px] font-extrabold tracking-tight leading-[1.15] text-slate-900">
                 Développer le potentiel humain, structurer la gouvernance et accélérer la réussite de vos organisations.
               </h1>
 
               {/* Subtitle with Real Mission Proximity */}
-              <p className="text-xs sm:text-sm text-black dark:text-white max-w-2xl font-sans font-medium leading-relaxed">
-                Le <strong className="font-bold text-black dark:text-white">CICEXF</strong> réunit des experts de haut rang, des universitaires et des praticiens chevronnés pour accompagner les institutions publiques, les grandes entreprises et les bailleurs internationaux en Afrique de l'Ouest.
+              <p className="text-xs sm:text-sm text-slate-700 max-w-2xl font-sans font-medium leading-relaxed">
+                Le <strong className="font-bold text-slate-900">CICEXF</strong> réunit des experts de haut rang, des universitaires et des praticiens chevronnés pour accompagner les institutions publiques, les grandes entreprises et les bailleurs internationaux en Afrique de l'Ouest.
               </p>
 
               {/* CTAs */}
@@ -144,18 +143,18 @@ export default function Home({
               </div>
 
               {/* Human Impact Badges Row */}
-              <div className="pt-3 border-t border-slate-200 dark:border-white/10 grid grid-cols-3 gap-3 text-black dark:text-white max-w-xl">
+              <div className="pt-3 border-t border-slate-200 grid grid-cols-3 gap-3 text-slate-900 max-w-xl">
                 <div>
-                  <div className="font-display text-lg sm:text-xl font-extrabold text-black dark:text-white">+2000</div>
-                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Cadres formés</div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-slate-900">+2000</div>
+                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Cadres formés</div>
                 </div>
                 <div>
-                  <div className="font-display text-lg sm:text-xl font-extrabold text-brand-emerald dark:text-brand-emerald-light">+150</div>
-                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Missions réussies</div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-brand-emerald">+150</div>
+                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Missions réussies</div>
                 </div>
                 <div>
-                  <div className="font-display text-lg sm:text-xl font-extrabold text-amber-600 dark:text-amber-400">95%</div>
-                  <div className="text-[10px] sm:text-[11px] text-black dark:text-slate-300 font-semibold">Satisfaction client</div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-amber-600">95%</div>
+                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Satisfaction client</div>
                 </div>
               </div>
             </div>
@@ -246,65 +245,6 @@ export default function Home({
               </p>
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* ADILINE Virtual Assistant Presentation & Orientation Section */}
-      <section id="adiline-assistant-showcase" className="py-8 sm:py-10 bg-gradient-to-br from-slate-900 via-slate-950 to-[#021324] text-white relative overflow-hidden border-y border-slate-800">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-blue/15 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-emerald/15 rounded-full blur-3xl pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-slate-800/60 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl flex flex-col lg:flex-row items-center gap-8 justify-between">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
-              <div className="relative shrink-0">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-brand-emerald/50 shadow-xl ring-4 ring-brand-emerald/20">
-                  <img src={adilineAvatar} alt="ADILINE - Assistante Virtuelle d'Accueil" className="w-full h-full object-cover" />
-                </div>
-                <span className="absolute -bottom-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow border border-white/20 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                  En ligne
-                </span>
-              </div>
-
-              <div className="space-y-2 max-w-xl">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/30 border border-brand-blue/40 text-[11px] font-semibold text-blue-200">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>Assistante d'Accueil &amp; Conseillère d'Orientation</span>
-                </div>
-                <h3 className="text-xl sm:text-2xl font-bold font-display text-white">
-                  Bonjour, je m'appelle <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-teal-300 to-emerald-300">ADILINE</span>
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  Ma raison d'être : vous orienter vers la formation certifiante adaptée à votre carrière, vous renseigner sur nos tarifs officiels en FCFA, calculer vos devis proforma avec remises et vous mettre en relation directe avec les experts du <strong>CICEXF</strong>.
-                </p>
-                <div className="flex flex-wrap gap-2 pt-1 text-[11px] text-slate-400 justify-center sm:justify-start">
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">🎯 Orientation personnalisée</span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">📊 Devis instantané</span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-800/80 border border-white/5">🎙️ Échange vocal &amp; écrit</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 w-full lg:w-auto shrink-0">
-              <button
-                onClick={onOpenAssistant}
-                id="home-open-adiline-btn"
-                className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-brand-blue to-teal-600 hover:from-blue-600 hover:to-teal-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-brand-blue/30 hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-cyan-200" />
-                <span>Poser une question à ADILINE</span>
-              </button>
-              <a
-                href="https://wa.me/2250701970065?text=Bonjour%20ADILINE%20et%20CICEXF,%20je%20souhaite%20des%20renseignements"
-                target="_blank"
-                rel="noreferrer"
-                className="px-6 py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-700/80 border border-white/10 text-white font-semibold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-center"
-              >
-                <span>WhatsApp Direct (+225 07 01 97 00 65)</span>
-              </a>
-            </div>
           </div>
         </div>
       </section>

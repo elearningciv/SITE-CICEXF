@@ -225,9 +225,6 @@ export default function App() {
 
   // Back to top scroll state
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
-  
-  // WhatsApp bubble prompt expand state
-  const [showWaPrompt, setShowWaPrompt] = useState<boolean>(true);
 
   // Apply dark mode class to HTML element
   useEffect(() => {
@@ -407,7 +404,7 @@ export default function App() {
   };
 
   return (
-    <div id="app-root" className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#020817] transition-colors duration-300">
+    <div id="app-root" className="min-h-screen flex flex-col bg-white text-slate-900 transition-colors duration-300">
       
       {/* Primary header navbar */}
       <Header
@@ -520,76 +517,58 @@ export default function App() {
       )}
 
       {/* Floating Channels & Chatbot Widgets */}
-      <div id="floating-actions-group" className="fixed bottom-6 right-6 z-40 flex flex-col items-end space-y-3 font-sans text-xs">
+      <div id="floating-actions-group" className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end gap-3 font-sans">
         
-        {/* Animated prompt helper */}
-        {showWaPrompt && (
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl shadow-2xl max-w-[240px] relative flex flex-col space-y-1.5 animate-in fade-in slide-in-from-bottom-2">
-            <button
-              onClick={() => setShowWaPrompt(false)}
-              className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-              aria-label="Fermer la suggestion"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-            <div className="flex items-center space-x-1.5 text-brand-blue dark:text-cyan-400 font-bold text-[11px] uppercase tracking-wide">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>Conseiller IA & Direct</span>
-            </div>
-            <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
-              Une question sur nos formations, tarifs ou accompagnements ? Posez-la à notre Conseiller IA ou échangez sur WhatsApp !
-            </p>
-          </div>
-        )}
-
-        {/* Floating ADILINE Virtual Assistant Button */}
-        <button
-          type="button"
-          id="floating-adiline-btn"
-          onClick={() => setIsAiModalOpen(true)}
-          className="p-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-brand-blue via-indigo-900 to-[#8A2E1C] text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all group cursor-pointer border border-white/25 hover:shadow-brand-blue/30"
-          aria-label="Ouvrir ADILINE - Assistante virtuelle"
-          title="Discuter avec ADILINE, assistante virtuelle du cabinet"
-        >
-          <div className="relative flex items-center justify-center">
-            <img 
-              src={adilineAvatar} 
-              alt="ADILINE" 
-              className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-white shadow-md group-hover:scale-105 transition-transform"
-            />
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
-            <span className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full" />
-          </div>
-          <div className="flex flex-col text-left ml-2.5 pr-1">
-            <div className="flex items-center space-x-1.5">
-              <span className="font-extrabold text-[13px] whitespace-nowrap tracking-wide leading-tight text-white">
-                ADILINE
-              </span>
-              <span className="px-1.5 py-0.2 text-[8.5px] font-black bg-white/20 text-white rounded-full uppercase tracking-wider">
-                En ligne
-              </span>
-            </div>
-            <span className="text-[10.5px] text-blue-100/90 font-medium leading-tight">
-              Assistante virtuelle
-            </span>
-          </div>
-        </button>
-
         {/* Core WhatsApp Button linking directly */}
         <a
           href="https://wa.me/2250701970065"
           target="_blank"
           rel="noreferrer"
           id="floating-whatsapp-btn"
-          className="p-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all group"
-          aria-label="Ouvrir le chat WhatsApp"
-          title="Assistance WhatsApp directe"
+          className="w-11 h-11 sm:w-12 sm:h-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all group border-2 border-white dark:border-slate-800"
+          aria-label="Ouvrir le chat WhatsApp direct"
+          title="WhatsApp Direct (+225 07 01 97 00 65)"
         >
-          <MessageSquare className="w-5 h-5" />
-          <span className="max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-2 transition-all duration-300 font-bold text-[11px] whitespace-nowrap">
-            WhatsApp Direct (+225 07 01 97 00 65)
-          </span>
+          <MessageSquare className="w-5 h-5 text-white" />
+          <span className="sr-only">WhatsApp Direct</span>
         </a>
+
+        {/* Floating ADILINE Virtual Assistant - Point WhatsApp Style */}
+        <div className="flex items-center gap-2 group">
+          {/* WhatsApp-style Speech Bubble callout */}
+          <div 
+            onClick={() => setIsAiModalOpen(true)}
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 bg-white dark:bg-slate-900 text-slate-800 dark:text-white rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 text-xs font-semibold whitespace-nowrap cursor-pointer hover:border-emerald-500/50 hover:shadow-2xl transition-all"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Discuter avec ADILINE</span>
+            <span className="text-emerald-500">💬</span>
+          </div>
+
+          <button
+            type="button"
+            id="floating-adiline-btn"
+            onClick={() => setIsAiModalOpen(true)}
+            className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-emerald-600 via-[#25D366] to-teal-500 p-0.5 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer ring-4 ring-emerald-500/20 hover:ring-emerald-500/40"
+            aria-label="Discuter avec ADILINE - Assistante virtuelle"
+            title="Discuter avec ADILINE, assistante d'accueil du cabinet"
+          >
+            <img 
+              src={adilineAvatar} 
+              alt="ADILINE" 
+              className="w-full h-full rounded-full object-cover border-2 border-white shadow-inner"
+            />
+            
+            {/* Green Online radar pulse */}
+            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-400 border-2 border-white dark:border-slate-900 rounded-full animate-ping" />
+            <span className="absolute top-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
+            
+            {/* WhatsApp Mini Badge Icon */}
+            <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-md border-2 border-white dark:border-slate-900">
+              <MessageSquare className="w-2.5 h-2.5 text-white" />
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* ADILINE Virtual Assistant Component */}
