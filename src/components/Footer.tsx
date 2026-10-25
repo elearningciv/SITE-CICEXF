@@ -45,66 +45,78 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
   };
 
   return (
-    <footer id="institutional-footer" className="bg-brand-emerald dark:bg-[#54150A] text-white border-t border-[#B84F3D]/40 pt-7 pb-4 relative overflow-hidden transition-colors shadow-2xl">
+    <footer id="institutional-footer" className="bg-brand-emerald dark:bg-[#54150A] text-white border-t border-[#B84F3D]/40 pt-4 pb-3 sm:pt-5 sm:pb-4 relative overflow-hidden transition-colors shadow-2xl">
       {/* Visual background details */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-black/25 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 mb-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-3">
           
           {/* Identity & Legal Info */}
           <div className="space-y-2">
-            <div className="flex items-center space-x-2.5">
-              <div className="w-8 h-8 bg-white text-[#8A2E1C] rounded-lg flex items-center justify-center font-black text-base shadow-md shrink-0">
+            <div className="flex items-center space-x-2">
+              <div className="w-7 h-7 bg-white text-[#8A2E1C] rounded-lg flex items-center justify-center font-black text-sm shadow-md shrink-0">
                 CX
               </div>
-              <span className="font-display font-extrabold text-lg tracking-tight text-white">
-                CIC<span className="text-amber-300">EXF</span>
+              <span className="font-display font-extrabold text-base tracking-tight text-white">
+                CIC<span className="text-yellow-400">EXF</span>
               </span>
             </div>
-            <p className="text-[11px] text-amber-50/90 leading-relaxed font-sans font-medium line-clamp-3">
-              Cabinet International de Consultance, d'Expertise et de Formation. Solutions de haut niveau pour l'accompagnement des organisations et la formation de cadres d'excellence.
-            </p>
-            <div className="pt-1.5 text-[9.5px] text-amber-200/80 space-y-0.5 border-t border-white/20 font-mono">
-              <p>Récépissé N°25343/GTCA/RC/2025</p>
-              <p>N°IDU CI-2025-0058238 N · Cocody Palmeraie</p>
+
+            {/* Références Officielles du Cabinet et Numéro d'Agrément */}
+            <div className="pt-1 text-[10.5px] space-y-1 font-sans">
+              <div className="flex items-center space-x-1.5 flex-wrap">
+                <span className="text-yellow-400 font-extrabold uppercase tracking-wide">Agrément Officiel :</span>
+                <span className="text-white font-extrabold font-mono bg-black/25 px-1.5 py-0.5 rounded border border-white/30 text-[11px]">
+                  N°25343/GTCA/RC/2025
+                </span>
+              </div>
+              <p className="text-white font-medium">
+                Récépissé N°25343/GTCA/RC/2025
+              </p>
+              <p className="text-white font-medium">
+                N°IDU CI-2025-0058238 N &middot; Cocody Palmeraie
+              </p>
+              <p className="text-white/90 text-[10px]">
+                Société de Consultance et Formation Agréée en Côte d'Ivoire
+              </p>
             </div>
           </div>
 
           {/* Quick Nav Links */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider border-l-2 border-amber-300 pl-2">
+            <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
               Navigation
             </h4>
-            <ul className="space-y-1 text-[11px] font-semibold text-amber-100/90">
+            <ul className="space-y-1.5 text-[11px] font-medium text-white">
               <li>
-                <button onClick={() => handleLinkClick('home')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('home')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Accueil
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('about')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('about')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Qui sommes-nous (Cabinet)
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('formations')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('formations')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Nos Formations
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('realisations')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('realisations')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Nos Réalisations
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('news')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('news')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Actualités &amp; Publications
                 </button>
               </li>
               <li>
-                <button onClick={() => handleLinkClick('partners')} className="hover:text-white hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
+                <button onClick={() => handleLinkClick('partners')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Espace Partenaires
                 </button>
               </li>
@@ -113,41 +125,41 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
 
           {/* Contact Details */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider border-l-2 border-amber-300 pl-2">
-              Nous Contacter
+            <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
+              Nos contacts
             </h4>
-            <ul className="space-y-2 text-[11px] leading-snug text-amber-50/95 font-medium">
-              <li className="flex items-start">
-                <MapPin className="w-3.5 h-3.5 text-amber-300 mr-2 shrink-0 mt-0.5" />
-                <span>Cocody Palmeraie, Rue de la Clinique, Abidjan</span>
+            <ul className="space-y-2 text-[11px] leading-snug text-white font-medium">
+              <li className="flex items-start text-white">
+                <MapPin className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0 mt-0.5" />
+                <span className="text-white">Cocody Palmeraie, Rue de la Clinique, Abidjan</span>
               </li>
-              <li className="flex items-center">
-                <Phone className="w-3.5 h-3.5 text-amber-300 mr-2 shrink-0" />
+              <li className="flex items-center text-white">
+                <Phone className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0" />
                 <div className="flex flex-wrap gap-x-2">
-                  <a href="tel:+2250574222246" className="hover:text-white transition-colors font-semibold text-amber-100">+225 05 74 22 22 46</a>
-                  <span className="text-white/40">/</span>
-                  <a href="tel:+2250701970065" className="hover:text-white transition-colors font-semibold text-amber-100">+225 07 01 97 00 65</a>
+                  <a href="tel:+2250574222246" className="text-white hover:text-yellow-300 transition-colors font-bold">+225 05 74 22 22 46</a>
+                  <span className="text-white/60">/</span>
+                  <a href="tel:+2250701970065" className="text-white hover:text-yellow-300 transition-colors font-bold">+225 07 01 97 00 65</a>
                 </div>
               </li>
-              <li className="flex items-center">
-                <Mail className="w-3.5 h-3.5 text-amber-300 mr-2 shrink-0" />
-                <a href="mailto:elearningciv@gmail.com" className="hover:text-white transition-colors break-all font-semibold text-amber-100">elearningciv@gmail.com</a>
+              <li className="flex items-center text-white">
+                <Mail className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0" />
+                <a href="mailto:elearningciv@gmail.com" className="text-white hover:text-yellow-300 transition-colors break-all font-bold">elearningciv@gmail.com</a>
               </li>
             </ul>
           </div>
 
           {/* Newsletter signup */}
           <div className="space-y-2">
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider border-l-2 border-amber-300 pl-2">
+            <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
               Lettre d'Information
             </h4>
-            <p className="text-[11px] text-amber-50/90 leading-tight font-sans font-medium">
+            <p className="text-[11px] text-white leading-tight font-sans font-medium">
               Abonnez-vous pour recevoir les calendriers et analyses stratégiques.
             </p>
             {subscribed ? (
               <div className="bg-white/15 border border-white/30 p-2 rounded-lg flex items-center space-x-2 text-[11px] text-white font-semibold">
-                <CheckCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span>Inscription réussie !</span>
+                <CheckCircle className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
+                <span className="text-white">Inscription réussie !</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="flex bg-white/10 border border-white/30 rounded-lg overflow-hidden focus-within:border-white transition-colors shadow-xs backdrop-blur-xs">
@@ -158,15 +170,15 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
                   placeholder="votre.email@institution.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent px-2.5 py-1.5 text-[11px] outline-none text-white placeholder-amber-100/60"
+                  className="w-full bg-transparent px-2.5 py-1.5 text-[11px] outline-none text-white placeholder-white/60"
                 />
                 <button
                   type="submit"
                   id="newsletter-submit-btn"
-                  className="bg-white hover:bg-amber-100 text-[#8A2E1C] font-bold px-3 flex items-center justify-center transition-colors shadow-xs cursor-pointer"
+                  className="bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold px-3 flex items-center justify-center transition-colors shadow-xs cursor-pointer"
                   aria-label="S'abonner"
                 >
-                  <Send className="w-3 h-3" />
+                  <Send className="w-3 h-3 text-slate-900" />
                 </button>
               </form>
             )}
@@ -206,22 +218,22 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
         </div>
 
         {/* Legal Mentions and Certifications Footer */}
-        <div className="border-t border-white/20 pt-3.5 mt-3.5 flex flex-col md:flex-row justify-between items-center text-[10px] text-amber-100/80 font-medium gap-2">
-          <p>© {new Date().getFullYear()} CICEXF. Tous droits réservés.</p>
-          <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end">
-            <a href="#mentions" className="hover:text-white transition-colors text-amber-100/90">Mentions Légales</a>
-            <span className="text-white/30">|</span>
-            <a href="#confidentiality" className="hover:text-white transition-colors text-amber-100/90">Politique de Confidentialité</a>
-            <span className="text-white/30">|</span>
-            <span className="text-amber-300 font-semibold">Standards WCAG Accessibilité</span>
-            <span className="text-white/30">|</span>
+        <div className="border-t border-white/20 pt-2.5 mt-2 flex flex-col md:flex-row justify-between items-center text-[10px] text-white font-medium gap-1.5">
+          <p className="text-white">© {new Date().getFullYear()} CICEXF &middot; Agrément N°25343/GTCA/RC/2025. Tous droits réservés.</p>
+          <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end text-white">
+            <a href="#mentions" className="hover:text-yellow-300 transition-colors text-white">Mentions Légales</a>
+            <span className="text-white/40">|</span>
+            <a href="#confidentiality" className="hover:text-yellow-300 transition-colors text-white">Politique de Confidentialité</a>
+            <span className="text-white/40">|</span>
+            <span className="text-yellow-400 font-semibold">Agrément N°25343/GTCA/RC/2025</span>
+            <span className="text-white/40">|</span>
             <button 
               onClick={() => { setActiveTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="hover:text-white text-amber-200 transition-colors font-bold flex items-center space-x-1 cursor-pointer"
+              className="hover:text-yellow-300 text-yellow-400 transition-colors font-bold flex items-center space-x-1 cursor-pointer"
               title="Espace Administrateur"
             >
-              <Key className="w-2.5 h-2.5 text-amber-300" />
-              <span>Administration</span>
+              <Key className="w-2.5 h-2.5 text-yellow-400" />
+              <span className="text-yellow-400">Administration</span>
             </button>
           </div>
         </div>
