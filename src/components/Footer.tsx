@@ -5,9 +5,18 @@ import { trackSubscription } from '../lib/tracker';
 interface FooterProps {
   setActiveTab: (tab: string) => void;
   setSelectedDomainId: (id: string | null) => void;
+  isAdminLoggedIn?: boolean;
+  onOpenAdminLogin?: () => void;
+  onAdminLogout?: () => void;
 }
 
-export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProps) {
+export default function Footer({ 
+  setActiveTab, 
+  setSelectedDomainId,
+  isAdminLoggedIn = false,
+  onOpenAdminLogin,
+  onAdminLogout
+}: FooterProps) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -141,9 +150,12 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
                   <a href="tel:+2250701970065" className="text-white hover:text-yellow-300 transition-colors font-bold">+225 07 01 97 00 65</a>
                 </div>
               </li>
-              <li className="flex items-center text-white">
-                <Mail className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0" />
-                <a href="mailto:elearningciv@gmail.com" className="text-white hover:text-yellow-300 transition-colors break-all font-bold">elearningciv@gmail.com</a>
+              <li className="flex items-start text-white">
+                <Mail className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0 mt-0.5" />
+                <div className="flex flex-col space-y-0.5">
+                  <a href="mailto:cabinetcicexf@gmail.com" className="text-white hover:text-yellow-300 transition-colors break-all font-bold">cabinetcicexf@gmail.com</a>
+                  <a href="mailto:elearningciv@gmail.com" className="text-white hover:text-yellow-300 transition-colors break-all font-bold">elearningciv@gmail.com</a>
+                </div>
               </li>
             </ul>
           </div>
@@ -227,14 +239,38 @@ export default function Footer({ setActiveTab, setSelectedDomainId }: FooterProp
             <span className="text-white/40">|</span>
             <span className="text-yellow-400 font-semibold">Agrément N°25343/GTCA/RC/2025</span>
             <span className="text-white/40">|</span>
-            <button 
-              onClick={() => { setActiveTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-              className="hover:text-yellow-300 text-yellow-400 transition-colors font-bold flex items-center space-x-1 cursor-pointer"
-              title="Espace Administrateur"
-            >
-              <Key className="w-2.5 h-2.5 text-yellow-400" />
-              <span className="text-yellow-400">Administration</span>
-            </button>
+            {isAdminLoggedIn ? (
+              <div className="flex items-center space-x-1.5">
+                <button 
+                  onClick={() => { setActiveTab('admin'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-yellow-300 text-yellow-400 transition-colors font-bold flex items-center space-x-1 cursor-pointer"
+                  title="Espace Administrateur - Console de Gestion"
+                >
+                  <Key className="w-2.5 h-2.5 text-yellow-400" />
+                  <span className="text-yellow-400 font-bold">Administration</span>
+                </button>
+                {onAdminLogout && (
+                  <button
+                    onClick={onAdminLogout}
+                    className="text-[9.5px] text-white/70 hover:text-red-300 underline cursor-pointer ml-1"
+                    title="Se déconnecter de l'administration"
+                  >
+                    (Déconnexion)
+                  </button>
+                )}
+              </div>
+            ) : (
+              onOpenAdminLogin && (
+                <button
+                  onClick={onOpenAdminLogin}
+                  className="text-white/40 hover:text-yellow-300 transition-colors flex items-center space-x-1 cursor-pointer text-[9.5px]"
+                  title="Accès réservé - Connexion administrateur"
+                >
+                  <Key className="w-2 h-2 text-white/40" />
+                  <span>Connexion</span>
+                </button>
+              )
+            )}
           </div>
         </div>
       </div>

@@ -1245,7 +1245,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
       const subject = `Inscription Individuelle - ${currentSpecialty}`;
       const body = `Bonjour CICEXF,\n\nJe souhaite m'inscrire à la spécialité suivante :\n${currentSpecialty}\n\nVoici mes coordonnées d'inscription :\n- Nom & Prénom : ${formName}\n- Email : ${formEmail}\n- Téléphone (WhatsApp) : ${formPhone}\n- Session souhaitée : ${formSession}\n- Modalité : ${formModality}`;
-      window.location.href = `mailto:elearningciv@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:cabinetcicexf@gmail.com?cc=elearningciv@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       setSubmitSuccess(true);
     } else {
       const newErrors: Record<string, string> = {};
@@ -1289,7 +1289,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
       const subject = `Demande de Devis - ${currentSpecialty}`;
       const body = `Bonjour CICEXF,\n\nNous souhaitons obtenir un devis pour la spécialité suivante :\n${currentSpecialty}\n\nVoici les informations de notre organisation :\n- Entreprise / Organisme : ${corpCompany}\n- Nom du contact : ${corpName}\n- Email professionnel : ${corpEmail}\n- Téléphone : ${corpPhone}\n- Nombre de participants : ${corpParticipants}\n- Modalité souhaitée : ${corpModality}`;
-      window.location.href = `mailto:elearningciv@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = `mailto:cabinetcicexf@gmail.com?cc=elearningciv@gmail.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       setCorpSuccess(true);
     }
   };

@@ -146,9 +146,10 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                   </div>
                   <div>
                     <h4 className="font-bold text-slate-800 dark:text-slate-200">Messagerie Électronique :</h4>
-                    <p className="text-slate-600 dark:text-slate-300 mt-1">
+                    <div className="flex flex-col space-y-0.5 mt-1">
+                      <a href="mailto:cabinetcicexf@gmail.com" className="hover:underline font-bold break-all text-slate-800 dark:text-slate-200">cabinetcicexf@gmail.com</a>
                       <a href="mailto:elearningciv@gmail.com" className="hover:underline font-bold break-all text-slate-800 dark:text-slate-200">elearningciv@gmail.com</a>
-                    </p>
+                    </div>
                   </div>
                 </div>
 

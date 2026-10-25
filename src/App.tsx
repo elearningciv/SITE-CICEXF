@@ -10,10 +10,11 @@ import News from './components/News';
 import Contact from './components/Contact';
 import Partners from './components/Partners';
 import AdminPanel, { isAuthorizedAdminEmail } from './components/AdminPanel';
+import AdminLoginModal from './components/AdminLoginModal';
 import AdilineChatbot from './components/AdilineChatbot';
 import adilineAvatar from './assets/images/adiline_avatar_1792359280949.jpg';
 import { trackVisit } from './lib/tracker';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from './firebase';
 import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
@@ -47,6 +48,7 @@ export default function App() {
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
   
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   
   // Real-time synced content states
   const [formations, setFormations] = useState<any[]>(FORMATIONS);
@@ -207,17 +209,59 @@ export default function App() {
     };
   }, []);
 
-  // Track Admin log state
+  // Track Admin session and Firebase auth state
   useEffect(() => {
+    // 1. Check persistent verified session
+    try {
+      const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
+          setIsAdminLoggedIn(true);
+        }
+      }
+    } catch (e) {
+      console.warn("Session restore check:", e);
+    }
+
+    // 2. Listen to Firebase Auth
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user && isAuthorizedAdminEmail(user.email)) {
         setIsAdminLoggedIn(true);
       } else {
-        setIsAdminLoggedIn(false);
+        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+        if (!stored) {
+          setIsAdminLoggedIn(false);
+        }
       }
     });
-    return unsubscribe;
+
+    // 3. Listen to internal auth change event
+    const handleAdminEvent = (e: any) => {
+      const { isLoggedIn } = e.detail || {};
+      setIsAdminLoggedIn(Boolean(isLoggedIn));
+    };
+    window.addEventListener('admin-auth-changed', handleAdminEvent);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('admin-auth-changed', handleAdminEvent);
+    };
   }, []);
+
+  const handleAdminLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {}
+    localStorage.removeItem('cicexf_admin_session');
+    sessionStorage.removeItem('cicexf_admin_session');
+    setIsAdminLoggedIn(false);
+    window.dispatchEvent(new CustomEvent('admin-auth-changed', { detail: { isLoggedIn: false } }));
+    if (activeTab === 'admin') {
+      setActiveTab('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Theme state
   const [darkMode, setDarkMode] = useState<boolean>(false);
@@ -499,7 +543,13 @@ export default function App() {
       </main>
 
       {/* Standard corporate corporate footer */}
-      <Footer setActiveTab={setActiveTab} setSelectedDomainId={setSelectedDomainId} />
+      <Footer 
+        setActiveTab={setActiveTab} 
+        setSelectedDomainId={setSelectedDomainId}
+        isAdminLoggedIn={isAdminLoggedIn}
+        onOpenAdminLogin={() => setIsAdminLoginModalOpen(true)}
+        onAdminLogout={handleAdminLogout}
+      />
 
       {/* FLOATING CHANNELS & CTA WIDGETS */}
       
@@ -580,6 +630,17 @@ export default function App() {
           if (itemId && tab === 'formations') {
             setSelectedDomainId(itemId);
           }
+        }}
+      />
+
+      {/* Admin Login Modal for Authorized Cabinet Access */}
+      <AdminLoginModal
+        isOpen={isAdminLoginModalOpen}
+        onClose={() => setIsAdminLoginModalOpen(false)}
+        onSuccess={(_adminEmail) => {
+          setIsAdminLoggedIn(true);
+          setActiveTab('admin');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />
     </div>

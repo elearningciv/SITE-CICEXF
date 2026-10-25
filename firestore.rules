@@ -4,7 +4,7 @@ service cloud.firestore {
     
     // Helper to check if the authenticated user is the designated administrator
     function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'elearningciv@gmail.com';
+      return request.auth != null && (request.auth.token.email == 'elearningciv@gmail.com' || request.auth.token.email == 'cabinetcicexf@gmail.com');
     }
 
     // Visits collection
