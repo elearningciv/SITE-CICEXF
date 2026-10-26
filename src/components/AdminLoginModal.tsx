@@ -54,6 +54,8 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
         name: cleanEmail === 'cabinetcicexf@gmail.com' ? 'Cabinet CICEXF (Direction)' : 'CICEXF E-Learning',
         loggedInAt: Date.now()
       };
+      localStorage.removeItem('cicexf_admin_explicit_logout');
+      sessionStorage.removeItem('cicexf_admin_explicit_logout');
       localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
       sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
 
@@ -85,6 +87,8 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
           name: res.user?.displayName || userEmail,
           loggedInAt: Date.now()
         };
+        localStorage.removeItem('cicexf_admin_explicit_logout');
+        sessionStorage.removeItem('cicexf_admin_explicit_logout');
         localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
         sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
 

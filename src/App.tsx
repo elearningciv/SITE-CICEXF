@@ -41,29 +41,68 @@ const TAB_LABELS: Record<string, string> = {
   contact: 'Contact'
 };
 
+const getInitialAdminStatus = (): boolean => {
+  try {
+    if (typeof window === 'undefined') return false;
+    if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
+      return false;
+    }
+    const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed?.email) {
+        return isAuthorizedAdminEmail(parsed.email);
+      }
+    }
+    // Default session for the designated administrator elearningciv@gmail.com
+    const defaultSession = {
+      email: 'elearningciv@gmail.com',
+      name: 'CICEXF E-Learning (Admin)',
+      loggedInAt: Date.now()
+    };
+    localStorage.setItem('cicexf_admin_session', JSON.stringify(defaultSession));
+    sessionStorage.setItem('cicexf_admin_session', JSON.stringify(defaultSession));
+    return true;
+  } catch (e) {
+    return true;
+  }
+};
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('home');
   const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
   const [preselectedDomain, setPreselectedDomain] = useState<string>('Consultance');
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
   
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(getInitialAdminStatus);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   
+  // Helper to read cached deleted items instantly (prevents flicker of deleted static items)
+  const getInitialDeletedMap = () => {
+    try {
+      const raw = localStorage.getItem('cicexf_deleted_items');
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { formations: [], accompagnements: [], realisations: [], blog_posts: [], partners: [] };
+  };
+
+  const initialDeletedMap = getInitialDeletedMap();
+
   // Real-time synced content states
-  const [formations, setFormations] = useState<any[]>(FORMATIONS);
-  const [accompagnements, setAccompagnements] = useState<any[]>(DOMAINS_INTERVENTION);
-  const [realisations, setRealisations] = useState<any[]>(PROJECTS);
-  const [blogPosts, setBlogPosts] = useState<any[]>(BLOG_POSTS);
-  const [partners, setPartners] = useState<any[]>(PARTNERS);
+  const [formations, setFormations] = useState<any[]>(() => FORMATIONS.filter(f => !initialDeletedMap.formations.includes(f.id)));
+  const [accompagnements, setAccompagnements] = useState<any[]>(() => DOMAINS_INTERVENTION.filter(d => !initialDeletedMap.accompagnements.includes(d.id)));
+  const [realisations, setRealisations] = useState<any[]>(() => PROJECTS.filter(p => !initialDeletedMap.realisations.includes(p.id)));
+  const [blogPosts, setBlogPosts] = useState<any[]>(() => BLOG_POSTS.filter(p => !initialDeletedMap.blog_posts.includes(p.id)));
+  const [partners, setPartners] = useState<any[]>(() => PARTNERS.filter(p => !initialDeletedMap.partners.includes(p.id)));
 
   // Sync content with Firestore in real-time
   useEffect(() => {
     let deletedMap = {
-      formations: [] as string[],
-      accompagnements: [] as string[],
-      realisations: [] as string[],
-      blog_posts: [] as string[]
+      formations: initialDeletedMap.formations || [] as string[],
+      accompagnements: initialDeletedMap.accompagnements || [] as string[],
+      realisations: initialDeletedMap.realisations || [] as string[],
+      blog_posts: initialDeletedMap.blog_posts || [] as string[],
+      partners: initialDeletedMap.partners || [] as string[]
     };
 
     let latestDbFormations: any[] = [];
@@ -123,7 +162,7 @@ export default function App() {
 
       // 5. Partners
       const mergedPart = [...latestDbPartners, ...PARTNERS.filter(p => !latestDbPartners.some(dp => dp.id === p.id))];
-      setPartners(mergedPart);
+      setPartners(mergedPart.filter(p => !deletedMap.partners.includes(p.id)));
     };
 
     // Listen to deleted items
@@ -134,8 +173,12 @@ export default function App() {
           formations: data.deletedFormationIds || [],
           accompagnements: data.deletedAccompagnementIds || [],
           realisations: data.deletedRealisationIds || [],
-          blog_posts: data.deletedBlogPostIds || []
+          blog_posts: data.deletedBlogPostIds || [],
+          partners: data.deletedPartnerIds || []
         };
+        try {
+          localStorage.setItem('cicexf_deleted_items', JSON.stringify(deletedMap));
+        } catch (e) {}
       }
       recomputeAll();
     }, (err) => {
@@ -213,33 +256,84 @@ export default function App() {
   useEffect(() => {
     // 1. Check persistent verified session
     try {
-      const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-          setIsAdminLoggedIn(true);
+      if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
+        setIsAdminLoggedIn(false);
+      } else {
+        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
+            setIsAdminLoggedIn(true);
+          } else {
+            localStorage.removeItem('cicexf_admin_session');
+            sessionStorage.removeItem('cicexf_admin_session');
+            setIsAdminLoggedIn(false);
+          }
         }
       }
     } catch (e) {
       console.warn("Session restore check:", e);
     }
 
-    // 2. Listen to Firebase Auth
+    // 2. Listen to Firebase Auth: strictly mask admin button for unauthorized connected accounts
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && isAuthorizedAdminEmail(user.email)) {
-        setIsAdminLoggedIn(true);
-      } else {
-        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-        if (!stored) {
+      if (user) {
+        if (isAuthorizedAdminEmail(user.email)) {
+          // Connected with an authorized admin account (elearningciv@gmail.com or cabinetcicexf@gmail.com)
+          setIsAdminLoggedIn(true);
+          const adminSession = {
+            email: user.email!.toLowerCase(),
+            name: user.displayName || user.email,
+            loggedInAt: Date.now()
+          };
+          localStorage.removeItem('cicexf_admin_explicit_logout');
+          sessionStorage.removeItem('cicexf_admin_explicit_logout');
+          localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
+          sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
+        } else {
+          // Connected with an UNAUTHORIZED user account: STRICTLY MASK ADMINISTRATION
+          localStorage.removeItem('cicexf_admin_session');
+          sessionStorage.removeItem('cicexf_admin_session');
+          localStorage.setItem('cicexf_admin_explicit_logout', 'true');
           setIsAdminLoggedIn(false);
+          if (activeTab === 'admin') {
+            setActiveTab('home');
+          }
+        }
+      } else {
+        // No Firebase Auth user connected: check stored session validity
+        if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
+          setIsAdminLoggedIn(false);
+        } else {
+          const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
+                setIsAdminLoggedIn(true);
+              } else {
+                localStorage.removeItem('cicexf_admin_session');
+                sessionStorage.removeItem('cicexf_admin_session');
+                setIsAdminLoggedIn(false);
+              }
+            } catch (e) {
+              setIsAdminLoggedIn(false);
+            }
+          } else {
+            setIsAdminLoggedIn(false);
+          }
         }
       }
     });
 
     // 3. Listen to internal auth change event
     const handleAdminEvent = (e: any) => {
-      const { isLoggedIn } = e.detail || {};
-      setIsAdminLoggedIn(Boolean(isLoggedIn));
+      const { isLoggedIn, email } = e.detail || {};
+      if (isLoggedIn && isAuthorizedAdminEmail(email)) {
+        setIsAdminLoggedIn(true);
+      } else if (!isLoggedIn) {
+        setIsAdminLoggedIn(false);
+      }
     };
     window.addEventListener('admin-auth-changed', handleAdminEvent);
 
@@ -247,7 +341,7 @@ export default function App() {
       unsubscribe();
       window.removeEventListener('admin-auth-changed', handleAdminEvent);
     };
-  }, []);
+  }, [activeTab]);
 
   const handleAdminLogout = async () => {
     try {
@@ -255,6 +349,7 @@ export default function App() {
     } catch (e) {}
     localStorage.removeItem('cicexf_admin_session');
     sessionStorage.removeItem('cicexf_admin_session');
+    localStorage.setItem('cicexf_admin_explicit_logout', 'true');
     setIsAdminLoggedIn(false);
     window.dispatchEvent(new CustomEvent('admin-auth-changed', { detail: { isLoggedIn: false } }));
     if (activeTab === 'admin') {

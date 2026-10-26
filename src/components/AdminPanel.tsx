@@ -24,7 +24,8 @@ import {
   setDoc,
   deleteDoc,
   addDoc,
-  arrayUnion
+  arrayUnion,
+  onSnapshot
 } from 'firebase/firestore';
 import { 
   Lock, Mail, Key, LogOut, Users, Eye, CheckCircle2, 
@@ -119,6 +120,21 @@ export default function AdminPanel({
   const [dbBlogPosts, setDbBlogPosts] = useState<any[]>([]);
   const [dbPartners, setDbPartners] = useState<any[]>([]);
 
+  // Local tracking of deleted items to guarantee instant zero-latency UI update for both static and Firestore items
+  const [localDeletedIds, setLocalDeletedIds] = useState<{
+    formations: string[];
+    accompagnements: string[];
+    realisations: string[];
+    blog_posts: string[];
+    partners: string[];
+  }>(() => {
+    try {
+      const cached = localStorage.getItem('cicexf_deleted_items');
+      if (cached) return JSON.parse(cached);
+    } catch (e) {}
+    return { formations: [], accompagnements: [], realisations: [], blog_posts: [], partners: [] };
+  });
+
   const [dataLoading, setDataLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
@@ -191,17 +207,23 @@ export default function AdminPanel({
   // Track Auth state changes with stored session support
   useEffect(() => {
     try {
-      const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-          setCurrentUser({
-            email: parsed.email,
-            uid: `admin_${parsed.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
-            displayName: parsed.name || parsed.email,
-            emailVerified: true
-          } as any);
-          loadDashboardData();
+      if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
+        setCurrentUser(null);
+      } else {
+        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
+            setCurrentUser({
+              email: parsed.email,
+              uid: `admin_${parsed.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
+              displayName: parsed.name || parsed.email,
+              emailVerified: true
+            } as any);
+            loadDashboardData();
+          } else {
+            setCurrentUser(null);
+          }
         }
       }
     } catch (e) {
@@ -209,18 +231,68 @@ export default function AdminPanel({
     }
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user && isAuthorizedAdminEmail(user.email)) {
-        setCurrentUser(user);
-        loadDashboardData();
-      } else {
-        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-        if (!stored) {
+      if (user) {
+        if (isAuthorizedAdminEmail(user.email)) {
+          setCurrentUser(user);
+          loadDashboardData();
+        } else {
+          // Connected with an unauthorized user email!
           setCurrentUser(null);
+          localStorage.removeItem('cicexf_admin_session');
+          sessionStorage.removeItem('cicexf_admin_session');
+        }
+      } else {
+        if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
+          setCurrentUser(null);
+        } else {
+          const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
+                setCurrentUser({
+                  email: parsed.email,
+                  uid: `admin_${parsed.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
+                  displayName: parsed.name || parsed.email,
+                  emailVerified: true
+                } as any);
+                loadDashboardData();
+              } else {
+                setCurrentUser(null);
+              }
+            } catch (e) {
+              setCurrentUser(null);
+            }
+          } else {
+            setCurrentUser(null);
+          }
         }
       }
       setLoading(false);
     });
-    return unsubscribe;
+
+    // Real-time listener for permanently deleted items (formations, accompagnements, realisations, blog_posts, partners)
+    const unsubDeleted = onSnapshot(doc(db, 'app_settings', 'deleted_items'), (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        const map = {
+          formations: (data.deletedFormationIds || []) as string[],
+          accompagnements: (data.deletedAccompagnementIds || []) as string[],
+          realisations: (data.deletedRealisationIds || []) as string[],
+          blog_posts: (data.deletedBlogPostIds || []) as string[],
+          partners: (data.deletedPartnerIds || []) as string[]
+        };
+        setLocalDeletedIds(map);
+        try {
+          localStorage.setItem('cicexf_deleted_items', JSON.stringify(map));
+        } catch (e) {}
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      unsubDeleted();
+    };
   }, []);
 
   // Fetch all collections from Firestore
@@ -709,11 +781,26 @@ export default function AdminPanel({
   const handleDeleteFormation = async (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette formation ? Cette action la retirera définitivement du site.")) return;
     try {
-      await deleteDoc(doc(db, 'formations', id));
-      await setDoc(doc(db, 'app_settings', 'deleted_items'), {
-        deletedFormationIds: arrayUnion(id)
-      }, { merge: true });
+      const blogIds = [`p-f-${id}`, `p-f-f-${id}`];
+      setLocalDeletedIds(prev => ({
+        ...prev,
+        formations: Array.from(new Set([...prev.formations, id])),
+        blog_posts: Array.from(new Set([...prev.blog_posts, ...blogIds]))
+      }));
       setDbFormations(prev => prev.filter(item => item.id !== id));
+      setDbBlogPosts(prev => prev.filter(item => item.id !== id && !blogIds.includes(item.id)));
+
+      // Delete from Firestore collections
+      await deleteDoc(doc(db, 'formations', id));
+      for (const bId of blogIds) {
+        await deleteDoc(doc(db, 'blog_posts', bId)).catch(() => {});
+      }
+
+      // Permanent blacklist in app_settings
+      await setDoc(doc(db, 'app_settings', 'deleted_items'), {
+        deletedFormationIds: arrayUnion(id),
+        deletedBlogPostIds: arrayUnion(...blogIds)
+      }, { merge: true });
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, 'formations');
     }
@@ -787,11 +874,16 @@ export default function AdminPanel({
   const handleDeleteAccompagnement = async (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet accompagnement (domaine d'intervention) ? Cette action le retirera définitivement du site.")) return;
     try {
+      setLocalDeletedIds(prev => ({
+        ...prev,
+        accompagnements: Array.from(new Set([...prev.accompagnements, id]))
+      }));
+      setDbAccompagnements(prev => prev.filter(item => item.id !== id));
+
       await deleteDoc(doc(db, 'accompagnements', id));
       await setDoc(doc(db, 'app_settings', 'deleted_items'), {
         deletedAccompagnementIds: arrayUnion(id)
       }, { merge: true });
-      setDbAccompagnements(prev => prev.filter(item => item.id !== id));
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, 'accompagnements');
     }
@@ -865,11 +957,16 @@ export default function AdminPanel({
   const handleDeleteRealisation = async (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette réalisation / chantier ? Cette action la retirera définitivement du site.")) return;
     try {
+      setLocalDeletedIds(prev => ({
+        ...prev,
+        realisations: Array.from(new Set([...prev.realisations, id]))
+      }));
+      setDbRealisations(prev => prev.filter(item => item.id !== id));
+
       await deleteDoc(doc(db, 'realisations', id));
       await setDoc(doc(db, 'app_settings', 'deleted_items'), {
         deletedRealisationIds: arrayUnion(id)
       }, { merge: true });
-      setDbRealisations(prev => prev.filter(item => item.id !== id));
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, 'realisations');
     }
@@ -996,11 +1093,16 @@ export default function AdminPanel({
   const handleDeleteBlogPost = async (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet article d'actualité ? Cette action le retirera définitivement du site.")) return;
     try {
+      setLocalDeletedIds(prev => ({
+        ...prev,
+        blog_posts: Array.from(new Set([...prev.blog_posts, id]))
+      }));
+      setDbBlogPosts(prev => prev.filter(item => item.id !== id));
+
       await deleteDoc(doc(db, 'blog_posts', id));
       await setDoc(doc(db, 'app_settings', 'deleted_items'), {
         deletedBlogPostIds: arrayUnion(id)
       }, { merge: true });
-      setDbBlogPosts(prev => prev.filter(item => item.id !== id));
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, 'blog_posts');
     }
@@ -1060,8 +1162,16 @@ export default function AdminPanel({
   const handleDeletePartner = async (id: string) => {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce partenaire ?")) return;
     try {
-      await deleteDoc(doc(db, 'partners', id));
+      setLocalDeletedIds(prev => ({
+        ...prev,
+        partners: Array.from(new Set([...prev.partners, id]))
+      }));
       setDbPartners(prev => prev.filter(item => item.id !== id));
+
+      await deleteDoc(doc(db, 'partners', id));
+      await setDoc(doc(db, 'app_settings', 'deleted_items'), {
+        deletedPartnerIds: arrayUnion(id)
+      }, { merge: true });
     } catch (err) {
       handleFirestoreError(err, OperationType.DELETE, 'partners');
     }
@@ -1104,11 +1214,17 @@ export default function AdminPanel({
   );
 
   // Merged sources (props from real-time App.tsx + local db items + static seed)
-  const mergedFormations = formations && formations.length > 0 ? formations : (dbFormations.length > 0 ? dbFormations : FORMATIONS);
-  const mergedAccompagnements = accompagnements && accompagnements.length > 0 ? accompagnements : (dbAccompagnements.length > 0 ? dbAccompagnements : DOMAINS_INTERVENTION);
-  const mergedRealisations = realisations && realisations.length > 0 ? realisations : (dbRealisations.length > 0 ? dbRealisations : PROJECTS);
-  const mergedBlogPosts = blogPosts && blogPosts.length > 0 ? blogPosts : (dbBlogPosts.length > 0 ? dbBlogPosts : BLOG_POSTS);
-  const mergedPartners = partners && partners.length > 0 ? partners : (dbPartners.length > 0 ? dbPartners : PARTNERS);
+  const rawFormations = formations !== undefined ? formations : (dbFormations.length > 0 ? dbFormations : FORMATIONS);
+  const rawAccompagnements = accompagnements !== undefined ? accompagnements : (dbAccompagnements.length > 0 ? dbAccompagnements : DOMAINS_INTERVENTION);
+  const rawRealisations = realisations !== undefined ? realisations : (dbRealisations.length > 0 ? dbRealisations : PROJECTS);
+  const rawBlogPosts = blogPosts !== undefined ? blogPosts : (dbBlogPosts.length > 0 ? dbBlogPosts : BLOG_POSTS);
+  const rawPartners = partners !== undefined ? partners : (dbPartners.length > 0 ? dbPartners : PARTNERS);
+
+  const mergedFormations = rawFormations.filter(f => !localDeletedIds.formations.includes(f.id));
+  const mergedAccompagnements = rawAccompagnements.filter(a => !localDeletedIds.accompagnements.includes(a.id));
+  const mergedRealisations = rawRealisations.filter(r => !localDeletedIds.realisations.includes(r.id));
+  const mergedBlogPosts = rawBlogPosts.filter(b => !localDeletedIds.blog_posts.includes(b.id));
+  const mergedPartners = rawPartners.filter(p => !localDeletedIds.partners.includes(p.id));
 
   const filteredFormations = mergedFormations.filter(f => 
     !searchQuery ||
