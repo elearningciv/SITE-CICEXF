@@ -31,10 +31,13 @@ import {
   Lock, Mail, Key, LogOut, Users, Eye, CheckCircle2, 
   AlertCircle, Search, RefreshCw, Calendar, Monitor, Download, ArrowLeftRight,
   Plus, Trash2, Edit3, Image, BookOpen, Layers, ExternalLink, Sparkles, Check, HelpCircle, MapPin, Tag, FileText,
-  FileSpreadsheet, Phone, MessageSquare, Send, CheckCheck, UserCheck, Filter, Clock, Briefcase, Award, Building, Compass
+  FileSpreadsheet, Phone, MessageSquare, Send, CheckCheck, UserCheck, Filter, Clock, Briefcase, Award, Building, Compass,
+  Target, ShieldCheck, Cpu
 } from 'lucide-react';
 import { DOMAINS_INTERVENTION, PROJECTS, FORMATIONS, BLOG_POSTS, PARTNERS } from '../data';
 import { Prospect, exportProspectsToExcel, exportSingleProspectToExcel, saveProspect } from '../lib/prospects';
+import { SoftwareTool } from '../types';
+import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
 
 enum OperationType {
   CREATE = 'create',
@@ -168,6 +171,17 @@ export default function AdminPanel({
   const [accIconName, setAccIconName] = useState('Layers');
   const [accSubDomainsText, setAccSubDomainsText] = useState('');
   const [accExamplesText, setAccExamplesText] = useState('');
+
+  // 7 Architectural sections for Accompagnements
+  const [accPresentationService, setAccPresentationService] = useState(''); // 1. Présentation du service
+  const [accObjectives, setAccObjectives] = useState(''); // 2. Objectifs opérationnels (1 par ligne)
+  const [accDemarche, setAccDemarche] = useState(''); // 3. Démarche d'accompagnement (1 phase par ligne)
+  const [accResultatsAttendus, setAccResultatsAttendus] = useState(''); // 4. Résultats attendus (1 par ligne)
+  const [accImpactEntite, setAccImpactEntite] = useState(''); // 5. Impact pour l'entité
+  const [accMethodeEvaluation, setAccMethodeEvaluation] = useState(''); // 6. Méthode d'évaluation (1 par ligne)
+  const [accSoftwareList, setAccSoftwareList] = useState<SoftwareTool[]>([]); // 7. Logiciels impliqués
+  const [newSoftwareName, setNewSoftwareName] = useState('');
+  const [newSoftwareIconUrl, setNewSoftwareIconUrl] = useState('');
 
   // Form states for Realisations (Projets & Chantiers)
   const [showRealisationForm, setShowRealisationForm] = useState(false);
@@ -814,6 +828,16 @@ export default function AdminPanel({
     setAccIconName('Layers');
     setAccSubDomainsText('');
     setAccExamplesText('');
+    // Reset the 7 architectural sections
+    setAccPresentationService('');
+    setAccObjectives('');
+    setAccDemarche('');
+    setAccResultatsAttendus('');
+    setAccImpactEntite('');
+    setAccMethodeEvaluation('');
+    setAccSoftwareList([]);
+    setNewSoftwareName('');
+    setNewSoftwareIconUrl('');
   };
 
   const handleSaveAccompagnement = async (e: React.FormEvent) => {
@@ -824,20 +848,48 @@ export default function AdminPanel({
         .replace(/(^-|-$)+/g, '');
       const accId = editingAccompagnement?.id || `acc-${Date.now()}`;
 
+      const objectivesList = accObjectives.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
+      const demarcheList = accDemarche.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
+      const resultatsList = accResultatsAttendus.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
+      const methodeList = accMethodeEvaluation.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
+      const softwareLegacy = accSoftwareList.map(s => s.name);
+
       const lines = accSubDomainsText.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
       const subDomainsList = lines.length > 0
         ? lines.map((title) => ({
             title,
             description: `Intervention spécialisée et cadrage opérationnel sur ${title}.`,
-            objectives: ['Diagnostic approfondi', 'Accompagnement technique sur-mesure', 'Transfert de compétences'],
-            software: []
+            presentationService: accPresentationService || `Intervention spécialisée et cadrage opérationnel sur ${title}.`,
+            objectives: objectivesList.length > 0 ? objectivesList : ['Diagnostic approfondi', 'Accompagnement technique sur-mesure', 'Transfert de compétences'],
+            demarcheAccompagnement: demarcheList.length > 0 ? demarcheList : [
+              '1. Diagnostic initial et cadrage des exigences',
+              '2. Déploiement des solutions et outillage technique',
+              '3. Conduite du changement et transfert d\'autonomie'
+            ],
+            resultatsAttendus: resultatsList.length > 0 ? resultatsList : [
+              'Processus optimisés et outillés',
+              'Rapport d\'expertise et documentation remis'
+            ],
+            impactEntite: accImpactEntite || 'Autonomie opérationnelle renforcée et sécurisation des processus métier.',
+            methodeEvaluation: methodeList.length > 0 ? methodeList : [
+              'Mesure des indicateurs de performance avant/après',
+              'Comité de clôture et audit de satisfaction'
+            ],
+            softwareTools: accSoftwareList,
+            software: softwareLegacy
           }))
         : (editingAccompagnement?.subDomains || [
             {
               title: accTitle,
               description: accShortDescription,
-              objectives: ['Conseil stratégique', 'Optimisation des processus'],
-              software: []
+              presentationService: accPresentationService || accDescription || accShortDescription,
+              objectives: objectivesList.length > 0 ? objectivesList : ['Conseil stratégique', 'Optimisation des processus'],
+              demarcheAccompagnement: demarcheList,
+              resultatsAttendus: resultatsList,
+              impactEntite: accImpactEntite,
+              methodeEvaluation: methodeList,
+              softwareTools: accSoftwareList,
+              software: softwareLegacy
             }
           ]);
 
@@ -848,7 +900,16 @@ export default function AdminPanel({
         slug,
         title: accTitle,
         shortDescription: accShortDescription,
-        description: accDescription,
+        description: accDescription || accPresentationService,
+        // The 7 architectural sections:
+        presentationService: accPresentationService || accDescription,
+        objectives: objectivesList,
+        demarcheAccompagnement: demarcheList,
+        resultatsAttendus: resultatsList,
+        impactEntite: accImpactEntite,
+        methodeEvaluation: methodeList,
+        softwareTools: accSoftwareList,
+        software: softwareLegacy,
         iconName: accIconName || 'Layers',
         subDomains: subDomainsList,
         examples: examplesList.length > 0 ? examplesList : ['Assistance technique institutionnelle', 'Audit et cadrage opérationnel'],
@@ -897,6 +958,36 @@ export default function AdminPanel({
     setAccIconName(acc.iconName || 'Layers');
     setAccSubDomainsText(acc.subDomains ? acc.subDomains.map((s: any) => s.title || s).join('\n') : '');
     setAccExamplesText(acc.examples ? acc.examples.join('\n') : '');
+
+    // Populate the 7 architectural sections from acc or its subDomains
+    const firstSub = acc.subDomains && acc.subDomains.length > 0 ? acc.subDomains[0] : null;
+    setAccPresentationService(acc.presentationService || acc.description || firstSub?.presentationService || '');
+    
+    const objs = acc.objectives || firstSub?.objectives || [];
+    setAccObjectives(Array.isArray(objs) ? objs.join('\n') : '');
+
+    const demarche = acc.demarcheAccompagnement || firstSub?.demarcheAccompagnement || [];
+    setAccDemarche(Array.isArray(demarche) ? demarche.join('\n') : '');
+
+    const resultats = acc.resultatsAttendus || firstSub?.resultatsAttendus || [];
+    setAccResultatsAttendus(Array.isArray(resultats) ? resultats.join('\n') : '');
+
+    setAccImpactEntite(acc.impactEntite || firstSub?.impactEntite || firstSub?.expectedChanges || '');
+
+    const methode = acc.methodeEvaluation || firstSub?.methodeEvaluation || [];
+    setAccMethodeEvaluation(Array.isArray(methode) ? methode.join('\n') : '');
+
+    // Software tools with icons
+    const tools: SoftwareTool[] = acc.softwareTools || firstSub?.softwareTools || (
+      (acc.software || firstSub?.software || []).map((s: string) => {
+        const found = PRESET_SOFTWARE_TOOLS.find(p => p.name.toLowerCase() === s.toLowerCase());
+        return { name: s, iconUrl: found?.iconUrl || '' };
+      })
+    );
+    setAccSoftwareList(tools);
+    setNewSoftwareName('');
+    setNewSoftwareIconUrl('');
+
     setShowAccompagnementForm(true);
   };
 
@@ -2372,100 +2463,353 @@ export default function AdminPanel({
           {showAccompagnementForm && (
             <div className="p-6 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-sm font-bold text-slate-800 dark:text-white uppercase tracking-wider flex items-center">
-                  <Briefcase className="w-4 h-4 mr-2 text-brand-emerald" />
-                  {editingAccompagnement ? "Modifier l'accompagnement" : "Ajouter un nouveau pôle d'accompagnement & conseil"}
-                </h3>
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-emerald bg-brand-emerald/10 px-2.5 py-0.5 rounded-full">
+                    Architecture d'Accompagnement en 7 Sections
+                  </span>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center mt-1">
+                    <Briefcase className="w-4 h-4 mr-2 text-brand-emerald" />
+                    {editingAccompagnement ? "Modifier l'accompagnement" : "Ajouter un nouveau pôle d'accompagnement & conseil"}
+                  </h3>
+                </div>
                 <button
+                  type="button"
                   onClick={() => { setShowAccompagnementForm(false); setEditingAccompagnement(null); }}
-                  className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
+                  className="text-xs font-bold text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-all"
                 >
                   Fermer [X]
                 </button>
               </div>
 
-              <form onSubmit={handleSaveAccompagnement} className="space-y-5 text-xs text-slate-700 dark:text-slate-300">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  <div className="md:col-span-2 space-y-1.5">
-                    <label className="block font-bold">Titre du pôle d'accompagnement :</label>
+              <form onSubmit={handleSaveAccompagnement} className="space-y-6 text-xs text-slate-700 dark:text-slate-300">
+                
+                {/* En-tête Général */}
+                <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-xs">
+                  <div className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider flex items-center">
+                    <Layers className="w-4 h-4 mr-2 text-brand-emerald" />
+                    Identification Générale du Pôle
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div className="md:col-span-2 space-y-1.5">
+                      <label className="block font-bold">Titre du pôle d'accompagnement * :</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="ex: Ingénierie Géomatique, SIG & Télédétection"
+                        value={accTitle}
+                        onChange={(e) => setAccTitle(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none focus:border-brand-emerald text-slate-900 dark:text-white font-medium"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="block font-bold">Icône représentative :</label>
+                      <select
+                        value={accIconName}
+                        onChange={(e) => setAccIconName(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none text-slate-900 dark:text-white font-medium"
+                      >
+                        <option value="Layers">Layers (Multi-couches / Système)</option>
+                        <option value="MapPin">MapPin (SIG / Territoire / Géomatique)</option>
+                        <option value="Database">Database (Données / Data Gouvernance)</option>
+                        <option value="BarChart">BarChart (Finance / Décisionnel)</option>
+                        <option value="ShieldCheck">ShieldCheck (QHSE / Sécurité / Audit)</option>
+                        <option value="Cpu">Cpu (Informatique / Réseaux)</option>
+                        <option value="Building">Building (Infrastructures / Collectivités)</option>
+                        <option value="Compass">Compass (Stratégie / Aménagement)</option>
+                        <option value="Target">Target (Performance & Objectifs)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="block font-bold">Accroche synthétique (S'affiche sur les vignettes du catalogue) * :</label>
                     <input
                       type="text"
                       required
-                      placeholder="ex: Ingénierie Géomatique, SIG & Télédétection"
-                      value={accTitle}
-                      onChange={(e) => setAccTitle(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none focus:border-brand-emerald text-slate-900 dark:text-white font-medium"
+                      placeholder="ex: Cartographie haute précision, cadastre numérique et modélisation spatiale pour décideurs."
+                      value={accShortDescription}
+                      onChange={(e) => setAccShortDescription(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none text-slate-900 dark:text-white"
                     />
                   </div>
+                </div>
 
-                  <div className="space-y-1.5">
-                    <label className="block font-bold">Icône représentative :</label>
-                    <select
-                      value={accIconName}
-                      onChange={(e) => setAccIconName(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white font-medium"
-                    >
-                      <option value="Layers">Layers (Multi-couches / Système)</option>
-                      <option value="MapPin">MapPin (SIG / Territoire / Géomatique)</option>
-                      <option value="Database">Database (Données / Data Gouvernance)</option>
-                      <option value="BarChart">BarChart (Finance / Décisionnel)</option>
-                      <option value="ShieldCheck">ShieldCheck (QHSE / Sécurité / Audit)</option>
-                      <option value="Cpu">Cpu (Informatique / Réseaux)</option>
-                      <option value="Building">Building (Infrastructures / Collectivités)</option>
-                      <option value="Compass">Compass (Stratégie / Aménagement)</option>
-                    </select>
+                {/* LES 7 SECTIONS DEMANDÉES */}
+                <div className="space-y-5">
+                  <div className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center">
+                    <span className="w-2.5 h-2.5 bg-brand-emerald rounded-full mr-2"></span>
+                    Structure Opérationnelle des 7 Sections :
                   </div>
-                </div>
 
-                <div className="space-y-1.5">
-                  <label className="block font-bold">Accroche synthétique (S'affiche sur les cartes) :</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="ex: Cartographie haute précision, cadastre numérique et modélisation spatiale pour décideurs."
-                    value={accShortDescription}
-                    onChange={(e) => setAccShortDescription(e.target.value)}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="block font-bold">Présentation détaillée &amp; Méthodologie :</label>
-                  <textarea
-                    required
-                    rows={4}
-                    placeholder="Décrivez l'offre de conseil, l'expertise mobilisée, l'impact et la démarche d'intervention..."
-                    value={accDescription}
-                    onChange={(e) => setAccDescription(e.target.value)}
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white leading-relaxed"
-                  ></textarea>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-1.5">
-                    <label className="block font-bold text-brand-emerald">Sous-domaines / Axes d'intervention (1 par ligne) :</label>
+                  {/* 1. Présentation du service */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">1</span>
+                      Présentation du service *
+                    </label>
+                    <p className="text-[11px] text-slate-500">Décrivez le service, les enjeux stratégiques, l'expertise mobilisée et le positionnement du cabinet.</p>
                     <textarea
-                      rows={5}
-                      placeholder="Systèmes d'Information Géographique (SIG)&#10;Télédétection spatiale & drone&#10;Cadastre numérique & foncier&#10;Aménagement territorial"
+                      required
+                      rows={4}
+                      placeholder="Ex: Notre accompagnement en Ingénierie Financière structure vos projets selon les standards bancaires de premier rang..."
+                      value={accPresentationService || accDescription}
+                      onChange={(e) => {
+                        setAccPresentationService(e.target.value);
+                        setAccDescription(e.target.value);
+                      }}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white leading-relaxed font-sans"
+                    ></textarea>
+                  </div>
+
+                  {/* 2. Objectifs opérationnels */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">2</span>
+                      Objectifs opérationnels (1 par ligne)
+                    </label>
+                    <p className="text-[11px] text-slate-500">Listez les buts concrets mesurables visés par l'intervention.</p>
+                    <textarea
+                      rows={3}
+                      placeholder="Réaliser un diagnostic de maturité et cartographier 100% des flux critiques&#10;Établir un modèle financier auditable selon les standards bancaires&#10;Déployer les outils de pilotage auprès des comités de direction"
+                      value={accObjectives}
+                      onChange={(e) => setAccObjectives(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                    ></textarea>
+                  </div>
+
+                  {/* 3. Démarche d’accompagnement */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">3</span>
+                      Démarche d’accompagnement (1 étape / phase par ligne)
+                    </label>
+                    <p className="text-[11px] text-slate-500">Détaillez le cheminement méthodologique étape par étape (ex: Phase 1 : Cadrage, Phase 2 : Audit, etc.).</p>
+                    <textarea
+                      rows={3}
+                      placeholder="Phase 1 : Cadrage stratégique et immersion auprès des parties prenantes&#10;Phase 2 : Analyse des données, cartographie technique et modélisation&#10;Phase 3 : Co-construction des livrables et sessions d'ateliers de restitution&#10;Phase 4 : Assistance au déploiement et transfert de compétences aux équipes"
+                      value={accDemarche}
+                      onChange={(e) => setAccDemarche(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                    ></textarea>
+                  </div>
+
+                  {/* 4. Résultats attendus */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">4</span>
+                      Résultats attendus (1 par ligne)
+                    </label>
+                    <p className="text-[11px] text-slate-500">Livrables tangibles, documents remis ou transformations opérationnelles concrètes.</p>
+                    <textarea
+                      rows={3}
+                      placeholder="Rapport complet de diagnostic et matrice de recommandations prioritaires&#10;Plateforme ou modèles opérationnels clé en main configurés&#10;Guides méthodologiques d'utilisation interne et fiches de poste harmonisées"
+                      value={accResultatsAttendus}
+                      onChange={(e) => setAccResultatsAttendus(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                    ></textarea>
+                  </div>
+
+                  {/* 5. Impact pour l’entité */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">5</span>
+                      Impact pour l’entité
+                    </label>
+                    <p className="text-[11px] text-slate-500">Gains de productivité, réduction des risques, retour sur investissement ou autonomie souveraine.</p>
+                    <textarea
+                      rows={2}
+                      placeholder="Ex: L'organisation sécurise ses décisions de gouvernance, réduit de 40% ses délais de traitement et autonomise durablement ses cadres."
+                      value={accImpactEntite}
+                      onChange={(e) => setAccImpactEntite(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none text-slate-900 dark:text-white"
+                    ></textarea>
+                  </div>
+
+                  {/* 6. Méthode d'évaluation */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
+                    <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">6</span>
+                      Méthode d'évaluation (1 par ligne)
+                    </label>
+                    <p className="text-[11px] text-slate-500">Comment la qualité et le succès de l'accompagnement sont mesurés et audités.</p>
+                    <textarea
+                      rows={3}
+                      placeholder="Revue d'étape bi-hebdomadaire avec le comité de pilotage&#10;Audit de conformité des livrables selon les grilles de validation interne&#10;Enquête de satisfaction des bénéficiaires et mesure des gains d'efficacité à J+60"
+                      value={accMethodeEvaluation}
+                      onChange={(e) => setAccMethodeEvaluation(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                    ></textarea>
+                  </div>
+
+                  {/* 7. Logiciels impliqués (Laisse moi la main d'insérer les icônes des logiciels) */}
+                  <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border-2 border-emerald-500/40 dark:border-emerald-500/40 space-y-4 shadow-sm">
+                    <div>
+                      <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                        <span className="w-5 h-5 rounded-full bg-brand-emerald text-white flex items-center justify-center font-mono mr-2 text-[10px] shadow-xs">7</span>
+                        Logiciels impliqués (Insertion libre d'icônes &amp; logos)
+                      </label>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        Vous avez la main totale pour insérer le nom du logiciel et son icône (via un lien direct URL ou en cliquant sur un modèle ci-dessous).
+                      </p>
+                    </div>
+
+                    {/* Quick Presets Chips */}
+                    <div className="space-y-1.5 pt-1">
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                        Modèles fréquents (cliquez pour ajouter instantanément) :
+                      </span>
+                      <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-1 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                        {PRESET_SOFTWARE_TOOLS.map((preset, pIdx) => {
+                          const isAlreadyAdded = accSoftwareList.some(s => s.name.toLowerCase() === preset.name.toLowerCase());
+                          return (
+                            <button
+                              key={pIdx}
+                              type="button"
+                              onClick={() => {
+                                if (!isAlreadyAdded) {
+                                  setAccSoftwareList(prev => [...prev, { name: preset.name, iconUrl: preset.iconUrl, category: preset.category }]);
+                                }
+                              }}
+                              disabled={isAlreadyAdded}
+                              className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-[10.5px] font-semibold transition-all border ${
+                                isAlreadyAdded
+                                  ? 'bg-slate-200/60 dark:bg-slate-800 text-slate-400 border-transparent cursor-not-allowed'
+                                  : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-brand-emerald hover:text-brand-emerald cursor-pointer shadow-2xs'
+                              }`}
+                            >
+                              <img src={preset.iconUrl} alt={preset.name} className="w-3.5 h-3.5 object-contain shrink-0" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+                              <span>{preset.name}</span>
+                              {!isAlreadyAdded && <Plus className="w-3 h-3 text-emerald-600" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Free Custom Software & Custom Icon Input */}
+                    <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
+                      <div className="font-bold text-[11px] text-slate-800 dark:text-slate-200 flex items-center">
+                        <Plus className="w-3.5 h-3.5 mr-1 text-brand-emerald" />
+                        <span>Ajouter un logiciel personnalisé avec son icône :</span>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+                        <div className="sm:col-span-5 space-y-1">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">Nom du logiciel :</label>
+                          <input
+                            type="text"
+                            placeholder="ex: ArcGIS Pro, Odoo, R Studio..."
+                            value={newSoftwareName}
+                            onChange={(e) => setNewSoftwareName(e.target.value)}
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 outline-none text-xs text-slate-900 dark:text-white"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-5 space-y-1">
+                          <label className="text-[10px] font-bold text-slate-500 uppercase">URL de l'icône / logo (PNG, SVG, Web) :</label>
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="url"
+                              placeholder="https://... (lien de l'icône)"
+                              value={newSoftwareIconUrl}
+                              onChange={(e) => setNewSoftwareIconUrl(e.target.value)}
+                              className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 outline-none text-xs text-slate-900 dark:text-white font-mono"
+                            />
+                            {newSoftwareIconUrl && (
+                              <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 p-1 flex items-center justify-center shrink-0">
+                                <img src={newSoftwareIconUrl} alt="Aperçu" className="w-full h-full object-contain" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="sm:col-span-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (!newSoftwareName.trim()) return;
+                              setAccSoftwareList(prev => [...prev, { name: newSoftwareName.trim(), iconUrl: newSoftwareIconUrl.trim() }]);
+                              setNewSoftwareName('');
+                              setNewSoftwareIconUrl('');
+                            }}
+                            className="w-full py-2 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-lg font-bold text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors shadow-xs"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                            <span>Ajouter</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Selected Softwares Badges List */}
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                        Logiciels enregistrés pour cet accompagnement ({accSoftwareList.length}) :
+                      </span>
+                      {accSoftwareList.length === 0 ? (
+                        <div className="text-[11px] text-slate-400 italic p-3 bg-slate-50 dark:bg-slate-900 rounded-xl text-center">
+                          Aucun logiciel sélectionné. Utilisez les modèles ci-dessus ou insérez un logiciel avec son icône.
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap gap-2">
+                          {accSoftwareList.map((sw, idx) => (
+                            <div
+                              key={idx}
+                              className="inline-flex items-center space-x-2 bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-3 py-1.5 rounded-xl text-xs font-semibold shadow-2xs group"
+                            >
+                              {sw.iconUrl ? (
+                                <img src={sw.iconUrl} alt={sw.name} className="w-4 h-4 object-contain shrink-0" onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }} />
+                              ) : (
+                                <Cpu className="w-3.5 h-3.5 text-slate-400" />
+                              )}
+                              <span className="text-slate-900 dark:text-white font-medium">{sw.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => setAccSoftwareList(prev => prev.filter((_, i) => i !== idx))}
+                                className="text-slate-400 hover:text-red-500 transition-colors cursor-pointer ml-1"
+                                title="Supprimer ce logiciel"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                  </div>
+
+                </div>
+
+                {/* Sub-domaines & Exemples optionnels */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <div className="space-y-1.5">
+                    <label className="block font-bold text-brand-emerald">Sous-domaines / Axes d'intervention spécifiques (1 par ligne) :</label>
+                    <textarea
+                      rows={4}
+                      placeholder="Systèmes d'Information Géographique (SIG)&#10;Télédétection spatiale &amp; drone&#10;Cadastre numérique &amp; foncier&#10;Aménagement territorial"
                       value={accSubDomainsText}
                       onChange={(e) => setAccSubDomainsText(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
                     ></textarea>
                   </div>
 
                   <div className="space-y-1.5">
                     <label className="block font-bold text-brand-emerald">Exemples de missions réalisées (1 par ligne) :</label>
                     <textarea
-                      rows={5}
+                      rows={4}
                       placeholder="Délimitation et numérisation de 45 000 parcelles&#10;Déploiement du SIG d'un réseau de distribution d'eau&#10;Formation technique des cadres ministériels"
                       value={accExamplesText}
                       onChange={(e) => setAccExamplesText(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none font-mono text-xs text-slate-900 dark:text-white"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-2.5 outline-none font-mono text-xs text-slate-900 dark:text-white"
                     ></textarea>
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+                {/* Actions Footer */}
+                <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                   <button
                     type="button"
                     onClick={() => { setShowAccompagnementForm(false); setEditingAccompagnement(null); }}
@@ -2475,10 +2819,10 @@ export default function AdminPanel({
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-md"
+                    className="px-6 py-2.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl font-bold flex items-center space-x-2 transition-all cursor-pointer shadow-md active:scale-98"
                   >
                     <Check className="w-4 h-4" />
-                    <span>Enregistrer l'accompagnement</span>
+                    <span>Enregistrer l'accompagnement (7 sections)</span>
                   </button>
                 </div>
               </form>

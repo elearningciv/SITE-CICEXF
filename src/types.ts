@@ -1,13 +1,25 @@
+export interface SoftwareTool {
+  name: string;
+  iconUrl?: string; // URL personnalisée de l'icône/logo du logiciel
+  category?: string;
+}
+
 export interface SubDomain {
   title: string;
   description: string;
+  presentationService?: string; // 1. Présentation du service
+  objectives?: string[]; // 2. Objectifs opérationnels
+  demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
+  resultatsAttendus?: string[]; // 4. Résultats attendus
+  impactEntite?: string; // 5. Impact pour l'entité
+  methodeEvaluation?: string[]; // 6. Méthode d'évaluation
+  softwareTools?: SoftwareTool[]; // 7. Logiciels impliqués avec icônes
+  software?: string[];
   imageUrl?: string;
   keyPoints?: string[];
-  software?: string[];
   expertiseLevel?: string;
-  objectives?: string[]; // Operational objectives
-  expectedChanges?: string; // Changes brought by this coaching to the entity
-  iconName?: string; // Dynamic icon representing the subdomain
+  expectedChanges?: string;
+  iconName?: string;
 }
 
 export interface DomainIntervention {
@@ -16,9 +28,18 @@ export interface DomainIntervention {
   title: string;
   shortDescription: string;
   description: string;
-  iconName: string; // Dynamic rendering from Lucide
+  presentationService?: string; // 1. Présentation du service
+  objectives?: string[]; // 2. Objectifs opérationnels
+  demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
+  resultatsAttendus?: string[]; // 4. Résultats attendus
+  impactEntite?: string; // 5. Impact pour l'entité
+  methodeEvaluation?: string[]; // 6. Méthode d'évaluation
+  softwareTools?: SoftwareTool[]; // 7. Logiciels impliqués avec icônes
+  software?: string[];
+  iconName: string;
   subDomains: SubDomain[];
   examples: string[];
+  createdAt?: any;
 }
 
 export interface TrainingSession {

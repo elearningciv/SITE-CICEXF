@@ -1,7 +1,14 @@
+import { SoftwareTool } from '../types';
+
 export interface SubDomainEnrichment {
   diversifiedDescription: string;
-  objectives: string[];
-  expectedChanges: string;
+  presentationService?: string; // 1. Présentation du service
+  objectives: string[]; // 2. Objectifs opérationnels
+  demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
+  resultatsAttendus?: string[]; // 4. Résultats attendus
+  expectedChanges: string; // 5. Impact pour l'entité
+  methodeEvaluation?: string[]; // 6. Méthode d'évaluation
+  softwareTools?: SoftwareTool[]; // 7. Logiciels impliqués
   iconName: string;
   imageUrl: string;
 }

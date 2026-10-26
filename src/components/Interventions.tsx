@@ -28,11 +28,14 @@ import {
   Eye,
   EyeOff,
   Briefcase,
-  Sparkles
+  Sparkles,
+  ShieldCheck,
+  CheckCheck
 } from 'lucide-react';
 import { DOMAINS_INTERVENTION } from '../data';
-import { DomainIntervention } from '../types';
+import { DomainIntervention, SoftwareTool } from '../types';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../data/accompanimentEnrichments';
+import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
 
 interface InterventionsProps {
   selectedDomainId: string | null;
@@ -290,116 +293,271 @@ export default function Interventions({
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {selectedDomainObj.subDomains.map((sub, sIdx) => {
                   const enrichments = ACCOMPANIMENT_ENRICHMENTS[selectedDomainObj.id];
                   const enrichment = enrichments && enrichments[sIdx];
-                  const finalDescription = enrichment ? enrichment.diversifiedDescription : sub.description;
-                  const finalIconName = enrichment ? enrichment.iconName : 'CheckSquare';
+                  const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
                   const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
-                  const objectives = enrichment ? enrichment.objectives : [];
-                  const expectedChanges = enrichment ? enrichment.expectedChanges : null;
+
+                  // 1. Présentation du service
+                  const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
+
+                  // 2. Objectifs opérationnels
+                  const objectives = (sub.objectives && sub.objectives.length > 0)
+                    ? sub.objectives
+                    : (enrichment?.objectives && enrichment.objectives.length > 0
+                        ? enrichment.objectives
+                        : [
+                            'Réaliser un diagnostic de maturité et cartographier 100% des flux critiques',
+                            'Déployer des solutions opérationnelles personnalisées et conformes aux normes',
+                            'Transférer les compétences aux équipes locales pour garantir la souveraineté métier'
+                          ]);
+
+                  // 3. Démarche d’accompagnement
+                  const demarche = (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0)
+                    ? sub.demarcheAccompagnement
+                    : (enrichment?.demarcheAccompagnement && enrichment.demarcheAccompagnement.length > 0
+                        ? enrichment.demarcheAccompagnement
+                        : [
+                            '1. Immersion diagnostique & cadrage des exigences',
+                            '2. Analyse approfondie, co-conception & modélisation',
+                            '3. Déploiement opérationnel sur le terrain et outillage',
+                            '4. Validation finale, capitalisation et transfert d\'autonomie'
+                          ]);
+
+                  // 4. Résultats attendus
+                  const resultatsAttendus = (sub.resultatsAttendus && sub.resultatsAttendus.length > 0)
+                    ? sub.resultatsAttendus
+                    : (enrichment?.resultatsAttendus && enrichment.resultatsAttendus.length > 0
+                        ? enrichment.resultatsAttendus
+                        : [
+                            'Livrables techniques complets et validés par le comité de direction',
+                            'Processus internes optimisés et sécurisés contre les dysfonctionnements',
+                            'Cadres opérationnels formés et autonomes sur les nouveaux outils'
+                          ]);
+
+                  // 5. Impact pour l’entité
+                  const impactEntite = sub.impactEntite || enrichment?.expectedChanges || sub.expectedChanges || 'Gain significatif de productivité, fiabilisation des processus stratégiques et autonomie d\'action durable pour l\'organisation.';
+
+                  // 6. Méthode d'évaluation
+                  const methodeEvaluation = (sub.methodeEvaluation && sub.methodeEvaluation.length > 0)
+                    ? sub.methodeEvaluation
+                    : (enrichment?.methodeEvaluation && enrichment.methodeEvaluation.length > 0
+                        ? enrichment.methodeEvaluation
+                        : [
+                            'Points d\'avancement hebdomadaires et comité de pilotage dédié',
+                            'Grille d\'audit de conformité des livrables selon les standards de la branche',
+                            'Enquête de satisfaction des parties prenantes et mesure d\'impact à J+60'
+                          ]);
+
+                  // 7. Logiciels impliqués (avec icônes personnalisées)
+                  const softwareTools: SoftwareTool[] = (sub.softwareTools && sub.softwareTools.length > 0)
+                    ? sub.softwareTools
+                    : (sub.software && sub.software.length > 0
+                        ? sub.software.map(name => {
+                            const found = PRESET_SOFTWARE_TOOLS.find(p => p.name.toLowerCase() === name.toLowerCase());
+                            return { name, iconUrl: found?.iconUrl || '' };
+                          })
+                        : (enrichment?.softwareTools && enrichment.softwareTools.length > 0
+                            ? enrichment.softwareTools
+                            : (selectedDomainObj.softwareTools && selectedDomainObj.softwareTools.length > 0
+                                ? selectedDomainObj.softwareTools
+                                : (selectedDomainObj.software && selectedDomainObj.software.length > 0
+                                    ? selectedDomainObj.software.map(name => {
+                                        const found = PRESET_SOFTWARE_TOOLS.find(p => p.name.toLowerCase() === name.toLowerCase());
+                                        return { name, iconUrl: found?.iconUrl || '' };
+                                      })
+                                    : [
+                                        { name: 'Outils Métiers CICEXF', iconUrl: 'https://raw.githubusercontent.com/microsoft/PowerBI-Icons/main/PNG/Power-BI.png' },
+                                        { name: 'Suite Bureautique Avancée', iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg' }
+                                      ]
+                                  )
+                              )
+                          ));
 
                   return (
                     <div
                       key={sIdx}
                       id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
-                      className="bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between group h-full transition-all duration-300 hover:shadow-lg"
+                      className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between group h-full transition-all duration-300 hover:shadow-xl"
                     >
                       <div>
                         {/* Sub-element/Minor line image */}
                         {finalImageUrl && (
-                          <div className="relative h-36 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                          <div className="relative h-40 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                             <img
                               src={finalImageUrl}
                               alt={sub.title}
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
                             
-                            {/* Title and Badge on image - ensuring text is white */}
+                            {/* Title and Badge on image */}
                             <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                              <span className="self-start font-mono font-bold text-[8px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                              <span className="self-start font-mono font-bold text-[8px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                 Axe #0{sIdx + 1}
                               </span>
-                              <h4 className="font-display font-extrabold text-[11.5px] sm:text-[12.5px] text-white leading-tight drop-shadow-md">
+                              <h4 className="font-display font-extrabold text-[12px] sm:text-[13.5px] text-white leading-tight drop-shadow-md">
                                 {sub.title}
                               </h4>
                             </div>
 
-                            <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-slate-950/40 backdrop-blur-md border border-white/25 text-white flex items-center justify-center">
-                              {renderIcon(finalIconName, "w-3.5 h-3.5 text-brand-emerald-light")}
+                            <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/50 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-sm">
+                              {renderIcon(finalIconName, "w-4 h-4 text-brand-emerald-light")}
                             </div>
                           </div>
                         )}
 
-                        <div className="p-4 sm:p-5 space-y-3">
-                          <p className="text-xs text-black dark:text-white leading-relaxed font-sans font-medium text-justify">
-                            {finalDescription}
-                          </p>
+                        <div className="p-4 sm:p-5 space-y-4">
+                          
+                          {/* 1. Présentation du service */}
+                          <div className="space-y-1.5">
+                            <span className="text-[9.5px] font-extrabold text-brand-emerald dark:text-brand-emerald-light uppercase tracking-widest flex items-center">
+                              <span className="w-4 h-4 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">1</span>
+                              Présentation du service
+                            </span>
+                            <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-sans font-medium text-justify">
+                              {presentationService}
+                            </p>
+                          </div>
 
-                          {/* Operational Objectives */}
+                          {/* 2. Objectifs opérationnels */}
                           {objectives && objectives.length > 0 && (
-                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                              <span className="text-[9px] font-extrabold text-black dark:text-brand-emerald-light uppercase tracking-widest flex items-center">
-                                <Target className="w-3 h-3 mr-1 shrink-0 text-brand-emerald" />
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">2</span>
+                                <Target className="w-3.5 h-3.5 mr-1 text-brand-emerald shrink-0" />
                                 Objectifs opérationnels
                               </span>
-                              <div className="grid grid-cols-1 gap-1">
+                              <div className="space-y-1 pl-1">
                                 {objectives.map((obj, oIdx) => (
-                                  <div key={oIdx} className="flex items-start text-black dark:text-white">
+                                  <div key={oIdx} className="flex items-start text-slate-700 dark:text-slate-300">
                                     <CheckCircle className="w-3 h-3 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                                    <span className="leading-snug text-[10.5px] font-medium font-sans text-black dark:text-white">{obj}</span>
+                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{obj}</span>
                                   </div>
                                 ))}
                               </div>
                             </div>
                           )}
 
-                          {/* Expected Changes and Transformation */}
-                          {expectedChanges && (
-                            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-0.5">
-                              <span className="text-[9px] font-extrabold text-black dark:text-sky-400 uppercase tracking-widest flex items-center">
-                                <Award className="w-3 h-3 mr-1 shrink-0 text-brand-blue" />
-                                Impact pour l'entité
+                          {/* 3. Démarche d’accompagnement */}
+                          {demarche && demarche.length > 0 && (
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">3</span>
+                                <Layers className="w-3.5 h-3.5 mr-1 text-blue-500 shrink-0" />
+                                Démarche d’accompagnement
                               </span>
-                              <p className="text-[10.5px] text-black dark:text-white leading-relaxed font-sans font-semibold text-justify">
-                                {expectedChanges}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Associated Key Skills (original keyPoints) */}
-                          {sub.keyPoints && sub.keyPoints.length > 0 && (
-                            <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 space-y-1">
-                              <span className="block text-[8.5px] font-extrabold text-black dark:text-white uppercase tracking-widest">
-                                Savoir-faire clé associés :
-                              </span>
-                              <div className="flex flex-wrap gap-1">
-                                {sub.keyPoints.slice(0, 3).map((point, pIdx) => (
-                                  <span
-                                    key={pIdx}
-                                    className="bg-slate-100 dark:bg-slate-800 text-black dark:text-white text-[8.5px] font-semibold px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700"
-                                  >
-                                    {point}
-                                  </span>
+                              <div className="grid grid-cols-1 gap-1.5">
+                                {demarche.map((step, stIdx) => (
+                                  <div key={stIdx} className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-start space-x-2 text-[10.5px]">
+                                    <span className="w-4 h-4 rounded-full bg-blue-600 text-white font-mono font-bold text-[8.5px] flex items-center justify-center shrink-0 mt-0.5">
+                                      {stIdx + 1}
+                                    </span>
+                                    <span className="text-slate-800 dark:text-slate-200 font-medium leading-snug">{step}</span>
+                                  </div>
                                 ))}
                               </div>
                             </div>
                           )}
+
+                          {/* 4. Résultats attendus */}
+                          {resultatsAttendus && resultatsAttendus.length > 0 && (
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">4</span>
+                                <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-teal-600 dark:text-teal-400 shrink-0" />
+                                Résultats attendus
+                              </span>
+                              <div className="space-y-1 pl-1">
+                                {resultatsAttendus.map((res, rIdx) => (
+                                  <div key={rIdx} className="flex items-start text-slate-700 dark:text-slate-300">
+                                    <CheckCheck className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 mr-2 shrink-0 mt-0.5" />
+                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{res}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 5. Impact pour l’entité */}
+                          {impactEntite && (
+                            <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/60 space-y-1">
+                              <span className="text-[9.5px] font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center font-mono mr-1.5 text-[8.5px] font-bold">5</span>
+                                <Award className="w-3.5 h-3.5 mr-1 text-amber-600 shrink-0" />
+                                Impact pour l’entité
+                              </span>
+                              <p className="text-[10.5px] text-amber-950 dark:text-amber-200 leading-relaxed font-sans font-semibold text-justify">
+                                {impactEntite}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* 6. Méthode d'évaluation */}
+                          {methodeEvaluation && methodeEvaluation.length > 0 && (
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
+                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">6</span>
+                                <ShieldCheck className="w-3.5 h-3.5 mr-1 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                                Méthode d'évaluation
+                              </span>
+                              <div className="space-y-1 pl-1">
+                                {methodeEvaluation.map((m, mIdx) => (
+                                  <div key={mIdx} className="flex items-start text-slate-700 dark:text-slate-300">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 shrink-0 mt-1.5"></div>
+                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{m}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 7. Logiciels impliqués (avec icônes personnalisées) */}
+                          {softwareTools && softwareTools.length > 0 && (
+                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
+                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
+                                <span className="w-4 h-4 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">7</span>
+                                <Cpu className="w-3.5 h-3.5 mr-1 text-purple-600 dark:text-purple-400 shrink-0" />
+                                Logiciels impliqués &amp; Outils
+                              </span>
+                              <div className="flex flex-wrap gap-1.5">
+                                {softwareTools.map((tool, tIdx) => (
+                                  <div
+                                    key={tIdx}
+                                    className="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-2xs"
+                                  >
+                                    {tool.iconUrl ? (
+                                      <img
+                                        src={tool.iconUrl}
+                                        alt={tool.name}
+                                        className="w-3.5 h-3.5 object-contain shrink-0"
+                                        onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                                      />
+                                    ) : (
+                                      <Cpu className="w-3 h-3 text-slate-400" />
+                                    )}
+                                    <span>{tool.name}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
                         </div>
                       </div>
 
                       {/* Card Action Footer */}
                       <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                        <span className="text-[9px] text-black dark:text-white font-bold font-sans uppercase">Expert CICEXF</span>
+                        <span className="text-[9px] text-slate-700 dark:text-slate-300 font-bold font-sans uppercase">Expertise CICEXF</span>
                         <button
                           onClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
-                          className="px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-brand-emerald hover:text-white dark:hover:bg-brand-emerald text-black dark:text-white rounded-lg text-[9px] font-bold transition-all flex items-center space-x-1 cursor-pointer"
+                          className="px-3.5 py-1.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-lg text-[9.5px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs active:scale-95"
                         >
-                          <span>Demander</span>
-                          <ChevronRight className="w-3 h-3 text-slate-600 dark:text-slate-300 group-hover:text-white" />
+                          <span>Demander cet accompagnement</span>
+                          <ChevronRight className="w-3.5 h-3.5 text-white" />
                         </button>
                       </div>
                     </div>
