@@ -161,6 +161,24 @@ export default function AdminPanel({
   const [fResultsExpected, setFResultsExpected] = useState('');
   const [fTargetPublic, setFTargetPublic] = useState('');
   const [fPrerequisites, setFPrerequisites] = useState('');
+  const [fProgramModules, setFProgramModules] = useState<{ module: string; details: string[] }[]>([
+    {
+      module: "Module 1 : Cadrage stratégique, fondements méthodologiques et revue sectorielle",
+      details: [
+        "Fondamentaux conceptuels et analyse des enjeux contemporains du secteur",
+        "Revue critique des normes professionnelles et standards internationaux",
+        "Études de cas réels appliqués aux contextes organisationnels africains"
+      ]
+    },
+    {
+      module: "Module 2 : Outils d'ingénierie opérationnelle et simulations pratiques",
+      details: [
+        "Prise en main des outils informatiques et des progiciels spécialisés",
+        "Protocoles de traitement, d'analyse et de modélisation avancée",
+        "Ateliers dirigés en laboratoire applicatif avec encadrement d'experts séniors"
+      ]
+    }
+  ]);
 
   // Form states for Accompagnements (Domaines d'intervention)
   const [showAccompagnementForm, setShowAccompagnementForm] = useState(false);
@@ -674,6 +692,24 @@ export default function AdminPanel({
     setFResultsExpected('');
     setFTargetPublic('');
     setFPrerequisites('');
+    setFProgramModules([
+      {
+        module: "Module 1 : Cadrage stratégique, fondements méthodologiques et revue sectorielle",
+        details: [
+          "Fondamentaux conceptuels et analyse des enjeux contemporains du secteur",
+          "Revue critique des normes professionnelles et standards internationaux",
+          "Études de cas réels appliqués aux contextes organisationnels africains"
+        ]
+      },
+      {
+        module: "Module 2 : Outils d'ingénierie opérationnelle et simulations pratiques",
+        details: [
+          "Prise en main des outils informatiques et des progiciels spécialisés",
+          "Protocoles de traitement, d'analyse et de modélisation avancée",
+          "Ateliers dirigés en laboratoire applicatif avec encadrement d'experts séniors"
+        ]
+      }
+    ]);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -730,10 +766,12 @@ export default function AdminPanel({
           { date: "Session en cours (Inscriptions ouvertes)", location: "Abidjan & En ligne", status: "Disponible" },
           { date: "Session sur-mesure / Intra-entreprise", location: "Sur site ou Hybride", status: "Disponible" }
         ],
-        program: editingFormation?.program || [
-          { module: "Module 1 : Cadrage méthodologique & Fondamentaux", details: ["Introduction et revue des concepts clés", "Études de cas réels sectoriels", "Exercices d'application"] },
-          { module: "Module 2 : Outils d'ingénierie & Mise en pratique", details: ["Mise en situation professionnelle", "Déploiement des solutions opérationnelles", "Évaluation et debriefing personnalisé"] }
-        ],
+        program: fProgramModules
+          .filter(m => m.module.trim())
+          .map(m => ({
+            module: m.module.trim(),
+            details: m.details.map(d => d.trim()).filter(Boolean)
+          })),
         createdAt: editingFormation?.createdAt || Timestamp.now()
       };
 
@@ -1115,6 +1153,31 @@ export default function AdminPanel({
     setFResultsExpected(f.resultsExpected ? f.resultsExpected.join('\n') : '');
     setFTargetPublic(f.targetPublic ? f.targetPublic.join('\n') : '');
     setFPrerequisites(f.prerequisites ? f.prerequisites.join('\n') : '');
+    if (f.program && Array.isArray(f.program) && f.program.length > 0) {
+      setFProgramModules(f.program.map((p: any) => ({
+        module: p.module || '',
+        details: Array.isArray(p.details) ? p.details : (p.details ? [String(p.details)] : [])
+      })));
+    } else {
+      setFProgramModules([
+        {
+          module: "Module 1 : Cadrage stratégique, fondements méthodologiques et revue sectorielle",
+          details: [
+            "Fondamentaux conceptuels et analyse des enjeux contemporains du secteur",
+            "Revue critique des normes professionnelles et standards internationaux",
+            "Études de cas réels appliqués aux contextes organisationnels africains"
+          ]
+        },
+        {
+          module: "Module 2 : Outils d'ingénierie opérationnelle et simulations pratiques",
+          details: [
+            "Prise en main des outils informatiques et des progiciels spécialisés",
+            "Protocoles de traitement, d'analyse et de modélisation avancée",
+            "Ateliers dirigés en laboratoire applicatif avec encadrement d'experts séniors"
+          ]
+        }
+      ]);
+    }
     setShowFormationForm(true);
   };
 
@@ -2186,6 +2249,90 @@ export default function AdminPanel({
                       onChange={(e) => setFPrerequisites(e.target.value)}
                       className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-3 outline-none font-mono text-[11px]"
                     ></textarea>
+                  </div>
+                </div>
+
+                {/* PROGRAMME DE LA FORMATION : MODULES (EN GRAS) ET POINTS D'APPRENTISSAGE */}
+                <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border-2 border-brand-emerald/30 space-y-4 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                    <div>
+                      <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
+                        <Layers className="w-4 h-4 mr-2" />
+                        Programme : Modules (en gras) &amp; Détails des notions (non gras)
+                      </label>
+                      <p className="text-[11px] text-slate-500 mt-0.5">
+                        Chaque intitulé de module apparaîtra en gras sur le menu PROGRAMME. Les points détaillés apparaîtront en texte normal sans gras.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFProgramModules(prev => [
+                          ...prev,
+                          {
+                            module: `Module ${prev.length + 1} : Nouveau module d'apprentissage`,
+                            details: ["Notion clé et cas pratique d'application", "Exercice dirigé et livrable opérationnel"]
+                          }
+                        ]);
+                      }}
+                      className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs self-start sm:self-auto"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Ajouter un module</span>
+                    </button>
+                  </div>
+
+                  <div className="space-y-4">
+                    {fProgramModules.map((mod, mIdx) => (
+                      <div key={mIdx} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="flex-1 space-y-1">
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-emerald">
+                              Module #{mIdx + 1} (Intitulé affiché en gras) :
+                            </span>
+                            <input
+                              type="text"
+                              required
+                              placeholder={`ex: Module ${mIdx + 1} : Cadrage stratégique et méthodologie`}
+                              value={mod.module}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setFProgramModules(prev => prev.map((m, i) => i === mIdx ? { ...m, module: val } : m));
+                              }}
+                              className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 font-bold text-slate-900 dark:text-white text-xs outline-none focus:border-brand-emerald"
+                            />
+                          </div>
+                          {fProgramModules.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFProgramModules(prev => prev.filter((_, i) => i !== mIdx));
+                              }}
+                              className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors cursor-pointer mt-5"
+                              title="Supprimer ce module"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                            Points du module (un par ligne, affichés sans gras) :
+                          </span>
+                          <textarea
+                            rows={3}
+                            placeholder="Revue des concepts fondamentaux&#10;Études de cas réels sectoriels&#10;Exercices d'application pratique et validation"
+                            value={mod.details.join('\n')}
+                            onChange={(e) => {
+                              const lines = e.target.value.split('\n');
+                              setFProgramModules(prev => prev.map((m, i) => i === mIdx ? { ...m, details: lines } : m));
+                            }}
+                            className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-2 text-xs font-normal text-slate-800 dark:text-slate-200 outline-none font-mono"
+                          ></textarea>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 

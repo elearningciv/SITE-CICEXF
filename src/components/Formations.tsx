@@ -4,7 +4,8 @@ import {
   MapPin, CheckCircle, Calendar, Send, HelpCircle, ArrowLeft, Terminal, 
   AlertCircle, TrendingUp, Cpu, Map, ShieldAlert, FileSpreadsheet, Layers, 
   Users, CheckSquare, CornerDownRight, ChevronRight, Briefcase, Building2,
-  FileText, MessageSquare, Compass, Sparkles, Filter, X, ChevronDown, Check
+  FileText, MessageSquare, Compass, Sparkles, Filter, X, ChevronDown, Check,
+  UserCheck, ShieldCheck
 } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION } from '../data';
 import { Formation, DomainIntervention, SubDomain } from '../types';
@@ -909,6 +910,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   const [formTerms, setFormTerms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [formationActiveTab, setFormationActiveTab] = useState<string>('description');
 
   // Corporate Domain Quote Form States
   const [corpCompany, setCorpCompany] = useState('');
@@ -927,6 +929,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   const handleSelectFormation = (formation: Formation) => {
     setSelectedFormation(formation);
     setSelectedDomainId(null);
+    setFormationActiveTab('description');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -934,6 +937,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     setSelectedFormation(null);
     setSelectedDomainId(null);
     setSubmitSuccess(false);
+    setFormationActiveTab('description');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -2487,11 +2491,179 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     <InteractiveSectionTabs
                       title={selectedFormation.title}
                       description={selectedFormation.context || selectedFormation.shortDescription}
-                      sections={buildFormationTabSections(selectedFormation)}
-                      defaultTabId="objectifs"
+                      sections={buildFormationTabSections(
+                        selectedFormation,
+                        undefined,
+                        (
+                          <div id="registration-form-card" className="bg-slate-50 dark:bg-slate-950/70 p-5 sm:p-7 rounded-2xl border-2 border-[#8A1A24]/30 dark:border-[#8A1A24]/50 shadow-md">
+                            {submitSuccess ? (
+                              <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 p-5 rounded-xl space-y-3 text-emerald-900 dark:text-emerald-200">
+                                <div className="flex items-center space-x-2.5">
+                                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                                  <span className="font-extrabold text-sm sm:text-base">Candidature Enregistrée avec Succès !</span>
+                                </div>
+                                <p className="font-sans leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                                  Un email officiel de confirmation a été adressé à <strong>{formEmail}</strong>. Un conseiller pédagogique du Cabinet CICEXF va prendre contact avec vous par WhatsApp pour finaliser vos modalités d'inscription.
+                                </p>
+                                <button
+                                  onClick={() => setSubmitSuccess(false)}
+                                  className="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:underline inline-block pt-1 cursor-pointer"
+                                >
+                                  ← Soumettre un autre dossier de candidature
+                                </button>
+                              </div>
+                            ) : (
+                              <form onSubmit={handleRegisterSubmit} className="space-y-4 font-sans text-xs">
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Nom Complet */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Nom Complet * :</label>
+                                    <input
+                                      type="text"
+                                      placeholder="Nom Prénom"
+                                      value={formName}
+                                      onChange={(e) => setFormName(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
+                                        errors.name ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                      }`}
+                                    />
+                                    {errors.name && <span className="text-[11px] text-red-500">{errors.name}</span>}
+                                  </div>
+
+                                  {/* Email */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Adresse Email * :</label>
+                                    <input
+                                      type="email"
+                                      placeholder="votre.email@gmail.com"
+                                      value={formEmail}
+                                      onChange={(e) => setFormEmail(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
+                                        errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                      }`}
+                                    />
+                                    {errors.email && <span className="text-[11px] text-red-500">{errors.email}</span>}
+                                  </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* WhatsApp */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">WhatsApp * :</label>
+                                    <input
+                                      type="tel"
+                                      placeholder="Ex: +225 07 01 02 03..."
+                                      value={formPhone}
+                                      onChange={(e) => setFormPhone(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
+                                        errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                      }`}
+                                    />
+                                    {errors.phone && <span className="text-[11px] text-red-500">{errors.phone}</span>}
+                                  </div>
+
+                                  {/* Session souhaitée */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Session souhaitée * :</label>
+                                    <select
+                                      value={formSession}
+                                      onChange={(e) => setFormSession(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
+                                        errors.session ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24]'
+                                      }`}
+                                    >
+                                      <option value="">-- Choisir une date --</option>
+                                      {(selectedFormation.sessions && selectedFormation.sessions.length > 0) ? (
+                                        selectedFormation.sessions.map((s, idx) => (
+                                          <option key={idx} value={s.date}>{s.date} ({s.location})</option>
+                                        ))
+                                      ) : (
+                                        <>
+                                          <option value="Session ouverte - Inscriptions en cours">Session ouverte - Inscriptions en cours (Abidjan &amp; En ligne)</option>
+                                          <option value="Session sur-mesure / Intra-entreprise">Session sur-mesure / Intra-entreprise (Sur site ou Hybride)</option>
+                                        </>
+                                      )}
+                                    </select>
+                                    {errors.session && <span className="text-[11px] text-red-500">{errors.session}</span>}
+                                  </div>
+                                </div>
+
+                                {/* Modalité préférée */}
+                                <div className="space-y-1.5 pt-1">
+                                  <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Modalité Préférée :</label>
+                                  <div className="flex flex-wrap gap-4 pt-1">
+                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
+                                      <input
+                                        type="radio"
+                                        name="cert-modal-grand"
+                                        checked={formModality === 'Présentiel'}
+                                        onChange={() => setFormModality('Présentiel')}
+                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
+                                      />
+                                      <span>Présentiel</span>
+                                    </label>
+                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
+                                      <input
+                                        type="radio"
+                                        name="cert-modal-grand"
+                                        checked={formModality === 'En ligne'}
+                                        onChange={() => setFormModality('En ligne')}
+                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
+                                      />
+                                      <span>En ligne</span>
+                                    </label>
+                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
+                                      <input
+                                        type="radio"
+                                        name="cert-modal-grand"
+                                        checked={formModality === 'Hybride'}
+                                        onChange={() => setFormModality('Hybride')}
+                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
+                                      />
+                                      <span>Hybride</span>
+                                    </label>
+                                  </div>
+                                </div>
+
+                                {/* RGPD / Consentement */}
+                                <div className="space-y-1 pt-2">
+                                  <label className="flex items-start space-x-2.5 cursor-pointer">
+                                    <input
+                                      type="checkbox"
+                                      checked={formTerms}
+                                      onChange={(e) => setFormTerms(e.target.checked)}
+                                      className="mt-0.5 shrink-0 accent-[#8A1A24] w-4 h-4 cursor-pointer"
+                                    />
+                                    <span className="text-[11px] text-slate-600 dark:text-slate-400 leading-normal">
+                                      J'autorise le cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier.
+                                    </span>
+                                  </label>
+                                  {errors.terms && <span className="text-[11px] text-red-500 block">{errors.terms}</span>}
+                                </div>
+
+                                {/* Submit Button matching user's image */}
+                                <button
+                                  type="submit"
+                                  className="w-full py-3.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs sm:text-sm transition-all flex items-center justify-center space-x-2 shadow-md hover:shadow-lg cursor-pointer active:scale-98 mt-2"
+                                >
+                                  <Send className="w-4 h-4" />
+                                  <span>VALIDER MON INSCRIPTION</span>
+                                </button>
+                              </form>
+                            )}
+                          </div>
+                        )
+                      )}
+                      defaultTabId="description"
+                      activeTabId={formationActiveTab}
+                      onTabChange={setFormationActiveTab}
                       onActionClick={() => {
-                        const el = document.getElementById('registration-form-card');
-                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        setFormationActiveTab('sinscrire');
+                        setTimeout(() => {
+                          const el = document.getElementById('registration-grand-plan-anchor');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }, 50);
                       }}
                       actionLabel="S'inscrire à cette certification"
                     />
@@ -2519,192 +2691,79 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     )}
                   </div>
 
-                  {/* Right elements */}
-                  <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-8">
-                    
-                    {/* Public targets */}
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                      <h4 className="font-display text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">
-                        Profils Admissibles
-                      </h4>
-                      <div className="space-y-3 font-sans text-xs">
-                        {selectedFormation.targetPublic && (
-                          <div>
-                            <h5 className="font-bold text-slate-800 dark:text-white">Public Cible :</h5>
-                            <ul className="list-disc pl-4 space-y-1 text-slate-500 dark:text-slate-400 mt-1 leading-relaxed text-[11px]">
-                              {selectedFormation.targetPublic.map((t, idx) => <li key={idx}>{t}</li>)}
-                            </ul>
-                          </div>
-                        )}
-                        {selectedFormation.prerequisites && (
-                          <div className="pt-2">
-                            <h5 className="font-bold text-slate-800 dark:text-white">Prérequis Académiques :</h5>
-                            <ul className="list-disc pl-4 space-y-1 text-slate-500 dark:text-slate-400 mt-1 leading-relaxed text-[11px]">
-                              {selectedFormation.prerequisites.map((p, idx) => <li key={idx}>{p}</li>)}
-                            </ul>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                  {/* Right elements: Sticky CTA Card with ONLY a button "S'inscrire" */}
+                  <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
 
-                    {/* Sessions Calendar */}
-                    {selectedFormation.sessions && (
-                      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                        <h4 className="font-display text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">
-                          Calendrier des Sessions
-                        </h4>
-                        <div className="space-y-3 font-sans text-xs">
-                          {selectedFormation.sessions.map((session, sIdx) => (
-                            <div key={sIdx} className="flex justify-between items-center p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
-                              <div className="flex items-center space-x-2.5">
-                                <Calendar className="w-4 h-4 text-brand-emerald" />
-                                <div>
-                                  <span className="block font-bold text-slate-800 dark:text-slate-200">{session.date}</span>
-                                  <span className="block text-[10px] text-slate-400">{session.location}</span>
-                                </div>
-                              </div>
-                              <span className={`text-[9px] font-bold px-2 py-0.5 rounded uppercase ${
-                                session.status === 'Disponible' ? 'bg-emerald-100 text-brand-emerald dark:bg-brand-emerald/10' : 'bg-slate-100 text-slate-400'
-                              }`}>
-                                {session.status}
-                              </span>
-                            </div>
-                          ))}
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md space-y-5">
+                      
+                      <div className="space-y-1.5 border-b border-slate-100 dark:border-slate-800 pb-4">
+                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8A1A24] dark:text-red-400 block">
+                          Formation Certifiante
+                        </span>
+                        <div className="flex items-baseline space-x-2">
+                          <span className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+                            {selectedFormation.price || "450 000 FCFA"}
+                          </span>
+                          <span className="text-[11px] text-slate-400 font-medium">/ participant</span>
                         </div>
-                      </div>
-                    )}
-
-                    {/* Registration Form */}
-                    <div id="registration-form-card" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-lg space-y-4">
-                      <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-                        <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">
-                          Inscription en Ligne Directe
-                        </h4>
-                        <p className="text-[10px] text-slate-400 font-sans mt-0.5">
-                          Remplissez ce formulaire pour soumettre votre dossier de candidature. Nos services d'admission traiteront votre demande sous 24h.
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+                          Éligible aux prises en charge entreprise &amp; conventions FDFP.
                         </p>
                       </div>
 
-                      {submitSuccess ? (
-                        <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/20 border border-brand-emerald/30 p-4 rounded-xl text-xs space-y-2 text-brand-emerald-dark dark:text-brand-emerald-light">
-                          <div className="flex items-center space-x-2">
-                            <CheckCircle className="w-5 h-5 text-brand-emerald" />
-                            <span className="font-bold">Candidature Enregistrée !</span>
-                          </div>
-                          <p className="font-sans leading-relaxed text-[11px] text-slate-550 dark:text-slate-400">
-                            Un email officiel vous a été adressé à <strong>{formEmail}</strong>. Un conseiller pédagogique va prendre contact par WhatsApp pour finaliser vos modalités d'inscription.
-                          </p>
-                          <button
-                            onClick={() => setSubmitSuccess(false)}
-                            className="text-[10px] font-bold text-brand-emerald hover:underline block pt-2"
-                          >
-                            Soumettre un autre dossier
-                          </button>
+                      <div className="space-y-2.5 text-xs">
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-400">Durée :</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.duration || "6 semaines"}</span>
                         </div>
-                      ) : (
-                        <form onSubmit={handleRegisterSubmit} className="space-y-4 font-sans text-xs">
-                          
-                          <div className="space-y-1">
-                            <label className="block font-bold text-slate-600 dark:text-slate-350">Nom Complet * :</label>
-                            <input
-                              type="text"
-                              placeholder="Nom Prénom"
-                              value={formName}
-                              onChange={(e) => setFormName(e.target.value)}
-                              className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.name ? 'border-red-500' : 'border-slate-200 dark:border-slate-850 focus:border-brand-emerald'}`}
-                            />
-                            {errors.name && <span className="text-[10px] text-red-500">{errors.name}</span>}
-                          </div>
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-400">Modalité :</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.modality || "Hybride"}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-400">Niveau :</span>
+                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.level || "Intermédiaire"}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
+                          <span className="text-slate-400">Agrément :</span>
+                          <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono text-[10.5px]">N°25343/GTCA/RC/2025</span>
+                        </div>
+                      </div>
 
-                          <div className="space-y-1">
-                            <label className="block font-bold text-slate-600 dark:text-slate-350">Adresse Email * :</label>
-                            <input
-                              type="email"
-                              placeholder="votre.email@gmail.com"
-                              value={formEmail}
-                              onChange={(e) => setFormEmail(e.target.value)}
-                              className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-850 focus:border-brand-emerald'}`}
-                            />
-                            {errors.email && <span className="text-[10px] text-red-500">{errors.email}</span>}
-                          </div>
+                      {/* Display ONLY a button 'S'inscrire' as explicitly requested */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormationActiveTab('sinscrire');
+                          setTimeout(() => {
+                            const el = document.getElementById('registration-grand-plan-anchor');
+                            if (el) el.scrollIntoView({ behavior: 'smooth' });
+                          }, 50);
+                        }}
+                        className="w-full py-3.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs transition-all flex items-center justify-center space-x-2 shadow-md hover:shadow-lg cursor-pointer active:scale-98"
+                      >
+                        <UserCheck className="w-4 h-4" />
+                        <span>S'inscrire</span>
+                      </button>
 
-                          <div className="space-y-1">
-                            <label className="block font-bold text-slate-600 dark:text-slate-350">WhatsApp * :</label>
-                            <input
-                              type="tel"
-                              placeholder="Ex: +225 07 01 02 03..."
-                              value={formPhone}
-                              onChange={(e) => setFormPhone(e.target.value)}
-                              className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-850 focus:border-brand-emerald'}`}
-                            />
-                            {errors.phone && <span className="text-[10px] text-red-500">{errors.phone}</span>}
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="block font-bold text-slate-600 dark:text-slate-350">Session souhaitée * :</label>
-                            <select
-                              value={formSession}
-                              onChange={(e) => setFormSession(e.target.value)}
-                              className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.session ? 'border-red-500' : 'border-slate-200 dark:border-slate-850'}`}
-                            >
-                              <option value="">-- Choisir une date --</option>
-                              {(selectedFormation.sessions && selectedFormation.sessions.length > 0) ? (
-                                selectedFormation.sessions.map((s, idx) => (
-                                  <option key={idx} value={s.date}>{s.date} ({s.location})</option>
-                                ))
-                              ) : (
-                                <>
-                                  <option value="Session ouverte - Inscriptions en cours">Session ouverte - Inscriptions en cours (Abidjan & En ligne)</option>
-                                  <option value="Session sur-mesure / Intra-entreprise">Session sur-mesure / Intra-entreprise (Sur site ou Hybride)</option>
-                                </>
-                              )}
-                            </select>
-                            {errors.session && <span className="text-[10px] text-red-500">{errors.session}</span>}
-                          </div>
-
-                          <div className="space-y-1">
-                            <label className="block font-bold text-slate-600 dark:text-slate-350">Modalité Préférée :</label>
-                            <div className="flex space-x-4 pt-1 text-xs">
-                              <label className="flex items-center space-x-1 cursor-pointer">
-                                <input type="radio" name="cert-modal" checked={formModality === 'Présentiel'} onChange={() => setFormModality('Présentiel')} />
-                                <span>Présentiel</span>
-                              </label>
-                              <label className="flex items-center space-x-1 cursor-pointer">
-                                <input type="radio" name="cert-modal" checked={formModality === 'En ligne'} onChange={() => setFormModality('En ligne')} />
-                                <span>En ligne</span>
-                              </label>
-                              <label className="flex items-center space-x-1 cursor-pointer">
-                                <input type="radio" name="cert-modal" checked={formModality === 'Hybride'} onChange={() => setFormModality('Hybride')} />
-                                <span>Hybride</span>
-                              </label>
-                            </div>
-                          </div>
-
-                          <div className="space-y-1.5 pt-2">
-                            <label className="flex items-start space-x-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={formTerms}
-                                onChange={(e) => setFormTerms(e.target.checked)}
-                                className="mt-0.5 shrink-0"
-                              />
-                              <span className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight">
-                                J'autorise le cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier.
-                              </span>
-                            </label>
-                            {errors.terms && <span className="text-[10px] text-red-500 block">{errors.terms}</span>}
-                          </div>
-
-                          <button
-                            type="submit"
-                            className="w-full py-3 bg-brand-emerald hover:bg-brand-emerald-dark text-white font-bold rounded-lg text-xs tracking-wider uppercase transition-colors flex items-center justify-center space-x-2 mt-4 cursor-pointer"
-                          >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Valider mon Inscription</span>
-                          </button>
-
-                        </form>
+                      {formationActiveTab === 'sinscrire' && (
+                        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-center space-y-1 animate-in fade-in">
+                          <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 block">
+                            ✓ Formulaire affiché en grand plan ci-contre
+                          </span>
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
+                            Remplissez vos coordonnées pour soumettre votre dossier.
+                          </span>
+                        </div>
                       )}
+
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
+                        <span className="text-[10.5px] text-slate-400 flex items-center justify-center space-x-1">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>Dossier traité sous 24h par nos conseillers</span>
+                        </span>
+                      </div>
+
                     </div>
 
                   </div>

@@ -1,5 +1,6 @@
+import React from 'react';
 import { Formation, DomainIntervention, SubDomain, SoftwareTool } from '../types';
-import { TabSectionItem } from '../components/InteractiveSectionTabs';
+import { TabSectionItem, ProgramModule } from '../components/InteractiveSectionTabs';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
 
 export function matchSoftwareWithIcons(softwareNames: string[] = []): SoftwareTool[] {
@@ -17,14 +18,25 @@ export function matchSoftwareWithIcons(softwareNames: string[] = []): SoftwareTo
 }
 
 /**
- * Builds the 6 interactive tab sections for Formations
- * (OBJECTIFS, PUBLIC, PROGRAMME, ACCESSIBILITÉ, PÉDAGOGIE, FINANCEMENT)
+ * Builds the 8 interactive tab sections for Formations:
+ * 1. DESCRIPTION (premier)
+ * 2. OBJECTIFS
+ * 3. PUBLIC
+ * 4. PROGRAMME (Module en gras + points non gras, sans mentionner "sous point")
+ * 5. ADMISSION
+ * 6. PÉDAGOGIE
+ * 7. FINANCEMENT
+ * 8. S'INSCRIRE (dernier)
  */
 export function buildFormationTabSections(
   formation: Formation,
-  axisData?: any
+  axisData?: any,
+  registrationContent?: React.ReactNode
 ): TabSectionItem[] {
-  // 1. Objectives & Results
+  // 1. Description text
+  const descText = formation.context || formation.shortDescription || "Formation certifiante d'excellence opérationnelle conçue et animée par les experts du Cabinet CICEXF.";
+
+  // 2. Objectives & Results
   const objectivesList = (formation.objectives && formation.objectives.length > 0)
     ? formation.objectives
     : (axisData?.objectives || [
@@ -42,7 +54,7 @@ export function buildFormationTabSections(
         "Capacité opérationnelle immédiate de niveau exécutif sur votre poste de travail."
       ]);
 
-  // 2. Target public & prerequisites
+  // 3. Target public & prerequisites
   const publicList = (formation.targetPublic && formation.targetPublic.length > 0)
     ? formation.targetPublic
     : (axisData?.opportunities || [
@@ -59,17 +71,51 @@ export function buildFormationTabSections(
         "Expérience professionnelle ou formation académique dans un domaine connexe souhaitée."
       ];
 
-  // 3. Program / Modules
-  const programList = (formation.program && formation.program.length > 0)
-    ? formation.program.map(p => `${p.module} : ${p.details.join(' • ')}`)
-    : [
-        "Module 1 : Cadrage stratégique, fondements méthodologiques et revue des normes sectorielles.",
-        "Module 2 : Outils d'ingénierie opérationnelle, études de cas réels et simulations pratiques.",
-        "Module 3 : Modélisation avancée, digitalisation des processus et automatisation des livrables.",
-        "Module 4 : Projet pratique de fin d'études et soutenance officielle devant jury d'experts."
-      ];
+  // 4. Program Modules (Modules in bold, details points in normal font, no "sous point" text)
+  let programModules: ProgramModule[] = [];
+  if (formation.program && formation.program.length > 0) {
+    programModules = formation.program.map(p => ({
+      module: p.module,
+      details: Array.isArray(p.details) ? p.details : [String(p.details)]
+    }));
+  } else {
+    programModules = [
+      {
+        module: "Module 1 : Cadrage stratégique, fondements méthodologiques et revue sectorielle",
+        details: [
+          "Fondamentaux conceptuels et analyse des enjeux contemporains du secteur",
+          "Revue critique des normes professionnelles et standards internationaux",
+          "Études de cas réels appliqués aux contextes organisationnels africains"
+        ]
+      },
+      {
+        module: "Module 2 : Outils d'ingénierie opérationnelle et simulations pratiques",
+        details: [
+          "Prise en main des outils informatiques et des progiciels spécialisés",
+          "Protocoles de traitement, d'analyse et de modélisation avancée",
+          "Ateliers dirigés en laboratoire applicatif avec encadrement d'experts séniors"
+        ]
+      },
+      {
+        module: "Module 3 : Modélisation avancée, digitalisation et automatisation des livrables",
+        details: [
+          "Structuration des tableaux de bord et indicateurs de performance clés (KPI)",
+          "Automatisation des flux de reporting et fiabilisation des livrables finaux",
+          "Contrôle qualité, auditabilité des processus et détection des anomalies"
+        ]
+      },
+      {
+        module: "Module 4 : Projet pratique de fin de cycle et soutenance officielle de certification",
+        details: [
+          "Élaboration d'un projet professionnel d'envergure réelle sur votre poste",
+          "Présentation et soutenance devant le jury d'experts du Cabinet CICEXF",
+          "Délivrance de l'attestation officielle de réussite et du certificat d'expertise"
+        ]
+      }
+    ];
+  }
 
-  // 4. Accessibility / Admission / Sessions
+  // 5. Accessibility / Admission
   const accessList = [
     `Modalité de suivi : ${formation.modality || "Présentiel & En ligne (Hybride)"} avec accès continu aux ressources digitales.`,
     `Durée du parcours : ${formation.duration || "6 semaines intensives"} modulables selon votre disponibilité.`,
@@ -84,7 +130,7 @@ export function buildFormationTabSections(
     });
   }
 
-  // 5. Pedagogy & Software
+  // 6. Pedagogy
   const pedagogyList = [
     "Pédagogie active et andragogie moderne axée à 80% sur la pratique et l'Approche Par Compétences (APC).",
     "Ateliers de codéveloppement et résolution de cas réels d'entreprises ivoiriennes et internationales.",
@@ -92,7 +138,7 @@ export function buildFormationTabSections(
     "Accès privilégié aux plateformes e-learning, supports interactifs et communauté d'alumni CICEXF."
   ];
 
-  // 6. Financing
+  // 7. Financing
   const financeList = [
     `Tarif de référence : ${formation.price || "450 000 FCFA"} (Tarif net sans coûts dissimulés).`,
     "Facilités de paiement : Possibilité d'échelonnement en 2 ou 3 versements sans frais additionnels pour les particuliers.",
@@ -101,7 +147,30 @@ export function buildFormationTabSections(
     "Moyens de règlement acceptés : Virement bancaire, chèque certifié, Mobile Money (Orange Money, Wave, MTN MoMo) ou au secrétariat du siège."
   ];
 
+  // 8. Inscription
+  const inscriptionList = [
+    "Dépôt de candidature immédiat avec prise en charge sous 24h ouvrées par notre service pédagogique.",
+    "Entretien de cadrage individuel offert pour adapter les dates et les horaires à votre planning.",
+    "Délivrance immédiate de convention de formation pour les prises en charge employeur (agrément FDFP).",
+    "Accès prioritaire à la documentation préparatoire dès validation de l'inscription."
+  ];
+
   return [
+    {
+      id: 'description',
+      label: 'DESCRIPTION',
+      intro: 'Présentation générale et portée d\'excellence du programme :',
+      items: [
+        descText,
+        `Domaine d'expertise : ${formation.domain}${formation.specialty ? ` — Spécialité : ${formation.specialty}` : ''}`,
+        `Niveau de qualification : ${formation.level} | Modalité d'exécution : ${formation.modality}`,
+        "Parcours professionnalisant orienté à 80% sur la pratique, les études de cas réels et la maîtrise opérationnelle."
+      ],
+      extraDetails: [
+        { label: 'Thématique', value: formation.domain },
+        { label: 'Spécialité', value: formation.specialty || 'Générale' }
+      ]
+    },
     {
       id: 'objectifs',
       label: 'OBJECTIFS',
@@ -125,7 +194,7 @@ export function buildFormationTabSections(
       id: 'programme',
       label: 'PROGRAMME',
       intro: 'Architecture académique et découpage des modules d\'apprentissage :',
-      items: programList
+      programModules: programModules
     },
     {
       id: 'admission',
@@ -152,19 +221,40 @@ export function buildFormationTabSections(
         { label: 'Investissement', value: formation.price || '450 000 FCFA' },
         { label: 'Échelonnement', value: '2 à 3 fois sans frais' }
       ]
+    },
+    {
+      id: 'sinscrire',
+      label: "S'INSCRIRE",
+      intro: 'Rejoignez la prochaine cohorte certifiante du Cabinet CICEXF :',
+      content: registrationContent,
+      items: inscriptionList,
+      extraDetails: [
+        { label: 'Délai de traitement', value: '24 heures ouvrées' },
+        { label: 'Validation', value: 'Dossier & Entretien' }
+      ]
     }
   ];
 }
 
 /**
- * Builds the 6 interactive tab sections for Accompagnements / Domaines d'intervention
- * (OBJECTIFS, PUBLIC, PROGRAMME, ACCESSIBILITÉ, PÉDAGOGIE, FINANCEMENT)
+ * Builds the 8 interactive tab sections for Accompagnements / Domaines d'intervention:
+ * 1. DESCRIPTION (premier)
+ * 2. OBJECTIFS
+ * 3. PUBLIC
+ * 4. PROGRAMME (Démarche d'accompagnement : phases en gras + points non gras)
+ * 5. ADMISSION (Modalités de déploiement)
+ * 6. PÉDAGOGIE (Évaluation & Logiciels)
+ * 7. FINANCEMENT
+ * 8. S'INSCRIRE (dernier)
  */
 export function buildAccompanimentTabSections(
   sub: SubDomain,
   domain: DomainIntervention
 ): TabSectionItem[] {
-  // 1. Objectives
+  // 1. Description
+  const descText = sub.presentationService || sub.description || domain.description || "Mission d'assistance technique, d'audit opérationnel et d'accompagnement stratégique réalisée par le Cabinet CICEXF.";
+
+  // 2. Objectives
   const objectivesList = (sub.objectives && sub.objectives.length > 0)
     ? sub.objectives
     : [
@@ -174,7 +264,7 @@ export function buildAccompanimentTabSections(
         "Garantir le transfert de compétences et l'autonomie technique souveraine des équipes locales."
       ];
 
-  // 2. Public / Target entities
+  // 3. Public / Target entities
   const publicList = [
     "Directions Générales, Directions Financières, Directions Techniques et comités de gouvernance.",
     "Institutions publiques, ministères sectoriels et agences gouvernementales d'exécution.",
@@ -183,17 +273,60 @@ export function buildAccompanimentTabSections(
     "Grandes entreprises privées, PME en expansion et cabinets d'ingénierie partenaires."
   ];
 
-  // 3. Program / Démarche d'accompagnement
-  const programList = (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0)
-    ? sub.demarcheAccompagnement
-    : [
-        "Phase 1 : Cadrage stratégique, immersion auprès des parties prenantes et diagnostic des besoins.",
-        "Phase 2 : Analyse approfondie des données, cartographie technique et co-conception des solutions.",
-        "Phase 3 : Déploiement opérationnel sur le terrain, outillage technique et conduite du changement.",
-        "Phase 4 : Évaluation d'impact, remise des livrables définitifs et transfert d'autonomie."
-      ];
+  // 4. Program / Démarche d'accompagnement (Phases in bold, details points in normal font, no "sous point" text)
+  let programModules: ProgramModule[] = [];
+  if (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0) {
+    programModules = sub.demarcheAccompagnement.map(step => {
+      const parts = step.split(':');
+      if (parts.length > 1) {
+        return {
+          module: parts[0].trim(),
+          details: [parts.slice(1).join(':').trim()]
+        };
+      }
+      return {
+        module: step,
+        details: []
+      };
+    });
+  } else {
+    programModules = [
+      {
+        module: "Phase 1 : Cadrage stratégique, immersion et diagnostic des besoins",
+        details: [
+          "Entretiens de fond avec les comités de direction et acteurs opérationnels clés",
+          "Revue documentaire exhaustive et analyse des processus existants",
+          "Rapport de cadrage préliminaire et fixation des indicateurs de réussite"
+        ]
+      },
+      {
+        module: "Phase 2 : Analyse approfondie des données, cartographie technique et co-conception",
+        details: [
+          "Modélisation sur-mesure et études d'impact organisationnel",
+          "Ateliers collaboratifs de validation avec les équipes d'exécution",
+          "Élaboration des livrables provisoires et des outils techniques"
+        ]
+      },
+      {
+        module: "Phase 3 : Déploiement opérationnel sur le terrain et outillage technique",
+        details: [
+          "Mise en place des progiciels, protocoles et grilles de gestion",
+          "Accompagnement per diem et sessions de renforcement des compétences",
+          "Stabilisation des processus et correction des anomalies identifiées"
+        ]
+      },
+      {
+        module: "Phase 4 : Évaluation d'impact, remise des livrables définitifs et transfert d'autonomie",
+        details: [
+          "Audit de clôture et mesure des gains d'efficacité opérationnelle",
+          "Remise des manuels de procédures et des cartographies définitives",
+          "Session officielle de restitution et transfert souverain des compétences"
+        ]
+      }
+    ];
+  }
 
-  // 4. Accessibility / Intervention modalities
+  // 5. Accessibility / Intervention modalities
   const accessList = [
     "Intervention sur site dans vos locaux à Abidjan, sur l'ensemble du territoire ivoirien et dans la sous-région ouest-africaine.",
     "Modalités agiles : Formules en immersion continue, missions modulaires ou assistance technique per diem.",
@@ -202,7 +335,7 @@ export function buildAccompanimentTabSections(
     "Accès sécurisé à nos plateformes collaboratives pour le partage des livrables en temps réel."
   ];
 
-  // 5. Pedagogy / Evaluation / Software
+  // 6. Pedagogy / Evaluation / Software
   const resultsExpected = sub.resultatsAttendus || [
     "Rapports d'expertise exhaustifs et grilles de recommandations opérationnelles remis.",
     "Processus internes fluidifiés, sécurisés et outillés pour une productivité décuplée."
@@ -225,7 +358,7 @@ export function buildAccompanimentTabSections(
         ? matchSoftwareWithIcons(sub.software)
         : matchSoftwareWithIcons(domain.software || []));
 
-  // 6. Financing
+  // 7. Financing
   const financeList = [
     "Offre technique et financière sur-mesure formalisée sous 48 heures ouvrées sur la base de vos Termes de Référence (TDR).",
     "Facturation progressive échelonnée selon la validation effective des jalons contractuels et des livrables.",
@@ -234,7 +367,30 @@ export function buildAccompanimentTabSections(
     "Possibilité de conventions-cadres pluriannuelles avec tarifs préférentiels pour les accompagnements réguliers."
   ];
 
+  // 8. Inscription
+  const inscriptionList = [
+    "Demande de devis ou d'assistance technique prise en charge immédiatement par nos experts séniors.",
+    "Réunion de cadrage offerte (en présentiel ou en visioconférence) sous 48 heures ouvrées.",
+    "Cadrage contractuel clair garantissant la confidentialité absolue de vos données stratégiques.",
+    "Déploiement rapide de nos consultants selon votre calendrier d'urgence."
+  ];
+
   return [
+    {
+      id: 'description',
+      label: 'DESCRIPTION',
+      intro: 'Présentation stratégique et cadrage de la mission d\'accompagnement :',
+      items: [
+        descText,
+        `Pôle d'intervention : ${domain.title}`,
+        `Axe spécifique : ${sub.title}`,
+        "Accompagnement sur-mesure combinant diagnostic stratégique, déploiement opérationnel et transfert de compétences souveraines."
+      ],
+      extraDetails: [
+        { label: 'Pôle', value: domain.title },
+        { label: 'Axe', value: sub.title }
+      ]
+    },
     {
       id: 'objectifs',
       label: 'OBJECTIFS',
@@ -251,7 +407,7 @@ export function buildAccompanimentTabSections(
       id: 'programme',
       label: 'PROGRAMME',
       intro: 'Démarche d\'accompagnement et étapes méthodologiques de la mission :',
-      items: programList
+      programModules: programModules
     },
     {
       id: 'admission',
@@ -274,6 +430,16 @@ export function buildAccompanimentTabSections(
       extraDetails: [
         { label: 'Proposition', value: 'Devis sur-mesure sous 48h' },
         { label: 'Agrément', value: 'Récépissé N°25343/GTCA/RC/2025' }
+      ]
+    },
+    {
+      id: 'sinscrire',
+      label: "S'INSCRIRE",
+      intro: 'Demandez votre offre technique et financière sur-mesure :',
+      items: inscriptionList,
+      extraDetails: [
+        { label: 'Délai d\'offre', value: '48 heures ouvrées' },
+        { label: 'Modalité', value: 'Mission sur-mesure' }
       ]
     }
   ];

@@ -344,7 +344,7 @@ export default function Interventions({
                           <InteractiveSectionTabs
                             description={presentationService}
                             sections={sections}
-                            defaultTabId="objectifs"
+                            defaultTabId="description"
                             onActionClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
                             actionLabel="Demander cet accompagnement"
                           />
