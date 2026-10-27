@@ -9,6 +9,8 @@ import {
 import { FORMATIONS, DOMAINS_INTERVENTION } from '../data';
 import { Formation, DomainIntervention, SubDomain } from '../types';
 import { saveProspect } from '../lib/prospects';
+import InteractiveSectionTabs from './InteractiveSectionTabs';
+import { buildFormationTabSections, buildAccompanimentTabSections } from '../lib/interactiveTabsHelper';
 
 export function getTailoredDataForAxis(title: string, sub: any) {
   const t = title.toLowerCase();
@@ -418,35 +420,18 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
           </div>
         )}
 
-        <div className="px-6 py-6 sm:px-8 space-y-5 lg:overflow-y-auto lg:flex-grow lg:flex-1 scrollbar-thin pr-2 text-justify">
-          <div className="space-y-4.5">
-            {generateUniformDescription(sub).map((p, idx) => (
-              <p key={idx} className="text-[14.5px] sm:text-[15.5px] text-slate-950 dark:text-slate-50 font-medium leading-relaxed">
-                <strong className="text-black dark:text-white font-extrabold uppercase tracking-wider block sm:inline mr-1.5">
-                  {p.title} :
-                </strong>
-                {p.text}
-              </p>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick scroll-to-form button */}
-        <div 
-          className="p-6 bg-slate-50/50 dark:bg-slate-950/20 border-t border-slate-100 dark:border-slate-850 flex items-center justify-between mt-auto shrink-0"
-        >
-          <span className="text-[10px] text-slate-400 font-sans uppercase">CICEXF Certifié</span>
-          <button
-            onClick={() => {
+        <div className="p-4 sm:p-6 lg:overflow-y-auto lg:flex-grow lg:flex-1 scrollbar-thin">
+          <InteractiveSectionTabs
+            description={sub.presentationService || sub.description}
+            sections={buildAccompanimentTabSections(sub, DOMAINS_INTERVENTION.find(d => d.id === currentDomainId) || DOMAINS_INTERVENTION[0])}
+            defaultTabId="objectifs"
+            onActionClick={() => {
               const el = document.getElementById('domain-quote-anchor');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
               setCorpInterest(sub.title);
             }}
-            className="px-4 py-2 bg-brand-emerald text-white hover:bg-brand-emerald/90 rounded-xl text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm active:scale-95"
-          >
-            <span>S'inscrire / Devis</span>
-            <ChevronRight className="w-3.5 h-3.5" />
-          </button>
+            actionLabel="S'inscrire / Devis"
+          />
         </div>
       </div>
     );
@@ -2367,135 +2352,23 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
                             {/* Expanded Details Panel */}
                             {isExpanded && (() => {
-                              const axisData = getTailoredDataForAxis(sub.title, sub);
                               return (
-                                <div className="px-6 pb-6 sm:px-8 sm:pb-8 pt-0 animate-in slide-in-from-top-2 duration-200 space-y-6 border-l-4 border-brand-emerald ml-9 text-left">
-                                  
-                                  {/* Two-column comprehensive layout */}
-                                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-4">
-                                    
-                                    {/* Left Column: Description & Program Objectives (7 cols) */}
-                                    <div className="lg:col-span-7 space-y-5">
-                                      <div className="space-y-2">
-                                        <span className="block text-[10px] font-extrabold text-brand-emerald uppercase tracking-wider">
-                                          Présentation Générale de l'Axe :
-                                        </span>
-                                        <p className="text-sm sm:text-base text-black dark:text-white leading-relaxed font-sans text-justify font-bold">
-                                          {sub.description}
-                                        </p>
-                                      </div>
-
-                                      <div className="space-y-2.5">
-                                        <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                          Objectifs d'Apprentissage &amp; Compétences Visés :
-                                        </span>
-                                        <ul className="space-y-1.5 font-sans text-xs">
-                                          {axisData.objectives.map((obj: string, oIdx: number) => (
-                                            <li key={oIdx} className="flex items-start text-black dark:text-white">
-                                              <span className="text-brand-emerald mr-2 mt-0.5">•</span>
-                                              <span className="leading-relaxed text-[11.5px]">{obj}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-
-                                      <div className="space-y-2.5">
-                                        <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                          Résultats &amp; Impact Professionnel :
-                                        </span>
-                                        <ul className="space-y-1.5 font-sans text-xs">
-                                          {axisData.results.map((res: string, rIdx: number) => (
-                                            <li key={rIdx} className="flex items-start text-black dark:text-white">
-                                              <span className="text-brand-blue mr-2 mt-0.5">✓</span>
-                                              <span className="leading-relaxed text-[11.5px]">{res}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    </div>
-
-                                    {/* Right Column: Key Points & Market Metadata (5 cols) */}
-                                    <div className="lg:col-span-5 space-y-5 lg:pl-4 lg:border-l border-slate-100 dark:border-slate-800">
-                                      {sub.keyPoints && sub.keyPoints.length > 0 && (
-                                        <div className="space-y-2.5">
-                                          <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                            Compétences Pratiques Enseignées :
-                                          </span>
-                                          <div className="space-y-1.5 text-xs">
-                                            {sub.keyPoints.map((kp: string, kpIdx: number) => (
-                                              <div key={kpIdx} className="flex items-start text-black dark:text-white bg-slate-50/50 dark:bg-slate-900/40 border border-slate-100/50 dark:border-slate-800 p-2 rounded-xl">
-                                                <CheckSquare className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                                                <span className="leading-snug text-[11px] font-semibold">{kp}</span>
-                                              </div>
-                                            ))}
-                                          </div>
-                                        </div>
-                                      )}
-
-                                      <div className="space-y-2.5">
-                                        <span className="block text-[10px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                          Perspectives &amp; Débouchés Carrière :
-                                        </span>
-                                        <ul className="space-y-1.5 font-sans text-xs">
-                                          {axisData.opportunities.map((opp: string, pIdx: number) => (
-                                            <li key={pIdx} className="flex items-start text-black dark:text-white">
-                                              <span className="text-slate-400 mr-2 mt-0.5">»</span>
-                                              <span className="leading-relaxed text-[11px]">{opp}</span>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-
-                                      {/* Metadata widgets */}
-                                      <div className="grid grid-cols-1 gap-3.5 pt-3 border-t border-slate-100 dark:border-slate-800">
-                                        {/* Level */}
-                                        {sub.expertiseLevel && (
-                                          <div className="space-y-1">
-                                            <span className="block text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                              Niveau d'Expertise :
-                                            </span>
-                                            <span className="inline-block bg-brand-blue/10 text-brand-blue dark:bg-blue-500/10 dark:text-blue-300 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                              {sub.expertiseLevel}
-                                            </span>
-                                          </div>
-                                        )}
-
-                                        {/* Software */}
-                                        {sub.software && sub.software.length > 0 && (
-                                          <div className="space-y-1">
-                                            <span className="block text-[9px] font-extrabold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-                                              Logiciels &amp; Outils Utilisés :
-                                            </span>
-                                            <div className="flex flex-wrap gap-1 font-mono">
-                                              {sub.software.map((sw: string, swIdx: number) => (
-                                                <span
-                                                  key={swIdx}
-                                                  className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[9px] font-bold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-750"
-                                                >
-                                                  {sw}
-                                                </span>
-                                              ))}
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
+                                <div className="px-4 pb-6 sm:px-6 sm:pb-8 pt-2 animate-in slide-in-from-top-2 duration-200 space-y-4 border-l-4 border-[#8A1A24] ml-6 sm:ml-9 text-left">
+                                  <InteractiveSectionTabs
+                                    description={sub.presentationService || sub.description}
+                                    sections={buildAccompanimentTabSections(sub, domain)}
+                                    defaultTabId="objectifs"
+                                    onActionClick={() => handleRequestQuoteForAxis(domain, sub.title)}
+                                    actionLabel="S'inscrire / Devis pour cet axe"
+                                  />
 
                                   {/* Action Buttons */}
-                                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-3">
+                                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-wrap gap-3">
                                     <button
                                       onClick={() => handleSelectDomainObj(domain)}
                                       className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
                                     >
                                       <span>Consulter la fiche complète du Pôle</span>
-                                      <ChevronRight className="w-3.5 h-3.5" />
-                                    </button>
-                                    <button
-                                      onClick={() => handleRequestQuoteForAxis(domain, sub.title)}
-                                      className="px-4 py-2 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-sm hover:shadow-brand-emerald/10"
-                                    >
-                                      <span>S'inscrire / Devis pour cet axe</span>
                                       <ChevronRight className="w-3.5 h-3.5" />
                                     </button>
                                   </div>
@@ -2609,106 +2482,34 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                   
                   {/* Left elements */}
+                  {/* Left elements: Interactive Tabs Block matching User Screenshot */}
                   <div className="lg:col-span-8 space-y-5">
-                    
-                    {/* Contexte & Enjeux */}
-                    {selectedFormation.context && (
-                      <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-3">
-                        <h3 className="font-display text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
-                          Contexte et Enjeux de la Formation
-                        </h3>
-                        <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans font-normal">
-                          {selectedFormation.context}
-                        </p>
-                      </div>
-                    )}
+                    <InteractiveSectionTabs
+                      title={selectedFormation.title}
+                      description={selectedFormation.context || selectedFormation.shortDescription}
+                      sections={buildFormationTabSections(selectedFormation)}
+                      defaultTabId="objectifs"
+                      onActionClick={() => {
+                        const el = document.getElementById('registration-form-card');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      actionLabel="S'inscrire à cette certification"
+                    />
 
-                    {/* Objectifs & Resultats Attendus */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {selectedFormation.objectives && (
-                        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                          <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">Objectifs d'Apprentissage :</h4>
-                          <ul className="space-y-2 text-xs font-sans">
-                            {selectedFormation.objectives.map((obj, oIdx) => (
-                              <li key={oIdx} className="flex items-start text-slate-600 dark:text-slate-450">
-                                <CheckCircle className="w-4.5 h-4.5 text-brand-emerald mr-2.5 shrink-0 mt-0.5" />
-                                <span>{obj}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-
-                      {selectedFormation.resultsExpected && (
-                        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                          <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">Résultats Attendus :</h4>
-                          <ul className="space-y-2 text-xs font-sans">
-                            {selectedFormation.resultsExpected.map((res, rIdx) => (
-                              <li key={rIdx} className="flex items-start text-slate-600 dark:text-slate-450">
-                                <CheckCircle className="w-4.5 h-4.5 text-brand-blue mr-2.5 shrink-0 mt-0.5" />
-                                <span>{res}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Interactive timeline program */}
-                    {selectedFormation.program && (
-                      <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-6">
-                        <div>
-                          <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
-                            Programme du Parcours (Syllabus Académique)
-                          </h3>
-                          <p className="text-[11px] text-slate-400 mt-1">
-                            Syllabus interactif. Cliquez sur chaque module pour déplier le contenu détaillé de la formation.
-                          </p>
-                        </div>
-
-                        <div className="space-y-4 relative pl-6 border-l border-slate-100 dark:border-slate-800 font-sans">
-                          {selectedFormation.program.map((prog, pIdx) => (
-                            <div key={pIdx} className="relative space-y-2" id={`timeline-module-${pIdx}`}>
-                              <div className={`absolute -left-[31px] top-1.5 w-4.5 h-4.5 rounded-full border-2 transition-all duration-300 ${expandedModule === pIdx ? 'bg-brand-emerald border-brand-emerald' : 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700'}`}></div>
-
-                              <button
-                                onClick={() => setExpandedModule(pIdx)}
-                                className={`w-full text-left font-bold text-xs flex justify-between items-center py-1 transition-colors ${expandedModule === pIdx ? 'text-brand-emerald font-extrabold' : 'text-slate-800 dark:text-slate-200'}`}
-                              >
-                                <span>{prog.module}</span>
-                              </button>
-
-                              {expandedModule === pIdx && (
-                                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-150/40 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-1.5 animate-in fade-in duration-150">
-                                  <span className="block font-bold text-[10px] text-slate-400 uppercase tracking-wider mb-1">Détail des notions étudiées :</span>
-                                  {prog.details.map((det, dIdx) => (
-                                    <div key={dIdx} className="flex items-center space-x-2">
-                                      <Terminal className="w-3.5 h-3.5 text-slate-400 animate-pulse" />
-                                      <span>{det}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* FAQ */}
-                    {selectedFormation.faq && (
-                      <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200/50 dark:border-slate-800 shadow-sm space-y-4">
-                        <h3 className="font-display text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
+                    {/* FAQ if available */}
+                    {selectedFormation.faq && selectedFormation.faq.length > 0 && (
+                      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                        <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
                           Foire Aux Questions (FAQ)
                         </h3>
-                        <div className="space-y-4 text-xs font-sans">
+                        <div className="space-y-3 text-xs font-sans">
                           {selectedFormation.faq.map((item, fIdx) => (
-                            <div key={fIdx} className="space-y-1.5">
+                            <div key={fIdx} className="space-y-1">
                               <h4 className="font-bold text-slate-800 dark:text-slate-200 flex items-center">
-                                <HelpCircle className="w-4 h-4 text-brand-emerald mr-2" />
+                                <HelpCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0" />
                                 <span>{item.question}</span>
                               </h4>
-                              <p className="text-slate-500 dark:text-slate-400 leading-relaxed pl-6 font-light">
+                              <p className="text-slate-500 dark:text-slate-400 leading-relaxed pl-5 font-normal text-[11.5px]">
                                 {item.answer}
                               </p>
                             </div>
@@ -2716,7 +2517,6 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         </div>
                       </div>
                     )}
-
                   </div>
 
                   {/* Right elements */}
@@ -2775,7 +2575,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     )}
 
                     {/* Registration Form */}
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-lg space-y-4">
+                    <div id="registration-form-card" className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/50 dark:border-slate-800 shadow-lg space-y-4">
                       <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
                         <h4 className="font-display text-sm font-bold text-slate-900 dark:text-white">
                           Inscription en Ligne Directe

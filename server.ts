@@ -982,7 +982,7 @@ Pour toute question personnalisée ou étude sur mesure, nos équipes sont à vo
     });
   } else {
     const vite = await createViteServer({
-      server: { middlewareMode: true, hmr: process.env.DISABLE_HMR !== 'true' },
+      server: { middlewareMode: true, hmr: false },
       appType: 'spa',
     });
     app.use(vite.middlewares);

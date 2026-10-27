@@ -36,6 +36,8 @@ import { DOMAINS_INTERVENTION } from '../data';
 import { DomainIntervention, SoftwareTool } from '../types';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../data/accompanimentEnrichments';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
+import InteractiveSectionTabs from './InteractiveSectionTabs';
+import { buildAccompanimentTabSections } from '../lib/interactiveTabsHelper';
 
 interface InterventionsProps {
   selectedDomainId: string | null;
@@ -300,81 +302,8 @@ export default function Interventions({
                   const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
                   const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
 
-                  // 1. Présentation du service
                   const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
-
-                  // 2. Objectifs opérationnels
-                  const objectives = (sub.objectives && sub.objectives.length > 0)
-                    ? sub.objectives
-                    : (enrichment?.objectives && enrichment.objectives.length > 0
-                        ? enrichment.objectives
-                        : [
-                            'Réaliser un diagnostic de maturité et cartographier 100% des flux critiques',
-                            'Déployer des solutions opérationnelles personnalisées et conformes aux normes',
-                            'Transférer les compétences aux équipes locales pour garantir la souveraineté métier'
-                          ]);
-
-                  // 3. Démarche d’accompagnement
-                  const demarche = (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0)
-                    ? sub.demarcheAccompagnement
-                    : (enrichment?.demarcheAccompagnement && enrichment.demarcheAccompagnement.length > 0
-                        ? enrichment.demarcheAccompagnement
-                        : [
-                            '1. Immersion diagnostique & cadrage des exigences',
-                            '2. Analyse approfondie, co-conception & modélisation',
-                            '3. Déploiement opérationnel sur le terrain et outillage',
-                            '4. Validation finale, capitalisation et transfert d\'autonomie'
-                          ]);
-
-                  // 4. Résultats attendus
-                  const resultatsAttendus = (sub.resultatsAttendus && sub.resultatsAttendus.length > 0)
-                    ? sub.resultatsAttendus
-                    : (enrichment?.resultatsAttendus && enrichment.resultatsAttendus.length > 0
-                        ? enrichment.resultatsAttendus
-                        : [
-                            'Livrables techniques complets et validés par le comité de direction',
-                            'Processus internes optimisés et sécurisés contre les dysfonctionnements',
-                            'Cadres opérationnels formés et autonomes sur les nouveaux outils'
-                          ]);
-
-                  // 5. Impact pour l’entité
-                  const impactEntite = sub.impactEntite || enrichment?.expectedChanges || sub.expectedChanges || 'Gain significatif de productivité, fiabilisation des processus stratégiques et autonomie d\'action durable pour l\'organisation.';
-
-                  // 6. Méthode d'évaluation
-                  const methodeEvaluation = (sub.methodeEvaluation && sub.methodeEvaluation.length > 0)
-                    ? sub.methodeEvaluation
-                    : (enrichment?.methodeEvaluation && enrichment.methodeEvaluation.length > 0
-                        ? enrichment.methodeEvaluation
-                        : [
-                            'Points d\'avancement hebdomadaires et comité de pilotage dédié',
-                            'Grille d\'audit de conformité des livrables selon les standards de la branche',
-                            'Enquête de satisfaction des parties prenantes et mesure d\'impact à J+60'
-                          ]);
-
-                  // 7. Logiciels impliqués (avec icônes personnalisées)
-                  const softwareTools: SoftwareTool[] = (sub.softwareTools && sub.softwareTools.length > 0)
-                    ? sub.softwareTools
-                    : (sub.software && sub.software.length > 0
-                        ? sub.software.map(name => {
-                            const found = PRESET_SOFTWARE_TOOLS.find(p => p.name.toLowerCase() === name.toLowerCase());
-                            return { name, iconUrl: found?.iconUrl || '' };
-                          })
-                        : (enrichment?.softwareTools && enrichment.softwareTools.length > 0
-                            ? enrichment.softwareTools
-                            : (selectedDomainObj.softwareTools && selectedDomainObj.softwareTools.length > 0
-                                ? selectedDomainObj.softwareTools
-                                : (selectedDomainObj.software && selectedDomainObj.software.length > 0
-                                    ? selectedDomainObj.software.map(name => {
-                                        const found = PRESET_SOFTWARE_TOOLS.find(p => p.name.toLowerCase() === name.toLowerCase());
-                                        return { name, iconUrl: found?.iconUrl || '' };
-                                      })
-                                    : [
-                                        { name: 'Outils Métiers CICEXF', iconUrl: 'https://raw.githubusercontent.com/microsoft/PowerBI-Icons/main/PNG/Power-BI.png' },
-                                        { name: 'Suite Bureautique Avancée', iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/34/Microsoft_Office_Excel_%282019%E2%80%93present%29.svg' }
-                                      ]
-                                  )
-                              )
-                          ));
+                  const sections = buildAccompanimentTabSections(sub, selectedDomainObj);
 
                   return (
                     <div
@@ -385,7 +314,7 @@ export default function Interventions({
                       <div>
                         {/* Sub-element/Minor line image */}
                         {finalImageUrl && (
-                          <div className="relative h-40 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                          <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
                             <img
                               src={finalImageUrl}
                               alt={sub.title}
@@ -396,167 +325,40 @@ export default function Interventions({
                             
                             {/* Title and Badge on image */}
                             <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                              <span className="self-start font-mono font-bold text-[8px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                                Axe #0{sIdx + 1}
+                              <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                Axe #0{sIdx + 1} &bull; CICEXF
                               </span>
-                              <h4 className="font-display font-extrabold text-[12px] sm:text-[13.5px] text-white leading-tight drop-shadow-md">
+                              <h4 className="font-display font-extrabold text-[13px] sm:text-[14.5px] text-white leading-tight drop-shadow-md">
                                 {sub.title}
                               </h4>
                             </div>
 
                             <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/50 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-sm">
-                              {renderIcon(finalIconName, "w-4 h-4 text-brand-emerald-light")}
+                              {renderIcon(finalIconName, "w-4 h-4 text-[#F25C05]")}
                             </div>
                           </div>
                         )}
 
-                        <div className="p-4 sm:p-5 space-y-4">
-                          
-                          {/* 1. Présentation du service */}
-                          <div className="space-y-1.5">
-                            <span className="text-[9.5px] font-extrabold text-brand-emerald dark:text-brand-emerald-light uppercase tracking-widest flex items-center">
-                              <span className="w-4 h-4 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">1</span>
-                              Présentation du service
-                            </span>
-                            <p className="text-xs text-slate-800 dark:text-slate-200 leading-relaxed font-sans font-medium text-justify">
-                              {presentationService}
-                            </p>
-                          </div>
-
-                          {/* 2. Objectifs opérationnels */}
-                          {objectives && objectives.length > 0 && (
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">2</span>
-                                <Target className="w-3.5 h-3.5 mr-1 text-brand-emerald shrink-0" />
-                                Objectifs opérationnels
-                              </span>
-                              <div className="space-y-1 pl-1">
-                                {objectives.map((obj, oIdx) => (
-                                  <div key={oIdx} className="flex items-start text-slate-700 dark:text-slate-300">
-                                    <CheckCircle className="w-3 h-3 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{obj}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 3. Démarche d’accompagnement */}
-                          {demarche && demarche.length > 0 && (
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">3</span>
-                                <Layers className="w-3.5 h-3.5 mr-1 text-blue-500 shrink-0" />
-                                Démarche d’accompagnement
-                              </span>
-                              <div className="grid grid-cols-1 gap-1.5">
-                                {demarche.map((step, stIdx) => (
-                                  <div key={stIdx} className="p-2 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-start space-x-2 text-[10.5px]">
-                                    <span className="w-4 h-4 rounded-full bg-blue-600 text-white font-mono font-bold text-[8.5px] flex items-center justify-center shrink-0 mt-0.5">
-                                      {stIdx + 1}
-                                    </span>
-                                    <span className="text-slate-800 dark:text-slate-200 font-medium leading-snug">{step}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 4. Résultats attendus */}
-                          {resultatsAttendus && resultatsAttendus.length > 0 && (
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">4</span>
-                                <CheckCircle2 className="w-3.5 h-3.5 mr-1 text-teal-600 dark:text-teal-400 shrink-0" />
-                                Résultats attendus
-                              </span>
-                              <div className="space-y-1 pl-1">
-                                {resultatsAttendus.map((res, rIdx) => (
-                                  <div key={rIdx} className="flex items-start text-slate-700 dark:text-slate-300">
-                                    <CheckCheck className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 mr-2 shrink-0 mt-0.5" />
-                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{res}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 5. Impact pour l’entité */}
-                          {impactEntite && (
-                            <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-800/60 space-y-1">
-                              <span className="text-[9.5px] font-extrabold text-amber-900 dark:text-amber-300 uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-amber-500 text-white flex items-center justify-center font-mono mr-1.5 text-[8.5px] font-bold">5</span>
-                                <Award className="w-3.5 h-3.5 mr-1 text-amber-600 shrink-0" />
-                                Impact pour l’entité
-                              </span>
-                              <p className="text-[10.5px] text-amber-950 dark:text-amber-200 leading-relaxed font-sans font-semibold text-justify">
-                                {impactEntite}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* 6. Méthode d'évaluation */}
-                          {methodeEvaluation && methodeEvaluation.length > 0 && (
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">6</span>
-                                <ShieldCheck className="w-3.5 h-3.5 mr-1 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                                Méthode d'évaluation
-                              </span>
-                              <div className="space-y-1 pl-1">
-                                {methodeEvaluation.map((m, mIdx) => (
-                                  <div key={mIdx} className="flex items-start text-slate-700 dark:text-slate-300">
-                                    <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-2 shrink-0 mt-1.5"></div>
-                                    <span className="leading-snug text-[10.5px] font-medium font-sans">{m}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* 7. Logiciels impliqués (avec icônes personnalisées) */}
-                          {softwareTools && softwareTools.length > 0 && (
-                            <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                              <span className="text-[9.5px] font-extrabold text-slate-900 dark:text-white uppercase tracking-widest flex items-center">
-                                <span className="w-4 h-4 rounded-full bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-mono mr-1.5 text-[9px] font-bold">7</span>
-                                <Cpu className="w-3.5 h-3.5 mr-1 text-purple-600 dark:text-purple-400 shrink-0" />
-                                Logiciels impliqués &amp; Outils
-                              </span>
-                              <div className="flex flex-wrap gap-1.5">
-                                {softwareTools.map((tool, tIdx) => (
-                                  <div
-                                    key={tIdx}
-                                    className="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[10px] font-semibold px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-2xs"
-                                  >
-                                    {tool.iconUrl ? (
-                                      <img
-                                        src={tool.iconUrl}
-                                        alt={tool.name}
-                                        className="w-3.5 h-3.5 object-contain shrink-0"
-                                        onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                                      />
-                                    ) : (
-                                      <Cpu className="w-3 h-3 text-slate-400" />
-                                    )}
-                                    <span>{tool.name}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
+                        {/* Interactive Section Tabs with Description and Vertical Burgundy Menu */}
+                        <div className="p-3 sm:p-4">
+                          <InteractiveSectionTabs
+                            description={presentationService}
+                            sections={sections}
+                            defaultTabId="objectifs"
+                            onActionClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
+                            actionLabel="Demander cet accompagnement"
+                          />
                         </div>
                       </div>
 
                       {/* Card Action Footer */}
                       <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                        <span className="text-[9px] text-slate-700 dark:text-slate-300 font-bold font-sans uppercase">Expertise CICEXF</span>
+                        <span className="text-[9.5px] text-slate-700 dark:text-slate-300 font-bold font-sans uppercase">Expertise CICEXF</span>
                         <button
                           onClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
-                          className="px-3.5 py-1.5 bg-brand-emerald hover:bg-brand-emerald-dark text-white rounded-lg text-[9.5px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs active:scale-95"
+                          className="px-3.5 py-1.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl text-[10px] font-extrabold tracking-wide uppercase transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs active:scale-95"
                         >
-                          <span>Demander cet accompagnement</span>
+                          <span>Demander un devis</span>
                           <ChevronRight className="w-3.5 h-3.5 text-white" />
                         </button>
                       </div>
