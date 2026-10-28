@@ -2,6 +2,7 @@ import React from 'react';
 import { Formation, DomainIntervention, SubDomain, SoftwareTool } from '../types';
 import { TabSectionItem, ProgramModule } from '../components/InteractiveSectionTabs';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
+import RegistrationGrandPlanForm from '../components/RegistrationGrandPlanForm';
 
 export function matchSoftwareWithIcons(softwareNames: string[] = []): SoftwareTool[] {
   return softwareNames.map(name => {
@@ -226,7 +227,12 @@ export function buildFormationTabSections(
       id: 'sinscrire',
       label: "S'INSCRIRE",
       intro: 'Rejoignez la prochaine cohorte certifiante du Cabinet CICEXF :',
-      content: registrationContent,
+      content: registrationContent || React.createElement(RegistrationGrandPlanForm, {
+        targetTitle: formation.title,
+        price: formation.price,
+        sessions: formation.sessions,
+        defaultType: 'Candidature Formation'
+      }),
       items: inscriptionList,
       extraDetails: [
         { label: 'Délai de traitement', value: '24 heures ouvrées' },
@@ -249,7 +255,8 @@ export function buildFormationTabSections(
  */
 export function buildAccompanimentTabSections(
   sub: SubDomain,
-  domain: DomainIntervention
+  domain: DomainIntervention,
+  registrationContent?: React.ReactNode
 ): TabSectionItem[] {
   // 1. Description
   const descText = sub.presentationService || sub.description || domain.description || "Mission d'assistance technique, d'audit opérationnel et d'accompagnement stratégique réalisée par le Cabinet CICEXF.";
@@ -425,8 +432,14 @@ export function buildAccompanimentTabSections(
     {
       id: 'financement',
       label: 'FINANCEMENT',
-      intro: 'Modalités contractuelles, devis sur-mesure et convention d\'ingénierie :',
-      items: financeList,
+      intro: 'Dispositifs de financement, conventions d\'entreprise et facilités de règlement :',
+      items: [
+        "Éligibilité aux conventions d'appui et prises en charge d'ingénierie (conventions FDFP et équivalents régionaux).",
+        "Financement institutionnel et programmes d'assistance technique bilatéraux (Banque Mondiale, BAD, AFD, UE).",
+        "Cadrage budgétaire ferme et définitif formalisé par une convention d'intervention claire et sans frais cachés.",
+        "Facturation progressive échelonnée selon la validation effective des jalons contractuels et des livrables.",
+        "Facilités de paiement pour les partenariats pluriannuels et les conventions-cadres institutionnelles."
+      ],
       extraDetails: [
         { label: 'Proposition', value: 'Devis sur-mesure sous 48h' },
         { label: 'Agrément', value: 'Récépissé N°25343/GTCA/RC/2025' }
@@ -435,8 +448,12 @@ export function buildAccompanimentTabSections(
     {
       id: 'sinscrire',
       label: "S'INSCRIRE",
-      intro: 'Demandez votre offre technique et financière sur-mesure :',
-      items: inscriptionList,
+      intro: 'Modalités contractuelles, devis sur-mesure et convention d\'ingénierie :',
+      items: financeList,
+      content: registrationContent || React.createElement(RegistrationGrandPlanForm, {
+        targetTitle: `${domain.title} — ${sub.title}`,
+        defaultType: 'Demande Entreprise'
+      }),
       extraDetails: [
         { label: 'Délai d\'offre', value: '48 heures ouvrées' },
         { label: 'Modalité', value: 'Mission sur-mesure' }

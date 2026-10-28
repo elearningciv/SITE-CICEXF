@@ -55,6 +55,13 @@ export default function Interventions({
   domains
 }: InterventionsProps) {
   const allDomains = domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION;
+  const [subTabMap, setSubTabMap] = useState<Record<number, string>>({});
+  const [activeSubIdx, setActiveSubIdx] = useState<number | null>(null);
+
+  // Reset active sub-domain when switching domains
+  useEffect(() => {
+    setActiveSubIdx(null);
+  }, [selectedDomainId]);
 
   // Handle specialty selection from the header's brown sub-navigation band
   useEffect(() => {
@@ -63,15 +70,16 @@ export default function Interventions({
       if (customEvent && customEvent.detail) {
         const { domainId, index } = customEvent.detail;
         
-        // Ensure the domain is selected
+        // Ensure the domain is selected and show this specialty exclusively
         setSelectedDomainId(domainId);
+        setActiveSubIdx(index);
 
         // Wait for state to render, then scroll to the specific sub-domain card
         setTimeout(() => {
           const cardId = `sub-point-card-${domainId}-${index}`;
           const element = document.getElementById(cardId);
           if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             
             // Momentary premium border/shadow highlight effect for visual confirmation
             element.classList.add('ring-2', 'ring-brand-emerald', 'scale-101', 'shadow-md');
@@ -284,88 +292,165 @@ export default function Interventions({
               </div>
             </div>
 
-            {/* Sub-domains (axes) grid representation */}
+            {/* Sub-domains (axes) representation */}
             <div className="space-y-6">
-              <div className="space-y-1 text-center max-w-xl mx-auto">
+              <div className="space-y-1 text-center max-w-2xl mx-auto">
                 <h2 className="font-display text-lg sm:text-xl font-extrabold text-black dark:text-white tracking-tight">
                   Axes d'Accompagnement Technique &amp; Composantes
                 </h2>
                 <p className="text-[9px] uppercase font-bold text-black dark:text-brand-emerald-light tracking-widest">
-                  Découvrez la structure opérationnelle et les compétences clés associées :
+                  {activeSubIdx === null 
+                    ? "Cliquez sur une spécialité pour afficher ses détails complets et le formulaire d'inscription :"
+                    : "Détails opérationnels et ingénierie de la spécialité sélectionnée :"}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {selectedDomainObj.subDomains.map((sub, sIdx) => {
+              {activeSubIdx === null ? (
+                /* MINIATURES GRID - ALL SPECIALTIES WITH SHORT DESCRIPTION */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {selectedDomainObj.subDomains.map((sub, sIdx) => {
+                    const enrichments = ACCOMPANIMENT_ENRICHMENTS[selectedDomainObj.id];
+                    const enrichment = enrichments && enrichments[sIdx];
+                    const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
+                    const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
+                    const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
+
+                    return (
+                      <div
+                        key={sIdx}
+                        onClick={() => {
+                          setActiveSubIdx(sIdx);
+                          window.scrollTo({ top: 400, behavior: 'smooth' });
+                        }}
+                        className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-[#8A1A24]/40 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                      >
+                        <div>
+                          {/* Miniature top image with badge */}
+                          {finalImageUrl && (
+                            <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                              <img
+                                src={finalImageUrl}
+                                alt={sub.title}
+                                referrerPolicy="no-referrer"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
+                              <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
+                                <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                  Axe #0{sIdx + 1} &bull; CICEXF
+                                </span>
+                              </div>
+                              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/60 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-sm">
+                                {renderIcon(finalIconName, "w-4 h-4 text-[#F25C05]")}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Content: Title & Short Description */}
+                          <div className="p-5 space-y-3">
+                            <h3 className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight group-hover:text-[#8A1A24] dark:group-hover:text-red-400 transition-colors">
+                              {sub.title}
+                            </h3>
+                            <p className="text-xs text-slate-600 dark:text-slate-355 line-clamp-3 leading-relaxed">
+                              {presentationService}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Action link */}
+                        <div className="p-4 bg-slate-50 dark:bg-slate-850/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                          <span className="text-[10px] text-[#8A1A24] dark:text-red-400 font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                            <span>Consulter la spécialité</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </span>
+                          <span className="text-[8.5px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
+                            Détails &amp; Inscription
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                /* SINGLE SELECTED SPECIALTY IN FULL SCREEN WIDTH - UNSELECTED SPECIALTIES HIDDEN */
+                (() => {
+                  const sIdx = activeSubIdx;
+                  const sub = selectedDomainObj.subDomains[sIdx];
+                  if (!sub) return null;
+
                   const enrichments = ACCOMPANIMENT_ENRICHMENTS[selectedDomainObj.id];
                   const enrichment = enrichments && enrichments[sIdx];
                   const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
                   const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
-
                   const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
                   const sections = buildAccompanimentTabSections(sub, selectedDomainObj);
 
                   return (
-                    <div
-                      key={sIdx}
-                      id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
-                      className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between group h-full transition-all duration-300 hover:shadow-xl"
-                    >
-                      <div>
-                        {/* Sub-element/Minor line image */}
+                    <div className="w-full max-w-7xl mx-auto space-y-4 px-2 sm:px-4 lg:px-6 animate-in fade-in duration-300">
+                      {/* Back button to return to all miniatures */}
+                      <div className="flex items-center justify-between pb-1">
+                        <button
+                          onClick={() => setActiveSubIdx(null)}
+                          className="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-[#8A1A24] hover:bg-slate-100 dark:hover:bg-slate-800 transition-all py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
+                        >
+                          <ArrowLeft className="w-4 h-4 text-[#8A1A24]" />
+                          <span>← Revenir aux miniatures des spécialités</span>
+                        </button>
+                        <span className="text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+                          Spécialité 0{sIdx + 1} sur {selectedDomainObj.subDomains.length}
+                        </span>
+                      </div>
+
+                      {/* Selected specialty full-width card */}
+                      <div
+                        id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
+                        className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-2xl space-y-0"
+                      >
+                        {/* Immersive Full Header Banner */}
                         {finalImageUrl && (
-                          <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                          <div className="relative h-52 sm:h-64 lg:h-72 w-full overflow-hidden bg-slate-950">
                             <img
                               src={finalImageUrl}
                               alt={sub.title}
                               referrerPolicy="no-referrer"
-                              className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                              className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
                             
-                            {/* Title and Badge on image */}
-                            <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                              <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                                Axe #0{sIdx + 1} &bull; CICEXF
+                            <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
+                              <span className="self-start font-mono font-bold text-[9.5px] sm:text-[10px] text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                                Axe #0{sIdx + 1} &bull; Accompagnement CICEXF
                               </span>
-                              <h4 className="font-display font-extrabold text-[13px] sm:text-[14.5px] text-white leading-tight drop-shadow-md">
+                              <h2 className="font-display font-extrabold text-lg sm:text-2xl lg:text-3xl text-white leading-tight drop-shadow-md max-w-4xl">
                                 {sub.title}
-                              </h4>
+                              </h2>
                             </div>
 
-                            <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/50 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-sm">
-                              {renderIcon(finalIconName, "w-4 h-4 text-[#F25C05]")}
+                            <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-slate-950/60 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-md">
+                              {renderIcon(finalIconName, "w-5 h-5 text-[#F25C05]")}
                             </div>
                           </div>
                         )}
 
-                        {/* Interactive Section Tabs with Description and Vertical Burgundy Menu */}
-                        <div className="p-3 sm:p-4">
+                        {/* Interactive Section Tabs with Details on Left and Vertical Burgundy Menu on Right */}
+                        <div className="p-0 border-t border-slate-100 dark:border-slate-800">
                           <InteractiveSectionTabs
                             description={presentationService}
                             sections={sections}
                             defaultTabId="description"
-                            onActionClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
-                            actionLabel="Demander cet accompagnement"
+                            activeTabId={subTabMap[sIdx] || 'description'}
+                            onTabChange={(tabId) => setSubTabMap(prev => ({ ...prev, [sIdx]: tabId }))}
+                            onActionClick={() => {
+                              setSubTabMap(prev => ({ ...prev, [sIdx]: 'sinscrire' }));
+                            }}
+                            actionLabel="S'inscrire / Demander un devis"
                           />
                         </div>
                       </div>
-
-                      {/* Card Action Footer */}
-                      <div className="p-4 bg-slate-50 dark:bg-slate-850 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                        <span className="text-[9.5px] text-slate-700 dark:text-slate-300 font-bold font-sans uppercase">Expertise CICEXF</span>
-                        <button
-                          onClick={() => handleRequestAssistance(`${selectedDomainObj.title} - ${sub.title}`)}
-                          className="px-3.5 py-1.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl text-[10px] font-extrabold tracking-wide uppercase transition-all flex items-center space-x-1.5 cursor-pointer shadow-xs active:scale-95"
-                        >
-                          <span>Demander un devis</span>
-                          <ChevronRight className="w-3.5 h-3.5 text-white" />
-                        </button>
-                      </div>
                     </div>
                   );
-                })}
-              </div>
+                })()
+              )}
             </div>
 
             {/* Concrete examples of recent accompaniments */}

@@ -393,44 +393,43 @@ function generateUniformDescription(sub: any) {
 
 function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, isLarge, onSelectDomain, currentDomainId }: any) {
   const [activeCardTab, setActiveCardTab] = useState<'info' | 'objectives' | 'results' | 'opportunities' | 'plus'>('info');
+  const [cardTabId, setCardTabId] = useState<string>('description');
   const data = getTailoredDataForAxis(sub.title, sub);
 
   if (isLarge) {
     return (
       <div
-        className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-md flex flex-col h-full animate-in fade-in duration-300"
+        className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl flex flex-col h-full animate-in fade-in duration-300"
       >
         {/* Immersive Banner Image */}
         {sub.imageUrl && (
-          <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100 shrink-0">
+          <div className="relative h-52 sm:h-64 lg:h-72 w-full overflow-hidden bg-slate-950 shrink-0">
             <img
               src={sub.imageUrl}
               alt={sub.title}
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/45 to-transparent"></div>
-            <div className="absolute bottom-4 left-4 right-4 flex flex-col space-y-1">
-              <span className="self-start font-mono font-bold text-[9px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                Spécialité 0{sIdx + 1}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
+              <span className="self-start font-mono font-bold text-[9.5px] sm:text-[10px] text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                Spécialité 0{sIdx + 1} &bull; Formations CICEXF
               </span>
-              <h1 className="font-display font-extrabold text-base sm:text-lg lg:text-xl text-white leading-tight drop-shadow-md">
+              <h1 className="font-display font-extrabold text-lg sm:text-2xl lg:text-3xl text-white leading-tight drop-shadow-md max-w-4xl">
                 {sub.title}
               </h1>
             </div>
           </div>
         )}
 
-        <div className="p-4 sm:p-6 lg:overflow-y-auto lg:flex-grow lg:flex-1 scrollbar-thin">
+        <div className="p-0 border-t border-slate-100 dark:border-slate-800">
           <InteractiveSectionTabs
             description={sub.presentationService || sub.description}
             sections={buildAccompanimentTabSections(sub, DOMAINS_INTERVENTION.find(d => d.id === currentDomainId) || DOMAINS_INTERVENTION[0])}
-            defaultTabId="objectifs"
-            onActionClick={() => {
-              const el = document.getElementById('domain-quote-anchor');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-              setCorpInterest(sub.title);
-            }}
+            defaultTabId="description"
+            activeTabId={cardTabId}
+            onTabChange={setCardTabId}
+            onActionClick={() => setCardTabId('sinscrire')}
             actionLabel="S'inscrire / Devis"
           />
         </div>
@@ -721,11 +720,13 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {isLarge ? (
           <button
             onClick={() => {
-              const el = document.getElementById('domain-quote-anchor');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-              setCorpInterest(sub.title);
+              setCardTabId('sinscrire');
+              setTimeout(() => {
+                const el = document.getElementById('interactive-tab-custom-content');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }, 60);
             }}
-            className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-brand-emerald hover:text-white dark:hover:bg-brand-emerald text-slate-700 dark:text-slate-300 rounded-xl text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer"
+            className="px-4 py-2 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl text-[11px] font-bold transition-all flex items-center space-x-1.5 cursor-pointer shadow-sm active:scale-95"
           >
             <span>S'inscrire / Devis</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -773,8 +774,31 @@ const ROMAN_THEMATICS = [
   "IV. INGÉNIERIE DE DÉVELOPPEMENT TERRITORIAL",
   "V. INGÉNIERIE QHSE (QUALITÉ – HYGIÈNE – SÉCURITÉ – ENVIRONNEMENT)",
   "VI. AUDIT, CONSULTANCE ET STRATÉGIE DE DÉVELOPPEMENT DES ORGANISATIONS",
-  "VII. ÉTUDES SPÉCIALISÉES ET INGÉNIERIE DE PROJETS",
-  "VIII. ACCOMPAGNEMENT TECHNIQUE ET INSTITUTIONNEL"
+];
+
+export const COUNTRIES_LIST = [
+  { code: 'CI', name: 'Côte d’Ivoire', dial: '+225', flag: '🇨🇮' },
+  { code: 'SN', name: 'Sénégal', dial: '+221', flag: '🇸🇳' },
+  { code: 'CM', name: 'Cameroun', dial: '+237', flag: '🇨🇲' },
+  { code: 'BF', name: 'Burkina Faso', dial: '+226', flag: '🇧🇫' },
+  { code: 'ML', name: 'Mali', dial: '+223', flag: '🇲🇱' },
+  { code: 'GN', name: 'Guinée', dial: '+224', flag: '🇬🇳' },
+  { code: 'BJ', name: 'Bénin', dial: '+229', flag: '🇧🇯' },
+  { code: 'TG', name: 'Togo', dial: '+228', flag: '🇹🇬' },
+  { code: 'GA', name: 'Gabon', dial: '+241', flag: '🇬🇦' },
+  { code: 'CG', name: 'Congo-Brazzaville', dial: '+242', flag: '🇨🇬' },
+  { code: 'CD', name: 'RD Congo', dial: '+243', flag: '🇨🇩' },
+  { code: 'NE', name: 'Niger', dial: '+227', flag: '🇳🇪' },
+  { code: 'TD', name: 'Tchad', dial: '+235', flag: '🇹🇩' },
+  { code: 'MR', name: 'Mauritanie', dial: '+222', flag: '🇲🇷' },
+  { code: 'MA', name: 'Maroc', dial: '+212', flag: '🇲🇦' },
+  { code: 'TN', name: 'Tunisie', dial: '+216', flag: '🇹🇳' },
+  { code: 'FR', name: 'France', dial: '+33', flag: '🇫🇷' },
+  { code: 'BE', name: 'Belgique', dial: '+32', flag: '🇧🇪' },
+  { code: 'CH', name: 'Suisse', dial: '+41', flag: '🇨🇭' },
+  { code: 'CA', name: 'Canada', dial: '+1', flag: '🇨🇦' },
+  { code: 'US', name: 'États-Unis', dial: '+1', flag: '🇺🇸' },
+  { code: 'AUTRE', name: 'Autre pays', dial: '+', flag: '🌐' },
 ];
 
 export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS }: FormationsProps) {
@@ -904,7 +928,11 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   // Core Certified Course Registration Form States
   const [formName, setFormName] = useState('');
   const [formEmail, setFormEmail] = useState('');
+  const [formCountry, setFormCountry] = useState('CI');
   const [formPhone, setFormPhone] = useState('');
+  const [formAccountType, setFormAccountType] = useState<'individuel' | 'entreprise'>('individuel');
+  const [formCompany, setFormCompany] = useState('');
+  const [formRole, setFormRole] = useState('');
   const [formSession, setFormSession] = useState('');
   const [formModality, setFormModality] = useState('Hybride');
   const [formTerms, setFormTerms] = useState(false);
@@ -991,6 +1019,10 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
+    if (formAccountType === 'entreprise' && (!formCompany.trim() || formCompany.trim().length < 2)) {
+      newErrors.company = "Veuillez préciser le nom de votre entreprise ou organisation.";
+    }
+
     if (!formName.trim() || formName.trim().length < 3) {
       newErrors.name = "Le nom complet doit comporter au moins 3 caractères.";
     }
@@ -1000,8 +1032,8 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       newErrors.email = "Veuillez saisir une adresse email valide.";
     }
 
-    if (!formPhone || formPhone.trim().length < 8) {
-      newErrors.phone = "Le numéro de téléphone WhatsApp doit comporter au moins 8 caractères.";
+    if (!formPhone || formPhone.trim().length < 6) {
+      newErrors.phone = "Le numéro de téléphone WhatsApp doit comporter au moins 6 chiffres.";
     }
 
     if (!formSession) {
@@ -1019,15 +1051,21 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       setErrors({});
       setSubmitSuccess(true);
 
+      const selectedCountryObj = COUNTRIES_LIST.find(c => c.code === formCountry) || COUNTRIES_LIST[0];
+      const cleanPhone = formPhone.trim();
+      const formattedPhone = cleanPhone.startsWith('+') ? cleanPhone : `${selectedCountryObj.dial} ${cleanPhone}`;
+
       // Enregistrement automatique du prospect en base de données pour export Excel
       saveProspect({
-        name: formName,
-        email: formEmail,
-        phone: formPhone,
-        type: 'Candidature Formation',
+        name: formName.trim(),
+        email: formEmail.trim(),
+        phone: formattedPhone,
+        type: formAccountType === 'entreprise' ? 'Demande Entreprise' : 'Candidature Formation',
         target: selectedFormation?.title || 'Formation Certifiante',
         session: formSession,
-        modality: selectedFormation?.modality || 'Présentiel',
+        modality: formModality || selectedFormation?.modality || 'Présentiel',
+        company: formAccountType === 'entreprise' ? (formCompany.trim() || 'Entreprise') : '',
+        notes: `Pays: ${selectedCountryObj.name} (${selectedCountryObj.dial}) | Type: ${formAccountType === 'entreprise' ? 'Compte Entreprise' : 'Compte Individuel'}${formRole.trim() ? ` | Poste: ${formRole.trim()}` : ''}`,
         channel: 'En ligne'
       });
 
@@ -1035,8 +1073,10 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
         setFormName('');
         setFormEmail('');
         setFormPhone('');
+        setFormCompany('');
+        setFormRole('');
         setFormSession('');
-      }, 3000);
+      }, 4000);
     }
   };
 
@@ -1639,472 +1679,96 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   </div>
 
                   {activeSubIdx === null ? (
-                    /* Initial Grid of Specialties (Petite taille avec images) */
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-                      {selectedDomainObj.subDomains.map((sub, sIdx) => (
-                        <div
-                          key={sIdx}
-                          id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
-                          onClick={() => {
-                            setActiveSubIdx(sIdx);
-                            const el = document.getElementById('domain-specialties-header');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                          className="group relative h-64 rounded-3xl overflow-hidden border border-slate-200/60 dark:border-slate-800/60 shadow-sm hover:shadow-xl hover:border-brand-emerald/45 transition-all duration-500 cursor-pointer flex flex-col justify-end p-6"
-                        >
-                          {/* Background Image */}
-                          {sub.imageUrl && (
-                            <div className="absolute inset-0 z-0 overflow-hidden">
-                              <img
-                                src={sub.imageUrl}
-                                alt={sub.title}
-                                referrerPolicy="no-referrer"
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                              />
-                              {/* Overlay for readable text */}
-                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-950/20 group-hover:via-slate-900/50 transition-all duration-500"></div>
+                    /* Initial Grid of Specialties (Miniatures avec images et courtes descriptions) */
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                      {selectedDomainObj.subDomains.map((sub, sIdx) => {
+                        const shortDesc = sub.presentationService || sub.description || selectedDomainObj.shortDescription;
+                        return (
+                          <div
+                            key={sIdx}
+                            id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
+                            onClick={() => {
+                              setActiveSubIdx(sIdx);
+                              const el = document.getElementById('domain-specialties-header');
+                              if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-brand-emerald/45 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                          >
+                            <div>
+                              {/* Background Image */}
+                              {sub.imageUrl && (
+                                <div className="relative h-44 w-full overflow-hidden bg-slate-950">
+                                  <img
+                                    src={sub.imageUrl}
+                                    alt={sub.title}
+                                    referrerPolicy="no-referrer"
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
+                                  <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
+                                    <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                      Spécialité 0{sIdx + 1} &bull; CICEXF
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Content */}
+                              <div className="p-5 space-y-2.5">
+                                <h3 className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight group-hover:text-brand-emerald transition-colors duration-300">
+                                  {sub.title}
+                                </h3>
+                                
+                                {/* Petite description de la spécialité */}
+                                <p className="text-xs text-slate-600 dark:text-slate-355 line-clamp-3 leading-relaxed">
+                                  {shortDesc}
+                                </p>
+                              </div>
                             </div>
-                          )}
 
-                          {/* Content */}
-                          <div className="relative z-10 space-y-2.5">
-                            <span className="inline-block font-mono font-bold text-[9px] text-white bg-brand-emerald px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                              Spécialité 0{sIdx + 1}
-                            </span>
-                            
-                            <h3 className="font-display font-extrabold text-sm sm:text-base text-white leading-tight drop-shadow-md group-hover:text-brand-emerald transition-colors duration-300">
-                              {sub.title}
-                            </h3>
-
-                            <div className="pt-2.5 flex items-center justify-between border-t border-white/10 mt-1">
-                              <span className="text-[9.5px] text-brand-emerald font-bold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform duration-300">
-                                <span>Découvrir la spécialité</span>
+                            <div className="p-4 bg-slate-50 dark:bg-slate-850/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                              <span className="text-[10px] text-brand-emerald font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform duration-300">
+                                <span>Consulter la spécialité</span>
                                 <ChevronRight className="w-3.5 h-3.5" />
                               </span>
                               {sub.expertiseLevel && (
-                                <span className="text-[8px] bg-white/10 backdrop-blur-sm text-slate-200 font-bold px-2 py-0.5 rounded uppercase">
+                                <span className="text-[8.5px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
                                   {sub.expertiseLevel}
                                 </span>
                               )}
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
-                    /* Active Split Screen View */
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:items-stretch animate-in fade-in duration-300">
-                      {/* Left side: Wide View of the Selected Specialty */}
-                      <div className="lg:col-span-8 flex flex-col h-full min-h-0">
-                        <div className="flex items-center justify-between mb-4 shrink-0">
-                          <button
-                            onClick={() => setActiveSubIdx(null)}
-                            className="inline-flex items-center space-x-2 text-[11px] font-bold text-slate-600 dark:text-slate-355 hover:text-brand-emerald hover:bg-slate-50 dark:hover:bg-slate-850/50 transition-all py-1.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
-                          >
-                            <ArrowLeft className="w-3.5 h-3.5" />
-                            <span>← Revenir aux autres spécialités</span>
-                          </button>
-                        </div>
-
-                        <div className="flex-grow flex-1 min-h-0">
-                          <SubDomainCard
-                            sub={selectedDomainObj.subDomains[activeSubIdx]}
-                            sIdx={activeSubIdx}
-                            setCorpInterest={setCorpInterest}
-                            renderIcon={renderIcon}
-                            isLarge={true}
-                            onSelectDomain={(domain: any) => {
-                              setSelectedDomainObj(domain);
-                              setActiveSubIdx(0);
-                            }}
-                            currentDomainId={selectedDomainObj.id}
-                          />
-                        </div>
+                    /* Active Full Width View - No other specialty on the side */
+                    <div className="w-full max-w-7xl mx-auto space-y-4 px-2 sm:px-4 lg:px-6 animate-in fade-in duration-300">
+                      <div className="flex items-center justify-between pb-1">
+                        <button
+                          onClick={() => setActiveSubIdx(null)}
+                          className="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200 hover:text-brand-emerald hover:bg-slate-100 dark:hover:bg-slate-800 transition-all py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
+                        >
+                          <ArrowLeft className="w-4 h-4 text-brand-emerald" />
+                          <span>← Revenir aux miniatures des spécialités</span>
+                        </button>
+                        <span className="text-[11px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+                          Spécialité 0{(activeSubIdx ?? 0) + 1} sur {selectedDomainObj.subDomains.length}
+                        </span>
                       </div>
 
-                      {/* Right side: specialties list and form in a unified height-matched column */}
-                      <div className="lg:col-span-4 flex flex-col h-full min-h-0 gap-4">
-                        
-                        {/* Spécialités list card */}
-                        <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/60 shadow-sm space-y-3 shrink-0">
-                          <div className="pb-1.5 border-b border-slate-100 dark:border-slate-800">
-                            <h3 className="text-[10.5px] font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-0.5">
-                              Spécialités de ce pôle
-                            </h3>
-                            <p className="text-[8.5px] text-brand-emerald uppercase font-bold tracking-widest">
-                              Cliquez pour changer la sélection
-                            </p>
-                          </div>
-
-                          <div className="space-y-2">
-                            {selectedDomainObj.subDomains.map((sub, sIdx) => {
-                              const isCurrent = sIdx === activeSubIdx;
-                              return (
-                                <div
-                                  key={sIdx}
-                                  onClick={() => {
-                                    setActiveSubIdx(sIdx);
-                                    const el = document.getElementById('domain-specialties-header');
-                                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                                  }}
-                                  className={`p-2.5 rounded-2xl border transition-all duration-300 cursor-pointer flex items-center space-x-3 group ${
-                                    isCurrent
-                                      ? 'bg-white dark:bg-slate-950 border-brand-emerald shadow-sm ring-1 ring-brand-emerald/30'
-                                      : 'bg-white/70 dark:bg-slate-900/70 border-slate-200/60 dark:border-slate-800/60'
-                                  } hover:bg-[#5C3D2E] dark:hover:bg-[#5C3D2E] hover:text-white hover:scale-105 hover:shadow-lg hover:border-transparent`}
-                                >
-                                  {sub.imageUrl && (
-                                    <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-slate-100 relative">
-                                      <img
-                                        src={sub.imageUrl}
-                                        alt={sub.title}
-                                        referrerPolicy="no-referrer"
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                      />
-                                      <div className="absolute inset-0 bg-slate-950/25"></div>
-                                    </div>
-                                  )}
-                                  
-                                  <div className="flex-grow min-w-0 space-y-0.5">
-                                    <span className={`text-[7px] font-mono font-extrabold uppercase tracking-widest block transition-colors duration-300 ${isCurrent ? 'text-brand-emerald group-hover:text-amber-200' : 'text-slate-400 group-hover:text-amber-200/80'}`}>
-                                      Spécialité 0{sIdx + 1} {isCurrent && '• Actuelle'}
-                                    </span>
-                                    <h4 className={`text-[10px] font-bold leading-tight line-clamp-2 transition-colors duration-300 ${isCurrent ? 'text-slate-950 dark:text-white font-extrabold group-hover:text-white' : 'text-slate-600 dark:text-slate-400 group-hover:text-white'}`}>
-                                      {sub.title}
-                                    </h4>
-                                  </div>
-                                  
-                                  <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${isCurrent ? 'bg-brand-emerald text-white group-hover:bg-white group-hover:text-[#5C3D2E]' : 'bg-slate-50 dark:bg-slate-800 text-slate-400 group-hover:bg-white group-hover:text-[#5C3D2E]'}`}>
-                                    <ChevronRight className="w-3 h-3" />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {/* Interactive Form Card (Right Sidebar) - Inscription ou Demande de Devis */}
-                        <div id="domain-quote-anchor" className="bg-slate-900 dark:bg-slate-950 text-white p-5 rounded-3xl border border-slate-800/80 shadow-2xl space-y-4 animate-in fade-in slide-in-from-bottom-5 duration-500 relative overflow-hidden shrink-0">
-                          <div className="absolute inset-0 grid-pattern opacity-5 pointer-events-none"></div>
-                          
-                          <div className="relative z-10">
-                            <span className="text-[8px] font-mono font-extrabold uppercase tracking-widest text-brand-emerald bg-brand-emerald/10 border border-brand-emerald/20 px-2.5 py-1 rounded-full">
-                              Formulaire de contact Direct
-                            </span>
-                            <h3 className="font-display font-extrabold text-sm text-white mt-3 leading-snug">
-                              Inscription &amp; Devis Instantané
-                            </h3>
-                            <p className="text-[10px] text-slate-400 mt-1.5 leading-relaxed">
-                              Pour : <span className="text-brand-emerald font-bold">{selectedDomainObj.subDomains[activeSubIdx ?? 0]?.title}</span>
-                            </p>
-                          </div>
-
-                          {/* Dual section selectors */}
-                          <div className="relative z-10 grid grid-cols-2 gap-1.5 bg-slate-850 p-1 rounded-xl text-center text-[10px] font-bold border border-slate-800">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setActiveFormTab('individual');
-                                setSubmitSuccess(false);
-                                setCorpSuccess(false);
-                              }}
-                              className={`py-2 px-1 rounded-lg transition-all duration-300 cursor-pointer ${
-                                activeFormTab === 'individual'
-                                  ? 'bg-brand-emerald text-white shadow-md'
-                                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                              }`}
-                            >
-                              👤 S'inscrire (Candidat)
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setActiveFormTab('corporate');
-                                setSubmitSuccess(false);
-                                setCorpSuccess(false);
-                              }}
-                              className={`py-2 px-1 rounded-lg transition-all duration-300 cursor-pointer ${
-                                activeFormTab === 'corporate'
-                                  ? 'bg-brand-emerald text-white shadow-md'
-                                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                              }`}
-                            >
-                              🏢 Devis (Entreprise / Groupe)
-                            </button>
-                          </div>
-
-                          {activeFormTab === 'individual' ? (
-                            submitSuccess ? (
-                              <div className="relative z-10 bg-emerald-950/40 border border-brand-emerald/30 p-4 rounded-2xl space-y-2.5 text-brand-emerald-light text-[11px] animate-in zoom-in-95 duration-200">
-                                <div className="flex items-center space-x-2 text-brand-emerald font-bold">
-                                  <CheckCircle className="w-4 h-4 shrink-0 text-brand-emerald" />
-                                  <span className="text-xs">Inscription validée !</span>
-                                </div>
-                                <p className="text-slate-300 leading-relaxed text-[10px]">
-                                  Votre inscription pour la spécialité <strong>{selectedDomainObj.subDomains[activeSubIdx ?? 0]?.title}</strong> a bien été enregistrée. Notre équipe pédagogique va vous recontacter par email et par téléphone très rapidement.
-                                </p>
-                                <button
-                                  type="button"
-                                  onClick={() => setSubmitSuccess(false)}
-                                  className="text-[10px] text-brand-emerald hover:underline font-bold block pt-1 cursor-pointer"
-                                >
-                                  ← Remplir une nouvelle inscription
-                                </button>
-                              </div>
-                            ) : (
-                              <form onSubmit={(e) => handleSidebarEmailSubmit(e, 'individual')} className="relative z-10 space-y-3 font-sans text-[11px]">
-                                <div className="space-y-1">
-                                  <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Nom &amp; Prénom complet * :</label>
-                                  <input
-                                    type="text"
-                                    placeholder="Ex: Koffi Konan Olivier..."
-                                    value={formName}
-                                    onChange={(e) => setFormName(e.target.value)}
-                                    className={`w-full bg-slate-800/50 border rounded-lg px-3 py-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                      errors.name ? 'border-red-500' : 'border-slate-700/70 focus:ring-1 focus:ring-brand-emerald/20'
-                                    }`}
-                                  />
-                                  {errors.name && <span className="text-[9px] text-red-400 block font-medium">{errors.name}</span>}
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Adresse Email * :</label>
-                                  <input
-                                    type="email"
-                                    placeholder="Ex: olivier@gmail.com..."
-                                    value={formEmail}
-                                    onChange={(e) => setFormEmail(e.target.value)}
-                                    className={`w-full bg-slate-800/50 border rounded-lg px-3 py-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                      errors.email ? 'border-red-500' : 'border-slate-700/70 focus:ring-1 focus:ring-brand-emerald/20'
-                                    }`}
-                                  />
-                                  {errors.email && <span className="text-[9px] text-red-400 block font-medium">{errors.email}</span>}
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Téléphone (WhatsApp de préférence) * :</label>
-                                  <input
-                                    type="tel"
-                                    placeholder="Ex: +225 07 01 02 03 04..."
-                                    value={formPhone}
-                                    onChange={(e) => setFormPhone(e.target.value)}
-                                    className={`w-full bg-slate-800/50 border rounded-lg px-3 py-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                      errors.phone ? 'border-red-500' : 'border-slate-700/70 focus:ring-1 focus:ring-brand-emerald/20'
-                                    }`}
-                                  />
-                                  {errors.phone && <span className="text-[9px] text-red-400 block font-medium">{errors.phone}</span>}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Session * :</label>
-                                    <select
-                                      value={formSession}
-                                      onChange={(e) => setFormSession(e.target.value)}
-                                      className={`w-full bg-slate-800/50 border rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-brand-emerald transition-all text-[11px] ${
-                                        errors.session ? 'border-red-500' : 'border-slate-700/70'
-                                      }`}
-                                    >
-                                      <option value="" className="bg-slate-900">-- Choisir --</option>
-                                      <option value="Juillet 2026" className="bg-slate-900">Juillet 2026</option>
-                                      <option value="Août 2026" className="bg-slate-900">Août 2026</option>
-                                      <option value="Septembre 2026" className="bg-slate-900">Septembre 2026</option>
-                                    </select>
-                                    {errors.session && <span className="text-[9px] text-red-400 block font-medium">{errors.session}</span>}
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Format :</label>
-                                    <select
-                                      value={formModality}
-                                      onChange={(e) => setFormModality(e.target.value)}
-                                      className="w-full bg-slate-800/50 border border-slate-700/70 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-brand-emerald transition-all text-[11px]"
-                                    >
-                                      <option value="Hybride" className="bg-slate-900">Hybride</option>
-                                      <option value="Présentiel" className="bg-slate-900">Présentiel</option>
-                                      <option value="Distanciel" className="bg-slate-900">E-Learning</option>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <div className="space-y-1.5 pt-1">
-                                  <label className="flex items-start space-x-2 cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={formTerms}
-                                      onChange={(e) => setFormTerms(e.target.checked)}
-                                      className="mt-0.5 shrink-0 accent-brand-emerald rounded border-slate-700 bg-slate-800"
-                                    />
-                                    <span className="text-[9.5px] text-slate-400 leading-tight">
-                                      J'autorise CICEXF à utiliser mes coordonnées pour valider mon inscription pédagogique.
-                                    </span>
-                                  </label>
-                                  {errors.terms && <span className="text-[9px] text-red-400 block font-medium">{errors.terms}</span>}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2 pt-2">
-                                  <button
-                                    type="submit"
-                                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold rounded-xl text-[10px] tracking-wide uppercase transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-md"
-                                  >
-                                    <Send className="w-3 h-3 text-brand-emerald" />
-                                    <span>Par Email</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleSidebarWhatsAppSubmit('individual')}
-                                    className="w-full py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold rounded-xl text-[10px] tracking-wide uppercase transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-md"
-                                  >
-                                    <MessageSquare className="w-3 h-3" />
-                                    <span>Via WhatsApp</span>
-                                  </button>
-                                </div>
-                              </form>
-                            )
-                          ) : (
-                            corpSuccess ? (
-                              <div className="relative z-10 bg-emerald-950/40 border border-brand-emerald/30 p-4 rounded-2xl space-y-2.5 text-brand-emerald-light text-[11px] animate-in zoom-in-95 duration-200">
-                                <div className="flex items-center space-x-2 text-brand-emerald font-bold">
-                                  <CheckCircle className="w-4 h-4 shrink-0 text-brand-emerald" />
-                                  <span className="text-xs">Devis Demandé !</span>
-                                </div>
-                                <p className="text-slate-300 leading-relaxed text-[10px]">
-                                  La demande de devis pour l'organisation <strong>{corpCompany}</strong> concernant la spécialité <strong>{selectedDomainObj.subDomains[activeSubIdx ?? 0]?.title}</strong> a bien été transmise. Un ingénieur pédagogique CICEXF vous recontactera sous 24h ouvrables.
-                                </p>
-                                <button
-                                  type="button"
-                                  onClick={() => setCorpSuccess(false)}
-                                  className="text-[10px] text-brand-emerald hover:underline font-bold block pt-1 cursor-pointer"
-                                >
-                                  ← Remplir un nouveau devis
-                                </button>
-                              </div>
-                            ) : (
-                              <form onSubmit={(e) => handleSidebarEmailSubmit(e, 'corporate')} className="relative z-10 space-y-3 font-sans text-[11px]">
-                                <div className="space-y-1">
-                                  <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Entreprise / Organisme * :</label>
-                                  <input
-                                    type="text"
-                                    placeholder="Ex: Ministère, Cabinet, PME..."
-                                    value={corpCompany}
-                                    onChange={(e) => setCorpCompany(e.target.value)}
-                                    className={`w-full bg-slate-800/50 border rounded-lg px-3 py-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                      corpErrors.company ? 'border-red-500' : 'border-slate-700/70 focus:ring-1 focus:ring-brand-emerald/20'
-                                    }`}
-                                  />
-                                  {corpErrors.company && <span className="text-[9px] text-red-400 block font-medium">{corpErrors.company}</span>}
-                                </div>
-
-                                <div className="space-y-1">
-                                  <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Nom du Contact Responsable * :</label>
-                                  <input
-                                    type="text"
-                                    placeholder="Ex: Mme Yao Christine (DRH)..."
-                                    value={corpName}
-                                    onChange={(e) => setCorpName(e.target.value)}
-                                    className={`w-full bg-slate-800/50 border rounded-lg px-3 py-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                      corpErrors.name ? 'border-red-500' : 'border-slate-700/70 focus:ring-1 focus:ring-brand-emerald/20'
-                                    }`}
-                                  />
-                                  {corpErrors.name && <span className="text-[9px] text-red-400 block font-medium">{corpErrors.name}</span>}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Email Pro * :</label>
-                                    <input
-                                      type="email"
-                                      placeholder="drh@entreprise.ci"
-                                      value={corpEmail}
-                                      onChange={(e) => setCorpEmail(e.target.value)}
-                                      className={`w-full bg-slate-800/50 border rounded-lg px-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                        corpErrors.email ? 'border-red-500' : 'border-slate-700/70'
-                                      }`}
-                                    />
-                                    {corpErrors.email && <span className="text-[9px] text-red-400 block font-medium">{corpErrors.email}</span>}
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Téléphone * :</label>
-                                    <input
-                                      type="tel"
-                                      placeholder="+225 07 00 00..."
-                                      value={corpPhone}
-                                      onChange={(e) => setCorpPhone(e.target.value)}
-                                      className={`w-full bg-slate-800/50 border rounded-lg px-2 text-white outline-none focus:border-brand-emerald transition-all text-xs ${
-                                        corpErrors.phone ? 'border-red-500' : 'border-slate-700/70'
-                                      }`}
-                                    />
-                                    {corpErrors.phone && <span className="text-[9px] text-red-400 block font-medium">{corpErrors.phone}</span>}
-                                  </div>
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Participants * :</label>
-                                    <select
-                                      value={corpParticipants}
-                                      onChange={(e) => setCorpParticipants(e.target.value)}
-                                      className="w-full bg-slate-800/50 border border-slate-700/70 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-brand-emerald transition-all text-[11px]"
-                                    >
-                                      <option value="1 à 5 personnes" className="bg-slate-900">1 à 5 pers.</option>
-                                      <option value="5 à 10 personnes" className="bg-slate-900">5 à 10 pers.</option>
-                                      <option value="10 à 20 personnes" className="bg-slate-900">10 à 20 pers.</option>
-                                      <option value="Plus de 20 personnes" className="bg-slate-900">Plus de 20 pers.</option>
-                                    </select>
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <label className="block text-slate-400 font-bold tracking-wide uppercase text-[8.5px]">Format :</label>
-                                    <select
-                                      value={corpModality}
-                                      onChange={(e) => setCorpModality(e.target.value)}
-                                      className="w-full bg-slate-800/50 border border-slate-700/70 rounded-lg px-2.5 py-1.5 text-white outline-none focus:border-brand-emerald transition-all text-[11px]"
-                                    >
-                                      <option value="Intra-entreprise" className="bg-slate-900">Intra-Entr.</option>
-                                      <option value="Inter-entreprise" className="bg-slate-900">Inter-Entr.</option>
-                                      <option value="Sur-mesure" className="bg-slate-900">Sur-mesure</option>
-                                    </select>
-                                  </div>
-                                </div>
-
-                                <div className="space-y-1.5 pt-1">
-                                  <label className="flex items-start space-x-2 cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={corpTerms}
-                                      onChange={(e) => setCorpTerms(e.target.checked)}
-                                      className="mt-0.5 shrink-0 accent-brand-emerald rounded border-slate-700 bg-slate-800"
-                                    />
-                                    <span className="text-[9.5px] text-slate-400 leading-tight">
-                                      Nous autorisons le CICEXF à nous envoyer la brochure d'ingénierie et le devis requis.
-                                    </span>
-                                  </label>
-                                  {corpErrors.terms && <span className="text-[9px] text-red-400 block font-medium">{corpErrors.terms}</span>}
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-2 pt-2">
-                                  <button
-                                    type="submit"
-                                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold rounded-xl text-[10px] tracking-wide uppercase transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-md"
-                                  >
-                                    <Send className="w-3 h-3 text-brand-emerald" />
-                                    <span>Par Email</span>
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleSidebarWhatsAppSubmit('corporate')}
-                                    className="w-full py-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold rounded-xl text-[10px] tracking-wide uppercase transition-all flex items-center justify-center space-x-1 cursor-pointer active:scale-95 shadow-md"
-                                  >
-                                    <MessageSquare className="w-3 h-3" />
-                                    <span>Via WhatsApp</span>
-                                  </button>
-                                </div>
-                              </form>
-                            )
-                          )}
-                        </div>
-                      </div>
+                      <SubDomainCard
+                        sub={selectedDomainObj.subDomains[activeSubIdx]}
+                        sIdx={activeSubIdx}
+                        setCorpInterest={setCorpInterest}
+                        renderIcon={renderIcon}
+                        isLarge={true}
+                        onSelectDomain={(domain: any) => {
+                          setSelectedDomainObj(domain);
+                          setActiveSubIdx(0);
+                        }}
+                        currentDomainId={selectedDomainObj.id}
+                      />
                     </div>
                   )}
                 </div>
@@ -2455,18 +2119,42 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         {selectedFormation.shortDescription}
                       </p>
                       
-                      <div className="flex flex-wrap gap-4 text-xs">
-                        <span className="flex items-center text-slate-300">
+                      <div className="flex flex-wrap items-center gap-3 text-xs pt-1">
+                        <span className="flex items-center text-slate-300 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
                           <Clock className="w-4 h-4 text-brand-emerald mr-1.5 shrink-0" />
                           {selectedFormation.duration}
                         </span>
-                        <span className="flex items-center text-slate-300">
+                        <span className="flex items-center text-slate-300 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
                           <GraduationCap className="w-4 h-4 text-brand-emerald mr-1.5 shrink-0" />
                           Niveau {selectedFormation.level}
                         </span>
-                        <span className="flex items-center text-slate-300">
+                        <span className="flex items-center text-slate-300 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
                           <MapPin className="w-4 h-4 text-brand-emerald mr-1.5 shrink-0" />
                           Mode {selectedFormation.modality}
+                        </span>
+                        <span className="flex items-center font-mono font-bold text-white bg-[#8A1A24]/70 px-3 py-1.5 rounded-lg border border-[#8A1A24]">
+                          {selectedFormation.price || "450 000 FCFA"}
+                        </span>
+                      </div>
+
+                      {/* Compact "S'inscrire" button in header */}
+                      <div className="pt-2 flex flex-wrap items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormationActiveTab('sinscrire');
+                            setTimeout(() => {
+                              const el = document.getElementById('registration-form-card');
+                              if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            }, 80);
+                          }}
+                          className="px-6 py-2.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white font-extrabold text-xs uppercase tracking-wider rounded-xl flex items-center space-x-2 shadow-lg hover:shadow-xl transition-all cursor-pointer active:scale-95"
+                        >
+                          <UserCheck className="w-4 h-4" />
+                          <span>S'inscrire</span>
+                        </button>
+                        <span className="text-[11px] text-slate-400">
+                          Agrément N°25343/GTCA/RC/2025 &bull; Traitement sous 24h
                         </span>
                       </div>
                     </div>
@@ -2482,292 +2170,368 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   </div>
                 </div>
 
-                {/* Core Syllabus Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                  
-                  {/* Left elements */}
-                  {/* Left elements: Interactive Tabs Block matching User Screenshot */}
-                  <div className="lg:col-span-8 space-y-5">
-                    <InteractiveSectionTabs
-                      title={selectedFormation.title}
-                      description={selectedFormation.context || selectedFormation.shortDescription}
-                      sections={buildFormationTabSections(
-                        selectedFormation,
-                        undefined,
-                        (
-                          <div id="registration-form-card" className="bg-slate-50 dark:bg-slate-950/70 p-5 sm:p-7 rounded-2xl border-2 border-[#8A1A24]/30 dark:border-[#8A1A24]/50 shadow-md">
+                {/* Core Syllabus - Full Width for Maximum Space */}
+                <div className="w-full space-y-6">
+                  <InteractiveSectionTabs
+                    title={selectedFormation.title}
+                    description={selectedFormation.context || selectedFormation.shortDescription}
+                    sections={buildFormationTabSections(
+                      selectedFormation,
+                      undefined,
+                      (() => {
+                        const selectedCountryObj = COUNTRIES_LIST.find(c => c.code === formCountry) || COUNTRIES_LIST[0];
+                        return (
+                          <div id="registration-form-card" className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border-2 border-[#8A1A24]/30 dark:border-[#8A1A24]/50 shadow-xl space-y-6">
+                            
+                            {/* Header of Grand Plan Form */}
+                            <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                              <div className="space-y-1">
+                                <span className="inline-flex items-center space-x-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[#8A1A24] dark:text-red-400">
+                                  <UserCheck className="w-4 h-4" />
+                                  <span>Dossier d'Admission &amp; Inscription Directe</span>
+                                </span>
+                                <h3 className="text-base sm:text-lg font-display font-extrabold text-slate-900 dark:text-white">
+                                  Formulaire Officiel de Candidature — {selectedFormation.title}
+                                </h3>
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="font-mono text-sm sm:text-base font-extrabold text-[#8A1A24] dark:text-red-400 block">
+                                  {selectedFormation.price || "450 000 FCFA"}
+                                </span>
+                                <span className="text-[10.5px] text-slate-400 block">Éligible conventions FDFP</span>
+                              </div>
+                            </div>
+
                             {submitSuccess ? (
-                              <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 p-5 rounded-xl space-y-3 text-emerald-900 dark:text-emerald-200">
-                                <div className="flex items-center space-x-2.5">
-                                  <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
-                                  <span className="font-extrabold text-sm sm:text-base">Candidature Enregistrée avec Succès !</span>
+                              <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-700 p-6 rounded-2xl space-y-3 text-emerald-900 dark:text-emerald-100 animate-in fade-in">
+                                <div className="flex items-center space-x-3">
+                                  <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                                  <div>
+                                    <h4 className="font-extrabold text-base sm:text-lg">Candidature Enregistrée avec Succès !</h4>
+                                    <p className="text-xs text-emerald-700 dark:text-emerald-300">Votre numéro de dossier a été généré et transmis à nos directeurs pédagogiques.</p>
+                                  </div>
                                 </div>
-                                <p className="font-sans leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-                                  Un email officiel de confirmation a été adressé à <strong>{formEmail}</strong>. Un conseiller pédagogique du Cabinet CICEXF va prendre contact avec vous par WhatsApp pour finaliser vos modalités d'inscription.
+                                <p className="font-sans leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300 pl-10">
+                                  Un accusé de réception a été envoyé à <strong>{formEmail}</strong>. Un conseiller d'admission vous contactera très rapidement sur votre numéro WhatsApp pour valider vos prérequis et finaliser votre convention.
                                 </p>
-                                <button
-                                  onClick={() => setSubmitSuccess(false)}
-                                  className="text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:underline inline-block pt-1 cursor-pointer"
-                                >
-                                  ← Soumettre un autre dossier de candidature
-                                </button>
+                                <div className="pl-10 pt-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => setSubmitSuccess(false)}
+                                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-sm"
+                                  >
+                                    ← Soumettre une autre inscription
+                                  </button>
+                                </div>
                               </div>
                             ) : (
-                              <form onSubmit={handleRegisterSubmit} className="space-y-4 font-sans text-xs">
+                              <form onSubmit={handleRegisterSubmit} className="space-y-6 font-sans">
                                 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {/* Nom Complet */}
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Nom Complet * :</label>
-                                    <input
-                                      type="text"
-                                      placeholder="Nom Prénom"
-                                      value={formName}
-                                      onChange={(e) => setFormName(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
-                                        errors.name ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                {/* 1. ACCOUNT TYPE SELECTION (Individuel vs Entreprise) */}
+                                <div className="space-y-2">
+                                  <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                    Type d'inscription * :
+                                  </label>
+                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button
+                                      type="button"
+                                      onClick={() => setFormAccountType('individuel')}
+                                      className={`p-3.5 sm:p-4 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center space-x-3.5 ${
+                                        formAccountType === 'individuel'
+                                          ? 'border-[#8A1A24] bg-[#8A1A24]/5 dark:bg-[#8A1A24]/15 shadow-sm'
+                                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300'
                                       }`}
-                                    />
-                                    {errors.name && <span className="text-[11px] text-red-500">{errors.name}</span>}
-                                  </div>
+                                    >
+                                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                                        formAccountType === 'individuel' ? 'bg-[#8A1A24] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                                      }`}>
+                                        <Users className="w-5 h-5" />
+                                      </div>
+                                      <div>
+                                        <span className={`block font-extrabold text-xs sm:text-sm ${
+                                          formAccountType === 'individuel' ? 'text-[#8A1A24] dark:text-red-400' : 'text-slate-900 dark:text-white'
+                                        }`}>
+                                          Compte Individuel
+                                        </span>
+                                        <span className="block text-[11px] text-slate-500 dark:text-slate-400">
+                                          Candidature personnelle / Financement propre
+                                        </span>
+                                      </div>
+                                    </button>
 
-                                  {/* Email */}
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Adresse Email * :</label>
-                                    <input
-                                      type="email"
-                                      placeholder="votre.email@gmail.com"
-                                      value={formEmail}
-                                      onChange={(e) => setFormEmail(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
-                                        errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                    <button
+                                      type="button"
+                                      onClick={() => setFormAccountType('entreprise')}
+                                      className={`p-3.5 sm:p-4 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center space-x-3.5 ${
+                                        formAccountType === 'entreprise'
+                                          ? 'border-[#8A1A24] bg-[#8A1A24]/5 dark:bg-[#8A1A24]/15 shadow-sm'
+                                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300'
                                       }`}
-                                    />
-                                    {errors.email && <span className="text-[11px] text-red-500">{errors.email}</span>}
+                                    >
+                                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                                        formAccountType === 'entreprise' ? 'bg-[#8A1A24] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                                      }`}>
+                                        <Building2 className="w-5 h-5" />
+                                      </div>
+                                      <div>
+                                        <span className={`block font-extrabold text-xs sm:text-sm ${
+                                          formAccountType === 'entreprise' ? 'text-[#8A1A24] dark:text-red-400' : 'text-slate-900 dark:text-white'
+                                        }`}>
+                                          Compte Entreprise
+                                        </span>
+                                        <span className="block text-[11px] text-slate-500 dark:text-slate-400">
+                                          Prise en charge entreprise, FDFP ou bon de commande
+                                        </span>
+                                      </div>
+                                    </button>
                                   </div>
                                 </div>
 
+                                {/* Conditional Enterprise Fields */}
+                                {formAccountType === 'entreprise' && (
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 animate-in fade-in duration-200">
+                                    <div className="space-y-1.5">
+                                      <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                        Nom de l'Entreprise / Organisation * :
+                                      </label>
+                                      <input
+                                        type="text"
+                                        placeholder="Ex: Orange, Ministère, Sodeci, Cabinet..."
+                                        value={formCompany}
+                                        onChange={(e) => setFormCompany(e.target.value)}
+                                        className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all ${
+                                          errors.company ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
+                                        }`}
+                                      />
+                                      {errors.company && <span className="text-xs text-red-500 font-semibold block">{errors.company}</span>}
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                      <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                        Fonction / Poste au sein de l'entreprise :
+                                      </label>
+                                      <input
+                                        type="text"
+                                        placeholder="Ex: Responsable RH, DAF, Chef de Projet..."
+                                        value={formRole}
+                                        onChange={(e) => setFormRole(e.target.value)}
+                                        className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20"
+                                      />
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* 2. PERSONAL DETAILS (Nom & Email) */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {/* WhatsApp */}
                                   <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">WhatsApp * :</label>
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Nom Complet * :
+                                    </label>
                                     <input
-                                      type="tel"
-                                      placeholder="Ex: +225 07 01 02 03..."
-                                      value={formPhone}
-                                      onChange={(e) => setFormPhone(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
-                                        errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24] focus:ring-1 focus:ring-[#8A1A24]'
+                                      type="text"
+                                      placeholder="Ex: KOUASSI Jean-Philippe"
+                                      value={formName}
+                                      onChange={(e) => setFormName(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm ${
+                                        errors.name ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
                                       }`}
                                     />
-                                    {errors.phone && <span className="text-[11px] text-red-500">{errors.phone}</span>}
+                                    {errors.name && <span className="text-xs text-red-500 font-semibold block">{errors.name}</span>}
                                   </div>
 
-                                  {/* Session souhaitée */}
                                   <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Session souhaitée * :</label>
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Adresse Email * :
+                                    </label>
+                                    <input
+                                      type="email"
+                                      placeholder="votre.email@domaine.com"
+                                      value={formEmail}
+                                      onChange={(e) => setFormEmail(e.target.value)}
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm ${
+                                        errors.email ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
+                                      }`}
+                                    />
+                                    {errors.email && <span className="text-xs text-red-500 font-semibold block">{errors.email}</span>}
+                                  </div>
+                                </div>
+
+                                {/* 3. COUNTRY SELECTOR & AUTO DIAL CODE PHONE */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  {/* Country Dropdown */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Pays de Résidence * :
+                                    </label>
+                                    <select
+                                      value={formCountry}
+                                      onChange={(e) => setFormCountry(e.target.value)}
+                                      className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20 font-medium shadow-sm cursor-pointer"
+                                    >
+                                      {COUNTRIES_LIST.map((c) => (
+                                        <option key={c.code} value={c.code}>
+                                          {c.flag} {c.name} ({c.dial})
+                                        </option>
+                                      ))}
+                                    </select>
+                                    <span className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                                      L'indicatif international s'ajuste automatiquement ci-contre.
+                                    </span>
+                                  </div>
+
+                                  {/* WhatsApp / Phone with auto dial badge */}
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Numéro WhatsApp * :
+                                    </label>
+                                    <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] focus-within:ring-2 focus-within:ring-[#8A1A24]/20 shadow-sm transition-all">
+                                      <div className="px-3.5 py-3 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-xs sm:text-sm flex items-center space-x-1.5 shrink-0 select-none">
+                                        <span>{selectedCountryObj.flag}</span>
+                                        <span>{selectedCountryObj.dial}</span>
+                                      </div>
+                                      <input
+                                        type="tel"
+                                        placeholder="Ex: 07 01 02 03 04"
+                                        value={formPhone}
+                                        onChange={(e) => setFormPhone(e.target.value)}
+                                        className="w-full px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
+                                      />
+                                    </div>
+                                    {errors.phone ? (
+                                      <span className="text-xs text-red-500 font-semibold block">{errors.phone}</span>
+                                    ) : (
+                                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block">
+                                        Indiquez votre numéro sans répéter l'indicatif.
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+
+                                {/* 4. SESSION SOUHAITÉE & MODALITÉ */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Session Souhaitée * :
+                                    </label>
                                     <select
                                       value={formSession}
                                       onChange={(e) => setFormSession(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-2.5 text-xs text-slate-900 dark:text-white outline-none transition-all ${
-                                        errors.session ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-[#8A1A24]'
+                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm cursor-pointer ${
+                                        errors.session ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
                                       }`}
                                     >
-                                      <option value="">-- Choisir une date --</option>
+                                      <option value="">-- Choisir une date de session --</option>
                                       {(selectedFormation.sessions && selectedFormation.sessions.length > 0) ? (
                                         selectedFormation.sessions.map((s, idx) => (
                                           <option key={idx} value={s.date}>{s.date} ({s.location})</option>
                                         ))
                                       ) : (
                                         <>
-                                          <option value="Session ouverte - Inscriptions en cours">Session ouverte - Inscriptions en cours (Abidjan &amp; En ligne)</option>
+                                          <option value="Session en cours - Inscriptions ouvertes">Session en cours (Inscriptions ouvertes - Abidjan &amp; En ligne)</option>
+                                          <option value="Prochaine cohorte certifiante">Prochaine cohorte certifiante (Mois prochain)</option>
                                           <option value="Session sur-mesure / Intra-entreprise">Session sur-mesure / Intra-entreprise (Sur site ou Hybride)</option>
                                         </>
                                       )}
                                     </select>
-                                    {errors.session && <span className="text-[11px] text-red-500">{errors.session}</span>}
+                                    {errors.session && <span className="text-xs text-red-500 font-semibold block">{errors.session}</span>}
+                                  </div>
+
+                                  <div className="space-y-1.5">
+                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
+                                      Modalité Préférée :
+                                    </label>
+                                    <div className="grid grid-cols-3 gap-2 pt-1">
+                                      {(['Présentiel', 'En ligne', 'Hybride'] as const).map((m) => (
+                                        <button
+                                          key={m}
+                                          type="button"
+                                          onClick={() => setFormModality(m)}
+                                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer text-center ${
+                                            formModality === m
+                                              ? 'border-[#8A1A24] bg-[#8A1A24] text-white shadow-sm'
+                                              : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                                          }`}
+                                        >
+                                          {m}
+                                        </button>
+                                      ))}
+                                    </div>
                                   </div>
                                 </div>
 
-                                {/* Modalité préférée */}
-                                <div className="space-y-1.5 pt-1">
-                                  <label className="block font-bold text-slate-700 dark:text-slate-200 text-xs">Modalité Préférée :</label>
-                                  <div className="flex flex-wrap gap-4 pt-1">
-                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
-                                      <input
-                                        type="radio"
-                                        name="cert-modal-grand"
-                                        checked={formModality === 'Présentiel'}
-                                        onChange={() => setFormModality('Présentiel')}
-                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
-                                      />
-                                      <span>Présentiel</span>
-                                    </label>
-                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
-                                      <input
-                                        type="radio"
-                                        name="cert-modal-grand"
-                                        checked={formModality === 'En ligne'}
-                                        onChange={() => setFormModality('En ligne')}
-                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
-                                      />
-                                      <span>En ligne</span>
-                                    </label>
-                                    <label className="inline-flex items-center space-x-2 cursor-pointer font-medium text-slate-800 dark:text-slate-200">
-                                      <input
-                                        type="radio"
-                                        name="cert-modal-grand"
-                                        checked={formModality === 'Hybride'}
-                                        onChange={() => setFormModality('Hybride')}
-                                        className="accent-[#8A1A24] w-4 h-4 cursor-pointer"
-                                      />
-                                      <span>Hybride</span>
-                                    </label>
-                                  </div>
-                                </div>
-
-                                {/* RGPD / Consentement */}
+                                {/* 5. TERMS / CONSENT */}
                                 <div className="space-y-1 pt-2">
-                                  <label className="flex items-start space-x-2.5 cursor-pointer">
+                                  <label className="flex items-start space-x-3 cursor-pointer">
                                     <input
                                       type="checkbox"
                                       checked={formTerms}
                                       onChange={(e) => setFormTerms(e.target.checked)}
-                                      className="mt-0.5 shrink-0 accent-[#8A1A24] w-4 h-4 cursor-pointer"
+                                      className="mt-1 shrink-0 accent-[#8A1A24] w-4 h-4 cursor-pointer"
                                     />
-                                    <span className="text-[11px] text-slate-600 dark:text-slate-400 leading-normal">
-                                      J'autorise le cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier.
+                                    <span className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
+                                      J'autorise le Cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier de candidature et l'établissement des conventions de formation.
                                     </span>
                                   </label>
-                                  {errors.terms && <span className="text-[11px] text-red-500 block">{errors.terms}</span>}
+                                  {errors.terms && <span className="text-xs text-red-500 font-semibold block">{errors.terms}</span>}
                                 </div>
 
-                                {/* Submit Button matching user's image */}
+                                {/* 6. SUBMIT BUTTON */}
                                 <button
                                   type="submit"
-                                  className="w-full py-3.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs sm:text-sm transition-all flex items-center justify-center space-x-2 shadow-md hover:shadow-lg cursor-pointer active:scale-98 mt-2"
+                                  className="w-full py-4 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs sm:text-sm transition-all flex items-center justify-center space-x-2.5 shadow-lg hover:shadow-xl cursor-pointer active:scale-98"
                                 >
                                   <Send className="w-4 h-4" />
                                   <span>VALIDER MON INSCRIPTION</span>
                                 </button>
+
+                                <div className="pt-2 text-center">
+                                  <span className="text-[11px] text-slate-400 inline-flex items-center space-x-1.5">
+                                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                                    <span>Traitement garanti sous 24h ouvrées &bull; Agrément officiel N°25343/GTCA/RC/2025</span>
+                                  </span>
+                                </div>
+
                               </form>
                             )}
+
                           </div>
-                        )
-                      )}
-                      defaultTabId="description"
-                      activeTabId={formationActiveTab}
-                      onTabChange={setFormationActiveTab}
-                      onActionClick={() => {
-                        setFormationActiveTab('sinscrire');
-                        setTimeout(() => {
-                          const el = document.getElementById('registration-grand-plan-anchor');
-                          if (el) el.scrollIntoView({ behavior: 'smooth' });
-                        }, 50);
-                      }}
-                      actionLabel="S'inscrire à cette certification"
-                    />
-
-                    {/* FAQ if available */}
-                    {selectedFormation.faq && selectedFormation.faq.length > 0 && (
-                      <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-                        <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
-                          Foire Aux Questions (FAQ)
-                        </h3>
-                        <div className="space-y-3 text-xs font-sans">
-                          {selectedFormation.faq.map((item, fIdx) => (
-                            <div key={fIdx} className="space-y-1">
-                              <h4 className="font-bold text-slate-800 dark:text-slate-200 flex items-center">
-                                <HelpCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0" />
-                                <span>{item.question}</span>
-                              </h4>
-                              <p className="text-slate-500 dark:text-slate-400 leading-relaxed pl-5 font-normal text-[11.5px]">
-                                {item.answer}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                        );
+                      })()
                     )}
-                  </div>
+                    defaultTabId="description"
+                    activeTabId={formationActiveTab}
+                    onTabChange={setFormationActiveTab}
+                    onActionClick={() => {
+                      setFormationActiveTab('sinscrire');
+                      setTimeout(() => {
+                        const el = document.getElementById('registration-form-card');
+                        if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      }, 80);
+                    }}
+                    actionLabel="S'inscrire à cette certification"
+                  />
 
-                  {/* Right elements: Sticky CTA Card with ONLY a button "S'inscrire" */}
-                  <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
-
-                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md space-y-5">
-                      
-                      <div className="space-y-1.5 border-b border-slate-100 dark:border-slate-800 pb-4">
-                        <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#8A1A24] dark:text-red-400 block">
-                          Formation Certifiante
-                        </span>
-                        <div className="flex items-baseline space-x-2">
-                          <span className="text-2xl font-black text-slate-900 dark:text-white font-mono">
-                            {selectedFormation.price || "450 000 FCFA"}
-                          </span>
-                          <span className="text-[11px] text-slate-400 font-medium">/ participant</span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                          Éligible aux prises en charge entreprise &amp; conventions FDFP.
-                        </p>
+                  {/* FAQ if available */}
+                  {selectedFormation.faq && selectedFormation.faq.length > 0 && (
+                    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                      <h3 className="font-display text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2">
+                        Foire Aux Questions (FAQ)
+                      </h3>
+                      <div className="space-y-3 text-xs font-sans">
+                        {selectedFormation.faq.map((item, fIdx) => (
+                          <div key={fIdx} className="space-y-1">
+                            <h4 className="font-bold text-slate-800 dark:text-slate-200 flex items-center">
+                              <HelpCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0" />
+                              <span>{item.question}</span>
+                            </h4>
+                            <p className="text-slate-500 dark:text-slate-400 leading-relaxed pl-5 font-normal text-[11.5px]">
+                              {item.answer}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-
-                      <div className="space-y-2.5 text-xs">
-                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                          <span className="text-slate-400">Durée :</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.duration || "6 semaines"}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                          <span className="text-slate-400">Modalité :</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.modality || "Hybride"}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                          <span className="text-slate-400">Niveau :</span>
-                          <span className="font-bold text-slate-900 dark:text-white">{selectedFormation.level || "Intermédiaire"}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-300">
-                          <span className="text-slate-400">Agrément :</span>
-                          <span className="font-bold text-emerald-600 dark:text-emerald-400 font-mono text-[10.5px]">N°25343/GTCA/RC/2025</span>
-                        </div>
-                      </div>
-
-                      {/* Display ONLY a button 'S'inscrire' as explicitly requested */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormationActiveTab('sinscrire');
-                          setTimeout(() => {
-                            const el = document.getElementById('registration-grand-plan-anchor');
-                            if (el) el.scrollIntoView({ behavior: 'smooth' });
-                          }, 50);
-                        }}
-                        className="w-full py-3.5 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs transition-all flex items-center justify-center space-x-2 shadow-md hover:shadow-lg cursor-pointer active:scale-98"
-                      >
-                        <UserCheck className="w-4 h-4" />
-                        <span>S'inscrire</span>
-                      </button>
-
-                      {formationActiveTab === 'sinscrire' && (
-                        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl text-center space-y-1 animate-in fade-in">
-                          <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 block">
-                            ✓ Formulaire affiché en grand plan ci-contre
-                          </span>
-                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block">
-                            Remplissez vos coordonnées pour soumettre votre dossier.
-                          </span>
-                        </div>
-                      )}
-
-                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
-                        <span className="text-[10.5px] text-slate-400 flex items-center justify-center space-x-1">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>Dossier traité sous 24h par nos conseillers</span>
-                        </span>
-                      </div>
-
                     </div>
-
-                  </div>
-
+                  )}
                 </div>
 
               </div>
