@@ -235,75 +235,45 @@ export default function Interventions({
           // 2. Detailed view for selected General Accompanying Domain
           <div className="space-y-6 animate-in fade-in duration-300 font-sans">
             
-            {/* Back Button to list of domains */}
-            <div>
-              <button
-                onClick={() => {
-                  setSelectedDomainId(null);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="inline-flex items-center space-x-2 text-[11px] font-bold text-slate-800 dark:text-slate-200 hover:text-brand-emerald dark:hover:text-brand-emerald-light hover:bg-slate-100 dark:hover:bg-slate-800 transition-all py-1.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
-                <span>Retourner aux domaines d'accompagnement</span>
-              </button>
-            </div>
-
-            {/* Beautiful Modern Domain Hero Header with top image banner */}
-            <div className="relative h-44 sm:h-52 rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-300">
-              <img
-                src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
-                alt={selectedDomainObj.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 space-y-2">
-                <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
-                  {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
-                  <span>Ingénierie CICEXF &bull; Accompagnement</span>
+            {/* Back Button and Domain Hero Header (Masked when a specialty is selected) */}
+            {activeSubIdx === null && (
+              <>
+                <div>
+                  <button
+                    onClick={() => {
+                      setSelectedDomainId(null);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center space-x-2 text-[11px] font-bold text-slate-800 dark:text-slate-200 hover:text-brand-emerald dark:hover:text-brand-emerald-light hover:bg-slate-100 dark:hover:bg-slate-800 transition-all py-1.5 px-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm cursor-pointer active:scale-95"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+                    <span>Retourner aux domaines d'accompagnement</span>
+                  </button>
                 </div>
-                <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight text-white max-w-4xl">
-                  {selectedDomainObj.title}
-                </h1>
-              </div>
-            </div>
 
-            {/* Description & KPI Card */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-              <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-center">
-                <h3 className="text-[10px] uppercase font-extrabold tracking-widest text-black dark:text-brand-emerald-light mb-1">Présentation du pôle d'excellence</h3>
-                <p className="text-xs sm:text-[13px] text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
-                  {selectedDomainObj.description}
-                </p>
-              </div>
-
-              <div className="lg:col-span-4 bg-slate-900 text-white border border-slate-800 p-5 rounded-xl flex flex-col justify-center space-y-3 font-sans">
-                <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider">Indicateurs d'Impact</span>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="border-l-2 border-brand-emerald pl-3">
-                    <span className="block text-lg font-bold font-mono text-white">100%</span>
-                    <span className="block text-[8px] text-slate-400 uppercase">Pratique</span>
-                  </div>
-                  <div className="border-l-2 border-brand-blue pl-3">
-                    <span className="block text-lg font-bold font-mono text-white">Sur-mesure</span>
-                    <span className="block text-[8px] text-slate-400 uppercase">Approche</span>
+                {/* Beautiful Modern Domain Hero Header with top image banner */}
+                <div className="relative h-44 sm:h-52 rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-300">
+                  <img
+                    src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
+                    alt={selectedDomainObj.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 space-y-2">
+                    <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
+                      {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
+                      <span>Ingénierie CICEXF &bull; Accompagnement</span>
+                    </div>
+                    <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight text-white max-w-4xl">
+                      {selectedDomainObj.title}
+                    </h1>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
 
             {/* Sub-domains (axes) representation */}
             <div className="space-y-6">
-              <div className="space-y-1 text-center max-w-2xl mx-auto">
-                <h2 className="font-display text-lg sm:text-xl font-extrabold text-black dark:text-white tracking-tight">
-                  Axes d'Accompagnement Technique &amp; Composantes
-                </h2>
-                <p className="text-[9px] uppercase font-bold text-black dark:text-brand-emerald-light tracking-widest">
-                  {activeSubIdx === null 
-                    ? "Cliquez sur une spécialité pour afficher ses détails complets et le formulaire d'inscription :"
-                    : "Détails opérationnels et ingénierie de la spécialité sélectionnée :"}
-                </p>
-              </div>
 
               {activeSubIdx === null ? (
                 /* MINIATURES GRID - ALL SPECIALTIES WITH SHORT DESCRIPTION */
@@ -453,37 +423,21 @@ export default function Interventions({
               )}
             </div>
 
-            {/* Concrete examples of recent accompaniments */}
-            {selectedDomainObj.examples && selectedDomainObj.examples.length > 0 && (
-              <div className="bg-white dark:bg-slate-900 rounded-xl p-4 sm:p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-                <h3 className="text-xs sm:text-[13px] font-extrabold uppercase tracking-wider text-black dark:text-white flex items-center">
-                  <Briefcase className="w-4 h-4 mr-2 text-brand-emerald" />
-                  Exemples d'accompagnements récents réalisés
-                </h3>
-                <ul className="space-y-2 text-xs leading-relaxed">
-                  {selectedDomainObj.examples.map((ex, exIdx) => (
-                    <li key={exIdx} className="flex items-start text-black dark:text-white font-sans font-semibold">
-                      <CornerDownRight className="w-3.5 h-3.5 text-brand-emerald mr-2.5 shrink-0 mt-0.5" />
-                      <span>{ex}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* Main Action Call Grid block (Only on miniatures view) */}
+            {activeSubIdx === null && (
+              <div className="bg-gradient-to-r from-brand-blue to-brand-emerald rounded-2xl p-5 sm:p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4 shadow-md">
+                <div className="space-y-1">
+                  <h4 className="font-display font-bold text-sm sm:text-base text-white">Vous souhaitez faire auditer vos processus ou former vos équipes ?</h4>
+                  <p className="text-xs text-white/80 font-sans">Prenez contact pour obtenir une proposition technique et commerciale sur-mesure.</p>
+                </div>
+                <button
+                  onClick={() => handleRequestAssistance(selectedDomainObj.title)}
+                  className="px-4 py-2.5 bg-slate-950 hover:bg-slate-900 rounded-xl text-xs font-bold uppercase tracking-wider text-white shrink-0 transition-colors cursor-pointer"
+                >
+                  Demander un accompagnement
+                </button>
               </div>
             )}
-
-            {/* Main Action Call Grid block */}
-            <div className="bg-gradient-to-r from-brand-blue to-brand-emerald rounded-2xl p-5 sm:p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4 shadow-md">
-              <div className="space-y-1">
-                <h4 className="font-display font-bold text-sm sm:text-base text-white">Vous souhaitez faire auditer vos processus ou former vos équipes ?</h4>
-                <p className="text-xs text-white/80 font-sans">Prenez contact pour obtenir une proposition technique et commerciale sur-mesure.</p>
-              </div>
-              <button
-                onClick={() => handleRequestAssistance(selectedDomainObj.title)}
-                className="px-4 py-2.5 bg-slate-950 hover:bg-slate-900 rounded-xl text-xs font-bold uppercase tracking-wider text-white shrink-0 transition-colors cursor-pointer"
-              >
-                Demander un accompagnement
-              </button>
-            </div>
 
           </div>
         )}

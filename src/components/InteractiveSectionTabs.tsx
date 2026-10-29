@@ -67,35 +67,37 @@ export default function InteractiveSectionTabs({
         {/* LEFT COLUMN: ACTIVE SECTION DETAILS (Agrandis et adaptés à la taille de l'écran) */}
         <div className="flex-1 min-w-0 p-5 sm:p-7 lg:p-9 bg-white dark:bg-slate-900 flex flex-col justify-between">
           <div>
-            {/* Header of Active Section with color badge and title */}
-            <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center space-x-2.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#8A1A24]"></span>
-                <h3 className="font-display font-extrabold text-sm sm:text-base lg:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
-                  {activeSection.label}
-                </h3>
+            {/* Header of Active Section with color badge and title (Suppressed on S'INSCRIRE) */}
+            {activeSection.id !== 'sinscrire' && (
+              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center space-x-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#8A1A24]"></span>
+                  <h3 className="font-display font-extrabold text-sm sm:text-base lg:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
+                    {activeSection.label}
+                  </h3>
+                </div>
+                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest hidden sm:inline-block">
+                  Cabinet CICEXF &bull; Ingénierie
+                </span>
               </div>
-              <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest hidden sm:inline-block">
-                Cabinet CICEXF &bull; Ingénierie
-              </span>
-            </div>
+            )}
 
-            {/* DESCRIPTION: If on the description tab, show the presentation text prominently */}
+            {/* DESCRIPTION: If on the description tab, show the presentation text prominently on white background */}
             {activeSection.id === 'description' && description && (
-              <div className="mb-5 p-4 sm:p-6 bg-slate-50 dark:bg-slate-850/60 rounded-2xl border border-slate-200/70 dark:border-slate-800">
+              <div className="p-6 sm:p-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
                 {title && (
-                  <h4 className="font-display font-bold text-base sm:text-lg text-slate-900 dark:text-white mb-2">
+                  <h4 className="font-display font-extrabold text-base sm:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
                     {title}
                   </h4>
                 )}
-                <p className="text-[14px] sm:text-[15px] text-slate-800 dark:text-slate-200 font-sans font-normal leading-[1.7] text-justify">
+                <p className="text-[13.5px] sm:text-[14.5px] text-slate-850 dark:text-slate-100 font-sans font-normal leading-[1.7] text-justify break-words [overflow-wrap:anywhere]">
                   {description}
                 </p>
               </div>
             )}
 
-            {/* Section Introduction text */}
-            {activeSection.intro && (
+            {/* Section Introduction text (Suppressed on DESCRIPTION tab) */}
+            {activeSection.id !== 'description' && activeSection.intro && (
               <p className="text-[14px] sm:text-[15.5px] font-sans font-bold text-slate-900 dark:text-white mb-4 leading-relaxed">
                 {activeSection.intro}
               </p>
@@ -130,8 +132,8 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
-            {/* STANDARD ITEMS (for other tabs) with concentric orange circle */}
-            {(!activeSection.programModules || activeSection.programModules.length === 0) && activeSection.items && activeSection.items.length > 0 && (
+            {/* STANDARD ITEMS (for other tabs) with concentric orange circle (Suppressed on DESCRIPTION tab) */}
+            {activeSection.id !== 'description' && (!activeSection.programModules || activeSection.programModules.length === 0) && activeSection.items && activeSection.items.length > 0 && (
               <div className="space-y-3 font-sans">
                 {activeSection.items.map((item, idx) => (
                   <div key={idx} className="flex items-start text-slate-850 dark:text-slate-200 text-[13.5px] sm:text-[14px] leading-relaxed">
@@ -173,8 +175,8 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
-            {/* Extra Details key/values if present */}
-            {activeSection.extraDetails && activeSection.extraDetails.length > 0 && (
+            {/* Extra Details key/values if present (Suppressed on DESCRIPTION tab) */}
+            {activeSection.id !== 'description' && activeSection.extraDetails && activeSection.extraDetails.length > 0 && (
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 {activeSection.extraDetails.map((det, dIdx) => (
                   <div key={dIdx} className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800">
@@ -191,7 +193,10 @@ export default function InteractiveSectionTabs({
 
             {/* Custom Content slot (Grand Plan Registration Form when on S'INSCRIRE) */}
             {activeSection.content && (
-              <div id="interactive-tab-custom-content" className="mt-6 pt-5 border-t-2 border-slate-200 dark:border-slate-800">
+              <div
+                id="interactive-tab-custom-content"
+                className={activeSection.id === 'sinscrire' ? "mt-2 pt-1" : "mt-6 pt-5 border-t-2 border-slate-200 dark:border-slate-800"}
+              >
                 {activeSection.content}
               </div>
             )}

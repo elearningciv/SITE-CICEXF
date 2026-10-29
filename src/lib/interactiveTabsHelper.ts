@@ -35,7 +35,7 @@ export function buildFormationTabSections(
   registrationContent?: React.ReactNode
 ): TabSectionItem[] {
   // 1. Description text
-  const descText = formation.context || formation.shortDescription || "Formation certifiante d'excellence opérationnelle conçue et animée par les experts du Cabinet CICEXF.";
+  const descText = formation.shortDescription || formation.context || "Formation certifiante d'excellence opérationnelle conçue et animée par les experts du Cabinet CICEXF.";
 
   // 2. Objectives & Results
   const objectivesList = (formation.objectives && formation.objectives.length > 0)
@@ -448,16 +448,10 @@ export function buildAccompanimentTabSections(
     {
       id: 'sinscrire',
       label: "S'INSCRIRE",
-      intro: 'Modalités contractuelles, devis sur-mesure et convention d\'ingénierie :',
-      items: financeList,
       content: registrationContent || React.createElement(RegistrationGrandPlanForm, {
         targetTitle: `${domain.title} — ${sub.title}`,
         defaultType: 'Demande Entreprise'
-      }),
-      extraDetails: [
-        { label: 'Délai d\'offre', value: '48 heures ouvrées' },
-        { label: 'Modalité', value: 'Mission sur-mesure' }
-      ]
+      })
     }
   ];
 }

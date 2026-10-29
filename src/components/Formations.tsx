@@ -1624,59 +1624,67 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
               // 1.2 Detailed view for selected General Training Domain
               <div className="space-y-6 animate-in fade-in duration-300 font-sans">
                 
-                {/* Beautiful Modern Domain Hero Header with top image banner */}
-                <div className="relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800">
-                  <img
-                    src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
-                    alt={selectedDomainObj.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-6 sm:p-10 space-y-3">
-                    <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
-                      {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
-                      <span>Ingénierie CICEXF &bull; Pôle Académique</span>
-                    </div>
-                    <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white max-w-4xl">
-                      {selectedDomainObj.title}
-                    </h1>
-                  </div>
-                </div>
-
-                {/* Description & KPI Card */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                  <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/50 dark:border-slate-800 shadow-sm flex flex-col justify-center">
-                    <h3 className="text-xs uppercase font-extrabold tracking-widest text-brand-emerald mb-2">Présentation générale</h3>
-                    <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
-                      {selectedDomainObj.description}
-                    </p>
-                  </div>
-
-                  <div className="lg:col-span-4 bg-slate-900 text-white border border-slate-800 p-8 rounded-3xl flex flex-col justify-center space-y-4">
-                    <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Indicateurs de Performance</span>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="border-l-2 border-brand-emerald pl-3">
-                        <span className="block text-xl font-bold font-mono text-white">100%</span>
-                        <span className="block text-[9px] text-slate-400 uppercase">Pratique</span>
-                      </div>
-                      <div className="border-l-2 border-brand-blue pl-3">
-                        <span className="block text-xl font-bold font-mono text-white">4.8/5</span>
-                        <span className="block text-[9px] text-slate-400 uppercase">Avis Experts</span>
+                {/* Domain Hero Banner and Overview (Masked when specialty is selected) */}
+                {activeSubIdx === null && (
+                  <>
+                    {/* Beautiful Modern Domain Hero Header with top image banner */}
+                    <div className="relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800">
+                      <img
+                        src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
+                        alt={selectedDomainObj.title}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-6 sm:p-10 space-y-3">
+                        <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
+                          {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
+                          <span>Ingénierie CICEXF &bull; Pôle Académique</span>
+                        </div>
+                        <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white max-w-4xl">
+                          {selectedDomainObj.title}
+                        </h1>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* SUB-ELEMENTS GRID (The 4 specialized trainings) */}
-                <div id="domain-specialties-header" className="space-y-8 scroll-mt-20">
-                  <div className="text-center max-w-xl mx-auto space-y-2">
-                    <h2 className="font-display text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                      Axes d'intervention &amp; Livrables clés
-                    </h2>
-                    <p className="text-[10px] uppercase font-bold text-brand-emerald tracking-widest">
-                      Structure d'enseignement certifiante &amp; d'expertise
-                    </p>
-                  </div>
+                    {/* Description & KPI Card */}
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                      <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/50 dark:border-slate-800 shadow-sm flex flex-col justify-center">
+                        <h3 className="text-xs uppercase font-extrabold tracking-widest text-brand-emerald mb-2">Présentation générale</h3>
+                        <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
+                          {selectedDomainObj.description}
+                        </p>
+                      </div>
+
+                      <div className="lg:col-span-4 bg-slate-900 text-white border border-slate-800 p-8 rounded-3xl flex flex-col justify-center space-y-4">
+                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Indicateurs de Performance</span>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="border-l-2 border-brand-emerald pl-3">
+                            <span className="block text-xl font-bold font-mono text-white">100%</span>
+                            <span className="block text-[9px] text-slate-400 uppercase">Pratique</span>
+                          </div>
+                          <div className="border-l-2 border-brand-blue pl-3">
+                            <span className="block text-xl font-bold font-mono text-white">4.8/5</span>
+                            <span className="block text-[9px] text-slate-400 uppercase">Avis Experts</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* SUB-ELEMENTS GRID HEADER */}
+                    <div id="domain-specialties-header" className="space-y-8 scroll-mt-20">
+                      <div className="text-center max-w-xl mx-auto space-y-2">
+                        <h2 className="font-display text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                          Axes d'intervention &amp; Livrables clés
+                        </h2>
+                        <p className="text-[10px] uppercase font-bold text-brand-emerald tracking-widest">
+                          Structure d'enseignement certifiante &amp; d'expertise
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                <div className="space-y-8">
 
                   {activeSubIdx === null ? (
                     /* Initial Grid of Specialties (Miniatures avec images et courtes descriptions) */
@@ -2107,19 +2115,16 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   <div className="absolute inset-0 grid-pattern opacity-10"></div>
                   <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-emerald/10 rounded-full blur-3xl"></div>
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 p-6 sm:p-8 items-center">
-                    <div className="lg:col-span-7 space-y-5">
-                      <span className="bg-brand-emerald text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                  <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-6 sm:p-8 items-start lg:items-center relative z-10">
+                    <div className="w-full lg:w-7/12 min-w-0 flex-1 space-y-4">
+                      <span className="inline-block bg-brand-emerald text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
                         Certifications d'Excellence CICEXF
                       </span>
-                      <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white">
+                      <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white break-words">
                         {selectedFormation.title}
                       </h1>
-                      <p className="text-xs text-slate-300 font-sans font-light leading-relaxed">
-                        {selectedFormation.shortDescription}
-                      </p>
                       
-                      <div className="flex flex-wrap items-center gap-3 text-xs pt-1">
+                      <div className="flex flex-wrap items-center gap-2.5 text-xs pt-1">
                         <span className="flex items-center text-slate-300 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10">
                           <Clock className="w-4 h-4 text-brand-emerald mr-1.5 shrink-0" />
                           {selectedFormation.duration}
@@ -2132,7 +2137,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                           <MapPin className="w-4 h-4 text-brand-emerald mr-1.5 shrink-0" />
                           Mode {selectedFormation.modality}
                         </span>
-                        <span className="flex items-center font-mono font-bold text-white bg-[#8A1A24]/70 px-3 py-1.5 rounded-lg border border-[#8A1A24]">
+                        <span className="flex items-center font-mono font-bold text-white bg-[#8A1A24]/80 px-3 py-1.5 rounded-lg border border-[#8A1A24]">
                           {selectedFormation.price || "450 000 FCFA"}
                         </span>
                       </div>
@@ -2159,7 +2164,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                       </div>
                     </div>
 
-                    <div className="lg:col-span-5 aspect-[4/3] rounded-2xl overflow-hidden shadow-md">
+                    <div className="w-full lg:w-5/12 min-w-0 shrink-0 aspect-[4/3] rounded-2xl overflow-hidden shadow-xl border border-white/10 bg-slate-950">
                       <img
                         src={selectedFormation.featuredImage}
                         alt={selectedFormation.title}
@@ -2174,330 +2179,8 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 <div className="w-full space-y-6">
                   <InteractiveSectionTabs
                     title={selectedFormation.title}
-                    description={selectedFormation.context || selectedFormation.shortDescription}
-                    sections={buildFormationTabSections(
-                      selectedFormation,
-                      undefined,
-                      (() => {
-                        const selectedCountryObj = COUNTRIES_LIST.find(c => c.code === formCountry) || COUNTRIES_LIST[0];
-                        return (
-                          <div id="registration-form-card" className="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-2xl border-2 border-[#8A1A24]/30 dark:border-[#8A1A24]/50 shadow-xl space-y-6">
-                            
-                            {/* Header of Grand Plan Form */}
-                            <div className="border-b border-slate-200 dark:border-slate-800 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                              <div className="space-y-1">
-                                <span className="inline-flex items-center space-x-1.5 text-[11px] font-extrabold uppercase tracking-widest text-[#8A1A24] dark:text-red-400">
-                                  <UserCheck className="w-4 h-4" />
-                                  <span>Dossier d'Admission &amp; Inscription Directe</span>
-                                </span>
-                                <h3 className="text-base sm:text-lg font-display font-extrabold text-slate-900 dark:text-white">
-                                  Formulaire Officiel de Candidature — {selectedFormation.title}
-                                </h3>
-                              </div>
-                              <div className="text-right shrink-0">
-                                <span className="font-mono text-sm sm:text-base font-extrabold text-[#8A1A24] dark:text-red-400 block">
-                                  {selectedFormation.price || "450 000 FCFA"}
-                                </span>
-                                <span className="text-[10.5px] text-slate-400 block">Éligible conventions FDFP</span>
-                              </div>
-                            </div>
-
-                            {submitSuccess ? (
-                              <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-700 p-6 rounded-2xl space-y-3 text-emerald-900 dark:text-emerald-100 animate-in fade-in">
-                                <div className="flex items-center space-x-3">
-                                  <CheckCircle className="w-7 h-7 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                                  <div>
-                                    <h4 className="font-extrabold text-base sm:text-lg">Candidature Enregistrée avec Succès !</h4>
-                                    <p className="text-xs text-emerald-700 dark:text-emerald-300">Votre numéro de dossier a été généré et transmis à nos directeurs pédagogiques.</p>
-                                  </div>
-                                </div>
-                                <p className="font-sans leading-relaxed text-xs sm:text-sm text-slate-700 dark:text-slate-300 pl-10">
-                                  Un accusé de réception a été envoyé à <strong>{formEmail}</strong>. Un conseiller d'admission vous contactera très rapidement sur votre numéro WhatsApp pour valider vos prérequis et finaliser votre convention.
-                                </p>
-                                <div className="pl-10 pt-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => setSubmitSuccess(false)}
-                                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-all shadow-sm"
-                                  >
-                                    ← Soumettre une autre inscription
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <form onSubmit={handleRegisterSubmit} className="space-y-6 font-sans">
-                                
-                                {/* 1. ACCOUNT TYPE SELECTION (Individuel vs Entreprise) */}
-                                <div className="space-y-2">
-                                  <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                    Type d'inscription * :
-                                  </label>
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                    <button
-                                      type="button"
-                                      onClick={() => setFormAccountType('individuel')}
-                                      className={`p-3.5 sm:p-4 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center space-x-3.5 ${
-                                        formAccountType === 'individuel'
-                                          ? 'border-[#8A1A24] bg-[#8A1A24]/5 dark:bg-[#8A1A24]/15 shadow-sm'
-                                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300'
-                                      }`}
-                                    >
-                                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                                        formAccountType === 'individuel' ? 'bg-[#8A1A24] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                                      }`}>
-                                        <Users className="w-5 h-5" />
-                                      </div>
-                                      <div>
-                                        <span className={`block font-extrabold text-xs sm:text-sm ${
-                                          formAccountType === 'individuel' ? 'text-[#8A1A24] dark:text-red-400' : 'text-slate-900 dark:text-white'
-                                        }`}>
-                                          Compte Individuel
-                                        </span>
-                                        <span className="block text-[11px] text-slate-500 dark:text-slate-400">
-                                          Candidature personnelle / Financement propre
-                                        </span>
-                                      </div>
-                                    </button>
-
-                                    <button
-                                      type="button"
-                                      onClick={() => setFormAccountType('entreprise')}
-                                      className={`p-3.5 sm:p-4 rounded-xl border-2 text-left transition-all cursor-pointer flex items-center space-x-3.5 ${
-                                        formAccountType === 'entreprise'
-                                          ? 'border-[#8A1A24] bg-[#8A1A24]/5 dark:bg-[#8A1A24]/15 shadow-sm'
-                                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 hover:border-slate-300'
-                                      }`}
-                                    >
-                                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                                        formAccountType === 'entreprise' ? 'bg-[#8A1A24] text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
-                                      }`}>
-                                        <Building2 className="w-5 h-5" />
-                                      </div>
-                                      <div>
-                                        <span className={`block font-extrabold text-xs sm:text-sm ${
-                                          formAccountType === 'entreprise' ? 'text-[#8A1A24] dark:text-red-400' : 'text-slate-900 dark:text-white'
-                                        }`}>
-                                          Compte Entreprise
-                                        </span>
-                                        <span className="block text-[11px] text-slate-500 dark:text-slate-400">
-                                          Prise en charge entreprise, FDFP ou bon de commande
-                                        </span>
-                                      </div>
-                                    </button>
-                                  </div>
-                                </div>
-
-                                {/* Conditional Enterprise Fields */}
-                                {formAccountType === 'entreprise' && (
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 animate-in fade-in duration-200">
-                                    <div className="space-y-1.5">
-                                      <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                        Nom de l'Entreprise / Organisation * :
-                                      </label>
-                                      <input
-                                        type="text"
-                                        placeholder="Ex: Orange, Ministère, Sodeci, Cabinet..."
-                                        value={formCompany}
-                                        onChange={(e) => setFormCompany(e.target.value)}
-                                        className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all ${
-                                          errors.company ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
-                                        }`}
-                                      />
-                                      {errors.company && <span className="text-xs text-red-500 font-semibold block">{errors.company}</span>}
-                                    </div>
-
-                                    <div className="space-y-1.5">
-                                      <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                        Fonction / Poste au sein de l'entreprise :
-                                      </label>
-                                      <input
-                                        type="text"
-                                        placeholder="Ex: Responsable RH, DAF, Chef de Projet..."
-                                        value={formRole}
-                                        onChange={(e) => setFormRole(e.target.value)}
-                                        className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20"
-                                      />
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* 2. PERSONAL DETAILS (Nom & Email) */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Nom Complet * :
-                                    </label>
-                                    <input
-                                      type="text"
-                                      placeholder="Ex: KOUASSI Jean-Philippe"
-                                      value={formName}
-                                      onChange={(e) => setFormName(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm ${
-                                        errors.name ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
-                                      }`}
-                                    />
-                                    {errors.name && <span className="text-xs text-red-500 font-semibold block">{errors.name}</span>}
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Adresse Email * :
-                                    </label>
-                                    <input
-                                      type="email"
-                                      placeholder="votre.email@domaine.com"
-                                      value={formEmail}
-                                      onChange={(e) => setFormEmail(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm ${
-                                        errors.email ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
-                                      }`}
-                                    />
-                                    {errors.email && <span className="text-xs text-red-500 font-semibold block">{errors.email}</span>}
-                                  </div>
-                                </div>
-
-                                {/* 3. COUNTRY SELECTOR & AUTO DIAL CODE PHONE */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  {/* Country Dropdown */}
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Pays de Résidence * :
-                                    </label>
-                                    <select
-                                      value={formCountry}
-                                      onChange={(e) => setFormCountry(e.target.value)}
-                                      className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20 font-medium shadow-sm cursor-pointer"
-                                    >
-                                      {COUNTRIES_LIST.map((c) => (
-                                        <option key={c.code} value={c.code}>
-                                          {c.flag} {c.name} ({c.dial})
-                                        </option>
-                                      ))}
-                                    </select>
-                                    <span className="text-[11px] text-slate-500 dark:text-slate-400 block">
-                                      L'indicatif international s'ajuste automatiquement ci-contre.
-                                    </span>
-                                  </div>
-
-                                  {/* WhatsApp / Phone with auto dial badge */}
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Numéro WhatsApp * :
-                                    </label>
-                                    <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] focus-within:ring-2 focus-within:ring-[#8A1A24]/20 shadow-sm transition-all">
-                                      <div className="px-3.5 py-3 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-xs sm:text-sm flex items-center space-x-1.5 shrink-0 select-none">
-                                        <span>{selectedCountryObj.flag}</span>
-                                        <span>{selectedCountryObj.dial}</span>
-                                      </div>
-                                      <input
-                                        type="tel"
-                                        placeholder="Ex: 07 01 02 03 04"
-                                        value={formPhone}
-                                        onChange={(e) => setFormPhone(e.target.value)}
-                                        className="w-full px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
-                                      />
-                                    </div>
-                                    {errors.phone ? (
-                                      <span className="text-xs text-red-500 font-semibold block">{errors.phone}</span>
-                                    ) : (
-                                      <span className="text-[11px] text-slate-500 dark:text-slate-400 block">
-                                        Indiquez votre numéro sans répéter l'indicatif.
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-
-                                {/* 4. SESSION SOUHAITÉE & MODALITÉ */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Session Souhaitée * :
-                                    </label>
-                                    <select
-                                      value={formSession}
-                                      onChange={(e) => setFormSession(e.target.value)}
-                                      className={`w-full bg-white dark:bg-slate-900 border rounded-xl px-4 py-3 text-xs sm:text-sm text-slate-900 dark:text-white outline-none transition-all shadow-sm cursor-pointer ${
-                                        errors.session ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24] focus:ring-2 focus:ring-[#8A1A24]/20'
-                                      }`}
-                                    >
-                                      <option value="">-- Choisir une date de session --</option>
-                                      {(selectedFormation.sessions && selectedFormation.sessions.length > 0) ? (
-                                        selectedFormation.sessions.map((s, idx) => (
-                                          <option key={idx} value={s.date}>{s.date} ({s.location})</option>
-                                        ))
-                                      ) : (
-                                        <>
-                                          <option value="Session en cours - Inscriptions ouvertes">Session en cours (Inscriptions ouvertes - Abidjan &amp; En ligne)</option>
-                                          <option value="Prochaine cohorte certifiante">Prochaine cohorte certifiante (Mois prochain)</option>
-                                          <option value="Session sur-mesure / Intra-entreprise">Session sur-mesure / Intra-entreprise (Sur site ou Hybride)</option>
-                                        </>
-                                      )}
-                                    </select>
-                                    {errors.session && <span className="text-xs text-red-500 font-semibold block">{errors.session}</span>}
-                                  </div>
-
-                                  <div className="space-y-1.5">
-                                    <label className="block font-bold text-slate-900 dark:text-white text-xs sm:text-sm">
-                                      Modalité Préférée :
-                                    </label>
-                                    <div className="grid grid-cols-3 gap-2 pt-1">
-                                      {(['Présentiel', 'En ligne', 'Hybride'] as const).map((m) => (
-                                        <button
-                                          key={m}
-                                          type="button"
-                                          onClick={() => setFormModality(m)}
-                                          className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition-all cursor-pointer text-center ${
-                                            formModality === m
-                                              ? 'border-[#8A1A24] bg-[#8A1A24] text-white shadow-sm'
-                                              : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                                          }`}
-                                        >
-                                          {m}
-                                        </button>
-                                      ))}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* 5. TERMS / CONSENT */}
-                                <div className="space-y-1 pt-2">
-                                  <label className="flex items-start space-x-3 cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      checked={formTerms}
-                                      onChange={(e) => setFormTerms(e.target.checked)}
-                                      className="mt-1 shrink-0 accent-[#8A1A24] w-4 h-4 cursor-pointer"
-                                    />
-                                    <span className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-normal">
-                                      J'autorise le Cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier de candidature et l'établissement des conventions de formation.
-                                    </span>
-                                  </label>
-                                  {errors.terms && <span className="text-xs text-red-500 font-semibold block">{errors.terms}</span>}
-                                </div>
-
-                                {/* 6. SUBMIT BUTTON */}
-                                <button
-                                  type="submit"
-                                  className="w-full py-4 bg-[#8A1A24] hover:bg-[#6D141C] text-white rounded-xl font-extrabold uppercase tracking-wider text-xs sm:text-sm transition-all flex items-center justify-center space-x-2.5 shadow-lg hover:shadow-xl cursor-pointer active:scale-98"
-                                >
-                                  <Send className="w-4 h-4" />
-                                  <span>VALIDER MON INSCRIPTION</span>
-                                </button>
-
-                                <div className="pt-2 text-center">
-                                  <span className="text-[11px] text-slate-400 inline-flex items-center space-x-1.5">
-                                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                                    <span>Traitement garanti sous 24h ouvrées &bull; Agrément officiel N°25343/GTCA/RC/2025</span>
-                                  </span>
-                                </div>
-
-                              </form>
-                            )}
-
-                          </div>
-                        );
-                      })()
-                    )}
+                    description={selectedFormation.shortDescription || selectedFormation.context}
+                    sections={buildFormationTabSections(selectedFormation)}
                     defaultTabId="description"
                     activeTabId={formationActiveTab}
                     onTabChange={setFormationActiveTab}
