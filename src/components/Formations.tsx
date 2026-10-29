@@ -1372,7 +1372,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
   return (
     <div id="formations-view" className="pt-4 pb-8 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`${selectedFormation ? 'w-full max-w-[1850px] px-3 sm:px-6 lg:px-10' : 'max-w-7xl px-4 sm:px-6 lg:px-8'} mx-auto`}>
         
         {/* -------------------- UNIFIED TOP TOOLBAR: DROPDOWN FILTER + SEARCH + FORMATIONS COUNT -------------------- */}
         {!selectedFormation && !selectedDomainObj && (

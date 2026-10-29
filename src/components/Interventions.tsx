@@ -146,7 +146,7 @@ export default function Interventions({
 
   return (
     <div id="accompagnements-view" className="pt-4 pb-8 bg-white dark:bg-slate-950 font-sans min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`${activeSubIdx !== null ? 'w-full max-w-[1850px] px-3 sm:px-6 lg:px-10' : 'max-w-7xl px-4 sm:px-6 lg:px-8'} mx-auto`}>
         
         {/* 1. List of Accompanying Domains (If none selected) */}
         {!selectedDomainObj ? (
@@ -356,7 +356,7 @@ export default function Interventions({
                   const sections = buildAccompanimentTabSections(sub, selectedDomainObj);
 
                   return (
-                    <div className="w-full max-w-7xl mx-auto space-y-4 px-2 sm:px-4 lg:px-6 animate-in fade-in duration-300">
+                    <div className="w-full space-y-4 animate-in fade-in duration-300">
                       {/* Back button to return to all miniatures */}
                       <div className="flex items-center justify-between pb-1">
                         <button
@@ -414,6 +414,7 @@ export default function Interventions({
                               setSubTabMap(prev => ({ ...prev, [sIdx]: 'sinscrire' }));
                             }}
                             actionLabel="S'inscrire / Demander un devis"
+                            borderless={true}
                           />
                         </div>
                       </div>

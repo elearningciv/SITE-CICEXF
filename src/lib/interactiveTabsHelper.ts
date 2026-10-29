@@ -226,18 +226,12 @@ export function buildFormationTabSections(
     {
       id: 'sinscrire',
       label: "S'INSCRIRE",
-      intro: 'Rejoignez la prochaine cohorte certifiante du Cabinet CICEXF :',
       content: registrationContent || React.createElement(RegistrationGrandPlanForm, {
         targetTitle: formation.title,
         price: formation.price,
         sessions: formation.sessions,
         defaultType: 'Candidature Formation'
-      }),
-      items: inscriptionList,
-      extraDetails: [
-        { label: 'Délai de traitement', value: '24 heures ouvrées' },
-        { label: 'Validation', value: 'Dossier & Entretien' }
-      ]
+      })
     }
   ];
 }

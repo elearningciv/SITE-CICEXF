@@ -55,6 +55,7 @@ export default function RegistrationGrandPlanForm({
   const [formCountry, setFormCountry] = useState('CI');
   const [formPhone, setFormPhone] = useState('');
   const [formAltPhone, setFormAltPhone] = useState('');
+  const [formSecondAltPhone, setFormSecondAltPhone] = useState('');
   const [formCompany, setFormCompany] = useState('');
   const [formRole, setFormRole] = useState('');
   const [formSession, setFormSession] = useState('');
@@ -109,6 +110,8 @@ export default function RegistrationGrandPlanForm({
       const formattedPhone = cleanPhone.startsWith('+') ? cleanPhone : `${selectedCountryObj.dial} ${cleanPhone}`;
       const cleanAltPhone = formAltPhone.trim();
       const formattedAltPhone = cleanAltPhone ? (cleanAltPhone.startsWith('+') ? cleanAltPhone : `${selectedCountryObj.dial} ${cleanAltPhone}`) : '';
+      const cleanSecondAltPhone = formSecondAltPhone.trim();
+      const formattedSecondAltPhone = cleanSecondAltPhone ? (cleanSecondAltPhone.startsWith('+') ? cleanSecondAltPhone : `${selectedCountryObj.dial} ${cleanSecondAltPhone}`) : '';
 
       await saveProspect({
         name: formName.trim(),
@@ -119,7 +122,7 @@ export default function RegistrationGrandPlanForm({
         session: formSession,
         modality: formModality,
         company: formAccountType === 'entreprise' ? (formCompany.trim() || 'Entreprise') : '',
-        notes: `Pays: ${selectedCountryObj.name} (${selectedCountryObj.dial})${formattedAltPhone ? ` | Autre Numéro: ${formattedAltPhone}` : ''} | Type: ${formAccountType === 'entreprise' ? 'Compte Entreprise' : 'Compte Individuel'}${formRole.trim() ? ` | Poste: ${formRole.trim()}` : ''}`,
+        notes: `Pays: ${selectedCountryObj.name} (${selectedCountryObj.dial})${formattedAltPhone ? ` | Autre Numéro: ${formattedAltPhone}` : ''}${formattedSecondAltPhone ? ` | Autre Numéro 2: ${formattedSecondAltPhone}` : ''} | Type: ${formAccountType === 'entreprise' ? 'Compte Entreprise' : 'Compte Individuel'}${formRole.trim() ? ` | Poste: ${formRole.trim()}` : ''}`,
         channel: 'En ligne'
       });
 
@@ -131,6 +134,7 @@ export default function RegistrationGrandPlanForm({
         setFormEmail('');
         setFormPhone('');
         setFormAltPhone('');
+        setFormSecondAltPhone('');
         setFormCompany('');
         setFormRole('');
         setFormSession('');
@@ -144,7 +148,7 @@ export default function RegistrationGrandPlanForm({
   };
 
   return (
-    <div id="registration-form-card" className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md space-y-3.5">
+    <div id="registration-form-card" className="bg-transparent p-0 space-y-3.5">
       {submitSuccess ? (
         <div id="registration-success-banner" className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-400 dark:border-emerald-700 p-5 rounded-xl space-y-2.5 text-emerald-900 dark:text-emerald-100 animate-in fade-in">
           <div className="flex items-center space-x-3">
@@ -294,16 +298,38 @@ export default function RegistrationGrandPlanForm({
             </div>
           </div>
 
-          {/* 3. COUNTRY SELECTOR (WITH EXPLICIT VISIBLE FLAG) & PRIMARY WHATSAPP */}
+          {/* 3. PAYS DE RÉSIDENCE (AVEC DRAPEAU RÉEL VISIBLE) & TÉLÉPHONE WHATSAPP */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {/* Country Dropdown WITH VISIBLE FLAG BADGE */}
+            {/* Country Dropdown WITH VISIBLE REAL FLAG */}
             <div className="space-y-1">
-              <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Pays de Résidence * :
+              <label className="flex items-center space-x-2 font-bold text-slate-900 dark:text-white text-[11.5px]">
+                <span>Pays de Résidence * :</span>
+                {selectedCountryObj.code !== 'AUTRE' ? (
+                  <span className="inline-flex items-center space-x-1.5 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md border border-slate-200 dark:border-slate-700">
+                    <img
+                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
+                      alt={selectedCountryObj.name}
+                      className="w-4 h-3 object-cover rounded-xs shadow-2xs"
+                    />
+                    <span className="text-[10.5px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                      {selectedCountryObj.name}
+                    </span>
+                  </span>
+                ) : (
+                  <span className="text-xs">🌐 International</span>
+                )}
               </label>
               <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
-                <div className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-lg flex items-center justify-center shrink-0 select-none">
-                  <span>{selectedCountryObj.flag}</span>
+                <div className="px-2.5 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex items-center justify-center shrink-0 select-none">
+                  {selectedCountryObj.code !== 'AUTRE' ? (
+                    <img
+                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
+                      alt={selectedCountryObj.name}
+                      className="w-5 h-3.5 object-cover rounded-xs shadow-2xs"
+                    />
+                  ) : (
+                    <span className="text-base leading-none">🌐</span>
+                  )}
                 </div>
                 <select
                   value={formCountry}
@@ -322,11 +348,19 @@ export default function RegistrationGrandPlanForm({
             {/* Primary Phone / WhatsApp */}
             <div className="space-y-1">
               <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Numéro WhatsApp * :
+                Numéro WhatsApp Principal * :
               </label>
               <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
-                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1 shrink-0 select-none">
-                  <span>{selectedCountryObj.flag}</span>
+                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
+                  {selectedCountryObj.code !== 'AUTRE' ? (
+                    <img
+                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
+                      alt=""
+                      className="w-4 h-3 object-cover rounded-xs"
+                    />
+                  ) : (
+                    <span>🌐</span>
+                  )}
                   <span>{selectedCountryObj.dial}</span>
                 </div>
                 <input
@@ -341,21 +375,29 @@ export default function RegistrationGrandPlanForm({
             </div>
           </div>
 
-          {/* 4. AUTRE NUMÉRO (demande autre numero) & SESSION SOUHAITÉE */}
+          {/* 4. AUTRE NUMÉRO (demande autre numero) & AUTRE NUMÉRO SUPPLÉMENTAIRE */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-            {/* Second / Alternative Phone Number */}
+            {/* Premier Autre Numéro (Secondaire / Appels) */}
             <div className="space-y-1">
               <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Autre numéro de contact :
+                Autre numéro de téléphone (Appels / Secondaire) :
               </label>
               <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
-                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1 shrink-0 select-none">
-                  <span>{selectedCountryObj.flag}</span>
+                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
+                  {selectedCountryObj.code !== 'AUTRE' ? (
+                    <img
+                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
+                      alt=""
+                      className="w-4 h-3 object-cover rounded-xs"
+                    />
+                  ) : (
+                    <span>🌐</span>
+                  )}
                   <span>{selectedCountryObj.dial}</span>
                 </div>
                 <input
                   type="tel"
-                  placeholder="Ex: 05 06 07 08 09 (Appels / Secondaire)"
+                  placeholder="Ex: 05 06 07 08 09"
                   value={formAltPhone}
                   onChange={(e) => setFormAltPhone(e.target.value)}
                   className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
@@ -363,6 +405,37 @@ export default function RegistrationGrandPlanForm({
               </div>
             </div>
 
+            {/* Deuxième Autre Numéro (Contact supplémentaire / Urgence) */}
+            <div className="space-y-1">
+              <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
+                Autre numéro supplémentaire (Secours / Urgence) :
+              </label>
+              <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
+                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
+                  {selectedCountryObj.code !== 'AUTRE' ? (
+                    <img
+                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
+                      alt=""
+                      className="w-4 h-3 object-cover rounded-xs"
+                    />
+                  ) : (
+                    <span>🌐</span>
+                  )}
+                  <span>{selectedCountryObj.dial}</span>
+                </div>
+                <input
+                  type="tel"
+                  placeholder="Ex: 01 02 03 04 05"
+                  value={formSecondAltPhone}
+                  onChange={(e) => setFormSecondAltPhone(e.target.value)}
+                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 5. SESSION SOUHAITÉE & MODALITÉ */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             {/* Session souhaitée */}
             <div className="space-y-1">
               <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
@@ -393,28 +466,28 @@ export default function RegistrationGrandPlanForm({
               </select>
               {errors.session && <span className="text-[10.5px] text-red-500 font-semibold block">{errors.session}</span>}
             </div>
-          </div>
 
-          {/* 5. MODALITÉ PRÉFÉRÉE */}
-          <div className="space-y-1">
-            <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-              Modalité Préférée :
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              {(['Présentiel', 'En ligne', 'Hybride'] as const).map((m) => (
-                <button
-                  key={m}
-                  type="button"
-                  onClick={() => setFormModality(m)}
-                  className={`py-1.5 px-2 rounded-lg border text-xs font-bold transition-all cursor-pointer text-center ${
-                    formModality === m
-                      ? 'border-[#8A1A24] bg-[#8A1A24] text-white shadow-2xs'
-                      : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
-                  }`}
-                >
-                  {m}
-                </button>
-              ))}
+            {/* Modalité préférée */}
+            <div className="space-y-1">
+              <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
+                Modalité Préférée :
+              </label>
+              <div className="grid grid-cols-3 gap-1.5">
+                {(['Présentiel', 'En ligne', 'Hybride'] as const).map((m) => (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setFormModality(m)}
+                    className={`py-1.5 px-2 rounded-lg border text-xs font-bold transition-all cursor-pointer text-center ${
+                      formModality === m
+                        ? 'border-[#8A1A24] bg-[#8A1A24] text-white shadow-2xs'
+                        : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:border-slate-300'
+                    }`}
+                  >
+                    {m}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

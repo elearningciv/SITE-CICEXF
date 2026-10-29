@@ -27,6 +27,7 @@ interface InteractiveSectionTabsProps {
   title?: string;
   onActionClick?: () => void;
   actionLabel?: string;
+  borderless?: boolean;
 }
 
 export default function InteractiveSectionTabs({
@@ -37,7 +38,8 @@ export default function InteractiveSectionTabs({
   onTabChange,
   title,
   onActionClick,
-  actionLabel = "S'inscrire / Demander un devis"
+  actionLabel = "S'inscrire / Demander un devis",
+  borderless = false,
 }: InteractiveSectionTabsProps) {
   const initialTab = externalActiveTabId || defaultTabId || (sections[0]?.id || 'description');
   const [internalTabId, setInternalTabId] = useState<string>(initialTab);
@@ -59,17 +61,21 @@ export default function InteractiveSectionTabs({
   };
 
   return (
-    <div className="w-full bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-xl font-sans">
+    <div className={`w-full bg-white dark:bg-slate-900 font-sans ${
+      borderless
+        ? 'overflow-hidden'
+        : 'rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/70 dark:border-slate-800 shadow-md'
+    }`}>
       
       {/* Side-by-side Layout: Details on LEFT (wide and screen-adapted), Burgundy Menu on RIGHT (narrow) */}
       <div className="flex flex-col-reverse md:flex-row items-stretch">
         
         {/* LEFT COLUMN: ACTIVE SECTION DETAILS (Agrandis et adaptés à la taille de l'écran) */}
-        <div className="flex-1 min-w-0 p-5 sm:p-7 lg:p-9 bg-white dark:bg-slate-900 flex flex-col justify-between">
+        <div className="flex-1 min-w-0 p-6 sm:p-8 lg:p-10 bg-white dark:bg-slate-900 flex flex-col justify-between">
           <div>
             {/* Header of Active Section with color badge and title (Suppressed on S'INSCRIRE) */}
             {activeSection.id !== 'sinscrire' && (
-              <div className="flex items-center justify-between pb-3.5 mb-5 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center justify-between pb-3 mb-6 border-b border-slate-100 dark:border-slate-800">
                 <div className="flex items-center space-x-2.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#8A1A24]"></span>
                   <h3 className="font-display font-extrabold text-sm sm:text-base lg:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
@@ -82,22 +88,25 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
-            {/* DESCRIPTION: If on the description tab, show the presentation text prominently on white background */}
+            {/* DESCRIPTION: Rendered directly on the page without redundant nested box borders */}
             {activeSection.id === 'description' && description && (
-              <div className="p-6 sm:p-7 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+              <div className="space-y-4">
                 {title && (
-                  <h4 className="font-display font-extrabold text-base sm:text-lg text-slate-900 dark:text-white uppercase tracking-wider">
+                  <h4
+                    className="font-display font-extrabold text-base sm:text-lg lg:text-xl text-black uppercase tracking-wider"
+                    style={{ color: '#000000' }}
+                  >
                     {title}
                   </h4>
                 )}
-                <p className="text-[13.5px] sm:text-[14.5px] text-slate-850 dark:text-slate-100 font-sans font-normal leading-[1.7] text-justify break-words [overflow-wrap:anywhere]">
+                <div className="text-slate-850 dark:text-slate-850 text-[14px] sm:text-[14.5px] font-sans font-normal leading-relaxed text-justify break-words [overflow-wrap:anywhere]">
                   {description}
-                </p>
+                </div>
               </div>
             )}
 
-            {/* Section Introduction text (Suppressed on DESCRIPTION tab) */}
-            {activeSection.id !== 'description' && activeSection.intro && (
+            {/* Section Introduction text (Suppressed on DESCRIPTION & S'INSCRIRE tabs) */}
+            {activeSection.id !== 'description' && activeSection.id !== 'sinscrire' && activeSection.intro && (
               <p className="text-[14px] sm:text-[15.5px] font-sans font-bold text-slate-900 dark:text-white mb-4 leading-relaxed">
                 {activeSection.intro}
               </p>
@@ -132,8 +141,8 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
-            {/* STANDARD ITEMS (for other tabs) with concentric orange circle (Suppressed on DESCRIPTION tab) */}
-            {activeSection.id !== 'description' && (!activeSection.programModules || activeSection.programModules.length === 0) && activeSection.items && activeSection.items.length > 0 && (
+            {/* STANDARD ITEMS (for other tabs) with concentric orange circle (Suppressed on DESCRIPTION & S'INSCRIRE tabs) */}
+            {activeSection.id !== 'description' && activeSection.id !== 'sinscrire' && (!activeSection.programModules || activeSection.programModules.length === 0) && activeSection.items && activeSection.items.length > 0 && (
               <div className="space-y-3 font-sans">
                 {activeSection.items.map((item, idx) => (
                   <div key={idx} className="flex items-start text-slate-850 dark:text-slate-200 text-[13.5px] sm:text-[14px] leading-relaxed">
@@ -175,8 +184,8 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
-            {/* Extra Details key/values if present (Suppressed on DESCRIPTION tab) */}
-            {activeSection.id !== 'description' && activeSection.extraDetails && activeSection.extraDetails.length > 0 && (
+            {/* Extra Details key/values if present (Suppressed on DESCRIPTION & S'INSCRIRE tabs) */}
+            {activeSection.id !== 'description' && activeSection.id !== 'sinscrire' && activeSection.extraDetails && activeSection.extraDetails.length > 0 && (
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 {activeSection.extraDetails.map((det, dIdx) => (
                   <div key={dIdx} className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800">
