@@ -212,3 +212,101 @@
 .text-white-force {
   color: #ffffff;
 }
+
+/* Phones: 16px fields stop iOS from zooming in on focus (which made the chat pan sideways) */
+@media (max-width: 640px) {
+  #adiline-chat-modal input,
+  #adiline-chat-modal textarea,
+  #adiline-chat-modal select {
+    font-size: 16px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Visitor forms (registration, accompaniment request, contact, leads)
+   One consistent, professional look. Kept outside Tailwind layers so it
+   wins over the per-field utility classes.
+   ------------------------------------------------------------------ */
+.pro-form label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  letter-spacing: 0;
+}
+.pro-form input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.pro-form select,
+.pro-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+.pro-form textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+.pro-form input::placeholder,
+.pro-form textarea::placeholder {
+  color: #64748b;
+}
+.pro-form input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+.pro-form select:focus,
+.pro-form textarea:focus {
+  border-color: #003b6f;
+  box-shadow: 0 0 0 4px rgba(0, 59, 111, 0.14);
+}
+/* Fields flagged invalid keep a red border */
+.pro-form .border-red-500 {
+  border-color: #dc2626 !important;
+}
+/* Composite fields (flag + select, prefix + number) carry the border on their wrapper */
+.pro-form .overflow-hidden > input,
+.pro-form .overflow-hidden > select {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.pro-form .overflow-hidden:has(> input, > select) {
+  border-radius: 0.75rem;
+  border-color: #cbd5e1;
+}
+.pro-form .overflow-hidden:has(> input:focus, > select:focus) {
+  border-color: #003b6f;
+  box-shadow: 0 0 0 4px rgba(0, 59, 111, 0.14);
+}
+.pro-form button[type='submit'] {
+  min-height: 52px;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+.dark .pro-form label {
+  color: #e2e8f0;
+}
+.dark .pro-form input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.dark .pro-form select,
+.dark .pro-form textarea {
+  background-color: #0f172a;
+  border-color: #334155;
+  color: #f1f5f9;
+}
+.dark .pro-form input::placeholder,
+.dark .pro-form textarea::placeholder {
+  color: #94a3b8;
+}
+.dark .pro-form input:not([type='checkbox']):not([type='radio']):not([type='file']):focus,
+.dark .pro-form select:focus,
+.dark .pro-form textarea:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
+}

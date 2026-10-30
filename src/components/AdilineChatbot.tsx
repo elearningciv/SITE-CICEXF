@@ -10,6 +10,13 @@ import {
 import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.webp';
 import { CABINET_INFO, FORMATIONS, TEAM_MEMBERS } from '../knowledgeBase';
 import { saveProspect } from '../lib/prospects';
+import { getCatalogueMeta, useCatalogueMeta } from '../lib/catalogue';
+import CatalogueActions from './CatalogueActions';
+
+// Visitor asks for the catalogue / brochure (any phrasing)
+const CATALOGUE_RE = /catalogu|brochure|plaquette|liste (compl[eè]te )?des formations/i;
+// ...and only wants the document (short request, or explicit "send / download / see" verbs)
+const CATALOGUE_ONLY_RE = /(envoi|envoy|t[ée]l[ée]charg|donne|avoir|obtenir|recevoir|voir|consulter|partag|pdf|o[uù] (est|trouver))/i;
 
 // Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
 const ADILINE_API_URL = import.meta.env.VITE_ADILINE_API_URL
@@ -39,6 +46,7 @@ export interface ChatMessage {
   attachmentName?: string;
   audioUrl?: string; // Voice note playback URL
   feedback?: 'like' | 'dislike';
+  showCatalogue?: boolean; // the training catalogue PDF is attached to this answer
 }
 
 interface AdilineChatbotProps {
@@ -174,7 +182,8 @@ Comment puis-je vous accompagner aujourd'hui ?`,
   const [leadSubmitted, setLeadSubmitted] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const { meta: catalogueMeta } = useCatalogueMeta();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll on new message
@@ -573,6 +582,23 @@ Comment puis-je vous accompagner aujourd'hui ?`,
 
     setMessages(prev => [...prev, initialAssistantMsg]);
 
+    // Catalogue requests: the PDF is attached to the answer (when one is published in the admin)
+    const asksCatalogue = !!query && CATALOGUE_RE.test(query);
+    const catalogue = asksCatalogue ? (catalogueMeta || await getCatalogueMeta().catch(() => null)) : null;
+    if (catalogue && (query.length < 90 || CATALOGUE_ONLY_RE.test(query))) {
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? {
+        ...m,
+        text: "Avec plaisir ! Voici le **catalogue des formations CICEXF** : vous pouvez le consulter directement ou le télécharger ci-dessous.\n\nVous y trouverez nos programmes, durées et tarifs. Souhaitez-vous que je vous aide à choisir une formation ou à préparer un devis ?",
+        sources: ['Catalogue officiel CICEXF'],
+        showCatalogue: true
+      } : m));
+      setIsStreaming(false);
+      return;
+    }
+    if (catalogue) {
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, showCatalogue: true } : m));
+    }
+
     try {
       const recentHistory = messages.slice(-10).map(m => ({
         role: m.role === 'user' ? 'user' : 'model',
@@ -852,7 +878,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
   return (
     <div 
       id="adiline-chat-modal" 
-      className={`fixed inset-0 z-50 flex font-sans transition-all duration-300 ${
+      className={`fixed inset-0 z-50 flex overflow-hidden overscroll-none font-sans transition-all duration-300 ${
         screenLayout === 'fullscreen'
           ? 'items-center justify-center p-0 bg-slate-950/80 backdrop-blur-md'
           : screenLayout === 'adapted'
@@ -863,7 +889,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
       
       {/* Main Chat Window Card - Adapts dynamically to screen size */}
       <div 
-        className={`w-full bg-white dark:bg-slate-900 shadow-2xl flex flex-col border border-slate-200/80 dark:border-slate-800 overflow-hidden transition-all duration-300 ${
+        className={`w-full max-w-[100vw] overflow-x-hidden bg-white dark:bg-slate-900 shadow-2xl flex flex-col border border-slate-200/80 dark:border-slate-800 overflow-hidden transition-all duration-300 ${
           screenLayout === 'fullscreen'
             ? 'h-[100dvh] w-full rounded-none'
             : screenLayout === 'adapted'
@@ -988,14 +1014,14 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
         </div>
 
         {/* MESSAGES LIST AREA */}
-        <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-4 bg-slate-50/70 dark:bg-slate-950/40">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y p-4 space-y-4 bg-slate-50/70 dark:bg-slate-950/40 [overflow-wrap:anywhere]">
           
           {messages.map((msg) => (
             <div 
               key={msg.id} 
-              className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
+              className={`flex min-w-0 flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
             >
-              <div className="flex items-end space-x-2 max-w-[92%] sm:max-w-[85%]">
+              <div className="flex min-w-0 items-end space-x-2 max-w-[92%] sm:max-w-[85%]">
                 {msg.role === 'assistant' && (
                   <img 
                     src={adilineAvatar} 
@@ -1005,7 +1031,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 )}
 
                 <div 
-                  className={`p-3.5 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
+                  className={`min-w-0 max-w-full p-3.5 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
                     msg.role === 'user'
                       ? 'bg-blue-50 text-slate-900 border border-blue-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 rounded-br-none'
                       : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200/80 dark:border-slate-800'
@@ -1035,6 +1061,17 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                   {/* Render text with clean paragraphs, parsed bolding and bullet styling */}
                   <FormattedMessageText text={msg.text} />
+
+                  {/* Training catalogue attached to the answer */}
+                  {msg.showCatalogue && catalogueMeta && (
+                    <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                      <p className="mb-2 flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                        <FileText className="w-4 h-4 shrink-0 text-red-700 dark:text-red-300" />
+                        <span className="truncate">{catalogueMeta.name}</span>
+                      </p>
+                      <CatalogueActions meta={catalogueMeta} compact />
+                    </div>
+                  )}
 
                   {/* RICH CARDS (Formations, Sessions, Experts, Devis) */}
                   {msg.cards && msg.cards.length > 0 && (
@@ -1348,7 +1385,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="flex items-center space-x-1.5"
+              className="flex items-end space-x-1.5"
             >
               {/* Attachment input hidden */}
               <input 
@@ -1381,13 +1418,20 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-rose-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span>
               </button>
 
-              <input
+              <textarea
                 ref={inputRef}
-                type="text"
+                rows={3}
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Posez une question ou cliquez sur le micro..."
-                className="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-3.5 py-2.5 rounded-xl text-xs sm:text-sm border border-transparent focus:border-brand-blue focus:bg-white dark:focus:bg-slate-900 outline-none transition-all placeholder:text-slate-400"
+                onKeyDown={(e) => {
+                  // Enter sends, Shift+Enter goes to a new line
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }
+                }}
+                placeholder="Écrivez votre message…"
+                className="flex-1 min-w-0 min-h-[84px] max-h-40 resize-none bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white px-3.5 py-3 rounded-xl text-base sm:text-sm leading-relaxed border border-slate-200 dark:border-slate-700 focus:border-brand-blue focus:bg-white dark:focus:bg-slate-900 outline-none transition-all placeholder:text-slate-500"
                 disabled={isStreaming}
               />
 
@@ -1496,7 +1540,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <p className="text-xs text-slate-500">Un conseiller vous contacte sous 24h avec la proforma officielle.</p>
               </div>
             ) : (
-              <form onSubmit={handleLeadSubmit} className="space-y-3 text-xs">
+              <form onSubmit={handleLeadSubmit} className="pro-form space-y-4">
                 <div>
                   <label className="font-semibold block mb-1 text-slate-700 dark:text-slate-300">
                     Formation souhaitée :

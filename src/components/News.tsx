@@ -109,7 +109,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                 src={selectedArticle.imageUrl}
                 alt={selectedArticle.title}
                 referrerPolicy="no-referrer"
-                className="w-full h-full object-contain bg-slate-900"
+                className="w-full h-full object-contain bg-white dark:bg-slate-800"
               />
               <div className="absolute top-4 left-4 bg-brand-emerald text-white text-xs font-bold px-3 py-1 rounded">
                 {selectedArticle.category}
@@ -180,7 +180,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                       <form onSubmit={(e) => {
                         setRequestedGuide("Guide Pratique de collecte de données KoboCollect");
                         handleDownloadLead(e);
-                      }} className="space-y-3 font-sans text-[11px]">
+                      }} className="pro-form space-y-3 font-sans">
                         <input
                           id="lead-article-name"
                           type="text"
@@ -273,7 +273,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                         src={post.imageUrl}
                         alt={post.title}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-contain bg-slate-900 group-hover:scale-103 transition-transform duration-300"
+                        className="w-full h-full object-contain bg-white dark:bg-slate-800 group-hover:scale-103 transition-transform duration-300"
                       />
                       <div className="absolute top-4 left-4 bg-brand-emerald text-white text-[11px] font-bold px-2.5 py-1 rounded">
                         {post.category}
@@ -339,7 +339,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                     <form onSubmit={(e) => {
                       setRequestedGuide(null);
                       handleDownloadLead(e);
-                    }} className="space-y-3 font-sans text-[11px]">
+                    }} className="pro-form space-y-3 font-sans">
                       <input
                         id="generic-lead-name"
                         type="text"

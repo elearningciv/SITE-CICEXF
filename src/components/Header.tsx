@@ -51,6 +51,14 @@ export default function Header({
   const [isOpen, setIsOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [formationsMenuOpen, setFormationsMenuOpen] = useState(false);
+  // Mobile menu: which tab's list is unfolded (nothing opens until the visitor taps a tab)
+  // Desktop dropdowns close as soon as an entry is chosen (and reopen on the next hover)
+  const [closedMenu, setClosedMenu] = useState<string | null>(null);
+  const closeMenuAfterChoice = (id: string) => {
+    setClosedMenu(id);
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  };
+  const [mobileGroup, setMobileGroup] = useState<'acc' | 'form' | 'news' | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [internalAiModalOpen, setInternalAiModalOpen] = useState(false);
   const aiModalOpen = externalAiModalOpen !== undefined ? externalAiModalOpen : internalAiModalOpen;
@@ -300,8 +308,8 @@ export default function Header({
                 id="ai-mobile-btn"
                 onClick={() => setAiModalOpen(true)}
                 className="h-9 px-2.5 rounded-xl bg-amber-700 hover:bg-amber-600 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
-                aria-label="Conseiller Intelligent"
-                title="Conseiller Intelligent CICEXF - Posez une question"
+                aria-label="Assistant virtuel"
+                title="Assistant virtuel CICEXF - Posez une question"
               >
                 <span className="text-[11px] font-black uppercase tracking-wider text-white">IA</span>
               </button>
@@ -394,7 +402,12 @@ export default function Header({
                 </button>
 
                 {/* Accompagnement, with the list of domains in its dropdown */}
-                <div className="relative group/acc shrink-0">
+                <div
+                  className="relative group/acc shrink-0"
+                  onMouseEnter={() => setClosedMenu(null)}
+                  onMouseLeave={() => setClosedMenu(null)}
+                  onClickCapture={() => closeMenuAfterChoice("acc")}
+                >
                   <button
                     id="nav-accompagnements"
                     onClick={() => handleNavClick('accompagnements')}
@@ -408,7 +421,7 @@ export default function Header({
                     <span>Accompagnement</span>
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/acc:rotate-180" />
                   </button>
-                  <div className="invisible opacity-0 group-hover/acc:visible group-hover/acc:opacity-100 group-focus-within/acc:visible group-focus-within/acc:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50">
+                  <div className="invisible opacity-0 group-hover/acc:visible group-hover/acc:opacity-100 group-focus-within/acc:visible group-focus-within/acc:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50" style={closedMenu === "acc" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
                     <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <p className="px-3 pt-1 pb-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nos domaines d'intervention</p>
                       {domains.map(d => (
@@ -431,7 +444,12 @@ export default function Header({
                 </div>
 
                 {/* Formations, with the list of domains in its dropdown */}
-                <div className="relative group/form shrink-0">
+                <div
+                  className="relative group/form shrink-0"
+                  onMouseEnter={() => setClosedMenu(null)}
+                  onMouseLeave={() => setClosedMenu(null)}
+                  onClickCapture={() => closeMenuAfterChoice("form")}
+                >
                   <button
                     id="nav-formations"
                     onClick={() => handleNavClick('formations')}
@@ -445,7 +463,7 @@ export default function Header({
                     <span>Formations</span>
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/form:rotate-180" />
                   </button>
-                  <div className="invisible opacity-0 group-hover/form:visible group-hover/form:opacity-100 group-focus-within/form:visible group-focus-within/form:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50">
+                  <div className="invisible opacity-0 group-hover/form:visible group-hover/form:opacity-100 group-focus-within/form:visible group-focus-within/form:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50" style={closedMenu === "form" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
                     <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <button
                         onClick={() => openFormationsView('subtab-certifications')}
@@ -474,7 +492,12 @@ export default function Header({
                 </div>
 
                 {/* Actualités, with Réalisations in its dropdown */}
-                <div className="relative group/news shrink-0">
+                <div
+                  className="relative group/news shrink-0"
+                  onMouseEnter={() => setClosedMenu(null)}
+                  onMouseLeave={() => setClosedMenu(null)}
+                  onClickCapture={() => closeMenuAfterChoice("news")}
+                >
                   <button
                     id="nav-news"
                     onClick={() => handleNavClick('news')}
@@ -488,7 +511,7 @@ export default function Header({
                     <span>Actualités</span>
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/news:rotate-180" />
                   </button>
-                  <div className="invisible opacity-0 group-hover/news:visible group-hover/news:opacity-100 group-focus-within/news:visible group-focus-within/news:opacity-100 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50">
+                  <div className="invisible opacity-0 group-hover/news:visible group-hover/news:opacity-100 group-focus-within/news:visible group-focus-within/news:opacity-100 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50" style={closedMenu === "news" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
                     <div className="w-56 rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <button
                         onClick={() => handleNavClick('news')}
@@ -506,6 +529,18 @@ export default function Header({
                     </div>
                   </div>
                 </div>
+
+                <button
+                  id="nav-catalogue"
+                  onClick={() => handleNavClick('catalogue')}
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                    activeTab === 'catalogue'
+                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
+                  }`}
+                >
+                  Catalogue
+                </button>
 
                 <button
                   id="nav-contact"
@@ -543,9 +578,9 @@ export default function Header({
                   id="bar-ai-btn"
                   onClick={() => setAiModalOpen(true)}
                   className="px-2 lg:px-2.5 py-1 rounded-xl bg-amber-700 hover:bg-amber-600 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
-                  title="Conseiller Intelligent CICEXF - Posez vos questions sur les formations et expertises"
+                  title="Assistant virtuel CICEXF - Posez vos questions sur les formations et expertises"
                 >
-                  <span className="hidden 2xl:inline tracking-wide font-black">Conseiller IA</span>
+                  <span className="hidden 2xl:inline tracking-wide font-black">Assistant virtuel</span>
                   <span className="2xl:hidden font-black">IA</span>
                 </button>
 
@@ -631,52 +666,59 @@ export default function Header({
               Accueil
             </button>
             <button
-              onClick={() => handleNavClick('accompagnements')}
-              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'accompagnements' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+              onClick={() => setMobileGroup(g => (g === 'acc' ? null : 'acc'))}
+              aria-expanded={mobileGroup === 'acc'}
+              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'accompagnements' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
             >
-              Accompagnement
+              <span>Accompagnement</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'acc' ? 'rotate-180' : ''}`} />
             </button>
-            {domains.map(d => (
-              <button
-                key={d.id}
-                onClick={() => openDomain(d.id)}
-                className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
-              >
-                ↳ {d.title}
-              </button>
-            ))}
+            {mobileGroup === 'acc' && (
+              <div className="space-y-0.5 pb-1">
+                <button onClick={() => handleNavClick('accompagnements')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && !selectedDomainId ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Tous les accompagnements</button>
+                {domains.map(d => (
+                  <button key={d.id} onClick={() => openDomain(d.id)} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>{d.title}</button>
+                ))}
+              </div>
+            )}
 
             <button
-              onClick={() => handleNavClick('formations')}
-              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'formations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+              onClick={() => setMobileGroup(g => (g === 'form' ? null : 'form'))}
+              aria-expanded={mobileGroup === 'form'}
+              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'formations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
             >
-              Formations
+              <span>Formations</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'form' ? 'rotate-180' : ''}`} />
             </button>
-            {domains.map(d => (
-              <button
-                key={d.id}
-                onClick={() => openFormationsView(d.id)}
-                className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'formations' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
-              >
-                ↳ {d.title}
-              </button>
-            ))}
+            {mobileGroup === 'form' && (
+              <div className="space-y-0.5 pb-1">
+                <button onClick={() => openFormationsView('subtab-certifications')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${false ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Formations certifiantes</button>
+                {domains.map(d => (
+                  <button key={d.id} onClick={() => openFormationsView(d.id)} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'formations' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>{d.title}</button>
+                ))}
+                <button onClick={() => openFormationsView('subtab-axes')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${false ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Tous les axes de formation</button>
+              </div>
+            )}
 
             <button
-              onClick={() => handleNavClick('news')}
-              className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold flex items-center justify-between border-2 border-dashed border-red-500 animate-pulse bg-red-500/10 dark:bg-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.4)] ${activeTab === 'news' ? 'text-white bg-red-600 dark:bg-red-600 border-solid animate-none' : 'text-red-700 dark:text-red-300'}`}
+              onClick={() => setMobileGroup(g => (g === 'news' ? null : 'news'))}
+              aria-expanded={mobileGroup === 'news'}
+              className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'news' || activeTab === 'realisations' ? 'bg-red-600 text-white' : 'text-red-700 dark:text-red-300 bg-red-500/10'}`}
             >
               <span>Actualités</span>
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-              </span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'news' ? 'rotate-180' : ''}`} />
             </button>
+            {mobileGroup === 'news' && (
+              <div className="space-y-0.5 pb-1">
+                <button onClick={() => handleNavClick('news')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'news' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Actualités & publications</button>
+                <button onClick={() => handleNavClick('realisations')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Nos réalisations</button>
+              </div>
+            )}
             <button
-              onClick={() => handleNavClick('realisations')}
-              className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+              onClick={() => handleNavClick('catalogue')}
+              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'catalogue' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
             >
-              ↳ Nos réalisations
+              Catalogue
             </button>
             <button
               onClick={() => handleNavClick('contact')}
@@ -724,14 +766,14 @@ export default function Header({
               </button>
             </form>
 
-            {/* Bannière Conseiller Intelligent dans la recherche */}
+            {/* Bannière Assistant virtuel dans la recherche */}
             <div className="bg-amber-50 dark:bg-slate-900 px-4 py-3 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center space-x-2.5">
                 <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                 </div>
                 <div>
                   <p className="text-xs font-black text-slate-900 dark:text-white leading-tight">
-                    Une question précise ? Posez-la au Conseiller Intelligent
+                    Une question précise ? Posez-la à l'assistant virtuel
                   </p>
                   <p className="text-[10.5px] text-slate-500 dark:text-slate-400">
                     Réponses détaillées et ciblées sur chaque information de tous les onglets (Formations, Accompagnement, Réalisations, Tarifs...)

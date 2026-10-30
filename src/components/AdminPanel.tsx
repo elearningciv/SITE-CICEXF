@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import AdminTestimonials from './AdminTestimonials';
 import AdminDomains from './AdminDomains';
+import AdminCatalogue from './AdminCatalogue';
+import DomainAxisSelect from './DomainAxisSelect';
 import { 
   auth, db 
 } from '../firebase';
@@ -131,7 +133,7 @@ export default function AdminPanel({
   });
 
   const [dataLoading, setDataLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'visits' | 'subscribers'>('formations');
+  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form states for Formations
@@ -197,7 +199,8 @@ export default function AdminPanel({
   const [showRealisationForm, setShowRealisationForm] = useState(false);
   const [editingRealisation, setEditingRealisation] = useState<any | null>(null);
   const [rTitle, setRTitle] = useState('');
-  const [rCategory, setRCategory] = useState('Ingénierie & SIG');
+  const [rCategory, setRCategory] = useState('');
+  const [rAxis, setRAxis] = useState('');
   const [rClient, setRClient] = useState('');
   const [rLocation, setRLocation] = useState('Abidjan, Côte d\'Ivoire');
   const [rYear, setRYear] = useState(new Date().getFullYear().toString());
@@ -210,7 +213,8 @@ export default function AdminPanel({
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [editingBlogPost, setEditingBlogPost] = useState<any | null>(null);
   const [bTitle, setBTitle] = useState('');
-  const [bCategory, setBCategory] = useState('Formation');
+  const [bCategory, setBCategory] = useState('');
+  const [bAxis, setBAxis] = useState('');
   const [bReadTime, setBReadTime] = useState('5 min de lecture');
   const [bExcerpt, setBExcerpt] = useState('');
   const [bContent, setBContent] = useState('');
@@ -917,7 +921,8 @@ export default function AdminPanel({
   // CRUD for Realisations (Projets & Chantiers)
   const resetRealisationForm = () => {
     setRTitle('');
-    setRCategory('Ingénierie & SIG');
+    setRCategory('');
+    setRAxis('');
     setRClient('');
     setRLocation('Abidjan, Côte d\'Ivoire');
     setRYear(new Date().getFullYear().toString());
@@ -937,7 +942,8 @@ export default function AdminPanel({
       const payload = {
         id: realId,
         title: rTitle,
-        category: rCategory,
+        category: rCategory || 'Mission',
+        axis: rAxis,
         client: rClient,
         location: rLocation,
         year: parseInt(rYear, 10) || new Date().getFullYear(),
@@ -989,7 +995,8 @@ export default function AdminPanel({
   const handleEditRealisationClick = (proj: any) => {
     setEditingRealisation(proj);
     setRTitle(proj.title || '');
-    setRCategory(proj.category || 'Ingénierie & SIG');
+    setRCategory(proj.category || '');
+    setRAxis(proj.axis || '');
     setRClient(proj.client || '');
     setRLocation(proj.location || 'Abidjan, Côte d\'Ivoire');
     setRYear(proj.year ? proj.year.toString() : new Date().getFullYear().toString());
@@ -1011,7 +1018,7 @@ export default function AdminPanel({
     setFSpecialty(specVal);
 
     // Check if domain is custom
-    const domainExists = DOMAINS_INTERVENTION.some(d => d.title === domainVal);
+    const domainExists = mergedAccompagnements.some(d => d.title === domainVal);
     if (domainVal && !domainExists) {
       setIsCustomDomain(true);
     } else {
@@ -1019,7 +1026,7 @@ export default function AdminPanel({
     }
 
     // Check if specialty is custom within that domain
-    const dObj = DOMAINS_INTERVENTION.find(d => d.title === domainVal);
+    const dObj = mergedAccompagnements.find(d => d.title === domainVal);
     const specExists = dObj ? dObj.subDomains.some(sub => sub.title === specVal) : false;
     if (specVal && !specExists) {
       setIsCustomSpecialty(true);
@@ -1069,7 +1076,8 @@ export default function AdminPanel({
   // CRUD for Blog Posts (News)
   const resetBlogForm = () => {
     setBTitle('');
-    setBCategory('Formation');
+    setBCategory('');
+    setBAxis('');
     setBReadTime('5 min de lecture');
     setBExcerpt('');
     setBContent('');
@@ -1094,7 +1102,8 @@ export default function AdminPanel({
         id: postId,
         slug,
         title: bTitle,
-        category: bCategory,
+        category: bCategory || 'Actualité',
+        axis: bAxis,
         readTime: bReadTime,
         date: editingBlogPost?.date || new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
         author: {
@@ -1106,7 +1115,7 @@ export default function AdminPanel({
         content: bContent,
         imageUrl: bImageUrl || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
         isFeatured: bIsFeatured,
-        tags: bTags ? bTags.split(',').map(t => t.trim()).filter(Boolean) : [bCategory],
+        tags: bTags ? bTags.split(',').map(t => t.trim()).filter(Boolean) : [bCategory || 'Actualité'],
         createdAt: editingBlogPost?.createdAt || Timestamp.now()
       };
 
@@ -1150,7 +1159,8 @@ export default function AdminPanel({
   const handleEditBlogPostClick = (post: any) => {
     setEditingBlogPost(post);
     setBTitle(post.title || '');
-    setBCategory(post.category || 'Formation');
+    setBCategory(post.category || '');
+    setBAxis(post.axis || '');
     setBReadTime(post.readTime || '5 min de lecture');
     setBExcerpt(post.excerpt || '');
     setBContent(post.content || '');
@@ -1737,6 +1747,18 @@ export default function AdminPanel({
               </button>
 
               <button
+                onClick={() => { setActiveTab('catalogue'); setSearchQuery(''); }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTab === 'catalogue'
+                    ? 'bg-red-700 text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-red-700 hover:bg-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Catalogue PDF</span>
+              </button>
+
+              <button
                 onClick={() => { setActiveTab('visits'); setSearchQuery(''); }}
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'visits' 
@@ -1882,7 +1904,7 @@ export default function AdminPanel({
                         } else {
                           setIsCustomDomain(false);
                           setFDomain(val);
-                          const dObj = DOMAINS_INTERVENTION.find(d => d.title === val);
+                          const dObj = mergedAccompagnements.find(d => d.title === val);
                           if (dObj && dObj.subDomains && dObj.subDomains.length > 0) {
                             setFSpecialty(dObj.subDomains[0].title);
                             setIsCustomSpecialty(false);
@@ -1893,7 +1915,7 @@ export default function AdminPanel({
                       }}
                       className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-3 outline-none focus:border-brand-emerald"
                     >
-                      {DOMAINS_INTERVENTION.map((dom) => (
+                      {mergedAccompagnements.map((dom) => (
                         <option key={dom.id} value={dom.title}>
                           {dom.title}
                         </option>
@@ -1935,7 +1957,7 @@ export default function AdminPanel({
                       className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-3 outline-none focus:border-brand-emerald"
                     >
                       {(() => {
-                        const dObj = DOMAINS_INTERVENTION.find(d => d.title === fDomain);
+                        const dObj = mergedAccompagnements.find(d => d.title === fDomain);
                         const list = dObj ? dObj.subDomains : [];
                         return (
                           <>
@@ -2275,22 +2297,14 @@ export default function AdminPanel({
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="block font-bold">Catégorie de l'article :</label>
-                    <select
-                      value={bCategory}
-                      onChange={(e) => setBCategory(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-3 outline-none"
-                    >
-                      <option value="Formation">Formation / Cohorte</option>
-                      <option value="Data">Analyse de Données</option>
-                      <option value="Intelligence Artificielle">Intelligence Artificielle</option>
-                      <option value="SIG">Systèmes d'Information Géographique</option>
-                      <option value="QHSE">Sécurité &amp; Environnement QHSE</option>
-                      <option value="Finance">Ingénierie Financière</option>
-                      <option value="Gouvernance">Gouvernance Locale &amp; Aménagement</option>
-                    </select>
-                  </div>
+                  <DomainAxisSelect
+                    domains={mergedAccompagnements}
+                    domain={bCategory}
+                    axis={bAxis}
+                    onDomainChange={setBCategory}
+                    onAxisChange={setBAxis}
+                    selectClassName="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-850 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -2895,21 +2909,13 @@ export default function AdminPanel({
                     />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <label className="block font-bold">Domaine d'intervention :</label>
-                    <select
-                      value={rCategory}
-                      onChange={(e) => setRCategory(e.target.value)}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 outline-none text-slate-900 dark:text-white font-medium"
-                    >
-                      <option value="Ingénierie & SIG">Ingénierie &amp; SIG</option>
-                      <option value="Formation Professionnelle">Formation Professionnelle</option>
-                      <option value="Data & Intelligence Artificielle">Data &amp; Intelligence Artificielle</option>
-                      <option value="Audit & Conseil QHSE">Audit &amp; Conseil QHSE</option>
-                      <option value="Ingénierie Financière">Ingénierie Financière</option>
-                      <option value="Gouvernance Locale">Gouvernance Locale</option>
-                    </select>
-                  </div>
+                  <DomainAxisSelect
+                    domains={mergedAccompagnements}
+                    domain={rCategory}
+                    axis={rAxis}
+                    onDomainChange={setRCategory}
+                    onAxisChange={setRAxis}
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -3734,6 +3740,8 @@ export default function AdminPanel({
             )}
 
             {activeTab === 'testimonials' && <AdminTestimonials />}
+
+            {activeTab === 'catalogue' && <AdminCatalogue />}
 
           </div>
 

@@ -157,34 +157,26 @@ export default function Interventions({
                     className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-black/30 dark:hover:border-white/30 transition-all flex flex-col justify-between cursor-pointer group h-full relative overflow-hidden"
                   >
                     {/* Domain Cover Image with text overlay in white */}
-                    <div className="relative h-40 w-full overflow-hidden">
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-50 dark:bg-slate-800">
                       <img
                         src={getDomainImage(domain)}
                         alt={domain.title}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-contain bg-white dark:bg-slate-800 group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-slate-950/60"></div>
                       
-                      {/* Title and Badge on image - ensuring text is white */}
-                      <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                        <span className="self-start font-mono font-bold text-[11px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                          Domaine {displayNum}
-                        </span>
-                        <h3 className="font-display font-extrabold text-[12px] sm:text-[13px] text-white leading-tight drop-shadow-md">
-                          {domain.title}
-                        </h3>
-                      </div>
-
-                      {/* Floating Icon */}
-                      <div className="absolute top-3 left-3 p-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/20 text-white shadow-sm">
-                        {renderIcon(domain.iconName, "w-3.5 h-3.5")}
-                      </div>
                     </div>
 
                     <div className="p-4 flex-grow flex flex-col justify-between">
                       <div className="space-y-2">
-                        <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3">
+                        <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-brand-emerald dark:text-orange-300">
+                          {renderIcon(domain.iconName, "w-3.5 h-3.5")}
+                          Domaine {displayNum}
+                        </p>
+                        <h3 className="font-display text-base font-extrabold leading-snug text-slate-900 dark:text-white group-hover:text-brand-emerald dark:group-hover:text-orange-300 transition-colors">
+                          {domain.title}
+                        </h3>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed line-clamp-3">
                           {domain.shortDescription}
                         </p>
                       </div>
@@ -206,10 +198,10 @@ export default function Interventions({
             </div>
 
             {/* General Contact banner under grid */}
-            <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-6 shadow-md border border-slate-800">
+            <div className="bg-slate-50 dark:bg-slate-900 p-6 sm:p-8 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-6 ring-1 ring-slate-200 dark:ring-slate-800">
               <div className="space-y-1.5 text-center md:text-left">
-                <h4 className="font-display font-bold text-base text-white">Vous souhaitez obtenir un accompagnement sur-mesure ?</h4>
-                <p className="text-xs text-slate-300 dark:text-slate-300 font-sans leading-relaxed">Le cabinet CICEXF déploie ses experts pour auditer vos structures et conseiller vos directions techniques.</p>
+                <h4 className="font-display font-bold text-base text-slate-900 dark:text-white">Vous souhaitez obtenir un accompagnement sur-mesure ?</h4>
+                <p className="text-sm text-slate-600 dark:text-slate-400 font-sans leading-relaxed">Le cabinet CICEXF déploie ses experts pour auditer vos structures et conseiller vos directions techniques.</p>
               </div>
               <button
                 onClick={() => {
@@ -243,21 +235,29 @@ export default function Interventions({
                 </div>
 
                 {/* Beautiful Modern Domain Hero Header with top image banner */}
-                <div className="relative h-44 sm:h-52 rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-300">
-                  <img
-                    src={getDomainImage(selectedDomainObj)}
-                    alt={selectedDomainObj.title}
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain bg-slate-900"
-                  />
-                  <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-4 sm:p-6 space-y-2">
-                    <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
+                <div className="grid grid-cols-1 items-start gap-6 overflow-hidden rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:p-8 lg:grid-cols-2 lg:gap-10">
+                  <div className="order-2 space-y-4 lg:order-1">
+                    <div className="inline-flex items-center space-x-2 rounded-full bg-brand-emerald/10 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-widest text-brand-emerald dark:text-orange-300">
                       {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
                       <span>Ingénierie CICEXF &bull; Accompagnement</span>
                     </div>
-                    <h1 className="font-display text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight leading-tight text-white max-w-4xl">
+                    <h1 className="font-display text-xl font-extrabold leading-snug tracking-tight text-slate-900 dark:text-white sm:text-2xl">
                       {selectedDomainObj.title}
                     </h1>
+                    {(selectedDomainObj.shortDescription || selectedDomainObj.description) && (
+                      <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300 line-clamp-6">{(selectedDomainObj.shortDescription || selectedDomainObj.description)}</p>
+                    )}
+                    {selectedDomainObj.subDomains?.length > 0 && (
+                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">{selectedDomainObj.subDomains.length} axes d'intervention</p>
+                    )}
+                  </div>
+                  <div className="order-1 aspect-[16/10] overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-800 lg:order-2">
+                    <img
+                      src={getDomainImage(selectedDomainObj)}
+                      alt={selectedDomainObj.title}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-contain"
+                    />
                   </div>
                 </div>
               </>
@@ -283,49 +283,41 @@ export default function Interventions({
                           setActiveSubIdx(sIdx);
                           window.scrollTo({ top: 400, behavior: 'smooth' });
                         }}
-                        className="group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-xl hover:border-[#8A1A24]/40 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                        className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900 dark:ring-slate-800 cursor-pointer"
                       >
                         <div>
                           {/* Miniature top image with badge */}
                           {finalImageUrl && (
-                            <div className="relative h-44 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                            <div className="relative aspect-[16/9] w-full overflow-hidden bg-slate-50 dark:bg-slate-800">
                               <img
                                 src={finalImageUrl}
                                 alt={sub.title}
                                 referrerPolicy="no-referrer"
-                                className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500"
+                                className="w-full h-full object-contain bg-white dark:bg-slate-800 group-hover:scale-105 transition-transform duration-500"
                               />
-                              <div className="absolute inset-0 bg-slate-950/60"></div>
-                              <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                                <span className="self-start font-mono font-bold text-[11px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                                  Axe #0{sIdx + 1} &bull; CICEXF
-                                </span>
-                              </div>
-                              <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-950/60 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-sm">
-                                {renderIcon(finalIconName, "w-4 h-4 text-[#F25C05]")}
-                              </div>
                             </div>
                           )}
 
                           {/* Content: Title & Short Description */}
-                          <div className="p-5 space-y-3">
-                            <h3 className="font-display font-extrabold text-sm sm:text-base text-slate-900 dark:text-white leading-tight group-hover:text-[#8A1A24] dark:group-hover:text-red-400 transition-colors">
+                          <div className="p-5 space-y-2">
+                            <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#8A1A24] dark:text-red-300">
+                              {renderIcon(finalIconName, "w-3.5 h-3.5")}
+                              Axe {String(sIdx + 1).padStart(2, '0')}
+                            </p>
+                            <h3 className="font-display font-extrabold text-base text-slate-900 dark:text-white leading-snug group-hover:text-[#8A1A24] dark:group-hover:text-red-300 transition-colors">
                               {sub.title}
                             </h3>
-                            <p className="text-xs text-slate-600 dark:text-slate-355 line-clamp-3 leading-relaxed">
+                            <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
                               {presentationService}
                             </p>
                           </div>
                         </div>
 
                         {/* Action link */}
-                        <div className="p-4 bg-slate-50 dark:bg-slate-850/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                          <span className="text-xs text-[#8A1A24] dark:text-red-400 font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
-                            <span>Consulter la spécialité</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
-                          </span>
-                          <span className="text-[11px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
-                            Détails &amp; Inscription
+<div className="mt-auto flex items-center justify-between border-t border-slate-100 px-5 py-4 dark:border-slate-800">
+                          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-[#8A1A24] dark:text-red-300">
+                            Voir le détail
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                           </span>
                         </div>
                       </div>
@@ -367,28 +359,25 @@ export default function Interventions({
                         id={`sub-point-card-${selectedDomainObj.id}-${sIdx}`}
                         className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200/90 dark:border-slate-800 shadow-2xl space-y-0"
                       >
-                        {/* Immersive Full Header Banner */}
+                        {/* Axis header: description left, photo right */}
                         {finalImageUrl && (
-                          <div className="relative h-52 sm:h-64 lg:h-72 w-full overflow-hidden bg-slate-950">
-                            <img
-                              src={finalImageUrl}
-                              alt={sub.title}
-                              referrerPolicy="no-referrer"
-                              className="w-full h-full object-contain bg-slate-900"
-                            />
-                            <div className="absolute inset-0 bg-slate-950/60"></div>
-                            
-                            <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
-                              <span className="self-start font-mono font-bold text-[11px] sm:text-xs text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
-                                Axe #0{sIdx + 1} &bull; Accompagnement CICEXF
-                              </span>
-                              <h2 className="font-display font-extrabold text-lg sm:text-2xl lg:text-3xl text-white leading-tight drop-shadow-md max-w-4xl">
+                          <div className="grid grid-cols-1 items-start gap-6 bg-white p-5 dark:bg-slate-900 sm:p-8 lg:grid-cols-2 lg:gap-10">
+                            <div className="order-2 space-y-3 lg:order-1">
+                              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Axe {String(sIdx + 1).padStart(2, '0')} · Accompagnement CICEXF</p>
+                              <h2 className="font-display text-xl font-extrabold leading-snug text-slate-900 dark:text-white sm:text-2xl">
                                 {sub.title}
                               </h2>
+                              {presentationService && (
+                                <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300 line-clamp-5">{presentationService}</p>
+                              )}
                             </div>
-
-                            <div className="absolute top-5 right-5 w-10 h-10 rounded-full bg-slate-950/60 backdrop-blur-md border border-white/25 text-white flex items-center justify-center shadow-md">
-                              {renderIcon(finalIconName, "w-5 h-5 text-[#F25C05]")}
+                            <div className="order-1 aspect-[16/10] overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-800 lg:order-2">
+                              <img
+                                src={finalImageUrl}
+                                alt={sub.title}
+                                referrerPolicy="no-referrer"
+                                className="h-full w-full object-contain"
+                              />
                             </div>
                           </div>
                         )}

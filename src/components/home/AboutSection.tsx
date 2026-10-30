@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Target, Eye, Gem, CheckCircle2, Facebook } from 'lucide-react';
 import { CABINET_INFO } from '../../data';
-import { DomainIntervention } from '../../types';
-import { getDomainImage } from '../../lib/domainImages';
 
 /** True once the element has scrolled into view (never resets). */
 function useInView<T extends Element>(threshold = 0.25) {
@@ -79,7 +77,9 @@ const reveal = (on: boolean, delay = 0, from = 'translate-y-8') =>
     style: { transitionDelay: `${on ? delay : 0}ms` }
   });
 
-export default function AboutSection({ goTo, poles, onOpenDomain }: { goTo: (tab: string) => void; poles: DomainIntervention[]; onOpenDomain: (id: string) => void }) {
+const ABOUT_IMAGE = 'https://images.unsplash.com/photo-1573164574572-cb89e39749b4?auto=format&fit=crop&w=1400&q=80';
+
+export default function AboutSection({ goTo }: { goTo: (tab: string) => void }) {
   const [sectionRef, visible] = useInView<HTMLElement>(0.05);
   const [statsRef, statsVisible] = useInView<HTMLDivElement>(0.3);
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]['id']>('mission');
@@ -89,7 +89,7 @@ export default function AboutSection({ goTo, poles, onOpenDomain }: { goTo: (tab
   return (
     <section id="about-preview" ref={sectionRef} className="relative overflow-hidden bg-slate-50 py-10 dark:bg-slate-900 sm:py-14">
 
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8">
 
         {/* Text column */}
         <div>
@@ -182,28 +182,31 @@ export default function AboutSection({ goTo, poles, onOpenDomain }: { goTo: (tab
           </div>
         </div>
 
-        {/* Visual: mosaic of our expertise poles, each opening its domain */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-          {poles.slice(0, 6).map((d, i) => (
-            <button
-              key={d.id}
-              onClick={() => onOpenDomain(d.id)}
-              style={reveal(visible, 150 + i * 120, 'translate-y-6 scale-95').style}
-              className={`${reveal(visible, 150 + i * 120, 'translate-y-6 scale-95').className} group relative overflow-hidden rounded-2xl bg-slate-200 shadow-md cursor-pointer ${i === 0 ? 'col-span-2 row-span-2 aspect-square sm:aspect-auto' : 'aspect-square'}`}
-              aria-label={`Voir le domaine : ${d.title}`}
-            >
-              <img src={getDomainImage(d)} alt="" loading="lazy" referrerPolicy="no-referrer" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-              <span className="absolute inset-0 bg-[#001a33]/40 transition-colors group-hover:bg-[#001a33]/25" />
-              <span className={`absolute inset-x-2 bottom-2 rounded-lg bg-white/95 px-2.5 py-1.5 text-left font-bold leading-snug text-[#002447] shadow ${i === 0 ? 'text-sm sm:text-base' : 'text-[11px] sm:text-xs line-clamp-2'}`}>
-                {d.title}
-              </span>
-            </button>
-          ))}
-        </div>
+        {/* Visual: one photo illustrating the cabinet's field of action (used only here) */}
+        <figure
+          style={reveal(visible, 200, 'translate-y-8').style}
+          className={`${reveal(visible, 200, 'translate-y-8').className} flex flex-col gap-3`}
+        >
+          <figcaption className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-2xl bg-[#002447] px-5 py-3 text-center text-sm font-bold text-white shadow-lg">
+            <span>Formation</span><span className="text-amber-300">•</span><span>Conseil</span><span className="text-amber-300">•</span><span>Expertise</span><span className="text-amber-300">•</span><span>Accompagnement</span>
+          </figcaption>
+          <div
+            className="relative min-h-[300px] flex-1 overflow-hidden rounded-3xl shadow-2xl transition-[clip-path] duration-[1400ms] ease-[cubic-bezier(.77,0,.18,1)]"
+            style={{ clipPath: visible ? 'inset(0 0 0 0 round 24px)' : 'inset(0 100% 0 0 round 24px)' }}
+          >
+            <img
+              src={ABOUT_IMAGE}
+              alt="Équipe de consultants et de participants en séance de travail"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+              className={`absolute inset-0 h-full w-full object-cover transition-transform duration-[1800ms] ease-out ${visible ? 'scale-100' : 'scale-110'}`}
+            />
+          </div>
+        </figure>
       </div>
 
       {/* Key figures with count-up */}
-      <div className="relative mx-auto mt-12 max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto mt-16 max-w-7xl px-4 sm:px-6 lg:px-8">
         <div ref={statsRef} className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-slate-200 shadow-sm ring-1 ring-slate-200 dark:bg-slate-800 dark:ring-slate-800 lg:grid-cols-4">
           {STATS.map((s, i) => (
             <div key={s.label} className="relative bg-white px-6 py-8 text-center dark:bg-slate-950">

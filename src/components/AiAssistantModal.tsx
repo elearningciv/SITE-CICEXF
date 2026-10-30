@@ -25,7 +25,7 @@ export default function AiAssistantModal({ isOpen, onClose, onNavigate }: AiAssi
     {
       id: 'welcome-msg',
       sender: 'assistant',
-      text: `**Bienvenue sur le Conseiller Intelligent du CICEXF !**
+      text: `**Bienvenue sur le Assistant virtuel du CICEXF !**
 
 Je maîtrise l'intégralité des informations publiées sur l'ensemble des rubriques et onglets du cabinet :
 • **Onglet Formations :** Programmes détaillés (Data Analyst, PMP 35 PDU, Auditeur QHSE ISO, Finance & Modélisation Excel, SIG QGIS, Gestion des équipes), durées, modules et tarifs officiels en FCFA.
@@ -206,7 +206,7 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className="font-display font-black text-base sm:text-lg md:text-xl tracking-wide text-white">
-                  Conseiller Intelligent CICEXF
+                  Assistant virtuel CICEXF
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-400 text-slate-900 shadow-xs">
                   Expertise Tous Onglets

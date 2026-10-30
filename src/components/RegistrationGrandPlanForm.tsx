@@ -88,6 +88,10 @@ export default function RegistrationGrandPlanForm({
       newErrors.phone = "Le numéro de téléphone WhatsApp doit comporter au moins 6 chiffres.";
     }
 
+    if (!formAltPhone || formAltPhone.trim().length < 6) {
+      newErrors.altPhone = "L'autre numéro de téléphone doit comporter au moins 6 chiffres.";
+    }
+
     if (!formSession) {
       newErrors.session = "Veuillez sélectionner la date de session ou période souhaitée.";
     }
@@ -172,7 +176,7 @@ export default function RegistrationGrandPlanForm({
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3 font-sans">
+        <form onSubmit={handleSubmit} className="pro-form space-y-4 font-sans">
           
           {/* 1. ACCOUNT TYPE SELECTION (Compact buttons, label suppressed) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -348,7 +352,7 @@ export default function RegistrationGrandPlanForm({
             {/* Primary Phone / WhatsApp */}
             <div className="space-y-1">
               <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Numéro WhatsApp Principal * :
+                Tel WhatsApp * :
               </label>
               <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
                 <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
@@ -380,7 +384,7 @@ export default function RegistrationGrandPlanForm({
             {/* Premier Autre Numéro (Secondaire / Appels) */}
             <div className="space-y-1">
               <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Autre numéro de téléphone (Appels / Secondaire) :
+                Autre Tel * :
               </label>
               <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
                 <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
@@ -403,35 +407,9 @@ export default function RegistrationGrandPlanForm({
                   className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-500 dark:placeholder-slate-400"
                 />
               </div>
+              {errors.altPhone && <span className="text-xs text-red-500 font-semibold block">{errors.altPhone}</span>}
             </div>
 
-            {/* Deuxième Autre Numéro (Contact supplémentaire / Urgence) */}
-            <div className="space-y-1">
-              <label className="block font-bold text-slate-900 dark:text-white text-[11.5px]">
-                Autre numéro supplémentaire (Secours / Urgence) :
-              </label>
-              <div className="flex rounded-lg overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 focus-within:border-[#8A1A24] shadow-2xs transition-all">
-                <div className="px-2 py-1.5 bg-slate-100 dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold font-mono text-[11.5px] flex items-center space-x-1.5 shrink-0 select-none">
-                  {selectedCountryObj.code !== 'AUTRE' ? (
-                    <img
-                      src={`https://flagcdn.com/w40/${selectedCountryObj.code.toLowerCase()}.png`}
-                      alt=""
-                      className="w-4 h-3 object-cover rounded-xs"
-                    />
-                  ) : (
-                    <span>🌐</span>
-                  )}
-                  <span>{selectedCountryObj.dial}</span>
-                </div>
-                <input
-                  type="tel"
-                  placeholder="Ex: 01 02 03 04 05"
-                  value={formSecondAltPhone}
-                  onChange={(e) => setFormSecondAltPhone(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-500 dark:placeholder-slate-400"
-                />
-              </div>
-            </div>
           </div>
 
           {/* 5. SESSION SOUHAITÉE & MODALITÉ */}
@@ -448,21 +426,9 @@ export default function RegistrationGrandPlanForm({
                   errors.session ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24]'
                 }`}
               >
-                <option value="">-- Choisir une date ou période --</option>
-                {sessions && sessions.length > 0 ? (
-                  sessions.map((s, idx) => (
-                    <option key={idx} value={s.date}>
-                      {s.date} {s.location ? `(${s.location})` : ''}
-                    </option>
-                  ))
-                ) : (
-                  <>
-                    <option value="Session en cours - Inscriptions ouvertes">Session en cours (Inscriptions ouvertes - Abidjan &amp; En ligne)</option>
-                    <option value="Prochaine cohorte certifiante">Prochaine cohorte certifiante (Mois prochain)</option>
-                    <option value="Mission sur-mesure / Immédiate">Mission sur-mesure / Immédiate</option>
-                    <option value="Selon calendrier convenu">Selon calendrier convenu avec nos experts</option>
-                  </>
-                )}
+                <option value="">-- Choisir --</option>
+                <option value="Session en cours (Inscriptions ouvertes)">Session en cours (Inscriptions ouvertes)</option>
+                <option value="Session sur-mesure">Session sur-mesure</option>
               </select>
               {errors.session && <span className="text-xs text-red-500 font-semibold block">{errors.session}</span>}
             </div>

@@ -188,7 +188,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmitConsultant} className="space-y-4 font-sans text-xs">
+              <form onSubmit={handleSubmitConsultant} className="pro-form space-y-5 font-sans">
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name field */}
@@ -401,7 +401,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handlePortalSubmit} className="space-y-4 font-sans text-xs">
+                <form onSubmit={handlePortalSubmit} className="pro-form space-y-5 font-sans">
                   
                   <div className="space-y-1.5">
                     <label className="block font-bold text-slate-300">Code d'accès sécurisé :</label>

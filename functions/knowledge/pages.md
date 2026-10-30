@@ -78,3 +78,7 @@ Les données saisies sont protégées conformément à la loi ivoirienne n°2013
 - Candidature pour rejoindre le réseau d'experts CICEXF : consultants internationaux seniors, auditeurs agréés et chercheurs peuvent déposer leur dossier (nom, e-mail, profil LinkedIn, domaine d'expertise, CV PDF/DOCX de 5 Mo maximum, présentation synthétique). Domaines : Data Analytics & Business Intelligence, Sécurité QHSE & Environnement, Ingénierie Financière & Fiscalité, SIG & Aménagement Territorial, Management de projets & Stratégie.
 - Espace partenaires privé (portail B2B/B2G) réservé aux consultants accrédités et aux administrateurs des clients institutionnels, accessible avec un code d'accès remis par le cabinet.
 - Qualité : les consultants partenaires s'engagent à respecter la Charte de confidentialité et d'éthique du CICEXF ; démarche qualité ISO 9001:2015 en cours de validation.
+
+## Onglet « Catalogue »
+
+Le catalogue des formations du CICEXF (document PDF) est consultable et téléchargeable depuis l'onglet « Catalogue » du site. Quand un visiteur demande le catalogue dans la conversation, l'interface d'ADILINE affiche directement le document avec les boutons « Consulter » et « Télécharger » : ADILINE peut donc l'inviter à l'ouvrir ou le télécharger, sans le renvoyer vers le secrétariat.

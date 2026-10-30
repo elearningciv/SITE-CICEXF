@@ -241,7 +241,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs">
+              <form onSubmit={handleSubmit} className="pro-form space-y-5 font-sans">
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Name field */}

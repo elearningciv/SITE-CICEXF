@@ -159,7 +159,7 @@ export default function Home({
   return (
     <div id="home-view" className="relative font-sans overflow-hidden bg-white dark:bg-slate-950">
 
-      <TrainingModeModal modeId={openMode} onClose={() => setOpenMode(null)} goTo={goTo} />
+      <TrainingModeModal modeId={openMode} image={approachTiles.find(t => t.mode === openMode)?.image} onClose={() => setOpenMode(null)} goTo={goTo} />
 
       {/* Welcome pop-up */}
       {showWelcome && (
@@ -242,7 +242,7 @@ export default function Home({
       </section>
 
       {/* 3. Who we are */}
-      <AboutSection goTo={goTo} poles={currentDomains} onOpenDomain={openDomain} />
+      <AboutSection goTo={goTo} />
 
       {/* 4. Partners carousel (hidden while no partner is published) */}
       {partners.length > 0 && (
@@ -269,17 +269,17 @@ export default function Home({
           <SectionTitle>Notre approche de formation</SectionTitle>
           <div className="mt-10 grid grid-cols-1 overflow-hidden rounded-xl md:grid-cols-3">
             {approachTiles.map(tile => (
-              <div key={tile.title} className="group relative min-h-[380px] overflow-hidden">
+              <button type="button" key={tile.title} onClick={() => setOpenMode(tile.mode)} aria-label={`${tile.title} : voir les détails`} className="group relative min-h-[380px] w-full overflow-hidden text-left cursor-pointer">
                 <img src={tile.image} alt="" loading="lazy" referrerPolicy="no-referrer" className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                 <div className="absolute inset-0 bg-slate-950/70 transition-colors duration-500 group-hover:bg-[#002447]/85" />
                 <div className="relative flex h-full flex-col p-8 text-white">
                   <h3 className="font-display text-2xl font-extrabold">{tile.title}</h3>
                   <p className="mt-4 text-base leading-relaxed text-slate-100">{tile.text}</p>
-                  <button onClick={() => setOpenMode(tile.mode)} className="mt-auto self-start rounded-full bg-amber-400 px-6 py-2.5 text-sm font-bold text-[#001a33] hover:bg-amber-300 transition-colors cursor-pointer">
+                  <span className="mt-auto self-start rounded-full bg-amber-400 px-6 py-2.5 text-sm font-bold text-[#001a33] group-hover:bg-amber-300 transition-colors">
                     En savoir plus
-                  </button>
+                  </span>
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -290,23 +290,23 @@ export default function Home({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Nos formations certifiantes</SectionTitle>
           <div className="mt-8 px-6">
-            <Carousel label="Nos formations certifiantes" perView={{ base: 1, sm: 2, lg: 3 }} autoplay={6000}>
+            <Carousel label="Nos formations certifiantes" perView={{ base: 1, sm: 2, lg: 4 }} autoplay={6000}>
               {formations.map(f => (
-                <article key={f.id} className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                  <button onClick={() => openFormation(f.id)} className="aspect-[16/9] overflow-hidden bg-slate-200 cursor-pointer" aria-label={`Voir la formation ${f.title}`}>
-                    {f.featuredImage && <img src={f.featuredImage} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />}
+                <article key={f.id} className="group flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-slate-200 transition-shadow hover:shadow-lg dark:bg-slate-900 dark:ring-slate-800">
+                  <button onClick={() => openFormation(f.id)} className="aspect-[16/10] overflow-hidden bg-slate-50 dark:bg-slate-800 cursor-pointer" aria-label={`Voir la formation ${f.title}`}>
+                    {f.featuredImage && <img src={f.featuredImage} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-contain transition-transform duration-700 group-hover:scale-105" />}
                   </button>
-                  <div className="flex flex-1 flex-col p-6">
-                    <p className="text-xs font-bold uppercase tracking-wider text-brand-emerald dark:text-orange-300">{f.domain}</p>
-                    <h3 className="mt-2 font-display text-lg font-bold leading-snug text-slate-900 dark:text-white line-clamp-2">{f.title}</h3>
+                  <div className="flex flex-1 flex-col p-4">
+                    <p className="text-[11px] font-bold uppercase tracking-wider text-brand-emerald dark:text-orange-300 line-clamp-1">{f.domain}</p>
+                    <h3 className="mt-1.5 font-display text-base font-bold leading-snug text-slate-900 dark:text-white line-clamp-2">{f.title}</h3>
                     {!isPlaceholder(f.shortDescription) && <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 line-clamp-2">{f.shortDescription}</p>}
-                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-700 dark:text-slate-300">
+                    <div className="mt-3 mb-4 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-700 dark:text-slate-300">
                       <span className="inline-flex items-center gap-1.5"><Clock className="w-4 h-4 text-slate-500" />{f.duration}</span>
                       <span className="inline-flex items-center gap-1.5"><Presentation className="w-4 h-4 text-slate-500" />{f.modality}</span>
                     </div>
-                    <div className="mt-auto flex items-center justify-between pt-5">
-                      <span className="font-display font-extrabold text-slate-900 dark:text-white">{f.price}</span>
-                      <button onClick={() => openFormation(f.id)} className="rounded-full bg-brand-emerald px-4 py-2 text-xs font-bold text-white hover:bg-brand-emerald-dark cursor-pointer">
+                    <div className="mt-auto flex items-center justify-between gap-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+                      <span className="whitespace-nowrap font-display text-sm font-extrabold text-slate-900 dark:text-white">{f.price}</span>
+                      <button onClick={() => openFormation(f.id)} className="whitespace-nowrap rounded-full bg-brand-emerald px-3.5 py-1.5 text-xs font-bold text-white hover:bg-brand-emerald-dark cursor-pointer">
                         Voir le programme
                       </button>
                     </div>
@@ -376,7 +376,7 @@ export default function Home({
           <h2 className="font-display text-xl font-extrabold text-white sm:text-2xl">
             Un projet de formation pour vos équipes ?
           </h2>
-          <button onClick={() => goTo('contact')} className="shrink-0 rounded-full bg-amber-400 px-7 py-3 text-sm font-bold text-[#001a33] hover:bg-amber-300 transition-colors cursor-pointer">
+          <button onClick={() => window.dispatchEvent(new Event('cicexf:open-adiline'))} className="shrink-0 rounded-full bg-amber-400 px-7 py-3 text-sm font-bold text-[#001a33] hover:bg-amber-300 transition-colors cursor-pointer">
             Parlons-en !
           </button>
         </div>
@@ -412,7 +412,7 @@ export default function Home({
               <CheckCircle2 className="w-5 h-5" /> Merci, votre inscription est enregistrée.
             </p>
           ) : (
-            <form onSubmit={handleNewsletter} className="mx-auto mt-6 flex max-w-xl flex-col gap-3 sm:flex-row">
+            <form onSubmit={handleNewsletter} className="pro-form mx-auto mt-6 flex max-w-xl flex-col gap-3 sm:flex-row">
               <label htmlFor="home-newsletter-email" className="sr-only">Adresse e-mail</label>
               <input
                 id="home-newsletter-email"

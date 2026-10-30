@@ -18,6 +18,7 @@ const NAVIGATION_ORDER = [
   'accompagnements',
   'formations',
   'news',
+  'catalogue',
   'realisations',
   'contact'
 ];
@@ -29,6 +30,7 @@ const TAB_LABELS: Record<string, string> = {
   formations: 'Formations',
   realisations: 'Réalisations',
   news: 'Actualités',
+  catalogue: 'Catalogue',
   contact: 'Contact'
 };
 
@@ -40,6 +42,7 @@ const TAB_PATHS: Record<string, string> = {
   formations: '/formations',
   realisations: '/realisations',
   news: '/actualites',
+  catalogue: '/catalogue',
   partners: '/partenaires',
   contact: '/contact',
   admin: '/admin'
@@ -55,6 +58,7 @@ const About = lazy(() => import('./components/About'));
 const Interventions = lazy(() => import('./components/Interventions'));
 const Formations = lazy(() => import('./components/Formations'));
 const Realisations = lazy(() => import('./components/Realisations'));
+const Catalogue = lazy(() => import('./components/Catalogue'));
 const News = lazy(() => import('./components/News'));
 const Contact = lazy(() => import('./components/Contact'));
 const Partners = lazy(() => import('./components/Partners'));
@@ -81,6 +85,13 @@ export default function App() {
   useEffect(() => {
     if (isAiModalOpen) setHasOpenedAssistant(true);
   }, [isAiModalOpen]);
+
+  // Any part of the site can open the conversation with ADILINE
+  useEffect(() => {
+    const open = () => setIsAiModalOpen(true);
+    window.addEventListener('cicexf:open-adiline', open);
+    return () => window.removeEventListener('cicexf:open-adiline', open);
+  }, []);
   
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
@@ -455,6 +466,8 @@ export default function App() {
         );
       case 'formations':
         return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} domains={accompagnements} />;
+      case 'catalogue':
+        return <Catalogue setActiveTab={setActiveTab} />;
       case 'realisations':
         return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} projects={realisations} />;
       case 'news':
