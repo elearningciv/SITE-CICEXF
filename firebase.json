@@ -4,5 +4,12 @@
       "database": "ai-studio-cicexfcabinetint-be0c0f21-7527-4112-ae7f-82c61d321a9c",
       "rules": "firestore.rules"
     }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "cicexf",
+      "ignore": ["node_modules", ".git", "*.log"]
+    }
   ]
 }

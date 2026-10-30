@@ -11,6 +11,10 @@ import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.webp';
 import { CABINET_INFO, FORMATIONS, TEAM_MEMBERS } from '../knowledgeBase';
 import { saveProspect } from '../lib/prospects';
 
+// Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
+const ADILINE_API_URL = import.meta.env.VITE_ADILINE_API_URL
+  || 'https://europe-west1-project-a93f5a0f-743d-4552-852.cloudfunctions.net/adilineChat';
+
 export interface RichCard {
   type: 'formation' | 'session' | 'expert' | 'devis';
   title: string;
@@ -471,17 +475,28 @@ Comment puis-je vous accompagner aujourd'hui ?`,
       let cardsFound: RichCard[] = [];
 
       if (reader) {
+        // A network chunk can end in the middle of an event: keep the partial line for the next read
+        let buffer = '';
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
+              let data: any;
               try {
-                const data = JSON.parse(line.slice(6));
+                data = JSON.parse(line.slice(6));
+              } catch {
+                continue; // non-json line
+              }
+              if (data.type === 'error') {
+                throw new Error('ADILINE service unavailable');
+              }
+              {
                 if (data.type === 'chunk' && data.text) {
                   accumulatedText += data.text;
                   setMessages(prev => prev.map(m => 
@@ -495,8 +510,6 @@ Comment puis-je vous accompagner aujourd'hui ?`,
                   if (data.sources) sourcesFound = data.sources;
                   if (data.cards) cardsFound = data.cards;
                 }
-              } catch {
-                // non-json line
               }
             }
           }
@@ -574,7 +587,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
         text: m.text
       }));
 
-      const response = await fetch('/api/adiline/chat', {
+      const response = await fetch(ADILINE_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -642,7 +655,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
         text: m.text
       }));
 
-      const response = await fetch('/api/adiline/chat', {
+      const response = await fetch(ADILINE_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

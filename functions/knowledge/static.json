@@ -1,0 +1,1699 @@
+{
+ "exportedAt": "2026-10-30T12:42:22.152Z",
+ "cabinet": {
+  "nom": "Cabinet International de Consultance, d'Expertise et de Formation",
+  "sigle": "CICEXF",
+  "statutLegal": "Société de droit ivoirien agréée pour la formation professionnelle continue et l'ingénierie de conseil",
+  "agrementOfficiel": "Récépissé N°25343/GTCA/RC/2025",
+  "numeroIDU": "CI-2025-0058238 N",
+  "directeurGeneral": {
+   "nom": "Dr. Kouassi Marc-Aurèle",
+   "titre": "Directeur Général & Associé Gérant",
+   "contactMail": "cabinetcicexf@gmail.com"
+  },
+  "directionAssociee": {
+   "nom": "M. Amadou Diallo",
+   "titre": "Directeur Général & Co-fondateur",
+   "specialite": "Conseil stratégique, PPP et réformes institutionnelles",
+   "contactMail": "a.diallo@cicexf.org"
+  },
+  "directionAcademique": {
+   "nom": "Dr. Marc Koffi",
+   "titre": "Directeur Général Adjoint & Chef du Pôle Formation",
+   "specialite": "Sciences de l'Éducation & Ingénierie Pédagogique",
+   "contactMail": "m.koffi@cicexf.org"
+  },
+  "siegePrincipal": {
+   "pays": "Côte d'Ivoire",
+   "ville": "Abidjan",
+   "commune": "Cocody",
+   "quartier": "Angré 8ème Tranche / Cocody Palmeraie",
+   "adresseComplete": "Cocody Angré 8ème Tranche, Carrefour Duncan / Rue de la Clinique, Immeuble Prestige, 3ème étage, Abidjan, Côte d'Ivoire",
+   "repere": "À proximité du Carrefour Duncan et de la Clinique de la Palmeraie"
+  },
+  "antennesRegionales": [
+   {
+    "pays": "Bénin",
+    "ville": "Cotonou",
+    "statut": "Antenne opérationnelle"
+   },
+   {
+    "pays": "Togo",
+    "ville": "Lomé",
+    "statut": "Antenne opérationnelle"
+   },
+   {
+    "pays": "Mali",
+    "ville": "Bamako",
+    "statut": "Antenne opérationnelle"
+   },
+   {
+    "pays": "Burkina Faso",
+    "ville": "Ouagadougou",
+    "statut": "Antenne opérationnelle"
+   }
+  ],
+  "telephones": {
+   "whatsappAdmissions": "+225 07 01 97 00 65",
+   "whatsappClean": "2250701970065",
+   "secretariatTechnique": "+225 05 74 22 22 46"
+  },
+  "emails": {
+   "admissions": "elearningciv@gmail.com",
+   "direction": "cabinetcicexf@gmail.com"
+  },
+  "horairesOuverture": {
+   "semaine": "Lundi au Vendredi : 08h00 à 18h00 en continu",
+   "samedi": "Samedi : 09h00 à 13h00",
+   "dimanche": "Dimanche : Fermé (Permanence WhatsApp active pour urgences admissions)"
+  },
+  "financementEtModalites": {
+   "particuliers": "Possibilité d'échelonnement en 2 ou 3 versements sans frais additionnels.",
+   "entreprises": "Délivrance de convention officielle de formation et facture proforma sous 24 heures.",
+   "moyensPaiement": [
+    "Virement bancaire",
+    "Chèque certifié d'entreprise",
+    "Mobile Money (Orange Money, Wave, MTN MoMo)",
+    "Paiement au secrétariat du siège"
+   ],
+   "remisesGroupe": [
+    {
+     "seuil": "À partir de 3 participants d'une même structure",
+     "remise": "10% de réduction sur le total"
+    },
+    {
+     "seuil": "À partir de 5 participants d'une même structure",
+     "remise": "15% de réduction sur le total"
+    },
+    {
+     "seuil": "Formation intra-entreprise sur site ou dédiée",
+     "remise": "Tarif dégressif sur devis personnalisé"
+    }
+   ]
+  },
+  "chiffresCles": {
+   "professionnelsFormes": "+2 000 cadres et professionnels certifiés",
+   "missionsRealisees": "+150 missions d'envergure internationale menées avec succès",
+   "partenairesInstitutionnels": "+50 partenaires (Banque Mondiale, AFD, ministères, institutions)",
+   "tauxSatisfaction": "95% de satisfaction globale audité"
+  },
+  "valeurs": [
+   {
+    "nom": "Excellence",
+    "description": "Refus systématique de l'approximation, double revue par des pairs experts."
+   },
+   {
+    "nom": "Rigueur",
+    "description": "Armature méthodologique scientifique et respect scrupuleux des délais."
+   },
+   {
+    "nom": "Transparence",
+    "description": "Clarté contractuelle et financière totale, sans coûts dissimulés."
+   },
+   {
+    "nom": "Redevabilité",
+    "description": "Mesure de l'impact réel et pérennité opérationnelle sur le terrain."
+   },
+   {
+    "nom": "Innovation",
+    "description": "Intégration continue de l'IA, des SIG, du Big Data et des outils modernes."
+   }
+  ]
+ },
+ "formations": [
+  {
+   "id": "f-data-analyst",
+   "slug": "data-analyst-collecte-visualisation",
+   "title": "Data Analyst : Maîtrise complète de la collecte, de la préparation et de la visualisation des données",
+   "domain": "Ingénierie Informatique & Data",
+   "level": "Tous niveaux",
+   "modality": "Hybride",
+   "duration": "6 semaines (120 heures intensives)",
+   "price": "450 000 FCFA",
+   "shortDescription": "Un parcours d'excellence opérationnelle pour transformer la donnée brute en indicateurs décisionnels avec Excel Avancé, SQL, Power BI, Python et KoboCollect.",
+   "context": "À l'ère de la transformation numérique, la capacité à collecter, nettoyer et interpréter la donnée constitue une compétence stratégique. Le CICEXF propose une formation immersive alliant rigueur méthodologique et projets réels d'entreprises pour doter les cadres des compétences les plus recherchées du marché.",
+   "objectives": [
+    "Concevoir des formulaires de collecte mobiles avec KoboCollect / ODK",
+    "Nettoyer et automatiser le traitement des données avec Excel et Power Query",
+    "Interroger et manipuler des bases de données relationnelles avec SQL (PostgreSQL)",
+    "Modéliser et concevoir des tableaux de bord interactifs percutants avec Microsoft Power BI et DAX",
+    "S'initier à l'analyse exploratoire et l'automatisation avec Python (Pandas, Matplotlib)"
+   ],
+   "resultsExpected": [
+    "Autonomie complète sur la chaîne ETL (Extract, Transform, Load)",
+    "Capacité à livrer des dashboards exécutifs professionnels",
+    "Obtention du Certificat professionnel d'Expert Data Analyst délivré par le CICEXF"
+   ],
+   "targetPublic": [
+    "Contrôleurs de gestion, directeurs financiers, analystes d'affaires",
+    "Responsables de suivi-évaluation de projets et programmes de développement",
+    "Statisticiens, sociologues, chargés d'études marketing",
+    "Ingénieurs, informaticiens et professionnels en reconversion"
+   ],
+   "prerequisites": [
+    "Connaissance basique de l'outil informatique et navigation web",
+    "Pratique de base du tableur Microsoft Excel"
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Culture data & cycle de vie de la donnée",
+     "details": [
+      "Comprendre l'écosystème data",
+      "Les phases ETL",
+      "Bonnes pratiques de gouvernance"
+     ]
+    },
+    {
+     "module": "Module 2 : Collecte mobile avec XLSForm & KoboCollect",
+     "details": [
+      "Syntaxe XLSForm",
+      "Déploiement sur serveur",
+      "Synchronisation hors-ligne"
+     ]
+    },
+    {
+     "module": "Module 3 : Nettoyage avancé sous Excel & requêtes SQL",
+     "details": [
+      "Power Query",
+      "Jointures",
+      "Requêtes SELECT, GROUP BY, HAVING, subqueries"
+     ]
+    },
+    {
+     "module": "Module 4 : Modélisation décisionnelle & DAX sous Power BI",
+     "details": [
+      "Schéma en étoile",
+      "Relations",
+      "Calculs temporels DAX avancés"
+     ]
+    },
+    {
+     "module": "Module 5 : Conception de dashboards décisionnels interactifs",
+     "details": [
+      "Storytelling avec la donnée",
+      "Ergonomie UX/UI",
+      "Indicateurs KPI"
+     ]
+    },
+    {
+     "module": "Module 6 : Projet pratique réel de soutenance d'entreprise",
+     "details": [
+      "Étude de cas complète",
+      "Présentation devant jury d'experts"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "04 Juillet 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e & En ligne",
+     "status": "Disponible"
+    },
+    {
+     "date": "05 Septembre 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e & En ligne",
+     "status": "Disponible"
+    },
+    {
+     "date": "07 Novembre 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e & En ligne",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "La formation est-elle accessible aux débutants en informatique ?",
+     "answer": "Absolument. Le premier module reprend les bases méthodologiques et le tableur avant d'aborder progressivement SQL et Power BI."
+    },
+    {
+     "question": "Le certificat est-il reconnu à l'international ?",
+     "answer": "Oui, le CICEXF est agréé sous le N°25343/GTCA/RC/2025 et le certificat valorise un portfolio concret de projets réels validés par des consultants seniors."
+    }
+   ]
+  },
+  {
+   "id": "f-management-equipe",
+   "slug": "formation-gestion-des-equipes-leadership",
+   "title": "GESTION DES EQUIPES (Leadership, Cohésion & Performance collective)",
+   "domain": "Management & Ressources Humaines",
+   "level": "Tous niveaux",
+   "modality": "Présentiel",
+   "duration": "Sessions modulaires intensives (24h à 40h)",
+   "price": "Sur devis / 350 000 FCFA par participant (Dégressif en groupe)",
+   "shortDescription": "Développez un leadership mobilisateur, renforcez la cohésion de vos collaborateurs et maîtrisez les techniques de résolution constructive des conflits.",
+   "context": "Face aux réorganisations permanentes et aux objectifs exigeants, la capacité d'un encadrant à fédérer, motiver et déléguer conditionne directement la réussite de l'organisation. Cette formation d'excellence CICEXF allie psychologie managériale, mises en situation concrètes et outils pratiques de gouvernance collective.",
+   "objectives": [
+    "Identifier son style de leadership dominant et développer sa flexibilité managériale",
+    "Instaurer une communication claire, bienveillante et orientée résultats",
+    "Déléguer de façon sécurisée et responsabiliser ses collaborateurs",
+    "Gérer les tensions, désamorcer les conflits et recréer la cohésion",
+    "Piloter la performance collective par des objectifs SMART partagés"
+   ],
+   "resultsExpected": [
+    "Amélioration mesurable du climat social et de l'engagement des équipes",
+    "Maîtrise des entretiens de cadrage et de feedback constructif",
+    "Certificat d'Excellence en Management d'Équipe CICEXF"
+   ],
+   "targetPublic": [
+    "Directeurs de départements, directeurs des ressources humaines (DRH)",
+    "Chefs d'équipe, superviseurs opérationnels, chefs de projet",
+    "Cadres nouvellement promus à des fonctions d'encadrement"
+   ],
+   "prerequisites": [
+    "Avoir une expérience d'encadrement ou être appelé à animer une équipe."
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Posture et styles de leadership situationnel",
+     "details": [
+      "Auto-diagnostic",
+      "Les 4 styles de Hersey et Blanchard",
+      "Adapter son management à la maturité des collaborateurs"
+     ]
+    },
+    {
+     "module": "Module 2 : Communication managériale & écoute active",
+     "details": [
+      "Les principes de l'assertivité",
+      "Donner un feedback constructif selon la méthode DESC",
+      "Mener des réunions courtes et productives"
+     ]
+    },
+    {
+     "module": "Module 3 : Délégation efficace et responsabilisation",
+     "details": [
+      "Les 5 niveaux de délégation",
+      "Fixer des indicateurs de progrès",
+      "Accompagner sans micro-manager"
+     ]
+    },
+    {
+     "module": "Module 4 : Prévention et résolution des conflits",
+     "details": [
+      "Détecter les signaux faibles de tension",
+      "Techniques de médiation interne",
+      "Transformer les désaccords en opportunités d'amélioration"
+     ]
+    },
+    {
+     "module": "Module 5 : Motivation et cohésion d'équipe",
+     "details": [
+      "Leviers de motivation intrinsèque",
+      "Rituels d'équipe et célébration des victoires",
+      "Plan d'action managérial personnel"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "15 Juillet 2026",
+     "location": "Siège CICEXF Abidjan & Intra-entreprise",
+     "status": "Disponible"
+    },
+    {
+     "date": "19 Août 2026",
+     "location": "Siège CICEXF Abidjan & En ligne",
+     "status": "Disponible"
+    },
+    {
+     "date": "23 Septembre 2026",
+     "location": "Siège CICEXF Abidjan & Intra-entreprise",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "La formation peut-elle être organisée directement au sein de notre entreprise ?",
+     "answer": "Oui, nous concevons des sessions intra-entreprises adaptées sur-mesure aux défis de vos équipes avec déplacement de nos consultants formateurs sur site."
+    }
+   ]
+  },
+  {
+   "id": "f-qhse-audit",
+   "slug": "auditeur-interne-qhse-iso-9001-14001-45001",
+   "title": "Auditeur Interne QHSE et Management de la Qualité ISO 9001, 14001, 45001",
+   "domain": "Ingénierie QHSE",
+   "level": "Intermédiaire",
+   "modality": "Présentiel",
+   "duration": "40 heures (5 jours intensifs)",
+   "price": "350 000 FCFA",
+   "shortDescription": "Acquérez la méthodologie complète pour planifier, réaliser et rapporter des audits internes selon la norme ISO 19011 sur les référentiels Qualité, Sécurité et Environnement.",
+   "context": "La conformité aux normes internationales est devenue une exigence d'accès aux marchés pour les entreprises compétitives. Ce programme forme des auditeurs internes rigoureux capables de piloter l'amélioration continue.",
+   "objectives": [
+    "Comprendre la structure universelle de haut niveau (HLS) des normes ISO",
+    "Maîtriser les exigences clés des normes ISO 9001:2015, ISO 14001:2015 et ISO 45001:2018",
+    "Planifier un programme d'audit interne selon l'ISO 19011:2018",
+    "Rédiger des constats d'audit sans ambiguïté et suivre les plans d'actions correctives"
+   ],
+   "resultsExpected": [
+    "Capacité à mener des audits internes de première et deuxième partie",
+    "Délivrance du Certificat d'Auditeur Interne QHSE CICEXF"
+   ],
+   "targetPublic": [
+    "Responsables Qualité, Sécurité et Environnement (QHSE)",
+    "Directeurs techniques, auditeurs internes, ingénieurs de production"
+   ],
+   "prerequisites": [
+    "Connaissance basique du fonctionnement des organisations."
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Structure HLS et panorama des normes ISO 9001, 14001, 45001",
+     "details": [
+      "Contexte de l'organisme",
+      "Leadership",
+      "Approche par les risques"
+     ]
+    },
+    {
+     "module": "Module 2 : Méthodologie d'audit interne selon ISO 19011",
+     "details": [
+      "Définition et principes",
+      "Gestion d'un programme d'audit"
+     ]
+    },
+    {
+     "module": "Module 3 : Préparation de l'audit et élaboration du guide d'entretien",
+     "details": [
+      "Revue documentaire",
+      "Plan d'audit",
+      "Check-lists d'audit"
+     ]
+    },
+    {
+     "module": "Module 4 : Conduite de l'audit sur site et techniques d'investigation",
+     "details": [
+      "Réunion d'ouverture",
+      "Questionnement",
+      "Recueil des preuves d'audit"
+     ]
+    },
+    {
+     "module": "Module 5 : Formulation des écarts, rapport d'audit et clôture",
+     "details": [
+      "Fiches de non-conformité",
+      "Réunion de clôture",
+      "Suivi des actions correctives"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "10 Août 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e",
+     "status": "Disponible"
+    },
+    {
+     "date": "12 Octobre 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "Cette formation permet-elle d'auditer des sous-traitants ?",
+     "answer": "Oui, la méthodologie ISO 19011 transmise s'applique aux audits internes (1ère partie) et aux audits de fournisseurs/prestataires (2nde partie)."
+    }
+   ]
+  },
+  {
+   "id": "f-finance-modeling",
+   "slug": "analyse-financiere-evaluation-modelisation-excel",
+   "title": "Analyse Financière, Évaluation d'Entreprise et Modélisation sur Excel",
+   "domain": "Ingénierie Financière & Investissement",
+   "level": "Avancé",
+   "modality": "Hybride",
+   "duration": "48 heures (6 samedis)",
+   "price": "400 000 FCFA",
+   "shortDescription": "Construisez des modèles financiers dynamiques à 3 états, maîtrisez la valorisation par les flux DCF et préparez vos dossiers de financement bancaire.",
+   "context": "Pour lever des fonds ou piloter des investissements stratégiques, la maîtrise des modèles prévisionnels est indispensable. Ce cours allie théorie financière avancée et pratique intensive sur tableur.",
+   "objectives": [
+    "Réaliser un diagnostic financier rétrospectif approfondi (SIG, BFR, CAF)",
+    "Bâtir un modèle prévisionnel dynamique à 3 états (Compte de résultat, Bilan, Tableau de flux)",
+    "Calculer le coût moyen pondéré du capital (CMPC / WACC)",
+    "Valoriser une entreprise par la méthode DCF (Discounted Cash Flows) et les multiples boursiers"
+   ],
+   "resultsExpected": [
+    "Autonomie pour modéliser des business plans bancables",
+    "Attestation d'Expert en Modélisation Financière CICEXF"
+   ],
+   "targetPublic": [
+    "Directeurs Administratifs et Financiers (DAF), contrôleurs de gestion",
+    "Analystes financiers, chargés d'affaires bancaires, experts-comptables mémorialistes"
+   ],
+   "prerequisites": [
+    "Bonne maîtrise des principes comptables généraux et d'Excel."
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Diagnostic financier et analyse de performance",
+     "details": [
+      "Retraitements des états financiers",
+      "Ratios de rentabilité et solvabilité"
+     ]
+    },
+    {
+     "module": "Module 2 : Mécanique de modélisation prévisionnelle sur Excel",
+     "details": [
+      "Hypothèses opérationnelles",
+      "Structure d'un modèle 3-Statement sans références circulaires"
+     ]
+    },
+    {
+     "module": "Module 3 : Modélisation du BFR et du calendrier de dette",
+     "details": [
+      "Tableaux d'amortissement d'emprunts",
+      "Optimisation de la trésorerie"
+     ]
+    },
+    {
+     "module": "Module 4 : Coût du capital et valorisation DCF",
+     "details": [
+      "Modèle MEDAF/CAPM",
+      "Flux de trésorerie disponibles (FCFF)",
+      "Valeur terminale"
+     ]
+    },
+    {
+     "module": "Module 5 : Analyse de sensibilité et stress-tests",
+     "details": [
+      "Tables de données à double entrée",
+      "Gestionnaire de scénarios",
+      "Recommandation d'investissement"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "18 Juillet 2026",
+     "location": "Siège CICEXF Abidjan & Zoom",
+     "status": "Disponible"
+    },
+    {
+     "date": "12 Septembre 2026",
+     "location": "Siège CICEXF Abidjan & Zoom",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "Reçoit-on les matrices Excel après la formation ?",
+     "answer": "Oui, vous recevez une bibliothèque complète de templates de modélisation entièrement déverrouillés et réutilisables."
+    }
+   ]
+  },
+  {
+   "id": "f-sig-qgis",
+   "slug": "sig-qgis-gestion-commune",
+   "title": "Systèmes d'Information Géographique (SIG) appliqués au Développement Local avec QGIS",
+   "domain": "Ingénierie de Développement Territorial",
+   "level": "Débutant",
+   "modality": "Présentiel",
+   "duration": "36 heures (4 samedis)",
+   "price": "300 000 FCFA",
+   "shortDescription": "Maîtrisez la cartographie numérique pour optimiser la prise de décision spatiale et la gestion cadastrale des communes.",
+   "context": "La gestion moderne des territoires exige une maîtrise parfaite des dimensions géospatiales. Ce programme forme à l'utilisation professionnelle du logiciel libre de référence QGIS.",
+   "objectives": [
+    "Comprendre les bases des systèmes de coordonnées de référence (SCR) et des projections",
+    "Importer, créer et géoréférencer des données vectorielles et rasters",
+    "Effectuer des requêtes spatiales et attributaires avancées",
+    "Composer des cartes thématiques prêtes à être publiées"
+   ],
+   "resultsExpected": [
+    "Autonomie pour réaliser des projets SIG complets sous QGIS",
+    "Certificat de Spécialiste SIG QGIS CICEXF"
+   ],
+   "targetPublic": [
+    "Urbanistes, géographes, aménagistes, environnementalistes",
+    "Ingénieurs du génie civil, géomètres, agents techniques municipaux",
+    "Chargés d'études en ONG de développement local"
+   ],
+   "prerequisites": [
+    "Aisance générale avec l'outil informatique. Aucune connaissance préalable en SIG."
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Fondamentaux de la cartographie & QGIS",
+     "details": [
+      "Concepts SIG",
+      "Modèles vectoriels vs rasters",
+      "Systèmes WGS 84 et UTM"
+     ]
+    },
+    {
+     "module": "Module 2 : Acquisition et connexion aux serveurs de cartes",
+     "details": [
+      "OpenStreetMap",
+      "Flux WMS/WFS",
+      "Import de données GPS de terrain"
+     ]
+    },
+    {
+     "module": "Module 3 : Numérisation et tables d'attributs",
+     "details": [
+      "Création de couches Shapefile et GeoPackage",
+      "Calcul de surfaces et linéaires"
+     ]
+    },
+    {
+     "module": "Module 4 : Géoréférencement & analyses spatiales",
+     "details": [
+      "Calage de plans scannés",
+      "Zones de tampon (buffer)",
+      "Intersections"
+     ]
+    },
+    {
+     "module": "Module 5 : Cartes thématiques et mise en page finale",
+     "details": [
+      "Sémiologie graphique",
+      "Gestionnaire de composition",
+      "Exportation haute résolution"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "25 Juillet 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e",
+     "status": "Disponible"
+    },
+    {
+     "date": "17 Octobre 2026",
+     "location": "Siège CICEXF Abidjan Angré 8e",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "Le logiciel QGIS est-il gratuit ?",
+     "answer": "Oui, QGIS est un logiciel libre et open source gratuit, sans frais de licence récurrents."
+    }
+   ]
+  },
+  {
+   "id": "f-management-project",
+   "slug": "pmp-certif-preparation",
+   "title": "Gestion de Projets et Préparation à la Certification PMP (Project Management Professional)",
+   "domain": "Audit & Stratégie",
+   "level": "Avancé",
+   "modality": "En ligne",
+   "duration": "60 heures",
+   "price": "500 000 FCFA",
+   "shortDescription": "Une préparation intensive basée sur le PMBOK 7ème édition pour réussir l'examen PMP du PMI du premier coup.",
+   "context": "La certification PMP® du Project Management Institute est le standard mondial le plus reconnu en management de projet. Le CICEXF propose une formation structurée garantissant les 35 heures officielles requises.",
+   "objectives": [
+    "Maîtriser les 3 domaines clés de l'examen : Personnes, Processus, Environnement Commercial",
+    "Intégrer les cycles de vie prédictifs, agiles (Scrum, Kanban) et hybrides",
+    "Valider les 35 heures de contact obligatoires pour l'éligibilité PMI",
+    "S'entraîner sur simulateur d'examen de plus de 2 000 questions avec corrigés"
+   ],
+   "resultsExpected": [
+    "Attestation officielle de 35 heures PDU délivrée",
+    "Taux de réussite historique supérieur à 96% sous 3 mois",
+    "Validation du dossier d'inscription PMI par nos experts"
+   ],
+   "targetPublic": [
+    "Chefs de projets, directeurs de programmes, consultants seniors",
+    "Ingénieurs, directeurs techniques, cadres de ministères et d'ONG"
+   ],
+   "prerequisites": [
+    "Bac+3 avec 3 ans d'expérience en projet OU Bac+2 avec 5 ans d'expérience."
+   ],
+   "program": [
+    {
+     "module": "Module 1 : Cadre PMI et déontologie du chef de projet",
+     "details": [
+      "Structure du PMBOK 7e",
+      "Dossier d'éligibilité"
+     ]
+    },
+    {
+     "module": "Module 2 : Domaine 'Personnes' - Leadership & Équipe",
+     "details": [
+      "Gestion des conflits",
+      "Motivation",
+      "Accompagnement du changement"
+     ]
+    },
+    {
+     "module": "Module 3 : Domaine 'Processus' - Planification prédictive",
+     "details": [
+      "Charte de projet",
+      "WBS",
+      "Chemin critique",
+      "Budgétisation"
+     ]
+    },
+    {
+     "module": "Module 4 : Approches Agiles, Scrum et Hybrides",
+     "details": [
+      "Manifeste Agile",
+      "Cérémonies Scrum",
+      "Gestion de la valeur acquise (EVM)"
+     ]
+    },
+    {
+     "module": "Module 5 : Gestion des Risques et Environnement Commercial",
+     "details": [
+      "Analyse qualitative et quantitative",
+      "Stratégies de réponse",
+      "Gouvernance"
+     ]
+    },
+    {
+     "module": "Module 6 : Stratégies d'examen & Examens blancs minutés",
+     "details": [
+      "Analyse des pièges",
+      "Simulateur 180 questions",
+      "Plan de révision"
+     ]
+    }
+   ],
+   "sessions": [
+    {
+     "date": "11 Juillet 2026",
+     "location": "Classe Virtuelle Zoom Direct (Samedis)",
+     "status": "Disponible"
+    },
+    {
+     "date": "05 Septembre 2026",
+     "location": "Classe Virtuelle Zoom Direct (Samedis)",
+     "status": "Disponible"
+    }
+   ],
+   "faq": [
+    {
+     "question": "Les frais d'examen PMI sont-ils inclus ?",
+     "answer": "Non, les frais d'examen PMI (environ 405 USD pour les membres PMI) se règlent directement sur pmi.org. L'accompagnement à l'inscription est offert par le CICEXF."
+    }
+   ]
+  }
+ ],
+ "accompagnements": [
+  {
+   "id": "ing-formation",
+   "slug": "ingenierie-formation",
+   "title": "Ingénierie de formation et de renforcement de capacités",
+   "shortDescription": "Analyse des besoins, conception de programmes sur-mesure et transfert de compétences de haut niveau.",
+   "description": "Le CICEXF accompagne les organisations publiques, privées et non gouvernementales dans le développement stratégique de leur capital humain.",
+   "subDomains": [
+    {
+     "title": "1. Analyse et planification des dispositifs de formation",
+     "description": "Diagnostics des besoins, plans de formation stratégiques et cartographie des compétences.",
+     "keyPoints": [
+      "Diagnostics individuels et collectifs",
+      "Veille réglementaire"
+     ]
+    },
+    {
+     "title": "2. Conception pédagogique et innovation éducative",
+     "description": "Curricula par compétences, ingénierie e-learning et multimodalités.",
+     "keyPoints": [
+      "Approche par compétences (APC)",
+      "Outils LMS interactifs"
+     ]
+    },
+    {
+     "title": "3. Mise en œuvre des formations",
+     "description": "Animation présentielle et virtuelle, ateliers pratiques et coordination logistique.",
+     "keyPoints": [
+      "Master facilitateurs certifiés",
+      "Suivi individuel"
+     ]
+    },
+    {
+     "title": "4. Évaluation et développement professionnel",
+     "description": "Mesure de l'impact selon le modèle de Kirkpatrick et certification des compétences.",
+     "keyPoints": [
+      "Évaluation de niveau 4",
+      "Bilan de compétences"
+     ]
+    }
+   ],
+   "examples": [
+    "Plan triennal de formation pour 450 cadres de l'administration publique.",
+    "Digitalisation des modules sécurité pour un groupe industriel."
+   ]
+  },
+  {
+   "id": "ing-financiere",
+   "slug": "ingenierie-financiere",
+   "title": "Ingénierie financière et de l'investissement",
+   "shortDescription": "Modélisation financière complexe, structuration de levées de fonds et appui à l'investissement privé.",
+   "description": "Nous offrons une expertise pointue pour optimiser la structure financière des entreprises et structurer les projets d'investissement majeurs.",
+   "subDomains": [
+    {
+     "title": "5. Structuration et financement des projets",
+     "description": "Montage financier, PPP, dossiers de crédit bancaire multilatéral.",
+     "keyPoints": [
+      "Dossiers de financement",
+      "PPP",
+      "Fonds verts"
+     ]
+    },
+    {
+     "title": "6. Analyse financière et modélisation",
+     "description": "Modèles 3-Statement dynamiques, analyse de rentabilité (VAN, TRI) et valorisation DCF.",
+     "keyPoints": [
+      "Valorisation d'entreprises",
+      "Modélisation prévisionnelle"
+     ]
+    },
+    {
+     "title": "7. Gestion comptable, fiscale et audit",
+     "description": "Mise en conformité SYSCOHADA Révisé, audit fiscal et reporting de conformité.",
+     "keyPoints": [
+      "Audit SYSCOHADA",
+      "Optimisation fiscale légale"
+     ]
+    },
+    {
+     "title": "8. Entrepreneuriat et développement de PME",
+     "description": "Accompagnement de startups et PME, plans d'affaires et mentorat exécutif.",
+     "keyPoints": [
+      "Incubation",
+      "Pitch investisseurs"
+     ]
+    }
+   ],
+   "examples": [
+    "Structuration d'une levée de fonds de 15 millions USD pour un pôle agro-industriel régional.",
+    "Modélisation financière d'une concession portuaire."
+   ]
+  },
+  {
+   "id": "ing-informatique",
+   "slug": "ingenierie-informatique",
+   "title": "Ingénierie informatique et systèmes de réseaux",
+   "shortDescription": "Architecture logicielle, cloud, transformation digitale et cybersécurité des organisations.",
+   "description": "Nous concevons et déployons des architectures numériques robustes pour accélérer la digitalisation des services.",
+   "subDomains": [
+    {
+     "title": "9. Infrastructure et réseaux",
+     "description": "Conception de réseaux d'entreprise, serveurs cloud et haute disponibilité.",
+     "keyPoints": [
+      "SD-WAN",
+      "Virtualisation",
+      "Cloud AWS/Azure"
+     ]
+    },
+    {
+     "title": "10. Développement logiciel et solutions applicatives",
+     "description": "Portails web d'entreprise, ERP sur-mesure et API sécurisées.",
+     "keyPoints": [
+      "Architectures microservices",
+      "Applications mobiles"
+     ]
+    },
+    {
+     "title": "11. Cybersécurité et gouvernance IT",
+     "description": "Audits de sécurité, tests d'intrusion (pentest) et mise en conformité ISO 27001.",
+     "keyPoints": [
+      "Sécurisation des données",
+      "Gestion des incidents"
+     ]
+    },
+    {
+     "title": "12. Transformation numérique",
+     "description": "Audit de maturité digitale, automatisation des processus et Big Data.",
+     "keyPoints": [
+      "Dématérialisation zéro papier",
+      "Business Intelligence"
+     ]
+    }
+   ],
+   "examples": [
+    "Déploiement d'une plateforme de gestion intégrée pour un réseau d'agences financières.",
+    "Audit de cybersécurité pour un opérateur de télécommunications."
+   ]
+  },
+  {
+   "id": "ing-territoriale",
+   "slug": "ingenierie-developpement-territorial",
+   "title": "Ingénierie de développement territorial",
+   "shortDescription": "Planification urbaine, cadastre moderne, SIG communaux et gouvernance locale.",
+   "description": "Accompagnement des ministères et collectivités pour l'aménagement harmonieux et durable des territoires.",
+   "subDomains": [
+    {
+     "title": "13. Aménagement du territoire et urbanisme",
+     "description": "Schémas directeurs d'aménagement (SDAU), plans d'urbanisme de détail.",
+     "keyPoints": [
+      "Planification urbaine",
+      "Zonage réglementaire"
+     ]
+    },
+    {
+     "title": "14. Décentralisation et gouvernance locale",
+     "description": "Appui aux mairies, optimisation du recouvrement fiscal communal.",
+     "keyPoints": [
+      "Fiscalité locale",
+      "Budgets participatifs"
+     ]
+    },
+    {
+     "title": "15. Développement rural et filières agricoles",
+     "description": "Valorisation des chaînes de valeur agricoles, pistes rurales et agropoles.",
+     "keyPoints": [
+      "Agrobusiness",
+      "Infrastructures de désenclavement"
+     ]
+    },
+    {
+     "title": "16. SIG et observation territoriale",
+     "description": "Numérisation du cadastre, cartographie par drone et bases de données spatiales.",
+     "keyPoints": [
+      "QGIS",
+      "Télédétection",
+      "Cadastre numérique"
+     ]
+    }
+   ],
+   "examples": [
+    "Cadastre fiscal numérisé et formation des agents de trois communes secondaires.",
+    "Plan d'Aménagement Urbain résilient au changement climatique."
+   ]
+  },
+  {
+   "id": "ing-qhse",
+   "slug": "ingenierie-qhse",
+   "title": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "shortDescription": "Systèmes de management intégré, certifications ISO 9001, 14001, 45001 et maîtrise des risques industriels.",
+   "description": "Protection du capital humain, respect de l'environnement et conformité aux standards internationaux les plus stricts.",
+   "subDomains": [
+    {
+     "title": "17. Systèmes de management intégré (SMI)",
+     "description": "Conception et déploiement de démarches intégrées ISO 9001/14001/45001.",
+     "keyPoints": [
+      "Processus certifiables",
+      "Manuels de management"
+     ]
+    },
+    {
+     "title": "18. Hygiène et sécurité au travail (SST)",
+     "description": "Document Unique d'évaluation des risques, ergonomie et plans de prévention.",
+     "keyPoints": [
+      "Sécurité de chantier",
+      "Réduction des accidents"
+     ]
+    },
+    {
+     "title": "19. Environnement et développement durable",
+     "description": "Études d'impact environnemental et social (EIES), bilan carbone et RSE.",
+     "keyPoints": [
+      "Audits environnementaux",
+      "Gestion des déchets"
+     ]
+    },
+    {
+     "title": "20. Sécurité sanitaire et agroalimentaire",
+     "description": "Normes HACCP, ISO 22000 et traçabilité des denrées.",
+     "keyPoints": [
+      "Hygiène alimentaire",
+      "Contrôles microbiologiques"
+     ]
+    }
+   ],
+   "examples": [
+    "Accompagnement d'un complexe industriel minier vers la triple certification QSE.",
+    "Élaboration du plan de sécurité pour un chantier d'infrastructure."
+   ]
+  },
+  {
+   "id": "ing-gestion-projets",
+   "slug": "gestion-de-projets",
+   "title": "Gestion, suivi et évaluation des projets et programmes",
+   "shortDescription": "Cadres logiques, gestion de la valeur acquise, collecte digitale et revues d'impact de bailleurs.",
+   "description": "Garantir le respect des budgets, délais et objectifs de performance pour les projets publics et humanitaires.",
+   "subDomains": [
+    {
+     "title": "21. Conception et planification de projets",
+     "description": "Théorie du changement, cadre logique et budget par objectifs.",
+     "keyPoints": [
+      "Modélisation logique",
+      "Gestion prédictive et agile"
+     ]
+    },
+    {
+     "title": "22. Suivi opérationnel et financier",
+     "description": "Mise en place de tableaux de bord de pilotage et suivi budgétaire en temps réel.",
+     "keyPoints": [
+      "Indicateurs clés (KPI)",
+      "Earned Value Management"
+     ]
+    },
+    {
+     "title": "23. Évaluation d'impact",
+     "description": "Évaluations à mi-parcours et finales selon les critères du CAD de l'OCDE.",
+     "keyPoints": [
+      "Mesure d'efficacité",
+      "Rapports pour bailleurs"
+     ]
+    },
+    {
+     "title": "24. Systèmes d'information pour le suivi-évaluation (SISE)",
+     "description": "Digitalisation de la collecte terrain avec KoboCollect, Power BI et bases SQL.",
+     "keyPoints": [
+      "Collecte mobile",
+      "Tableaux de bord automatisés"
+     ]
+    }
+   ],
+   "examples": [
+    "Mise en place du SISE national d'un projet de nutrition communautaire financé par la Banque Mondiale.",
+    "Évaluation finale d'un programme d'accès à l'eau potable."
+   ]
+  },
+  {
+   "id": "etudes-recherches",
+   "slug": "etudes-et-recherches",
+   "title": "Études, enquêtes et recherches socio-économiques",
+   "shortDescription": "Enquêtes quantitatives et qualitatives de grande envergure, analyses économétriques et publications.",
+   "description": "Apporter des données scientifiques solides pour éclairer la décision publique et orienter les investissements.",
+   "subDomains": [
+    {
+     "title": "25. Enquêtes statistiques et sondages",
+     "description": "Échantillonnage probabiliste, formation des enquêteurs et collecte mobile.",
+     "keyPoints": [
+      "Échantillonnage représentatif",
+      "Contrôle qualité en temps réel"
+     ]
+    },
+    {
+     "title": "26. Études socio-économiques",
+     "description": "Analyses de vulnérabilité, études de marché et profils de pauvreté.",
+     "keyPoints": [
+      "Diagnostic participatif",
+      "Analyse sociologique"
+     ]
+    },
+    {
+     "title": "27. Économétrie et analyse de données",
+     "description": "Modélisation économétrique avancée sous Stata, R et Python.",
+     "keyPoints": [
+      "Analyses de régression",
+      "Inférence causale"
+     ]
+    },
+    {
+     "title": "28. Études sectorielles spécialisées",
+     "description": "Diagnostics approfondis des secteurs de l'énergie, de l'éducation et de la santé.",
+     "keyPoints": [
+      "Perspectives de marché",
+      "Notes d'orientation politique"
+     ]
+    }
+   ],
+   "examples": [
+    "Enquête auprès de 5 000 ménages sur les dépenses énergétiques en milieu rural.",
+    "Étude de faisabilité socio-économique d'une zone franche."
+   ]
+  },
+  {
+   "id": "conseil-strategique",
+   "slug": "conseil-strategique-organisation",
+   "title": "Conseil stratégique et organisationnel",
+   "shortDescription": "Gouvernance d'entreprise, plans stratégiques pluriannuels et conduite du changement.",
+   "description": "Aligner les structures, les processus et les équipes sur les ambitions de croissance à long terme.",
+   "subDomains": [
+    {
+     "title": "29. Stratégie d'entreprise et vision",
+     "description": "Diagnostics stratégiques SWOT/PESTEL, élaboration de plans à 5 ans.",
+     "keyPoints": [
+      "Feuille de route",
+      "Avantage concurrentiel"
+     ]
+    },
+    {
+     "title": "30. Organisation et processus",
+     "description": "Cartographie des processus métiers, fiches de postes et manuels de procédures.",
+     "keyPoints": [
+      "Élimination des gaspillages",
+      "Réingénierie des processus"
+     ]
+    },
+    {
+     "title": "31. Gestion des ressources humaines et GPEC",
+     "description": "Référentiels de métiers, grilles salariales et plans de succession.",
+     "keyPoints": [
+      "GPEC",
+      "Attraction des talents"
+     ]
+    },
+    {
+     "title": "32. Conduite du changement et culture",
+     "description": "Accompagnement humain lors des fusions, acquisitions et digitalisations.",
+     "keyPoints": [
+      "Communication interne",
+      "Adhésion des collaborateurs"
+     ]
+    },
+    {
+     "title": "33. Audit organisationnel",
+     "description": "Évaluation de la performance globale et de la cohérence managériale.",
+     "keyPoints": [
+      "Rapports d'audit",
+      "Plans de redressement"
+     ]
+    },
+    {
+     "title": "34. Gouvernance et éthique",
+     "description": "Conseils d'administration, chartes déontologiques et conformité anticorruption.",
+     "keyPoints": [
+      "Standards de gouvernance",
+      "Transparence"
+     ]
+    }
+   ],
+   "examples": [
+    "Réorganisation managériale d'une société nationale d'énergie.",
+    "Audit d'adéquation profils-postes de 80 cadres dirigeants."
+   ]
+  }
+ ],
+ "accompagnementsDetails": {
+  "ing-formation": [
+   {
+    "diversifiedDescription": "Plutôt que d'appliquer des méthodologies standards, notre démarche s'aligne rigoureusement sur vos processus internes pour cartographier de manière scientifique vos besoins de compétences. Nous diagnostiquons les écarts entre les compétences installées et celles requises par vos orientations stratégiques, assurant ainsi que chaque investissement en formation réponde directement à un impératif de performance opérationnelle.",
+    "objectives": [
+     "Réaliser un diagnostic de compétences exhaustif et cartographier 100% des postes clés.",
+     "Établir un référentiel de compétences opérationnel et directement actionnable par les RH.",
+     "Concevoir un plan de formation pluriannuel optimisé budgétairement et fiscalement."
+    ],
+    "expectedChanges": "L'entité dispose d'une visibilité souveraine sur ses ressources, élimine les actions de formation non productives (gain budgétaire moyen de 25%) et sécurise l'évolution de ses effectifs face aux mutations de son secteur."
+   },
+   {
+    "diversifiedDescription": "Nous fusionnons l'andragogie moderne et la technopédagogie pour concevoir des curricula innovants adaptés au rythme et aux exigences opérationnelles des entreprises. En s'appuyant sur l'Approche Par Compétences (APC), notre pôle d'ingénierie crée des architectures de formation hybrides et des supports interactifs qui facilitent un ancrage mémoriel fort et durable.",
+    "objectives": [
+     "Structurer des programmes de formation modulaires basés sur l'andragogie active et l'APC.",
+     "Développer des boîtes à outils pédagogiques standardisées (guides, simulateurs, supports digitaux).",
+     "Modéliser et scénariser des parcours e-learning interactifs pour une diffusion à grande échelle."
+    ],
+    "expectedChanges": "Pour l'entité concernée, cela permet l'internalisation d'un patrimoine pédagogique propre, une réduction de 40% du temps d'intégration (onboarding) et une autonomisation des formateurs internes."
+   },
+   {
+    "diversifiedDescription": "Notre excellence opérationnelle garantit une animation andragogique d'impact menée exclusivement par des praticiens-experts de haut niveau. Nous déployons des ateliers de codéveloppement, des mises en situation réelles et des méthodes d'apprentissage collaboratives qui suscitent un haut niveau d'engagement de la part des participants.",
+    "objectives": [
+     "Assurer des sessions animées par des experts qualifiés avec un taux de satisfaction supérieur à 95%.",
+     "Mettre en œuvre des ateliers de résolution de problèmes réels rencontrés au quotidien par l'entité.",
+     "Piloter le déploiement logistique multi-sites de manière fluide et transparente pour l'organisation."
+    ],
+    "expectedChanges": "Les collaborateurs acquièrent des réflexes professionnels immédiats, renforcent la synergie de groupe et appliquent les meilleures pratiques dès le retour à leur poste de travail."
+   },
+   {
+    "diversifiedDescription": "En refusant les bilans de fin de formation purement formels, nous centrons notre démarche sur l'évaluation scientifique de l'impact réel de l'apprentissage sur vos indicateurs de productivité. Nous mettons en œuvre des protocoles d'évaluation multicritères pour mesurer le transfert effectif des compétences et analyser le retour sur investissement (ROI).",
+    "objectives": [
+     "Déployer des évaluations rigoureuses d'impact sur poste à J+30 et J+90 (Kirkpatrick Niveaux 3 & 4).",
+     "Quantifier l'évolution des performances opérationnelles directement corrélée à la formation.",
+     "Rédiger un rapport de capitalisation pour la Direction Générale justifiant les gains financiers."
+    ],
+    "expectedChanges": "L'entité objective scientifiquement la rentabilité de ses investissements de formation, valorise ses talents internes de manière équitable et adapte en continu sa politique de formation."
+   }
+  ],
+  "ing-financiere": [
+   {
+    "diversifiedDescription": "Sécuriser les bases de vos grands projets nécessite une maîtrise absolue de l'ingénierie financière et du dialogue avec les bailleurs. Notre cabinet conçoit des schémas d'optimisation financière complexes (fonds propres, endettement syndiqué, subventions d'appui) et structure des dossiers d'investissement conformes aux critères de bancabilité les plus stricts.",
+    "objectives": [
+     "Établir des modèles de projection financière auditables selon les standards bancaires de premier rang.",
+     "Optimiser la structure de capital afin de réduire le coût moyen pondéré du capital (CMPC).",
+     "Négocier des conditions de financement préférentielles auprès de bailleurs nationaux et multilatéraux."
+    ],
+    "expectedChanges": "L'entité garantit le bouclage financier rapide de ses projets à fort impact, réduit son exposition aux risques de liquidité et assure une gouvernance financière solide."
+   },
+   {
+    "diversifiedDescription": "Nous dotons les comités de direction d'outils analytiques robustes pour rationaliser chaque arbitrage d'investissement et sécuriser les allocations de ressources. En combinant modélisations de scénarios et analyses de sensibilité poussées, nous protégeons vos placements et maximisons vos retours de capitaux.",
+    "objectives": [
+     "Réaliser des simulations Monte Carlo pour évaluer la sensibilité des projets aux risques de marché.",
+     "Calculer avec précision les indicateurs clés de rendement (VAN, TRI, Indice de Profitabilité, payback).",
+     "Établir des stratégies de couverture efficaces contre les fluctuations de taux et de change."
+    ],
+    "expectedChanges": "Pour l'entité en question, le risque d'erreur d'investissement est réduit de 85%, et le rendement global du portefeuille d'actifs est significativement maximisé."
+   },
+   {
+    "diversifiedDescription": "Nous structurons vos fonctions comptables et fiscales pour en faire de véritables leviers de conformité, de transparence et d'optimisation budgétaire. En intégrant les impératifs des référentiels comptables régionaux et internationaux, nous auditons et sécurisons vos flux financiers.",
+    "objectives": [
+     "Implémenter des procédures de contrôle interne rigoureuses selon le référentiel SYSCOHADA révisé.",
+     "Optimiser l'assiette et la charge fiscale d'exploitation dans le strict respect de la réglementation.",
+     "Mettre en place des tableaux de bord budgétaires consolidés facilitant l'aide à la décision."
+    ],
+    "expectedChanges": "L'organisation élimine les risques de redressement fiscal ou comptable, fluidifie ses relations avec ses commissaires aux comptes et optimise son besoin en fonds de roulement."
+   },
+   {
+    "diversifiedDescription": "Propulser l'initiative privée exige un encadrement stratégique pragmatique alliant structuration d'affaires et mentorat entrepreneurial de haut niveau. Nous collaborons avec les start-up et PME d'envergure pour formuler des plans d'affaires bancables et accroître leur maturité managériale face aux investisseurs.",
+    "objectives": [
+     "Structurer et valider le modèle d'affaires (Business Model Canvas) au regard des réalités du marché.",
+     "Concevoir des dossiers de levée de fonds complets et percutants (pitch deck, mémorandum d'information).",
+     "Former les repreneurs et dirigeants à la gestion de la croissance et à la résilience entrepreneuriale."
+    ],
+    "expectedChanges": "L'entité accélère sa courbe de croissance, réussit l'intégration de capitaux extérieurs de premier tour et s'établit durablement sur ses marchés cibles."
+   }
+  ],
+  "ing-informatique": [
+   {
+    "diversifiedDescription": "Nous concevons et déployons des parcs informatiques résilients, agiles et alignés sur les exigences de haute disponibilité indispensables aux grandes entités modernes. De l'audit réseau à la migration Cloud, notre pôle technologique garantit l'évolution sécurisée de vos infrastructures.",
+    "objectives": [
+     "Concevoir des parcs serveurs et des réseaux locaux hautement sécurisés et redondés à 99.99%.",
+     "Piloter l'architecture et la migration hybride vers les plateformes Cloud leaders (AWS, Google Cloud, Azure).",
+     "Assurer la virtualisation optimale de vos serveurs pour réduire la consommation d'énergie et de matériel."
+    ],
+    "expectedChanges": "L'entité supprime les goulots d'étranglement de bande passante, réduit de 35% ses coûts de maintenance matérielle et assure un service continu et performant."
+   },
+   {
+    "diversifiedDescription": "Notre ingénierie logicielle conçoit des solutions d'affaires sur-mesure visant à automatiser l'intégralité de vos processus opérationnels les plus critiques. À travers une méthodologie agile rigoureuse, nous créons des outils intuitifs de gestion intégrée, des portails métiers sécurisés et des API de haute performance.",
+    "objectives": [
+     "Développer des solutions applicatives robustes adaptées aux spécificités de votre secteur.",
+     "Concevoir des API unifiées facilitant l'interconnexion sécurisée entre vos progiciels.",
+     "Déployer des usines logicielles modernes (CI/CD) pour un déploiement continu et sans faille."
+    ],
+    "expectedChanges": "Pour l'entité concernée, l'automatisation des flux élimine le risque d'erreur humaine de saisie, divise par deux le délai de traitement des tâches et accroît l'efficacité globale."
+   },
+   {
+    "diversifiedDescription": "Protéger l'intégrité de vos flux de données stratégiques face aux cybermenaces émergentes est au cœur de nos audits de cybersécurité de haut niveau. Nous réalisons des cartographies de risques informatiques, mettons en conformité vos traitements et élaborons des plans de résilience d'urgence.",
+    "objectives": [
+     "Réaliser des tests d'intrusion (PenTest) et des audits de vulnérabilité de l'infrastructure.",
+     "Élaborer et tester de manière pratique des Plans de Reprise d'Activité (PRA) face aux rançongiciels.",
+     "Assurer la conformité réglementaire de traitement de vos données sensibles."
+    ],
+    "expectedChanges": "L'organisation minimise drastiquement sa surface d'attaque, prévient les fuites de données confidentielles et garantit une résilience immédiate en cas de sinistre."
+   },
+   {
+    "diversifiedDescription": "Nous transformons vos flux documentaires et accélérons la dématérialisation de vos processus les plus chronophages pour libérer la productivité humaine. À travers la mise en place d'automates logiciels (RPA) et de plateformes de support, nous orchestrons la conduite du changement digital.",
+    "objectives": [
+     "Mettre en place des plateformes collaboratives intégrées simplifiant la gestion de l'information.",
+     "Déployer un centre de support technique (Helpdesk) performant de niveau 1-2-3.",
+     "Conduire des ateliers d'appropriation technologique pour éliminer la résistance au changement."
+    ],
+    "expectedChanges": "L'entité bascule vers un fonctionnement 'sans papier' (paperless), améliore la traçabilité des dossiers de 95% et réduit de moitié le temps moyen de résolution des incidents internes."
+   }
+  ],
+  "ing-territoriale": [
+   {
+    "diversifiedDescription": "L'intégration fine de la cartographie numérique et de l'analyse spatiale constitue le point de départ de toute politique de développement territorial moderne et éclairée. Nous dotons les collectivités territoriales de Systèmes d'Information Géographique (SIG) performants pour piloter les infrastructures et évaluer les dynamiques géographiques.",
+    "objectives": [
+     "Structurer une base de données SIG moderne et actualisable (QGIS / PostGIS).",
+     "Traiter par télédétection les images satellites et de drones pour l'analyse des sols.",
+     "Modéliser des cartes thématiques stratégiques pour l'aide à la décision publique."
+    ],
+    "expectedChanges": "L'entité publique ou municipale dispose d'une maîtrise cartographique rigoureuse de son territoire, facilitant le ciblage des investissements publics de 30% d'efficacité supplémentaire."
+   },
+   {
+    "diversifiedDescription": "Nous concevons des schémas d'urbanisme résilients face aux défis d'expansion démographique et de dérèglement climatique. Nos urbanistes et planificateurs structurent vos politiques d'aménagement urbain, de mobilité durable et d'implantation de zones d'activités.",
+    "objectives": [
+     "Concevoir et rédiger les Schémas Directeurs d'Aménagement Urbain (SDAU).",
+     "Analyser et planifier des maillages de transport et de mobilité intermodale fluide.",
+     "Intégrer les variables climatiques dans la planification spatiale locale."
+    ],
+    "expectedChanges": "La collectivité territoriale régule sainement son expansion urbaine, anticipe et réduit l'impact des inondations et valorise de nouvelles zones d'activités économiques."
+   },
+   {
+    "diversifiedDescription": "Le renforcement du dynamisme fiscal et de l'autonomie financière des communes est la clé de voûte de toute décentralisation réussie. Nous dispensons des appuis méthodologiques pointus aux équipes municipales pour optimiser la levée des ressources locales et piloter les budgets participatifs.",
+    "objectives": [
+     "Moderniser les méthodes d'assiette et de recouvrement de la fiscalité locale de manière éthique.",
+     "Former les élus et équipes communales à la maîtrise d'ouvrage et à la passation de marchés locaux.",
+     "Mettre en place des mécanismes transparents de budgets participatifs impliquant les citoyens."
+    ],
+    "expectedChanges": "L'entité locale augmente de 40% ses recettes fiscales propres, finance de manière autonome ses services de proximité et renforce la confiance citoyenne."
+   },
+   {
+    "diversifiedDescription": "Suivre en temps réel l'impact socio-économique des projets territoriaux d'envergure nécessite la mise en place d'observatoires pluridisciplinaires structurés. Nous développons des grilles d'indicateurs géolocalisés et outillons vos services pour piloter l'économie circulaire de proximité.",
+    "objectives": [
+     "Concevoir et animer un observatoire territorial d'indicateurs de développement durable.",
+     "Assurer le suivi spatialisé en temps réel des chantiers et infrastructures communales.",
+     "Modéliser et valoriser les chaînes de valeur agricoles ou artisanales locales."
+    ],
+    "expectedChanges": "L'entité régule ses plans de développement à l'aide de données scientifiques fiables et géolocalisées, améliorant de 20% l'efficience d'allocation des fonds de développement."
+   }
+  ],
+  "ing-qhse": [
+   {
+    "diversifiedDescription": "Intégrer la prévention, l'excellence opérationnelle et la responsabilité sociétale au cœur de vos flux industriels est indispensable pour asseoir votre compétitivité. Nos ingénieurs-conseils rédigent et consolident des Systèmes de Management Intégrés (SMI) rigoureux, favorisant une forte culture HSE de terrain.",
+    "objectives": [
+     "Formaliser des manuels QHSE intégrés et des fiches réflexes de sécurité immédiatement applicables.",
+     "Réduire de manière drastique les taux de fréquence (TF) et de gravité (TG) des accidents du travail.",
+     "Structurer des instances de sécurité actives et animer des rituels sécurité de premier ordre (1/4 d'heure sécurité)."
+    ],
+    "expectedChanges": "L'entité industrielle élimine l'apparition d'accidents du travail majeurs, réduit les coûts associés à l'absentéisme et insuffle un climat de confiance partagé par l'ensemble des collaborateurs."
+   },
+   {
+    "diversifiedDescription": "Nous accompagnons pas à pas votre organisation dans l'obtention de certifications internationales majeures de référence, véritables gages de confiance sur vos marchés cibles. À travers des diagnostics d'écarts stricts et des audits à blanc, nous garantissons l'obtention de vos labels ISO.",
+    "objectives": [
+     "Réaliser un diagnostic de conformité normatif complet par rapport aux référentiels ISO d'intérêt.",
+     "Former un pôle solide d'auditeurs internes certifiés au sein de votre entreprise.",
+     "Accompagner l'entité lors des audits officiels de certification avec un taux d'obtention de 100%."
+    ],
+    "expectedChanges": "Pour l'entité en question, l'obtention de la certification internationale ouvre les portes des marchés grands comptes mondiaux et atteste d'une rigueur managériale indiscutable."
+   },
+   {
+    "diversifiedDescription": "Maîtriser les scénarios de défaillance technologique et protéger l'outil de production exige une cartographie exhaustive de vos risques procédés. Nos experts de haut niveau rédigent des documents uniques conformes et mettent en œuvre des procédures de consignation pointues.",
+    "objectives": [
+     "Établir et mettre à jour le Document Unique d'Évaluation des Risques (DUER) de l'entreprise.",
+     "Mener des analyses de risques procédés avancées (HAZOP / Bow-Tie) pour l'industrie lourde.",
+     "Implémenter des protocoles de consignation (Lock-Out / Tag-Out - LOTO) et des plans d'urgence."
+    ],
+    "expectedChanges": "L'organisation sécurise son outil industriel, évite les arrêts de production non programmés extrêmement coûteux et garantit la conformité totale de ses installations réglementées."
+   },
+   {
+    "diversifiedDescription": "Incarner la transition écologique industrielle implique d'implémenter des plans de préservation des ressources et de réduction d'empreinte carbone rigoureux. Nous formons vos équipes de terrain pour fédérer l'intelligence collective autour de l'impact environnemental de vos sites.",
+    "objectives": [
+     "Réaliser un audit de conformité environnemental et mesurer l'empreinte carbone globale du site.",
+     "Concevoir des plans de réduction et de revalorisation des déchets industriels (économie circulaire).",
+     "Dispenser des parcours éducatifs engageants pour mobiliser l'ensemble des salariés autour des éco-gestes."
+    ],
+    "expectedChanges": "L'entité réduit de 30% ses rejets polluants, optimise le coût d'élimination de ses déchets et améliore son image de marque auprès des investisseurs et parties prenantes."
+   }
+  ],
+  "ing-audit": [
+   {
+    "diversifiedDescription": "Résoudre durablement les inefficacités opérationnelles exige une analyse rigoureuse des chaînes de commandement et des adéquations postes-profils de vos effectifs. Notre pôle d'experts réalise des audits de processus transversaux et conçoit des organigrammes optimisés pour libérer les énergies de vos collaborateurs.",
+    "objectives": [
+     "Analyser de manière critique l'organisation interne, identifier les doublons et les pertes de charge.",
+     "Évaluer l'adéquation postes-profils de 100% du comité de direction et des encadrants clés.",
+     "Cartographier les processus décisionnels pour en diviser le temps de traitement par deux."
+    ],
+    "expectedChanges": "L'entité gagne en agilité managériale, dissipe les tensions interservices de manière rationnelle et augmente sa réactivité opérationnelle globale."
+   },
+   {
+    "diversifiedDescription": "Définir l'ambition stratégique à 5 ou 10 ans requiert un alignement parfait de votre capital humain, de vos ressources financières et de vos actifs technologiques. Nous modélisons des feuilles de route stratégiques robustes assorties d'indicateurs d'exécution de premier ordre.",
+    "objectives": [
+     "Concevoir des plans de développement stratégique ou des plans nationaux sectoriels (PND).",
+     "Déployer des Balanced Scorecards (tableaux de bord prospectifs) déclinés par service.",
+     "Faciliter l'appropriation managériale des nouveaux objectifs à travers des plans de conduite du changement."
+    ],
+    "expectedChanges": "Pour l'entité en question, la vision à long terme est claire et partagée par l'ensemble des salariés, ce qui accélère la réalisation des objectifs stratégiques de 20%."
+   },
+   {
+    "diversifiedDescription": "Instaurer des mécanismes de gouvernance d'excellence constitue le plus puissant rempart pour garantir la pérennité institutionnelle et rassurer vos investisseurs. Nous vous accompagnons dans la rédaction de chartes de gouvernance vertueuses et la structuration de comités spécialisés.",
+    "objectives": [
+     "Rédiger des chartes de gouvernance et formaliser les responsabilités des administrateurs.",
+     "Structurer des comités d'audit, de gestion des risques et de rémunérations conformes aux meilleures pratiques.",
+     "Déployer des dispositifs rigoureux d'éthique des affaires et de conformité réglementaire."
+    ],
+    "expectedChanges": "L'organisation rassure pleinement ses partenaires financiers, pérennise ses processus de décision stratégiques et élimine le risque d'infractions réglementaires."
+   },
+   {
+    "diversifiedDescription": "Faire du capital humain le principal levier de performance passe par des politiques de motivation, d'évaluation objective et d'accompagnement de carrières d'excellence. Nous élaborons des dispositifs innovants de gestion prévisionnelle des effectifs et concevons vos académies d'entreprise.",
+    "objectives": [
+     "Concevoir des grilles d'évaluation de la performance individuelle corrélées à des plans d'intéressement.",
+     "Déployer une démarche de Gestion Prévisionnelle des Emplois et des Compétences (GPEC) innovante.",
+     "Accompagner de bout en bout l'ingénierie et le design d'universités ou d'académies internes d'entreprise."
+    ],
+    "expectedChanges": "L'entité retient ses hauts potentiels, réduit son taux de rotation du personnel de 25% et accélère l'acquisition de compétences stratégiques."
+   }
+  ],
+  "ing-projets": [
+   {
+    "diversifiedDescription": "Nous menons des études pluridisciplinaires approfondies pour vérifier scientifiquement la viabilité de vos chantiers et de vos investissements de croissance. En alliant études de marché quantitatives et modélisations économiques poussées, nous apportons des éclairages précis à votre comité stratégique.",
+    "objectives": [
+     "Réaliser des analyses d'opportunité sectorielles et des études de marché approfondies.",
+     "Modéliser des études de faisabilité technique, juridique et de rentabilité économique (VAN, TRI).",
+     "Rédiger des notes stratégiques d'aide à la décision d'investissement conformes aux critères bancaires."
+    ],
+    "expectedChanges": "L'entité valide ou ajuste ses projets d'expansion en s'appuyant sur des bases scientifiques irréprochables, éliminant ainsi les projets non viables en amont."
+   },
+   {
+    "diversifiedDescription": "Nous garantissons des investissements d'infrastructures ou de développements socialement équitables et parfaitement intégrés dans leur écosystème naturel. Nos spécialistes mènent des consultations inclusives et des études d'impact rigoureuses conformément aux exigences ESG.",
+    "objectives": [
+     "Réaliser des Études d'Impact Environnemental et Social (EIES) conformes aux exigences nationales et internationales.",
+     "Concevoir des Plans d'Action de Réinstallation (PAR) équitables de populations affectées.",
+     "Mettre en conformité vos chantiers avec les critères ESG stricts des banques de développement."
+    ],
+    "expectedChanges": "L'entité s'assure de la non-interruption de ses projets pour motifs sociaux ou administratifs, sécurise ses autorisations d'exploitation et valorise sa politique RSE."
+   },
+   {
+    "diversifiedDescription": "Notre cabinet traduit les ambitions de développement de nos partenaires en cadres logiques rigoureux, théories du changement limpides et planifications de gestion de risques robustes. Nous préparons des dossiers d'ingénierie de projets prêts pour le financement multi-bailleurs.",
+    "objectives": [
+     "Formaliser la Théorie du Changement et concevoir des cadres logiques irréprochables.",
+     "Bâtir des planifications opérationnelles fines (WBS, GANTT) avec identification du chemin critique (PERT).",
+     "Établir des plans de gestion des risques inhérents à l'exécution du projet de développement."
+    ],
+    "expectedChanges": "Les promoteurs de projet augmentent de 80% l'acceptabilité de leurs dossiers de financement auprès des bailleurs de fonds mondiaux et maîtrisent les délais de réalisation."
+   },
+   {
+    "diversifiedDescription": "Nous outillons les coordinateurs de programmes pour assurer un pilotage de terrain fondé sur la remontée de données fiables et en temps réel. Grâce à l'automatisation de la collecte de données sur mobile, nous créons des tableaux de bord dynamiques pour des évaluations rigoureuses.",
+    "objectives": [
+     "Déployer des dispositifs de Suivi-Évaluation (M&E) axés sur les résultats opérationnels.",
+     "Automatiser la collecte de données mobiles de terrain via des outils performants (KoboCollect / ODK).",
+     "Concevoir des rapports d'impact à mi-parcours et des études de capitalisation scientifique de premier plan."
+    ],
+    "expectedChanges": "L'organisation identifie immédiatement les écarts d'exécution de ses programmes, prend des mesures correctives éclairées et rend des comptes clairs et transparents aux bailleurs."
+   }
+  ],
+  "ing-accompagnement": [
+   {
+    "diversifiedDescription": "Garantir le succès des politiques publiques et la mise en œuvre de programmes complexes exige l'intégration à vos côtés d'experts techniques résidents de haut niveau. Notre assistance technique permanente soutient la montée en compétences quotidienne de vos cadres.",
+    "objectives": [
+     "Accompagner les Unités de Gestion de Projets (UGP) dans l'exécution opérationnelle rigoureuse de leurs mandats.",
+     "Optimiser la gestion administrative, comptable et budgétaire des programmes d'aide multilatéraux.",
+     "Transférer au quotidien et de manière formelle les compétences clés de gestion de projets de développement."
+    ],
+    "expectedChanges": "L'entité publique ou le ministère sectoriel enregistre un taux de décaissement de ses lignes de financement historique, et pérennise l'autonomie technique de ses équipes."
+   },
+   {
+    "diversifiedDescription": "Nous sécurisons vos opérations de gestion et de passation de marchés en formalisant des manuels de procédures de gestion clairs, hautement transparents et conformes. Nos équipes forment vos personnels à l'application stricte et éthique de ces règles.",
+    "objectives": [
+     "Concevoir et rédiger des manuels de procédures administratives, comptables, financières et de passation des marchés.",
+     "Former de manière pratique les commissions internes à l'instruction rigoureuse des appels d'offres.",
+     "Mettre en place des protocoles d'audit interne pour prévenir les risques de mauvaise gestion financière."
+    ],
+    "expectedChanges": "Pour l'entité concernée, le risque de non-conformité face aux bailleurs ou de recours sur passation de marchés est neutralisé, renforçant la crédibilité institutionnelle."
+   },
+   {
+    "diversifiedDescription": "La coordination opérationnelle de coalitions multi-acteurs d'envergure nécessite un dialogue constructif continu et une gouvernance de consortium solide. Nous facilitons les synergies opérationnelles de terrain et alignons stratégiquement l'ensemble de vos bailleurs.",
+    "objectives": [
+     "Structurer et administrer des consortia de développement nationaux ou sous-régionaux performants.",
+     "Assurer la facilitation et l'alignement continu des visions de l'ensemble des bailleurs de fonds.",
+     "Établir des mécanismes de reporting unifié de haut niveau reflétant de manière consolidée l'avancement global."
+    ],
+    "expectedChanges": "Les partenaires travaillent en harmonie totale, évitent les duplications d'efforts sur le terrain et maximisent de 30% l'impact cumulé de leurs budgets de développement."
+   },
+   {
+    "diversifiedDescription": "Nous soutenons les instances dirigeantes dans le dialogue institutionnel et la formulation de plaidoyers stratégiques à l'échelle régionale et internationale. Notre cabinet prépare vos instances de négociation et élabore des tables rondes d'investissement réussies.",
+    "objectives": [
+     "Rédiger des dossiers stratégiques d'intelligence économique et institutionnelle d'aide à la négociation.",
+     "Organiser et animer des ateliers d'influence réglementaire et de plaidoyer de haut niveau.",
+     "Concevoir l'ingénierie professionnelle de tables rondes d'investissement et de levées de fonds bailleurs."
+    ],
+    "expectedChanges": "L'entité publique ou associative fait adopter de nouvelles réglementations structurantes et réussit à mobiliser des financements additionnels auprès des coopérations multilatérales."
+   },
+   {
+    "diversifiedDescription": "Guider les restructurations internes d'organisations d'importance stratégique exige d'allier sens de la gouvernance et techniques de management agile. Nous conseillons vos comités exécutifs dans l'instauration d'objectifs OKR et de dynamiques d'amélioration de l'engagement.",
+    "objectives": [
+     "Dispenser un coaching de haut niveau auprès des comités de direction sur les démarches de leadership moderne.",
+     "Déployer la méthodologie des OKR (Objectives & Key Results) pour matérialiser la feuille de route stratégique.",
+     "Animer des ateliers de réorganisation organisationnelle et d'amélioration continue du capital humain."
+    ],
+    "expectedChanges": "L'entité libère pleinement l'initiative de ses collaborateurs, aligne ses objectifs d'équipe et de service de manière limpide et accroît l'implication opérationnelle globale."
+   }
+  ]
+ },
+ "equipe": [
+  {
+   "id": "t-dg-kouassi",
+   "name": "Dr. Kouassi Marc-Aurèle",
+   "role": "Directeur Général & Associé Gérant",
+   "category": "Dirigeant",
+   "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+   "bio": "Docteur et expert international en ingénierie de conseil et gestion des organisations. Il pilote le développement stratégique et les relations institutionnelles du CICEXF.",
+   "emailUrl": "cabinetcicexf@gmail.com"
+  },
+  {
+   "id": "t1",
+   "name": "M. Amadou Diallo",
+   "role": "Directeur Général & Co-fondateur",
+   "category": "Dirigeant",
+   "photoUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
+   "bio": "Fort de plus de 18 ans d'expérience dans le conseil stratégique et la modélisation de politiques publiques pour de prestigieux cabinets internationaux et bailleurs multilatéraux. Expert en structuration de PPP.",
+   "linkedinUrl": "https://linkedin.com/in/amadou-diallo-cicexf-example",
+   "emailUrl": "a.diallo@cicexf.org"
+  },
+  {
+   "id": "t2",
+   "name": "Dr. Marc Koffi",
+   "role": "Directeur Général Adjoint & Chef du Pôle Formation",
+   "category": "Dirigeant",
+   "photoUrl": "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=400&q=80",
+   "bio": "Docteur en Sciences de l'Éducation et Ingénieur Informaticien. Pionnier de l'approche par compétences en Afrique de l'Ouest. Concepteur de plusieurs plateformes E-learning nationales.",
+   "linkedinUrl": "https://linkedin.com/in/marc-koffi-cicexf-example",
+   "emailUrl": "m.koffi@cicexf.org"
+  },
+  {
+   "id": "t3",
+   "name": "Mme Fatou Sylla",
+   "role": "Conseillère Spéciale & Experte en Ingénierie Financière",
+   "category": "Conseil",
+   "photoUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80",
+   "bio": "Ancienne directrice d'investissement au sein d'un fonds de capital-risque panafricain. Titulaire d'un master de la London School of Economics, elle conseille les promoteurs sur les montages financiers et les levées de fonds.",
+   "linkedinUrl": "https://linkedin.com/in/fatou-sylla-cicexf-example",
+   "emailUrl": "f.sylla@cicexf.org"
+  },
+  {
+   "id": "t4",
+   "name": "M. Sylvain Gnahoré",
+   "role": "Spécialiste Principal Aménagement du Territoire & SIG",
+   "category": "Expert",
+   "photoUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
+   "bio": "Ingénieur géographe expert des dynamiques de décentralisation et des outils d'aide à la décision territoriale. Il a piloté plus de 30 missions de cartographie communale et d'élaboration de schémas directeurs.",
+   "linkedinUrl": "https://linkedin.com/in/sylvain-gnahore-cicexf-example",
+   "emailUrl": "s.gnahore@cicexf.org"
+  },
+  {
+   "id": "t5",
+   "name": "Mme Émilie Bamba",
+   "role": "Responsable du Pôle QHSE & RSE",
+   "category": "Expert",
+   "photoUrl": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=400&q=80",
+   "bio": "Experte certifiée IRCA ISO 9001, 14001, et 45001. Accompagne les industries agroalimentaires et minières de la sous-région dans leur mise en conformité réglementaire et l'audit de leurs processus.",
+   "linkedinUrl": "https://linkedin.com/in/emilie-bamba-cicexf-example",
+   "emailUrl": "e.bamba@cicexf.org"
+  }
+ ],
+ "realisations": [
+  {
+   "id": "p1",
+   "title": "Restructuration organisationnelle et audit stratégique d'un pôle d'énergie régional",
+   "category": "Audit & Stratégie",
+   "client": "Ministère de l'Énergie / Banque Multilatérale de Développement",
+   "location": "Afrique de l'Ouest",
+   "year": 2025,
+   "stats": [
+    {
+     "value": "45%",
+     "label": "De réduction des goulots d'étranglement administratifs"
+    },
+    {
+     "value": "5 ans",
+     "label": "De feuille de route de transformation certifiée"
+    },
+    {
+     "value": "+10 000",
+     "label": "Ménages raccordés grâce à l'efficacité gagnée"
+    }
+   ],
+   "description": "Révision de la structure interne d'une importante compagnie publique d'énergie, audit d'adéquation profils-postes de 80 cadres, et mise en place d'un système d'information de gestion intégré.",
+   "challenges": [
+    "Résistance culturelle interne",
+    "Dispersion géographique",
+    "Calendrier serré de bailleur"
+   ],
+   "solutions": [
+    "Comité mixte d'accompagnement du changement",
+    "Reporting Business Intelligence en temps réel",
+    "12 ateliers intensifs de formation des dirigeants"
+   ],
+   "testimonial": {
+    "text": "L'intervention de CICEXF a redonné de la clarté à nos équipes. Le plan de restructuration est appliqué avec des résultats tangibles.",
+    "author": "M. Traoré A.",
+    "role": "Directeur de la Modernisation Institutionnelle"
+   }
+  },
+  {
+   "id": "p2",
+   "title": "Conception du SIG cadastral et Plan d'Aménagement Urbain de trois métropoles secondaires",
+   "category": "Développement Territorial",
+   "client": "Secrétariat Général à l'Aménagement du Territoire et à la Décentralisation",
+   "location": "Côte d'Ivoire",
+   "year": 2025,
+   "stats": [
+    {
+     "value": "120 000 ha",
+     "label": "Cartographiés avec précision centimétrique par drone"
+    },
+    {
+     "value": "15 agents",
+     "label": "Municipaux formés en autonomie sur QGIS"
+    },
+    {
+     "value": "3",
+     "label": "Documents d'urbanisme réglementaires livrés et approuvés"
+    }
+   ],
+   "description": "Numérisation complète du cadastre sur QGIS et formation des agents pour sécuriser les recettes fiscales locales.",
+   "challenges": [
+    "Absence de cartes géoréférencées",
+    "Zones de litiges fonciers sensibles"
+   ],
+   "solutions": [
+    "Imagerie satellite combinée à des survols drone",
+    "Audiences de concertation publique",
+    "Don de stations de travail et académie SIG de 3 semaines"
+   ]
+  },
+  {
+   "id": "p3",
+   "title": "Formation d'Excellence 'Data Analyst' pour 150 responsables Suivi-Évaluation des ONG",
+   "category": "Ingénierie de Formation",
+   "client": "Consortium International pour le Développement d'Infrastructures Communautaires",
+   "location": "Afrique de l'Ouest",
+   "year": 2024,
+   "stats": [
+    {
+     "value": "150",
+     "label": "Cadres humanitaires certifiés autonomes"
+    },
+    {
+     "value": "100%",
+     "label": "Formulaires terrain convertis du papier au mobile"
+    },
+    {
+     "value": "+30%",
+     "label": "Gain de temps sur le reporting mensuel"
+    }
+   ],
+   "description": "Cycle de renforcement de capacités sur-mesure de 6 semaines centré sur KoboCollect, Power Query et Power BI.",
+   "challenges": [
+    "Hétérogénéité des profils",
+    "Connexion internet intermittente sur le terrain"
+   ],
+   "solutions": [
+    "Plateforme e-learning avec vidéos hors-ligne",
+    "KoboCollect en mode déconnecté"
+   ],
+   "testimonial": {
+    "text": "Nos équipes passent moins de temps sur la saisie papier et se concentrent sur l'analyse stratégique des indicateurs.",
+    "author": "Mme Sarah Dembélé",
+    "role": "Coordonnatrice Suivi-Évaluation du Consortium"
+   }
+  }
+ ],
+ "actualites": [
+  {
+   "id": "blog1",
+   "slug": "comment-reussir-collecte-kobo-collect",
+   "title": "Comment réussir sa transition digitale de la collecte de données papier vers KoboCollect ?",
+   "category": "Formation",
+   "readTime": "6 min de lecture",
+   "date": "14 Juin 2026",
+   "author": {
+    "name": "Dr. Marc Koffi",
+    "role": "Directeur Général Adjoint & Chef du Pôle Formation"
+   },
+   "excerpt": "Les 5 étapes indispensables pour concevoir des formulaires mobiles robustes et opérationnels hors-ligne.",
+   "content": "Guide méthodologique sur la conception XLSForm, les contrôles de cohérence, la formation terrain et la supervision.",
+   "isFeatured": true,
+   "tags": [
+    "KoboCollect",
+    "Data",
+    "ODK",
+    "Power BI"
+   ]
+  },
+  {
+   "id": "blog2",
+   "slug": "les-cles-de-la-certification-iso-9001",
+   "title": "Les clés du succès pour implémenter un Système de Management de la Qualité ISO 9001 v2015",
+   "category": "QHSE",
+   "readTime": "8 min de lecture",
+   "date": "10 Mai 2026",
+   "author": {
+    "name": "Mme Émilie Bamba",
+    "role": "Experte QHSE Senior & Auditeur de Certification"
+   },
+   "excerpt": "Évitez la sur-documentation et engagez la direction générale pour réussir l'audit de certification.",
+   "content": "L'approche par les risques, l'implication des parties prenantes et la simplification des processus d'audit.",
+   "tags": [
+    "ISO 9001",
+    "Qualite",
+    "Audit Interne"
+   ]
+  },
+  {
+   "id": "blog3",
+   "slug": "importance-du-sig-amenagement-territoire",
+   "title": "Pourquoi le SIG est-il l'outil incontournable du maire moderne ?",
+   "category": "Développement Territorial",
+   "readTime": "5 min de lecture",
+   "date": "28 Avril 2026",
+   "author": {
+    "name": "M. Sylvain Gnahoré",
+    "role": "Spécialiste Principal Aménagement du Territoire & SIG"
+   },
+   "excerpt": "De la gestion cadastrale à l'optimisation des taxes locales, comment l'analyse spatiale aide les communes.",
+   "content": "Superposition des données de voirie, d'écoles et de cadastre pour une fiscalité locale modernisée.",
+   "tags": [
+    "QGIS",
+    "SIG",
+    "Communes",
+    "Urbanisme"
+   ]
+  }
+ ],
+ "temoignages": [
+  {
+   "id": "test1",
+   "name": "M. Jean-Baptiste Yao",
+   "role": "Responsable Suivi-Évaluation",
+   "organization": "ONG Action pour le Progrès",
+   "text": "La formation 'Data Analyst' du CICEXF a changé ma façon de travailler. J'ai pu informatiser tout notre système de collecte d'informations terrain avec KoboCollect et Power BI. Notre comité de direction a été impressionné !",
+   "rating": 5
+  },
+  {
+   "id": "test2",
+   "name": "Mme Alima Coulibaly",
+   "role": "Analyste Financier",
+   "organization": "Sipro-Agri Holding",
+   "text": "Le pôle ingénierie financière de CICEXF nous a accompagnés dans l'élaboration de notre modèle financier pour l'implantation d'une nouvelle filiale. Rigueur, disponibilité et compréhension parfaite.",
+   "rating": 5
+  },
+  {
+   "id": "test3",
+   "name": "M. Christian Bini",
+   "role": "Secrétaire Technique",
+   "organization": "Mairie de Bouaké",
+   "text": "Une collaboration remarquable dans le cadre de la refonte de notre SIG cadastral. Grâce aux experts du cabinet, notre service d'urbanisme dispose enfin d'un outil fiable pour contrôler l'évolution communale.",
+   "rating": 5
+  }
+ ],
+ "partenaires": [
+  {
+   "id": "p1",
+   "name": "Banque Mondiale",
+   "category": "Bailleur Multilatéral"
+  },
+  {
+   "id": "p2",
+   "name": "Ministère de l'Économie",
+   "category": "Institution Publique"
+  },
+  {
+   "id": "p3",
+   "name": "AFD (Agence Française de Développement)",
+   "category": "Coopération Bilatérale"
+  },
+  {
+   "id": "p4",
+   "name": "PNUD",
+   "category": "Organisation Internationale"
+  },
+  {
+   "id": "p5",
+   "name": "ECOWAS / CEDEAO",
+   "category": "Institution Régionale"
+  }
+ ],
+ "faq": [
+  {
+   "question": "Comment s'inscrire à une formation du CICEXF ?",
+   "answer": "L'inscription s'effectue en 3 étapes simples : 1. Choisissez votre formation et remplissez le formulaire d'admission en ligne ou envoyez un message WhatsApp au +225 07 01 97 00 65. 2. Vous recevez sous 24h la fiche d'inscription officielle et la facture proforma. 3. Réglez votre acompte ou déposez le bon de commande de votre entreprise pour confirmer votre place."
+  },
+  {
+   "question": "Quelles sont les modalités de paiement et facilités accordées ?",
+   "answer": "Pour les particuliers, le règlement peut être échelonné en 2 ou 3 versements sans aucun frais additionnel. Pour les entreprises et institutions, une facture proforma et une convention sont transmises sous 24h ouvrées. Règlement accepté par virement, chèque ou Mobile Money (Orange Money, Wave, MTN MoMo)."
+  },
+  {
+   "question": "Existe-t-il des remises pour les inscriptions en groupe ?",
+   "answer": "Oui : 10% de réduction à partir de 3 participants d'une même organisation, 15% de réduction à partir de 5 participants, et tarification dégressive sur devis sur-mesure pour les formations intra-entreprise sur site client."
+  },
+  {
+   "question": "Où se déroulent les cours en présentiel ?",
+   "answer": "Au siège principal du CICEXF à Abidjan : Cocody Angré 8ème Tranche, Carrefour Duncan / Rue de la Clinique, Immeuble Prestige, 3ème étage. Pour les formations hybrides ou en ligne, les cours sont diffusés en direct interactif via Zoom avec accès illimité aux enregistrements et laboratoires."
+  },
+  {
+   "question": "Les formations donnent-elles lieu à des certificats officiels ?",
+   "answer": "Oui, tous nos cycles certifiants délivrent un certificat professionnel nominatif officiel du cabinet CICEXF (agréé sous le N°25343/GTCA/RC/2025). Pour le PMP, nous délivrons l'attestation officielle de 35 heures de contact de gestion de projet requise pour l'examen mondial du PMI."
+  },
+  {
+   "question": "Comment demander une mission de consultance ou un devis d'expertise ?",
+   "answer": "Contactez notre secrétariat par WhatsApp au +225 07 01 97 00 65 ou par e-mail à elearningciv@gmail.com / cabinetcicexf@gmail.com en décrivant votre besoin. Nos directeurs de pôles organisent une réunion de cadrage sous 48h."
+  }
+ ]
+}
