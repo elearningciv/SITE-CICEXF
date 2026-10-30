@@ -4,7 +4,24 @@
   RewriteEngine On
   RewriteBase /
   RewriteRule ^index\.html$ - [L]
+  # Missing build files must stay real 404s (never the HTML page), otherwise an
+  # outdated page loads HTML as JavaScript and stays blank
+  RewriteRule ^assets/ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
+</IfModule>
+
+# The page must always be revalidated so visitors get the latest version after
+# each deployment; hashed build files can be cached for a long time.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css|webp|png|jpg|svg|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+<IfModule LiteSpeed>
+  CacheLookup off
 </IfModule>
