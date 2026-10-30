@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { X, Lock, Mail, Key, CheckCircle2, AlertCircle, RefreshCw, ShieldCheck } from 'lucide-react';
 import { auth } from '../firebase';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { ALLOWED_ADMIN_EMAILS, isAuthorizedAdminEmail } from './AdminPanel';
+import { signInWithEmailAndPassword, signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
+import { isAuthorizedAdminEmail, getAuthErrorMessage } from '../lib/adminAuth';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
@@ -11,8 +11,8 @@ interface AdminLoginModalProps {
 }
 
 export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLoginModalProps) {
-  const [email, setEmail] = useState('cabinetcicexf@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,50 +24,22 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
     setLoading(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    const cleanPassword = (password || '').trim();
 
-    // 1. Validation de l'adresse autorisée
     if (!isAuthorizedAdminEmail(cleanEmail)) {
-      setError("Accès réservé. Seules les adresses officielles cabinetcicexf@gmail.com et elearningciv@gmail.com sont habilitées.");
-      setLoading(false);
-      return;
-    }
-
-    // 2. Validation du mot de passe officiel
-    if (cleanPassword !== '123456') {
-      setError("Mot de passe incorrect. Le mot de passe requis pour accéder à l'administration est 123456.");
+      setError("Accès réservé aux adresses habilitées du Cabinet.");
       setLoading(false);
       return;
     }
 
     try {
-      // Tentative de connexion via Firebase Auth
-      try {
-        await signInWithEmailAndPassword(auth, cleanEmail, cleanPassword);
-      } catch (fbErr: any) {
-        console.warn("Firebase Auth fallback to local session:", fbErr?.message || fbErr);
-      }
-
-      // Enregistrement de la session administrative garantie
-      const adminSession = {
-        email: cleanEmail,
-        name: cleanEmail === 'cabinetcicexf@gmail.com' ? 'Cabinet CICEXF (Direction)' : 'CICEXF E-Learning',
-        loggedInAt: Date.now()
-      };
-      localStorage.removeItem('cicexf_admin_explicit_logout');
-      sessionStorage.removeItem('cicexf_admin_explicit_logout');
-      localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-      sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-
-      window.dispatchEvent(new CustomEvent('admin-auth-changed', {
-        detail: { isLoggedIn: true, email: cleanEmail }
-      }));
-
+      // Firebase Auth vérifie le mot de passe côté serveur
+      await signInWithEmailAndPassword(auth, cleanEmail, password);
+      setPassword('');
       onSuccess(cleanEmail);
       onClose();
     } catch (err: any) {
-      console.error("Login error:", err);
-      setError("Une erreur est survenue lors de la connexion. Veuillez réessayer.");
+      console.warn("Admin sign-in failed:", err?.code || err);
+      setError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -80,30 +52,17 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
       const provider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, provider);
       const userEmail = res.user?.email?.toLowerCase();
-      
+
       if (isAuthorizedAdminEmail(userEmail)) {
-        const adminSession = {
-          email: userEmail,
-          name: res.user?.displayName || userEmail,
-          loggedInAt: Date.now()
-        };
-        localStorage.removeItem('cicexf_admin_explicit_logout');
-        sessionStorage.removeItem('cicexf_admin_explicit_logout');
-        localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-        sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-
-        window.dispatchEvent(new CustomEvent('admin-auth-changed', {
-          detail: { isLoggedIn: true, email: userEmail }
-        }));
-
         onSuccess(userEmail!);
         onClose();
       } else {
-        setError(`L'adresse Google "${userEmail}" n'est pas habilitée. Veuillez vous connecter avec cabinetcicexf@gmail.com ou elearningciv@gmail.com.`);
+        await signOut(auth);
+        setError(`L'adresse Google "${userEmail}" n'est pas habilitée à accéder à l'administration.`);
       }
     } catch (err: any) {
-      console.warn("Google Sign-In canceled or failed:", err);
-      setError("Connexion Google annulée ou indisponible. Veuillez utiliser le formulaire mot de passe (123456).");
+      console.warn("Google Sign-In canceled or failed:", err?.code || err);
+      setError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -125,7 +84,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
               <h3 className="font-display font-extrabold text-sm text-white">
                 Console d'Administration CICEXF
               </h3>
-              <p className="text-[10px] text-white/80">
+              <p className="text-xs text-white/80">
                 Accès réservé aux gestionnaires habilités
               </p>
             </div>
@@ -150,7 +109,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
 
           {/* Quick select buttons */}
           <div className="space-y-1.5">
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
               Choisir votre compte administrateur :
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -164,7 +123,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
                 }`}
               >
                 <span className="block truncate">cabinetcicexf@gmail.com</span>
-                <span className="text-[9px] text-slate-500 font-normal">Direction Générale</span>
+                <span className="text-[11px] text-slate-500 font-normal">Direction Générale</span>
               </button>
 
               <button
@@ -177,7 +136,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
                 }`}
               >
                 <span className="block truncate">elearningciv@gmail.com</span>
-                <span className="text-[9px] text-slate-500 font-normal">Pôle Pédagogique</span>
+                <span className="text-[11px] text-slate-500 font-normal">Pôle Pédagogique</span>
               </button>
             </div>
           </div>
@@ -205,18 +164,16 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
                 <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300">
                   Mot de passe :
                 </label>
-                <span className="text-[10px] text-amber-600 dark:text-amber-400 font-bold">
-                  Requis : 123456
-                </span>
               </div>
               <div className="relative">
                 <Key className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
                 <input
                   type="password"
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="123456"
+                  placeholder="Votre mot de passe"
                   className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 font-mono"
                 />
               </div>

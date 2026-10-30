@@ -74,20 +74,20 @@ export default function Footer({
             </div>
 
             {/* Références Officielles du Cabinet et Numéro d'Agrément */}
-            <div className="pt-1 text-[10.5px] space-y-1 font-sans">
+            <div className="pt-1 text-xs space-y-1 font-sans">
               <div className="flex items-center space-x-1.5 flex-wrap">
                 <span className="text-yellow-400 font-extrabold uppercase tracking-wide">Agrément Officiel :</span>
-                <span className="text-white font-extrabold font-mono bg-black/25 px-1.5 py-0.5 rounded border border-white/30 text-[11px]">
+                <span className="text-white font-extrabold font-mono bg-black/25 px-1.5 py-0.5 rounded border border-white/30 text-xs">
                   N°25343/GTCA/RC/2025
                 </span>
               </div>
-              <p className="text-white font-medium">
+              <p className="text-white text-xs font-medium">
                 Récépissé N°25343/GTCA/RC/2025
               </p>
-              <p className="text-white font-medium">
+              <p className="text-white text-xs font-medium">
                 N°IDU CI-2025-0058238 N &middot; Cocody Palmeraie
               </p>
-              <p className="text-white/90 text-[10px]">
+              <p className="text-white/90 text-xs">
                 Société de Consultance et Formation Agréée en Côte d'Ivoire
               </p>
             </div>
@@ -98,7 +98,7 @@ export default function Footer({
             <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
               Navigation
             </h4>
-            <ul className="space-y-1.5 text-[11px] font-medium text-white">
+            <ul className="space-y-1.5 text-xs font-medium text-white">
               <li>
                 <button onClick={() => handleLinkClick('home')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Accueil
@@ -137,7 +137,7 @@ export default function Footer({
             <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
               Nos contacts
             </h4>
-            <ul className="space-y-2 text-[11px] leading-snug text-white font-medium">
+            <ul className="space-y-2 text-xs leading-snug text-white font-medium">
               <li className="flex items-start text-white">
                 <MapPin className="w-3.5 h-3.5 text-yellow-400 mr-2 shrink-0 mt-0.5" />
                 <span className="text-white">Cocody Palmeraie, Rue de la Clinique, Abidjan</span>
@@ -165,11 +165,11 @@ export default function Footer({
             <h4 className="text-xs font-black text-yellow-400 uppercase tracking-wider border-l-2 border-yellow-400 pl-2">
               Lettre d'Information
             </h4>
-            <p className="text-[11px] text-white leading-tight font-sans font-medium">
+            <p className="text-xs text-white leading-tight font-sans font-medium">
               Abonnez-vous pour recevoir les calendriers et analyses stratégiques.
             </p>
             {subscribed ? (
-              <div className="bg-white/15 border border-white/30 p-2 rounded-lg flex items-center space-x-2 text-[11px] text-white font-semibold">
+              <div className="bg-white/15 border border-white/30 p-2 rounded-lg flex items-center space-x-2 text-xs text-white font-semibold">
                 <CheckCircle className="w-3.5 h-3.5 text-yellow-400 shrink-0" />
                 <span className="text-white">Inscription réussie !</span>
               </div>
@@ -182,7 +182,7 @@ export default function Footer({
                   placeholder="votre.email@institution.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent px-2.5 py-1.5 text-[11px] outline-none text-white placeholder-white/60"
+                  className="w-full bg-transparent px-2.5 py-1.5 text-xs outline-none text-white placeholder-white/80"
                 />
                 <button
                   type="submit"
@@ -230,7 +230,7 @@ export default function Footer({
         </div>
 
         {/* Legal Mentions and Certifications Footer */}
-        <div className="border-t border-white/20 pt-2.5 mt-2 flex flex-col md:flex-row justify-between items-center text-[10px] text-white font-medium gap-1.5">
+        <div className="border-t border-white/20 pt-2.5 mt-2 flex flex-col md:flex-row justify-between items-center text-xs text-white font-medium gap-1.5">
           <p className="text-white">© {new Date().getFullYear()} CICEXF &middot; Agrément N°25343/GTCA/RC/2025. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end text-white">
             <a href="#mentions" className="hover:text-yellow-300 transition-colors text-white">Mentions Légales</a>
@@ -252,7 +252,7 @@ export default function Footer({
                 {onAdminLogout && (
                   <button
                     onClick={onAdminLogout}
-                    className="text-[9.5px] text-white/70 hover:text-red-300 underline cursor-pointer ml-1"
+                    className="text-xs text-white/70 hover:text-red-300 underline cursor-pointer ml-1"
                     title="Se déconnecter de l'administration"
                   >
                     (Déconnexion)
@@ -263,10 +263,10 @@ export default function Footer({
               onOpenAdminLogin && (
                 <button
                   onClick={onOpenAdminLogin}
-                  className="text-white/40 hover:text-yellow-300 transition-colors flex items-center space-x-1 cursor-pointer text-[9.5px]"
+                  className="text-white/80 hover:text-yellow-300 transition-colors flex items-center space-x-1 cursor-pointer text-xs"
                   title="Accès réservé - Connexion administrateur"
                 >
-                  <Key className="w-2 h-2 text-white/40" />
+                  <Key className="w-2.5 h-2.5 text-white/80" />
                   <span>Connexion</span>
                 </button>
               )

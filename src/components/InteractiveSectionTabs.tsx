@@ -82,7 +82,7 @@ export default function InteractiveSectionTabs({
                     {activeSection.label}
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest hidden sm:inline-block">
+                <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest hidden sm:inline-block">
                   Cabinet CICEXF &bull; Ingénierie
                 </span>
               </div>
@@ -99,7 +99,7 @@ export default function InteractiveSectionTabs({
                     {title}
                   </h4>
                 )}
-                <div className="text-slate-850 dark:text-slate-850 text-[14px] sm:text-[14.5px] font-sans font-normal leading-relaxed text-justify break-words [overflow-wrap:anywhere]">
+                <div className="text-slate-850 dark:text-slate-850 text-[14px] sm:text-[14.5px] font-sans font-normal leading-relaxed break-words [overflow-wrap:anywhere]">
                   {description}
                 </div>
               </div>
@@ -131,7 +131,7 @@ export default function InteractiveSectionTabs({
                         {mod.details.map((point, pIdx) => (
                           <div key={pIdx} className="flex items-start text-slate-700 dark:text-slate-300 text-[13px] sm:text-[13.5px] leading-relaxed">
                             <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500 shrink-0 mt-2 mr-2.5"></span>
-                            <span className="font-normal text-justify">{point}</span>
+                            <span className="font-normal">{point}</span>
                           </div>
                         ))}
                       </div>
@@ -149,7 +149,7 @@ export default function InteractiveSectionTabs({
                     <span className="w-[18px] h-[18px] rounded-full border-2 border-[#F25C05] flex items-center justify-center shrink-0 mt-0.5 mr-3">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#F25C05]"></span>
                     </span>
-                    <span className="font-normal text-justify">{item}</span>
+                    <span className="font-normal">{item}</span>
                   </div>
                 ))}
               </div>
@@ -189,7 +189,7 @@ export default function InteractiveSectionTabs({
               <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 {activeSection.extraDetails.map((det, dIdx) => (
                   <div key={dIdx} className="p-3 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-800">
-                    <span className="block text-[10.5px] font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">
+                    <span className="block text-xs font-extrabold uppercase tracking-wider text-slate-500 mb-0.5">
                       {det.label}
                     </span>
                     <span className="text-xs sm:text-[13px] font-bold text-slate-900 dark:text-white">
@@ -236,7 +236,7 @@ export default function InteractiveSectionTabs({
         {/* RIGHT COLUMN: BURGUNDY VERTICAL MENU (#8A1A24) (Pas large, aligné à droite) */}
         <div className="w-full md:w-56 lg:w-64 xl:w-72 shrink-0 bg-[#8A1A24] dark:bg-[#6D141C] flex flex-col justify-start border-b md:border-b-0 md:border-l border-white/10 shadow-md">
           <div className="py-2.5 px-4 bg-black/20 text-white/90 border-b border-white/10 text-center">
-            <span className="text-[9.5px] font-mono font-extrabold uppercase tracking-widest text-amber-200">
+            <span className="text-[11px] font-mono font-extrabold uppercase tracking-widest text-amber-200">
               Rubriques &bull; Navigation
             </span>
           </div>

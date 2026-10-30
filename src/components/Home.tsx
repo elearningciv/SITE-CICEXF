@@ -6,8 +6,8 @@ import {
 } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS } from '../data';
 import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
-import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.jpg';
-import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.jpg';
+import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.webp';
+import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.webp';
 
 interface HomeProps {
   setActiveTab: (tab: string) => void;
@@ -107,7 +107,7 @@ export default function Home({
               {/* Institutional Official Kicker */}
               <div className="inline-flex items-center space-x-2 bg-slate-50 px-3 py-1 rounded-full border border-slate-200 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-brand-emerald shrink-0" />
-                <span className="text-[10px] sm:text-[10.5px] font-bold tracking-wider uppercase text-slate-800">
+                <span className="text-xs sm:text-xs font-bold tracking-wider uppercase text-slate-800">
                   Cabinet International d'Expertise &middot; Agrément N°25343/GTCA/RC/2025
                 </span>
               </div>
@@ -146,15 +146,15 @@ export default function Home({
               <div className="pt-3 border-t border-slate-200 grid grid-cols-3 gap-3 text-slate-900 max-w-xl">
                 <div>
                   <div className="font-display text-lg sm:text-xl font-extrabold text-slate-900">+2000</div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Cadres formés</div>
+                  <div className="text-xs sm:text-[11px] text-slate-600 font-semibold">Cadres formés</div>
                 </div>
                 <div>
                   <div className="font-display text-lg sm:text-xl font-extrabold text-brand-emerald">+150</div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Missions réussies</div>
+                  <div className="text-xs sm:text-[11px] text-slate-600 font-semibold">Missions réussies</div>
                 </div>
                 <div>
-                  <div className="font-display text-lg sm:text-xl font-extrabold text-amber-600">95%</div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-600 font-semibold">Satisfaction client</div>
+                  <div className="font-display text-lg sm:text-xl font-extrabold text-amber-700">95%</div>
+                  <div className="text-xs sm:text-[11px] text-slate-600 font-semibold">Satisfaction client</div>
                 </div>
               </div>
             </div>
@@ -178,17 +178,17 @@ export default function Home({
                   <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-slate-950/85 backdrop-blur-md border border-white/15 shadow-lg">
                     <div className="flex items-center space-x-2 mb-1">
                       <span className="w-2 h-2 rounded-full bg-brand-emerald"></span>
-                      <span className="text-[9.5px] uppercase font-bold tracking-wider text-brand-emerald-light font-mono">
+                      <span className="text-[11px] uppercase font-bold tracking-wider text-orange-300 font-mono">
                         Direction Générale &middot; Siège Abidjan
                       </span>
                     </div>
                     <h3 className="font-display font-bold text-xs sm:text-sm text-white leading-tight">
                       Dr. Kouassi Marc-Aurèle
                     </h3>
-                    <p className="text-[10.5px] text-slate-300 font-medium">
+                    <p className="text-xs text-slate-300 font-medium">
                       Directeur Général &amp; Associé Gérant
                     </p>
-                    <p className="text-[9.5px] italic text-slate-400 mt-1.5 border-t border-white/10 pt-1.5 leading-relaxed">
+                    <p className="text-[11px] italic text-slate-300 mt-1.5 border-t border-white/10 pt-1.5 leading-relaxed">
                       &laquo; L'excellence technique n'a de valeur que si elle transforme durablement la trajectoire des hommes et des organisations. &raquo;
                     </p>
                   </div>
@@ -264,15 +264,15 @@ export default function Home({
                   alt="Équipe d'experts et apprenants en session d'analyse de données - CICEXF Abidjan"
                   className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-                <div className="absolute top-4 left-4 bg-[#002447] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-md">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent"></div>
+                <div className="absolute top-4 left-4 bg-[#002447] text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md">
                   Formation Phare &middot; Mentoring Direct
                 </div>
                 <div className="absolute bottom-3 left-4 right-4 text-white">
                   <p className="text-[11px] font-bold text-white drop-shadow-sm">
                     Atelier interactif en salle exécutive &middot; Siège CICEXF Abidjan
                   </p>
-                  <p className="text-[9.5px] text-slate-300">
+                  <p className="text-[11px] text-slate-300">
                     Étude de cas sur des données réelles d'organisations ouest-africaines
                   </p>
                 </div>
@@ -291,19 +291,19 @@ export default function Home({
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 border-t border-slate-100 dark:border-slate-800 pt-5">
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Durée</h4>
+                  <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Durée</h4>
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">6 semaines (120 h)</p>
                 </div>
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Modalité</h4>
+                  <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modalité</h4>
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">Hybride (Abidjan &amp; Zoom)</p>
                 </div>
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Encadrement</h4>
+                  <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Encadrement</h4>
                   <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 mt-0.5">Consultant Senior dédié</p>
                 </div>
                 <div className="p-2.5 bg-slate-50 dark:bg-slate-900 rounded-xl">
-                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tarif</h4>
+                  <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tarif</h4>
                   <p className="text-xs font-bold text-brand-emerald mt-0.5">450 000 FCFA (Facilités)</p>
                 </div>
               </div>
@@ -461,7 +461,7 @@ export default function Home({
               const isOngoing = idx === 0;
               const isStartingSoon = idx === 1;
               const statusBadge = isOngoing 
-                ? { label: "Session en cours &middot; Inscriptions clôturées", bg: "bg-amber-500 text-white" }
+                ? { label: "Session en cours &middot; Inscriptions clôturées", bg: "bg-amber-700 text-white" }
                 : isStartingSoon
                   ? { label: "Démarrage imminent &middot; Dernières places", bg: "bg-red-600 text-white animate-pulse" }
                   : { label: "Nouvelle cohorte ouverte &middot; Candidatures", bg: "bg-brand-emerald text-white" };
@@ -476,14 +476,14 @@ export default function Home({
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent"></div>
-                    <div className={`absolute top-3 left-3 text-[10px] font-black uppercase px-2.5 py-1 rounded-lg shadow-md ${statusBadge.bg}`}>
+                    <div className={`absolute top-3 left-3 text-xs font-black uppercase px-2.5 py-1 rounded-lg shadow-md ${statusBadge.bg}`}>
                       <span dangerouslySetInnerHTML={{ __html: statusBadge.label }} />
                     </div>
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-[11px] font-bold">
                       <span className="bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded border border-white/20">
                         {f.modality}
                       </span>
-                      <span className="text-brand-emerald-light drop-shadow-md">
+                      <span className="bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded text-orange-300">
                         {f.price}
                       </span>
                     </div>
@@ -563,25 +563,25 @@ export default function Home({
             <div className="relative rounded-2xl overflow-hidden aspect-video shadow-sm group">
               <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=500&q=80" alt="Auditoire de formation CICEXF" referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-[10px] font-bold text-white">Auditoire &amp; Travaux dirigés</span>
+                <span className="text-xs font-bold text-white">Auditoire &amp; Travaux dirigés</span>
               </div>
             </div>
             <div className="relative rounded-2xl overflow-hidden aspect-video shadow-sm group">
               <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=500&q=80" alt="Session d'études de cas" referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-[10px] font-bold text-white">Atelier interactif par équipe</span>
+                <span className="text-xs font-bold text-white">Atelier interactif par équipe</span>
               </div>
             </div>
             <div className="relative rounded-2xl overflow-hidden aspect-video shadow-sm group">
               <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=80" alt="Présentation de tableaux de bord" referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-[10px] font-bold text-white">Présentation de livrable Power BI</span>
+                <span className="text-xs font-bold text-white">Présentation de livrable Power BI</span>
               </div>
             </div>
             <div className="relative rounded-2xl overflow-hidden aspect-video shadow-sm group">
               <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=500&q=80" alt="Remise des certificats" referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent flex items-end p-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="text-[10px] font-bold text-white">Remise officielle des certificats</span>
+                <span className="text-xs font-bold text-white">Remise officielle des certificats</span>
               </div>
             </div>
           </div>

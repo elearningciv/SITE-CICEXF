@@ -113,7 +113,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
         
         {/* Page Title banner */}
         <div className="mb-6">
-          <nav className="flex text-xs font-semibold text-slate-400 mb-2">
+          <nav className="flex text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
             <span>CICEXF</span>
             <span className="mx-2">/</span>
             <span className="text-brand-emerald">Espace Partenaires</span>
@@ -149,7 +149,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                 />
                 <div>
                   <span className="block font-bold text-[11px] text-slate-850 dark:text-slate-200">{part.name}</span>
-                  <span className="block text-[9px] text-slate-400 font-semibold">{part.category}</span>
+                  <span className="block text-[11px] text-slate-400 font-semibold">{part.category}</span>
                 </div>
               </div>
             ))}
@@ -166,7 +166,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
               <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">
                 Candidature : Rejoindre le Réseau d'Experts CICEXF
               </h3>
-              <p className="text-[11px] text-slate-400 mt-1">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                 Vous êtes consultant international senior, auditeur agréé, ou chercheur ? Déposez votre dossier pour intégrer notre vivier d'intervenants.
               </p>
             </div>
@@ -182,7 +182,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                 </p>
                 <button
                   onClick={() => setSuccess(false)}
-                  className="text-[10px] font-bold text-brand-blue hover:underline block pt-2"
+                  className="text-xs font-bold text-brand-blue hover:underline block pt-2"
                 >
                   Déposer une autre candidature
                 </button>
@@ -204,7 +204,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.name ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {errors.name && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {errors.name}
                       </span>
@@ -224,7 +224,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {errors.email && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {errors.email}
                       </span>
@@ -246,7 +246,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.linkedin ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {errors.linkedin && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {errors.linkedin}
                       </span>
@@ -297,7 +297,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                     ) : (
                       <div>
                         <p className="text-slate-700 dark:text-slate-300 font-bold">Glissez-déposez votre CV ici, ou cliquez pour parcourir</p>
-                        <p className="text-[10px] text-slate-400 mt-1">Accepte les fichiers PDF, Word (.docx) ou compressés</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Accepte les fichiers PDF, Word (.docx) ou compressés</p>
                       </div>
                     )}
                     <input
@@ -307,12 +307,12 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       onChange={handleFileChange}
                       className="hidden"
                     />
-                    <label htmlFor="partner-file-cv" className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded text-[10px] font-bold uppercase tracking-wider hover:bg-slate-200 cursor-pointer">
+                    <label htmlFor="partner-file-cv" className="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded text-xs font-bold uppercase tracking-wider hover:bg-slate-200 cursor-pointer">
                       Sélectionner
                     </label>
                   </div>
                   {errors.cv && (
-                    <span className="text-[10px] text-red-500 flex items-center mt-1">
+                    <span className="text-xs text-red-500 flex items-center mt-1">
                       <AlertCircle className="w-3.5 h-3.5 mr-1" />
                       {errors.cv}
                     </span>
@@ -354,14 +354,14 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
             <div className="bg-slate-900 text-white rounded-3xl border border-slate-800 p-8 shadow-lg space-y-6">
               
               <div className="border-b border-slate-800 pb-3">
-                <div className="inline-flex items-center space-x-2 bg-brand-blue/20 text-brand-blue dark:text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold mb-3 uppercase tracking-wider">
+                <div className="inline-flex items-center space-x-2 bg-white/10 text-sky-300 px-3 py-1 rounded-full text-xs font-bold mb-3 uppercase tracking-wider">
                   <Lock className="w-3.5 h-3.5 text-brand-emerald" />
                   <span>Portail B2B/B2G Sécurisé</span>
                 </div>
                 <h3 className="font-display text-base font-bold text-white">
                   Espace Partenaires Privé
                 </h3>
-                <p className="text-[10px] text-slate-400 font-sans mt-0.5">
+                <p className="text-xs text-slate-300 font-sans mt-0.5">
                   Réservé aux consultants accrédités du CICEXF et aux administrateurs de nos clients institutionnels.
                 </p>
               </div>
@@ -372,13 +372,13 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                     <CheckCircle className="w-5 h-5" />
                     <span className="font-bold">Accès autorisé avec succès</span>
                   </div>
-                  <p className="font-sans leading-relaxed text-[10.5px] text-slate-400 font-light">
+                  <p className="font-sans leading-relaxed text-xs text-slate-400 font-light">
                     Bienvenue dans votre espace d'échange sécurisé CICEXF. Vous êtes authentifié comme consultant partenaire externe.
                   </p>
                   
                   {/* Private download files resources list */}
-                  <div className="pt-3 border-t border-slate-900 space-y-2 text-[10.5px]">
-                    <span className="block font-bold text-slate-300 uppercase tracking-wider text-[9px]">Documents et livrables d'ingénierie :</span>
+                  <div className="pt-3 border-t border-slate-900 space-y-2 text-xs">
+                    <span className="block font-bold text-slate-300 uppercase tracking-wider text-[11px]">Documents et livrables d'ingénierie :</span>
                     <a href="#" className="flex items-center text-brand-emerald hover:underline font-mono">
                       <FileText className="w-4 h-4 mr-2" /> Template_Rapport_Mission_CICEXF.docx
                     </a>
@@ -395,7 +395,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       setPortalSuccess(false);
                       setPortalCode('');
                     }}
-                    className="text-[10px] font-bold text-red-500 hover:underline pt-3 block"
+                    className="text-xs font-bold text-red-500 hover:underline pt-3 block"
                   >
                     Se déconnecter de l'Espace Sécurisé
                   </button>
@@ -411,15 +411,15 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
                       placeholder="Saisir le code d'accès de mission"
                       value={portalCode}
                       onChange={(e) => setPortalCode(e.target.value)}
-                      className={`w-full bg-slate-950 border rounded-lg px-3 py-2 outline-none text-white placeholder-slate-600 ${portalError ? 'border-red-500' : 'border-slate-800 focus:border-brand-emerald'}`}
+                      className={`w-full bg-slate-950 border rounded-lg px-3 py-2 outline-none text-white placeholder-slate-400 ${portalError ? 'border-red-500' : 'border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {portalError && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {portalError}
                       </span>
                     )}
-                    <span className="block text-[9px] text-slate-500 leading-normal font-light">
+                    <span className="block text-[11px] text-slate-300 leading-normal">
                       Astuce démo : Utilisez le code d'évaluation <strong>CICEXF-2026</strong> pour déverrouiller l'espace privé.
                     </span>
                   </div>
@@ -439,7 +439,7 @@ export default function Partners({ partners = PARTNERS }: PartnersProps) {
 
             {/* Corporate Security Guidelines */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm space-y-4">
-              <h4 className="font-display text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">
+              <h4 className="font-display text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b pb-2">
                 Qualité ISO 9001:2015 &amp; Accompagnement
               </h4>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans">

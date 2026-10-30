@@ -196,7 +196,7 @@ export default function RegistrationGrandPlanForm({
                 }`}>
                   Compte Individuel
                 </span>
-                <span className="block text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                <span className="block text-xs text-slate-500 dark:text-slate-400 truncate">
                   Candidature personnelle / Financement propre
                 </span>
               </div>
@@ -222,7 +222,7 @@ export default function RegistrationGrandPlanForm({
                 }`}>
                   Compte Entreprise
                 </span>
-                <span className="block text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                <span className="block text-xs text-slate-500 dark:text-slate-400 truncate">
                   Prise en charge entreprise, FDFP ou bon de commande
                 </span>
               </div>
@@ -245,7 +245,7 @@ export default function RegistrationGrandPlanForm({
                     errors.company ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24]'
                   }`}
                 />
-                {errors.company && <span className="text-[10px] text-red-500 font-semibold block">{errors.company}</span>}
+                {errors.company && <span className="text-xs text-red-500 font-semibold block">{errors.company}</span>}
               </div>
 
               <div className="space-y-1">
@@ -278,7 +278,7 @@ export default function RegistrationGrandPlanForm({
                   errors.name ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24]'
                 }`}
               />
-              {errors.name && <span className="text-[10.5px] text-red-500 font-semibold block">{errors.name}</span>}
+              {errors.name && <span className="text-xs text-red-500 font-semibold block">{errors.name}</span>}
             </div>
 
             <div className="space-y-1">
@@ -294,7 +294,7 @@ export default function RegistrationGrandPlanForm({
                   errors.email ? 'border-red-500' : 'border-slate-300 dark:border-slate-700 focus:border-[#8A1A24]'
                 }`}
               />
-              {errors.email && <span className="text-[10.5px] text-red-500 font-semibold block">{errors.email}</span>}
+              {errors.email && <span className="text-xs text-red-500 font-semibold block">{errors.email}</span>}
             </div>
           </div>
 
@@ -311,7 +311,7 @@ export default function RegistrationGrandPlanForm({
                       alt={selectedCountryObj.name}
                       className="w-4 h-3 object-cover rounded-xs shadow-2xs"
                     />
-                    <span className="text-[10.5px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                    <span className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
                       {selectedCountryObj.name}
                     </span>
                   </span>
@@ -368,10 +368,10 @@ export default function RegistrationGrandPlanForm({
                   placeholder="Ex: 07 01 02 03 04"
                   value={formPhone}
                   onChange={(e) => setFormPhone(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
+                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-500 dark:placeholder-slate-400"
                 />
               </div>
-              {errors.phone && <span className="text-[10.5px] text-red-500 font-semibold block">{errors.phone}</span>}
+              {errors.phone && <span className="text-xs text-red-500 font-semibold block">{errors.phone}</span>}
             </div>
           </div>
 
@@ -400,7 +400,7 @@ export default function RegistrationGrandPlanForm({
                   placeholder="Ex: 05 06 07 08 09"
                   value={formAltPhone}
                   onChange={(e) => setFormAltPhone(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
+                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-500 dark:placeholder-slate-400"
                 />
               </div>
             </div>
@@ -428,7 +428,7 @@ export default function RegistrationGrandPlanForm({
                   placeholder="Ex: 01 02 03 04 05"
                   value={formSecondAltPhone}
                   onChange={(e) => setFormSecondAltPhone(e.target.value)}
-                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-400"
+                  className="w-full px-2.5 py-1.5 text-xs text-slate-900 dark:text-white bg-transparent outline-none font-medium placeholder-slate-500 dark:placeholder-slate-400"
                 />
               </div>
             </div>
@@ -464,7 +464,7 @@ export default function RegistrationGrandPlanForm({
                   </>
                 )}
               </select>
-              {errors.session && <span className="text-[10.5px] text-red-500 font-semibold block">{errors.session}</span>}
+              {errors.session && <span className="text-xs text-red-500 font-semibold block">{errors.session}</span>}
             </div>
 
             {/* Modalité préférée */}
@@ -500,11 +500,11 @@ export default function RegistrationGrandPlanForm({
                 onChange={(e) => setFormTerms(e.target.checked)}
                 className="mt-0.5 shrink-0 accent-[#8A1A24] w-3.5 h-3.5 cursor-pointer"
               />
-              <span className="text-[10.5px] text-slate-600 dark:text-slate-400 leading-tight font-normal">
+              <span className="text-xs text-slate-600 dark:text-slate-400 leading-tight font-normal">
                 J'autorise le Cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier de candidature.
               </span>
             </label>
-            {errors.terms && <span className="text-[10.5px] text-red-500 font-semibold block mt-1">{errors.terms}</span>}
+            {errors.terms && <span className="text-xs text-red-500 font-semibold block mt-1">{errors.terms}</span>}
           </div>
 
             {/* 7. SUBMIT BUTTON */}

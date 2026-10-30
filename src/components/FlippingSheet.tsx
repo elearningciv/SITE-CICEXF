@@ -410,13 +410,13 @@ export default function FlippingSheet({
                 <div>
                   <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3 pb-3 sm:pb-4 mb-4 sm:mb-5 border-b border-slate-100 dark:border-slate-800">
                     <div className="flex items-center space-x-2">
-                      <span className="font-mono text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider">
+                      <span className="font-mono text-xs sm:text-xs font-bold text-slate-500 dark:text-slate-400 tracking-wider">
                         {documentRef} • FEUILLE {currentItem.number.toString().padStart(2, '0')}/{items.length.toString().padStart(2, '0')}
                       </span>
                     </div>
 
                     <div className="flex items-center space-x-2">
-                      <span className={`text-[10px] sm:text-xs font-extrabold uppercase px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full tracking-wider shadow-xs ${colors.badge}`}>
+                      <span className={`text-xs sm:text-xs font-extrabold uppercase px-2.5 sm:px-3.5 py-0.5 sm:py-1 rounded-full tracking-wider shadow-xs ${colors.badge}`}>
                         {currentItem.tag}
                       </span>
                     </div>
@@ -489,7 +489,7 @@ export default function FlippingSheet({
                   </div>
 
                   <div className="flex items-center space-x-3">
-                    <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 text-[10px] sm:text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider bg-slate-50 dark:bg-slate-950">
+                    <div className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 text-xs sm:text-xs font-mono font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider bg-slate-50 dark:bg-slate-950">
                       <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald animate-pulse"></span>
                       <span>{currentItem.stamp || 'CERTIFIÉ CONFORME'}</span>
                     </div>
@@ -523,7 +523,7 @@ export default function FlippingSheet({
             </button>
           </div>
 
-          <span className="text-[11px] text-slate-400 inline font-medium text-center sm:text-left">
+          <span className="text-[11px] text-slate-500 dark:text-slate-400 inline font-medium text-center sm:text-left">
             Glissez avec le doigt sur mobile ou utilisez les flèches du clavier
           </span>
         </div>

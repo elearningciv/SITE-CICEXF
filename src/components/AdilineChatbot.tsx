@@ -7,7 +7,7 @@ import {
   Calculator, UserCheck, Shield, ChevronRight,
   Maximize2, Minimize2, Trash2, Play, Pause, Square
 } from 'lucide-react';
-import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.jpg';
+import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.webp';
 import { CABINET_INFO, FORMATIONS, TEAM_MEMBERS } from '../knowledgeBase';
 import { saveProspect } from '../lib/prospects';
 
@@ -87,7 +87,7 @@ function FormattedMessageText({ text }: { text: string }) {
         if (isBullet) {
           return (
             <div key={lIdx} className="flex items-start space-x-2 pl-0.5">
-              <span className="text-brand-blue dark:text-cyan-400 mt-1 select-none text-[10px] shrink-0">•</span>
+              <span className="text-brand-blue dark:text-cyan-400 mt-1 select-none text-xs shrink-0">•</span>
               <div className="flex-1 text-slate-700 dark:text-slate-200">
                 {renderSegments(content)}
               </div>
@@ -884,7 +884,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <h3 className="font-display font-extrabold text-sm sm:text-base tracking-wide text-white">
                   ADILINE
                 </h3>
-                <span className="text-[10px] bg-white/20 text-blue-100 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                   IA Certifiée
                 </span>
               </div>
@@ -1023,7 +1023,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                           <Mic className="w-3.5 h-3.5 text-rose-300" />
                           <span>{msg.attachmentName || 'Note vocale'}</span>
                         </div>
-                        <span className="text-[10px] opacity-80">Audio</span>
+                        <span className="text-xs opacity-80">Audio</span>
                       </div>
                       <audio controls src={msg.audioUrl} className="w-full h-8 rounded-lg" preload="metadata" />
                     </div>
@@ -1042,7 +1042,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div>
-                              <span className="text-[10px] font-bold uppercase tracking-wider text-brand-emerald">
+                              <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
                                 {card.type === 'formation' ? 'Formation Certifiante' : card.type === 'session' ? 'Session au calendrier' : card.type === 'devis' ? 'Devis Proforma' : 'Expert Consultance'}
                               </span>
                               <h4 className="font-bold text-slate-900 dark:text-white text-xs mt-0.5">
@@ -1060,7 +1060,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                           </div>
 
                           {/* Extra details chips */}
-                          <div className="flex flex-wrap gap-1.5 text-[10.5px]">
+                          <div className="flex flex-wrap gap-1.5 text-xs">
                             {card.duration && (
                               <span className="bg-white dark:bg-slate-700 px-2 py-0.5 rounded text-slate-600 dark:text-slate-300">
                                 ⏱ {card.duration}
@@ -1089,7 +1089,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                                       onClose();
                                     }
                                   }}
-                                  className="flex-1 py-1 px-2 rounded-lg bg-brand-blue text-white font-bold text-[10.5px] hover:bg-brand-blue-dark transition-colors text-center"
+                                  className="flex-1 py-1 px-2 rounded-lg bg-brand-blue text-white font-bold text-xs hover:bg-brand-blue-dark transition-colors text-center"
                                 >
                                   Voir la fiche
                                 </button>
@@ -1098,7 +1098,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                                     setLeadFormation(card.title);
                                     setShowLeadModal(true);
                                   }}
-                                  className="flex-1 py-1 px-2 rounded-lg bg-emerald-600 text-white font-bold text-[10.5px] hover:bg-emerald-700 transition-colors text-center"
+                                  className="flex-1 py-1 px-2 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-colors text-center"
                                 >
                                   S'inscrire
                                 </button>
@@ -1108,7 +1108,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                             {card.type === 'expert' && (
                               <a
                                 href={`mailto:${card.contact || 'elearningciv@gmail.com'}?subject=Demande de consultance via ADILINE`}
-                                className="flex-1 py-1 px-2 rounded-lg bg-brand-blue text-white font-bold text-[10.5px] text-center"
+                                className="flex-1 py-1 px-2 rounded-lg bg-brand-blue text-white font-bold text-xs text-center"
                               >
                                 Contacter l'expert
                               </a>
@@ -1121,7 +1121,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                   {/* CITATION DES SOURCES */}
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-[10px] text-slate-400 dark:text-slate-500 flex items-center space-x-1">
+                    <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-500 flex items-center space-x-1">
                       <Shield className="w-3 h-3 text-brand-emerald shrink-0" />
                       <span className="truncate">
                         Sources : {msg.sources.join(' · ')}
@@ -1134,7 +1134,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
               {/* Message Footer: Voice Read Aloud, Thumb feedback & Time */}
               {msg.role === 'assistant' && msg.id !== 'welcome' && (
                 <div className="flex items-center space-x-2 pl-9 text-[11px] text-slate-400">
-                  <span className="text-[10px]">
+                  <span className="text-xs">
                     {msg.timestamp.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                   </span>
 
@@ -1168,7 +1168,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                       <ThumbsDown className="w-3 h-3" />
                     </button>
                     {msg.feedback && (
-                      <span className="text-[9px] text-slate-400">Merci !</span>
+                      <span className="text-[11px] text-slate-400">Merci !</span>
                     )}
                   </div>
                 </div>
@@ -1419,7 +1419,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             </form>
           )}
 
-          <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 mt-2 px-1">
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500 mt-2 px-1">
             <span>Propulsé par Gemini &middot; Données officielles CICEXF</span>
             <span>Micro & Note vocale activés</span>
           </div>
@@ -1592,7 +1592,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                     onChange={(e) => setLeadParticipants(e.target.value)}
                     className="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 outline-none"
                   />
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1">
+                  <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
                     * Rappel : -10% dès 3 inscrits, -15% dès 5 inscrits.
                   </p>
                 </div>

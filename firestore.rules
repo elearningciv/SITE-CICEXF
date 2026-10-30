@@ -1,55 +1,64 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Helper to check if the authenticated user is the designated administrator
+
+    // Comptes administrateurs : authentification Firebase obligatoire
     function isAdmin() {
-      return request.auth != null && (request.auth.token.email == 'elearningciv@gmail.com' || request.auth.token.email == 'cabinetcicexf@gmail.com');
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['elearningciv@gmail.com', 'cabinetcicexf@gmail.com'];
     }
 
-    // Visits collection
+    // Statistiques de visites : écriture anonyme limitée, lecture admin
     match /visits/{visitId} {
-      allow read, write: if true;
+      allow create: if request.resource.data.keys().hasOnly(['visitorId', 'sessionId', 'timestamp', 'email', 'userAgent', 'page'])
+        && request.resource.data.page is string
+        && request.resource.data.page.size() < 100;
+      allow read, update, delete: if isAdmin();
     }
 
-    // Subscribers collection
+    // Abonnés newsletter : inscription publique, consultation admin
     match /subscribers/{subscriberId} {
-      allow read, write: if true;
+      allow create, update: if isAdmin() || (
+        request.resource.data.keys().hasOnly(['email', 'visitorId', 'subscribedAt', 'lastVisitAt', 'isSubscribed'])
+        && request.resource.data.email == subscriberId
+      );
+      allow read, delete: if isAdmin();
     }
 
-    // Prospects / Form Submissions (Inscriptions, Devis, Contact)
+    // Prospects (inscriptions, devis, contact) : soumission publique, données personnelles réservées à l'admin
     match /prospects/{prospectId} {
-      allow read, write: if true;
+      allow create: if request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'type', 'target', 'session', 'modality', 'company', 'participants', 'notes', 'channel', 'status', 'visitorId', 'createdAt'])
+        && request.resource.data.name is string && request.resource.data.name.size() < 200
+        && request.resource.data.notes is string && request.resource.data.notes.size() < 5000
+        && request.resource.data.status == 'Nouveau';
+      allow read, update, delete: if isAdmin();
     }
 
-    // Formations (Dynamic course listings)
-    match /formations/{formationId} {
-      allow read, write: if true;
+    // Contenus publics du site : lecture libre, modification admin uniquement
+    match /formations/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
-
-    // Blog Posts / Actualités (Dynamic publications)
-    match /blog_posts/{postId} {
-      allow read, write: if true;
+    match /blog_posts/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
-
-    // Partners (Dynamic company trust logos)
-    match /partners/{partnerId} {
-      allow read, write: if true;
+    match /partners/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
-
-    // Accompagnements (Domaines d'intervention / Services)
-    match /accompagnements/{domainId} {
-      allow read, write: if true;
+    match /accompagnements/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
-
-    // Réalisations (Projets & Chantiers menés)
-    match /realisations/{realisationId} {
-      allow read, write: if true;
+    match /realisations/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
-
-    // Paramètres d'application et éléments supprimés
-    match /app_settings/{settingId} {
-      allow read, write: if true;
+    match /app_settings/{id} {
+      allow read: if true;
+      allow write: if isAdmin();
     }
   }
 }

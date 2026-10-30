@@ -111,7 +111,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute top-4 left-4 bg-brand-emerald text-white text-[10px] font-bold px-3 py-1 rounded">
+              <div className="absolute top-4 left-4 bg-brand-emerald text-white text-xs font-bold px-3 py-1 rounded">
                 {selectedArticle.category}
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                 />
                 <div>
                   <h4 className="font-bold text-xs text-slate-950 dark:text-white">{selectedArticle.author.name}</h4>
-                  <p className="text-[10px] text-slate-400 font-medium">{selectedArticle.author.role}</p>
+                  <p className="text-xs text-slate-400 font-medium">{selectedArticle.author.role}</p>
                 </div>
               </div>
             </div>
@@ -156,7 +156,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
                   <div className="md:col-span-7 space-y-4">
-                    <div className="inline-flex items-center space-x-1 bg-brand-emerald/15 text-brand-emerald px-2.5 py-1 rounded text-[10px] font-bold">
+                    <div className="inline-flex items-center space-x-1 bg-brand-emerald/15 text-brand-emerald px-2.5 py-1 rounded text-xs font-bold">
                       <FileText className="w-3.5 h-3.5" />
                       <span>Ressource téléchargeable gratuite</span>
                     </div>
@@ -175,7 +175,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                       <div className="text-[11px] text-brand-emerald space-y-1 py-4 text-center">
                         <CheckCircle className="w-8 h-8 mx-auto text-brand-emerald mb-2" />
                         <span className="block font-bold">Lien généré !</span>
-                        <p className="text-slate-400 font-sans text-[10px]">Un email contenant le lien de téléchargement vient d'être envoyé.</p>
+                        <p className="text-slate-400 font-sans text-xs">Un email contenant le lien de téléchargement vient d'être envoyé.</p>
                       </div>
                     ) : (
                       <form onSubmit={(e) => {
@@ -189,7 +189,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                           placeholder="Votre nom complet"
                           value={leadName}
                           onChange={(e) => setLeadName(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 outline-none focus:border-brand-emerald text-white placeholder-slate-500"
+                          className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 outline-none focus:border-brand-emerald text-white placeholder-slate-400"
                         />
                         <input
                           id="lead-article-email"
@@ -198,7 +198,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                           placeholder="votre.email@institution.com"
                           value={leadEmail}
                           onChange={(e) => setLeadEmail(e.target.value)}
-                          className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 outline-none focus:border-brand-emerald text-white placeholder-slate-500"
+                          className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 outline-none focus:border-brand-emerald text-white placeholder-slate-400"
                         />
                         <button
                           type="submit"
@@ -237,7 +237,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                   placeholder="Rechercher des articles, des auteurs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400"
+                  className="w-full bg-transparent border-none outline-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400"
                 />
               </div>
 
@@ -276,13 +276,13 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
                       />
-                      <div className="absolute top-4 left-4 bg-brand-emerald text-white text-[9px] font-bold px-2.5 py-1 rounded">
+                      <div className="absolute top-4 left-4 bg-brand-emerald text-white text-[11px] font-bold px-2.5 py-1 rounded">
                         {post.category}
                       </div>
                     </div>
 
                     <div className="p-5 flex flex-col flex-grow space-y-2.5">
-                      <div className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                      <div className="text-xs font-bold text-slate-600 dark:text-slate-300">
                         <span>{post.date} • {post.readTime}</span>
                       </div>
                       
@@ -297,7 +297,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                       <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-[11px] font-bold">
                         <span className="text-brand-blue dark:text-brand-emerald-light group-hover:underline">Lire l'article entier →</span>
                         {post.guidePdfUrl && (
-                          <span className="text-slate-600 dark:text-slate-300 flex items-center text-[10px]"><Download className="w-3.5 h-3.5 mr-1" /> PDF inclus</span>
+                          <span className="text-slate-600 dark:text-slate-300 flex items-center text-xs"><Download className="w-3.5 h-3.5 mr-1" /> PDF inclus</span>
                         )}
                       </div>
                     </div>
@@ -329,7 +329,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
                 <div className="md:col-span-7 space-y-4 text-center md:text-left">
-                  <div className="inline-flex items-center space-x-1 bg-amber-400/10 text-amber-400 px-2.5 py-1 rounded text-[10px] font-bold">
+                  <div className="inline-flex items-center space-x-1 bg-amber-400/10 text-amber-400 px-2.5 py-1 rounded text-xs font-bold">
                     <Sparkles className="w-3.5 h-3.5 animate-pulse" />
                     <span>Alerte Prochaines Sessions</span>
                   </div>
@@ -348,7 +348,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                     <div className="text-[11px] text-brand-emerald space-y-1 py-4 text-center">
                       <CheckCircle className="w-8 h-8 mx-auto text-brand-emerald mb-2" />
                       <span className="block font-bold">Inscription Enregistrée !</span>
-                      <p className="text-slate-400 font-sans text-[10px]">Vous recevrez notre prochain bulletin d'analyse sous peu.</p>
+                      <p className="text-slate-400 font-sans text-xs">Vous recevrez notre prochain bulletin d'analyse sous peu.</p>
                     </div>
                   ) : (
                     <form onSubmit={(e) => {
@@ -362,7 +362,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                         placeholder="Votre nom complet"
                         value={leadName}
                         onChange={(e) => setLeadName(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-2 outline-none focus:border-brand-emerald text-white placeholder-slate-500"
+                        className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-2 outline-none focus:border-brand-emerald text-white placeholder-slate-400"
                       />
                       <input
                         id="generic-lead-email"
@@ -371,7 +371,7 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
                         placeholder="votre.email@institution.com"
                         value={leadEmail}
                         onChange={(e) => setLeadEmail(e.target.value)}
-                        className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-2 outline-none focus:border-brand-emerald text-white placeholder-slate-500"
+                        className="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-2 outline-none focus:border-brand-emerald text-white placeholder-slate-400"
                       />
                       <button
                         type="submit"

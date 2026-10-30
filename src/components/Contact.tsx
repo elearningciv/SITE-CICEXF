@@ -84,7 +84,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
         
         {/* Page title banner */}
         <div className="mb-6">
-          <nav className="flex text-xs font-semibold text-slate-400 mb-1.5">
+          <nav className="flex text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5">
             <span>CICEXF</span>
             <span className="mx-2">/</span>
             <span className="text-brand-emerald">Contact</span>
@@ -180,7 +180,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
 
             {/* Social Network Connections coordinates */}
             <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm space-y-4">
-              <h4 className="font-display text-xs font-bold text-slate-400 uppercase tracking-widest border-b pb-2">
+              <h4 className="font-display text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b pb-2">
                 Suivez nos publications
               </h4>
               <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-sans">
@@ -242,7 +242,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                 </p>
                 <button
                   onClick={() => setSuccess(false)}
-                  className="text-[10px] font-bold text-brand-blue hover:underline block pt-2"
+                  className="text-xs font-bold text-brand-blue hover:underline block pt-2"
                 >
                   Rédiger une nouvelle demande d'assistance
                 </button>
@@ -264,7 +264,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                       className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.name ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {errors.name && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {errors.name}
                       </span>
@@ -284,7 +284,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                       className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.phone ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                     />
                     {errors.phone && (
-                      <span className="text-[10px] text-red-500 flex items-center mt-1">
+                      <span className="text-xs text-red-500 flex items-center mt-1">
                         <AlertCircle className="w-3.5 h-3.5 mr-1" />
                         {errors.phone}
                       </span>
@@ -305,7 +305,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                     className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.email ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                   />
                   {errors.email && (
-                    <span className="text-[10px] text-red-500 flex items-center mt-1">
+                    <span className="text-xs text-red-500 flex items-center mt-1">
                       <AlertCircle className="w-3.5 h-3.5 mr-1" />
                       {errors.email}
                     </span>
@@ -342,7 +342,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                     className={`w-full bg-slate-50 dark:bg-slate-950 border rounded-lg px-3 py-2 outline-none ${errors.message ? 'border-red-500' : 'border-slate-200 dark:border-slate-800 focus:border-brand-emerald'}`}
                   ></textarea>
                   {errors.message && (
-                    <span className="text-[10px] text-red-500 flex items-center mt-1">
+                    <span className="text-xs text-red-500 flex items-center mt-1">
                       <AlertCircle className="w-3.5 h-3.5 mr-1" />
                       {errors.message}
                     </span>
@@ -350,7 +350,7 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
                 </div>
 
                 {/* GDPR security confirmation */}
-                <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200/40 dark:border-slate-800 flex items-start space-x-2 text-[10px] text-slate-500 leading-normal font-sans">
+                <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200/40 dark:border-slate-800 flex items-start space-x-2 text-xs text-slate-500 leading-normal font-sans">
                   <ShieldCheck className="w-5 h-5 text-brand-emerald shrink-0 mt-0.5" />
                   <span>
                     Conformément au RGPD et à la loi n°2013-450 relative à la protection des données à caractère personnel de Côte d'Ivoire, les informations saisies font l'objet d'un chiffrement AES-256 et ne seront jamais partagées en dehors du cabinet.

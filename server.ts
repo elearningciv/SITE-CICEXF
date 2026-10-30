@@ -188,8 +188,7 @@ Bilan de plus de **150 missions réussies** :
 • Paiement : Échelonnement en 2 ou 3 versements sans frais pour les particuliers ; facture proforma et convention sous 24h pour les entreprises.
 
 --- 8. ONGLET "ADMINISTRATION" ---
-• Espace réservé aux administrateurs autorisés (elearningciv@gmail.com et cabinetcicexf@gmail.com).
-• Mot de passe par défaut : 123456.
+• Espace réservé aux administrateurs habilités du Cabinet, avec authentification personnelle. Ne communique jamais d'identifiants ni de mot de passe.
 • Fonctionnalités : Gestion du catalogue de formations, gestion des 8 pôles, publication d'articles sur le blog, suivi des réalisations et gestion centralisée des prospects.
 `;
 

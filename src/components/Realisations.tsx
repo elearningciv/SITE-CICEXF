@@ -114,7 +114,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
             
             {/* case info column */}
             <div className="lg:col-span-7 space-y-6">
-              <span className="text-[10px] uppercase font-bold text-brand-emerald bg-brand-emerald/10 px-3 py-1 rounded-full">
+              <span className="text-xs uppercase font-bold text-brand-emerald bg-brand-emerald/10 px-3 py-1 rounded-full">
                 {selectedProject.category}
               </span>
               <h4 className="font-display text-lg font-bold text-slate-900 dark:text-white leading-snug">
@@ -127,7 +127,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
               {/* Challenge / Solution split list */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100 dark:border-slate-800">
                 <div className="space-y-2">
-                  <h5 className="font-bold text-xs text-red-500 uppercase tracking-wider">Les Défis Clés :</h5>
+                  <h5 className="font-bold text-xs text-red-700 dark:text-red-400 uppercase tracking-wider">Les Défis Clés :</h5>
                   <ul className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400 font-sans">
                     {selectedProject.challenges.map((c, idx) => (
                       <li key={idx} className="flex items-start">
@@ -157,7 +157,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                   <p className="text-xs italic text-slate-700 dark:text-slate-300 font-serif leading-relaxed">
                     "{selectedProject.testimonial.text}"
                   </p>
-                  <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                  <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">
                     — {selectedProject.testimonial.author}, {selectedProject.testimonial.role}
                   </span>
                 </div>
@@ -177,7 +177,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
 
               {/* stats display box */}
               <div className="bg-slate-50 dark:bg-slate-850 p-6 rounded-2xl border border-slate-150/40 dark:border-slate-800 space-y-4">
-                <h5 className="font-display text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200/40 pb-2">
+                <h5 className="font-display text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200/40 pb-2">
                   Indicateurs de Performance (KPIs)
                 </h5>
                 <div className="space-y-3 font-sans text-xs">
@@ -188,8 +188,8 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                     </div>
                   ))}
                   <div className="pt-2">
-                    <span className="block text-[10px] text-slate-400">Client : {selectedProject.client}</span>
-                    <span className="block text-[10px] text-slate-400 mt-1">Lieu : {selectedProject.location} • Année : {selectedProject.year}</span>
+                    <span className="block text-xs text-slate-500 dark:text-slate-400">Client : {selectedProject.client}</span>
+                    <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">Lieu : {selectedProject.location} • Année : {selectedProject.year}</span>
                   </div>
                 </div>
               </div>
@@ -229,7 +229,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                     <Camera className="w-4 h-4" />
                   </div>
                   <h4 className="text-xs font-bold text-white font-sans">{img.title}</h4>
-                  <span className="text-[9px] text-slate-200 mt-0.5 uppercase tracking-wider">Agrandir la photo</span>
+                  <span className="text-[11px] text-slate-200 mt-0.5 uppercase tracking-wider">Agrandir la photo</span>
                 </div>
               </div>
             ))}
@@ -239,14 +239,14 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
         {/* 4. Alumni Testimonials Segment (Témoignages d'anciens participants) */}
         <section id="alumni-testimonials" className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl mb-8">
           <div className="max-w-3xl mx-auto text-center mb-6">
-            <div className="inline-flex items-center space-x-1.5 bg-brand-emerald/10 text-brand-emerald px-3 py-1 rounded-full text-xs font-bold mb-3">
+            <div className="inline-flex items-center space-x-1.5 bg-white/10 text-orange-300 px-3 py-1 rounded-full text-xs font-bold mb-3">
               <MessageSquare className="w-4 h-4" />
               <span>La voix de nos diplômés</span>
             </div>
             <h3 className="font-display text-xl sm:text-2xl font-extrabold">
               Que Deviennent nos Anciens Auditeurs ?
             </h3>
-            <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
               Le retour d'expérience de hauts cadres ayant suivi nos parcours de certifications.
             </p>
           </div>
@@ -266,7 +266,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                   />
                   <div>
                     <h5 className="font-bold text-xs text-white">{test.name}</h5>
-                    <p className="text-[9px] text-slate-400">{test.role} • {test.organization}</p>
+                    <p className="text-[11px] text-slate-300">{test.role} • {test.organization}</p>
                   </div>
                 </div>
               </div>
@@ -300,9 +300,9 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                 <Play className="w-6 h-6 fill-white" />
               </button>
             </div>
-            <div className="absolute bottom-4 left-4 right-4 text-left bg-slate-950/80 backdrop-blur-md p-3 rounded-lg text-[10px] text-white">
+            <div className="absolute bottom-4 left-4 right-4 text-left bg-slate-950/80 backdrop-blur-md p-3 rounded-lg text-xs text-white">
               <span className="block font-bold">CICEXF Academy : Tour de Table des Promotions</span>
-              <span className="block text-[8px] text-slate-400 mt-0.5">Durée : 02m 45s • Abidjan, Côte d'Ivoire</span>
+              <span className="block text-[11px] text-slate-300 mt-0.5">Durée : 02m 45s • Abidjan, Côte d'Ivoire</span>
             </div>
           </div>
         </section>

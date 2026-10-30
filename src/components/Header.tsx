@@ -248,7 +248,7 @@ export default function Header({
         className="sticky top-0 z-40 transition-all duration-300 bg-white shadow-sm border-b border-slate-200"
       >
         {/* Mobile Top Bar */}
-        <div className="w-full px-3 py-2.5 lg:hidden bg-white border-b border-slate-100">
+        <div className="w-full px-3 py-2.5 xl:hidden bg-white border-b border-slate-100">
           <div className="flex justify-between items-center">
             {/* Logo */}
             <div
@@ -286,7 +286,7 @@ export default function Header({
               <button
                 id="ai-mobile-btn"
                 onClick={() => setAiModalOpen(true)}
-                className="h-9 px-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
+                className="h-9 px-2.5 rounded-xl bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
                 aria-label="Conseiller Intelligent"
                 title="Conseiller Intelligent CICEXF - Posez une question"
               >
@@ -316,7 +316,7 @@ export default function Header({
         </div>
 
         {/* Desktop Blue Bar Navigation (Bande bleue statique de haute visibilité) */}
-        <div className="hidden lg:block bg-brand-blue-dark py-2 border-t border-b border-[#001830] shadow-md relative z-30">
+        <div className="hidden xl:block bg-brand-blue-dark py-2 border-t border-b border-[#001830] shadow-md relative z-30">
           <div className="w-full px-2 sm:px-4 lg:px-5 xl:px-8">
             <div className="flex items-center justify-between">
               {/* Logo and Agrément sur la même bande - Calé tout à gauche pour libérer l'espace nav */}
@@ -333,11 +333,11 @@ export default function Header({
                     <span className="font-display font-black text-xs xl:text-sm tracking-wider text-white">
                       CIC
                     </span>
-                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-brand-emerald-light">
+                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-orange-300">
                       EXF
                     </span>
                   </div>
-                  <p className="text-[7px] lg:text-[7.5px] xl:text-[8.5px] font-bold text-slate-300 dark:text-slate-300 font-mono leading-none mt-0.5 whitespace-nowrap">
+                  <p className="text-[9px] xl:text-[10px] font-semibold text-slate-300 dark:text-slate-300 font-mono leading-none mt-0.5 whitespace-nowrap">
                     Agrément N°25343/GTCA/RC/2025
                   </p>
                 </div>
@@ -350,13 +350,13 @@ export default function Header({
                   target="_blank"
                   rel="noreferrer"
                   id="direct-header-whatsapp-btn"
-                  className="inline-flex items-center space-x-1.5 bg-[#25D366] hover:bg-[#1eb857] text-white px-2 lg:px-2.5 py-1 xl:py-1.5 rounded-lg text-[10px] xl:text-[11px] font-black tracking-wide shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  className="inline-flex items-center space-x-1.5 bg-emerald-700 hover:bg-emerald-800 text-white px-2 lg:px-2.5 py-1 xl:py-1.5 rounded-lg text-[10px] xl:text-[11px] font-black tracking-wide shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                   title="Contacter directement le CICEXF par WhatsApp (+225 07 01 97 00 65)"
                 >
                   <svg className="w-3.5 h-3.5 fill-current shrink-0" viewBox="0 0 24 24">
                     <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.149.929 3.182 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.771-5.768-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.694.062-2.18-.553-1.895-.783-3.117-2.73-3.212-2.856-.095-.127-.77-1.026-.77-1.956 0-.931.488-1.388.662-1.579.174-.191.381-.239.508-.239.127 0 .254.001.365.006.117.005.275-.044.43.328.159.381.54 1.319.587 1.415.048.095.079.206.016.333-.063.127-.095.206-.191.317-.095.111-.202.249-.289.334-.095.095-.195.199-.084.39.111.191.494.814 1.059 1.318.729.649 1.343.85 1.534.945.191.095.302.079.413-.048.111-.127.476-.556.603-.746.127-.19.254-.159.429-.095.174.063 1.111.524 1.302.619.191.095.317.143.365.222.048.079.048.46-.096.865z" />
                   </svg>
-                  <span>WhatsApp</span>
+                  <span className="hidden 2xl:inline">WhatsApp</span>
                 </a>
 
                 <a
@@ -366,16 +366,16 @@ export default function Header({
                   title="Écrire par email à elearningciv@gmail.com"
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0 text-cyan-300" />
-                  <span>Mail</span>
+                  <span className="hidden 2xl:inline">Mail</span>
                 </a>
               </div>
 
               {/* Navigation principale de la bande - Sans overflow-hidden pour que Accueil et Qui sommes-nous restent toujours 100% visibles */}
-              <nav id="desktop-nav" className="flex items-center space-x-1 lg:space-x-1.5 xl:space-x-2.5 shrink-0 ml-auto">
+              <nav id="desktop-nav" className="flex items-center space-x-1 lg:space-x-1.5 xl:space-x-1 shrink-0 ml-auto">
                 <button
                   id="nav-home"
                   onClick={() => handleNavClick('home')}
-                  className={`px-2 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
+                  className={`px-2 lg:px-2.5 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
                     activeTab === 'home'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -387,7 +387,7 @@ export default function Header({
                 <button
                   id="nav-about"
                   onClick={() => handleNavClick('about')}
-                  className={`px-2 lg:px-2.5 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
+                  className={`px-2 lg:px-2.5 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
                     activeTab === 'about'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -399,7 +399,7 @@ export default function Header({
                 <button
                   id="nav-accompagnements"
                   onClick={() => handleNavClick('accompagnements')}
-                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'accompagnements'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -412,7 +412,7 @@ export default function Header({
                 <button
                   id="nav-formations"
                   onClick={() => handleNavClick('formations')}
-                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'formations'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -424,7 +424,7 @@ export default function Header({
                 <button
                   id="nav-realisations"
                   onClick={() => handleNavClick('realisations')}
-                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'realisations'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
@@ -436,7 +436,7 @@ export default function Header({
                 <button
                   id="nav-news"
                   onClick={() => handleNavClick('news')}
-                  className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
                     activeTab === 'news'
                       ? 'bg-red-600 text-white shadow-md scale-105'
                       : 'bg-red-500/10 text-red-200 border border-red-500/30 hover:bg-red-500/25 hover:text-white hover:scale-105 active:scale-95'
@@ -452,7 +452,7 @@ export default function Header({
                 <button
                   id="nav-contact"
                   onClick={() => handleNavClick('contact')}
-                  className={`px-2 lg:px-2.5 xl:px-4 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                  className={`px-2 lg:px-2.5 xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
                     activeTab === 'contact'
                       ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
                       : 'bg-brand-emerald text-white hover:bg-brand-emerald-light hover:scale-105 active:scale-95'
@@ -466,7 +466,7 @@ export default function Header({
                   <button
                     id="nav-admin"
                     onClick={() => handleNavClick('admin')}
-                    className={`px-1.5 lg:px-2 xl:px-3.5 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[12px] font-black uppercase tracking-wider transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                    className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
                       activeTab === 'admin'
                         ? 'bg-white text-emerald-600 shadow-md scale-105 font-black'
                         : 'bg-emerald-500/20 text-emerald-200 border border-emerald-500/30 hover:bg-emerald-500/25 hover:text-white hover:scale-105 active:scale-95'
@@ -484,12 +484,12 @@ export default function Header({
                 <button
                   id="bar-ai-btn"
                   onClick={() => setAiModalOpen(true)}
-                  className="px-2 lg:px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
+                  className="px-2 lg:px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
                   title="Conseiller Intelligent CICEXF - Posez vos questions sur les formations et expertises"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-current animate-pulse" />
-                  <span className="hidden xl:inline tracking-wide font-black">Conseiller IA</span>
-                  <span className="xl:hidden font-black">IA</span>
+                  <span className="hidden 2xl:inline tracking-wide font-black">Conseiller IA</span>
+                  <span className="2xl:hidden font-black">IA</span>
                 </button>
 
                 {/* Search Toggle */}
@@ -582,14 +582,14 @@ export default function Header({
 
         {/* Mobile Slide-out Menu */}
         {isOpen && (
-          <div id="mobile-menu" className="lg:hidden bg-white dark:bg-[#020817] border-t border-slate-100 dark:border-white/10 shadow-xl py-4 px-4 space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
+          <div id="mobile-menu" className="xl:hiddenbg-white dark:bg-[#020817] border-t border-slate-100 dark:border-white/10 shadow-xl py-4 px-4 space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
             {/* Quick Contact Buttons inside Mobile Menu */}
             <div className="grid grid-cols-2 gap-2 pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
               <a
                 href="https://wa.me/2250701970065"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold shadow-sm active:scale-95 transition-all"
+                className="flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-sm active:scale-95 transition-all"
                 title="WhatsApp direct (+225 07 01 97 00 65)"
               >
                 <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
@@ -641,7 +641,7 @@ export default function Header({
             </button>
             <button
               onClick={() => handleNavClick('news')}
-              className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold flex items-center justify-between border-2 border-dashed border-red-500 animate-pulse bg-red-500/10 dark:bg-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.4)] ${activeTab === 'news' ? 'text-white bg-red-600 dark:bg-red-600 border-solid animate-none' : 'text-red-600 dark:text-red-400'}`}
+              className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold flex items-center justify-between border-2 border-dashed border-red-500 animate-pulse bg-red-500/10 dark:bg-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.4)] ${activeTab === 'news' ? 'text-white bg-red-600 dark:bg-red-600 border-solid animate-none' : 'text-red-700 dark:text-red-300'}`}
             >
               <span>Actualités</span>
               <span className="relative flex h-2 w-2">
@@ -692,7 +692,7 @@ export default function Header({
                 placeholder="Rechercher des formations, domaines d'accompagnement, actualités..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent border-none outline-none text-slate-800 dark:text-slate-100 placeholder-slate-400 text-base"
+                className="w-full bg-transparent border-none outline-none text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 text-base"
                 autoFocus
               />
               <button
@@ -743,7 +743,7 @@ export default function Header({
                     {/* Formations list */}
                     {matchedFormations.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">
+                        <h4 className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider px-2">
                           Spécialisations & Formations Certifiantes ({matchedFormations.length})
                         </h4>
                         <div className="space-y-1">
@@ -778,7 +778,7 @@ export default function Header({
                     {/* Domains / Subdomains list */}
                     {matchedDomains.length > 0 && (
                       <div className="space-y-2">
-                        <h4 className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-2">
+                        <h4 className="text-[10px] font-bold text-slate-500 dark:text-slate-500 uppercase tracking-wider px-2">
                           Domaines d'Intervention & Axes Thématiques ({matchedDomains.length})
                         </h4>
                         <div className="space-y-1">

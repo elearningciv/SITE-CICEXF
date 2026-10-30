@@ -3,8 +3,7 @@ import {
   auth, db 
 } from '../firebase';
 import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithPopup,
   GoogleAuthProvider,
@@ -37,6 +36,7 @@ import {
 import { DOMAINS_INTERVENTION, PROJECTS, FORMATIONS, BLOG_POSTS, PARTNERS } from '../data';
 import { Prospect, exportProspectsToExcel, exportSingleProspectToExcel, saveProspect } from '../lib/prospects';
 import { SoftwareTool } from '../types';
+import { isAuthorizedAdminEmail, getAuthErrorMessage } from '../lib/adminAuth';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
 
 enum OperationType {
@@ -86,16 +86,6 @@ interface AdminPanelProps {
   partners?: any[];
 }
 
-export const ALLOWED_ADMIN_EMAILS = [
-  'elearningciv@gmail.com',
-  'cabinetcicexf@gmail.com'
-];
-
-export const isAuthorizedAdminEmail = (email?: string | null): boolean => {
-  if (!email) return false;
-  return ALLOWED_ADMIN_EMAILS.includes(email.trim().toLowerCase());
-};
-
 export default function AdminPanel({
   formations = [],
   accompagnements = [],
@@ -106,8 +96,8 @@ export default function AdminPanel({
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [email, setEmail] = useState('elearningciv@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
 
@@ -236,69 +226,12 @@ export default function AdminPanel({
   const [pLogoUrl, setPLogoUrl] = useState('');
   const [pCategory, setPCategory] = useState('Cabinet Partenaire');
 
-  // Track Auth state changes with stored session support
+  // Track the verified Firebase Auth user
   useEffect(() => {
-    try {
-      if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
-        setCurrentUser(null);
-      } else {
-        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-            setCurrentUser({
-              email: parsed.email,
-              uid: `admin_${parsed.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
-              displayName: parsed.name || parsed.email,
-              emailVerified: true
-            } as any);
-            loadDashboardData();
-          } else {
-            setCurrentUser(null);
-          }
-        }
-      }
-    } catch (e) {
-      console.warn("Session restore check:", e);
-    }
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (isAuthorizedAdminEmail(user.email)) {
-          setCurrentUser(user);
-          loadDashboardData();
-        } else {
-          // Connected with an unauthorized user email!
-          setCurrentUser(null);
-          localStorage.removeItem('cicexf_admin_session');
-          sessionStorage.removeItem('cicexf_admin_session');
-        }
-      } else {
-        if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
-          setCurrentUser(null);
-        } else {
-          const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-                setCurrentUser({
-                  email: parsed.email,
-                  uid: `admin_${parsed.email.replace(/[^a-zA-Z0-9]/g, '_')}`,
-                  displayName: parsed.name || parsed.email,
-                  emailVerified: true
-                } as any);
-                loadDashboardData();
-              } else {
-                setCurrentUser(null);
-              }
-            } catch (e) {
-              setCurrentUser(null);
-            }
-          } else {
-            setCurrentUser(null);
-          }
-        }
+      setCurrentUser(user);
+      if (user && isAuthorizedAdminEmail(user.email)) {
+        loadDashboardData();
       }
       setLoading(false);
     });
@@ -453,52 +386,20 @@ export default function AdminPanel({
     setLoading(true);
 
     const cleanEmail = email.trim().toLowerCase();
-    const cleanPassword = (password || '').trim();
 
     if (!isAuthorizedAdminEmail(cleanEmail)) {
-      setAuthError("Accès Refusé. Seules les adresses officielles cabinetcicexf@gmail.com et elearningciv@gmail.com sont habilitées à accéder à l'administration.");
-      setLoading(false);
-      return;
-    }
-
-    if (cleanPassword !== '123456') {
-      setAuthError("Mot de passe incorrect. Le mot de passe requis pour accéder à l'administration est 123456.");
+      setAuthError("Accès refusé. Seules les adresses habilitées du Cabinet peuvent accéder à l'administration.");
       setLoading(false);
       return;
     }
 
     try {
-      // 1. Tenter la connexion Firebase Auth en arrière-plan
-      try {
-        await signInWithEmailAndPassword(auth, cleanEmail, cleanPassword);
-      } catch (signInErr: any) {
-        console.warn("Firebase Auth email sign in fallback:", signInErr?.message || signInErr);
-      }
-
-      // 2. Valider la session administrative certifiée
-      const adminSession = {
-        email: cleanEmail,
-        name: cleanEmail === 'cabinetcicexf@gmail.com' ? 'Cabinet CICEXF (Direction)' : 'CICEXF E-Learning',
-        loggedInAt: Date.now()
-      };
-      localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-      sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-
-      setCurrentUser({
-        email: cleanEmail,
-        uid: `admin_${cleanEmail.replace(/[^a-zA-Z0-9]/g, '_')}`,
-        displayName: adminSession.name,
-        emailVerified: true
-      } as any);
-
-      window.dispatchEvent(new CustomEvent('admin-auth-changed', {
-        detail: { isLoggedIn: true, email: cleanEmail }
-      }));
-
-      await loadDashboardData();
+      // onAuthStateChanged met à jour currentUser et charge le tableau de bord
+      await signInWithEmailAndPassword(auth, cleanEmail, password);
+      setPassword('');
     } catch (err: any) {
-      console.error('Auth unexpected error:', err);
-      setAuthError("Une erreur inattendue est survenue lors de l'authentification.");
+      console.warn('Admin sign-in failed:', err?.code || err);
+      setAuthError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -511,27 +412,14 @@ export default function AdminPanel({
       const provider = new GoogleAuthProvider();
       const res = await signInWithPopup(auth, provider);
       const userEmail = res.user?.email?.toLowerCase();
-      
-      if (isAuthorizedAdminEmail(userEmail)) {
-        const adminSession = {
-          email: userEmail,
-          name: res.user?.displayName || userEmail,
-          loggedInAt: Date.now()
-        };
-        localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-        sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
 
-        setCurrentUser(res.user);
-        window.dispatchEvent(new CustomEvent('admin-auth-changed', {
-          detail: { isLoggedIn: true, email: userEmail }
-        }));
-        await loadDashboardData();
-      } else {
-        setAuthError(`L'adresse Google "${userEmail}" n'est pas habilitée. Seules cabinetcicexf@gmail.com et elearningciv@gmail.com ont accès.`);
+      if (!isAuthorizedAdminEmail(userEmail)) {
+        await signOut(auth);
+        setAuthError(`L'adresse Google "${userEmail}" n'est pas habilitée à accéder à l'administration.`);
       }
     } catch (err: any) {
-      console.warn("Google Sign-In canceled or failed:", err);
-      setAuthError("Connexion Google indisponible ou annulée. Utilisez le mot de passe 123456.");
+      console.warn("Google Sign-In canceled or failed:", err?.code || err);
+      setAuthError(getAuthErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -543,12 +431,7 @@ export default function AdminPanel({
     } catch (err) {
       console.error(err);
     }
-    localStorage.removeItem('cicexf_admin_session');
-    sessionStorage.removeItem('cicexf_admin_session');
     setCurrentUser(null);
-    window.dispatchEvent(new CustomEvent('admin-auth-changed', {
-      detail: { isLoggedIn: false }
-    }));
   };
 
   const handleToggleSubscription = async (subId: string, currentStatus: boolean) => {
@@ -1512,7 +1395,7 @@ export default function AdminPanel({
               <div>
                 <div className="flex justify-between items-center mb-1.5">
                   <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
-                    Mot de passe (par défaut : 123456)
+                    Mot de passe
                   </label>
                   <button
                     type="button"
@@ -1530,7 +1413,8 @@ export default function AdminPanel({
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="123456"
+                    autoComplete="current-password"
+                    placeholder="Votre mot de passe"
                     className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-750 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all font-mono"
                   />
                 </div>
@@ -1630,7 +1514,7 @@ export default function AdminPanel({
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Formations</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Formations</span>
               <span className="block text-lg font-black text-slate-900 dark:text-white mt-0.5">{filteredFormations.length}</span>
             </div>
           </div>
@@ -1648,7 +1532,7 @@ export default function AdminPanel({
               <Briefcase className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Accompagnement</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Accompagnement</span>
               <span className="block text-lg font-black text-slate-900 dark:text-white mt-0.5">{filteredAccompagnements.length}</span>
             </div>
           </div>
@@ -1666,7 +1550,7 @@ export default function AdminPanel({
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Réalisations</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Réalisations</span>
               <span className="block text-lg font-black text-slate-900 dark:text-white mt-0.5">{filteredRealisations.length}</span>
             </div>
           </div>
@@ -1684,7 +1568,7 @@ export default function AdminPanel({
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actualités</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actualités</span>
               <span className="block text-lg font-black text-slate-900 dark:text-white mt-0.5">{filteredBlogPosts.length}</span>
             </div>
           </div>
@@ -1702,11 +1586,11 @@ export default function AdminPanel({
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Prospects &amp; Excel</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Prospects &amp; Excel</span>
               <div className="flex items-center space-x-1.5 mt-0.5">
                 <span className="text-lg font-black text-slate-900 dark:text-white">{prospects.length}</span>
                 {prospects.filter(p => p.status === 'Nouveau').length > 0 && (
-                  <span className="bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold px-1.5 py-0.2 rounded-full">
+                  <span className="bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 text-xs font-extrabold px-1.5 py-0.2 rounded-full">
                     {prospects.filter(p => p.status === 'Nouveau').length} nv
                   </span>
                 )}
@@ -1727,7 +1611,7 @@ export default function AdminPanel({
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <span className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Partenaires</span>
+              <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Partenaires</span>
               <span className="block text-lg font-black text-slate-900 dark:text-white mt-0.5">{filteredPartners.length}</span>
             </div>
           </div>
@@ -1751,7 +1635,7 @@ export default function AdminPanel({
               >
                 <Layers className="w-4 h-4" />
                 <span>Formations</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
                   activeTab === 'formations' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}>
                   {filteredFormations.length}
@@ -1768,7 +1652,7 @@ export default function AdminPanel({
               >
                 <Briefcase className="w-4 h-4" />
                 <span>Accompagnement</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
                   activeTab === 'accompagnements' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}>
                   {filteredAccompagnements.length}
@@ -1785,7 +1669,7 @@ export default function AdminPanel({
               >
                 <Award className="w-4 h-4" />
                 <span>Réalisations</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
                   activeTab === 'realisations' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}>
                   {filteredRealisations.length}
@@ -1802,7 +1686,7 @@ export default function AdminPanel({
               >
                 <BookOpen className="w-4 h-4" />
                 <span>Actualités</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
                   activeTab === 'blog_posts' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}>
                   {filteredBlogPosts.length}
@@ -1819,7 +1703,7 @@ export default function AdminPanel({
               >
                 <FileSpreadsheet className="w-4 h-4" />
                 <span>Devis &amp; Inscriptions</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                <span className={`text-xs px-1.5 py-0.2 rounded-full font-bold ${
                   activeTab === 'prospects' ? 'bg-white/20 text-white' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                 }`}>
                   {prospects.length}
@@ -2161,7 +2045,7 @@ export default function AdminPanel({
                             className="hidden"
                           />
                         </label>
-                        <p className="text-[10px] text-slate-400">Formats acceptés : PNG, JPG, WEBP. Taille conseillée &lt; 800 Ko.</p>
+                        <p className="text-xs text-slate-400">Formats acceptés : PNG, JPG, WEBP. Taille conseillée &lt; 800 Ko.</p>
                       </div>
                     </div>
                   </div>
@@ -2287,7 +2171,7 @@ export default function AdminPanel({
                       <div key={mIdx} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex-1 space-y-1">
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-emerald">
+                            <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-emerald">
                               Module #{mIdx + 1} (Intitulé affiché en gras) :
                             </span>
                             <input
@@ -2317,7 +2201,7 @@ export default function AdminPanel({
                         </div>
 
                         <div className="space-y-1">
-                          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                             Points du module (un par ligne, affichés sans gras) :
                           </span>
                           <textarea
@@ -2611,7 +2495,7 @@ export default function AdminPanel({
             <div className="p-6 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-100 dark:border-slate-800">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-brand-emerald bg-brand-emerald/10 px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-brand-emerald bg-brand-emerald/10 px-2.5 py-0.5 rounded-full">
                     Architecture d'Accompagnement en 7 Sections
                   </span>
                   <h3 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center mt-1">
@@ -2693,7 +2577,7 @@ export default function AdminPanel({
                   {/* 1. Présentation du service */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">1</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">1</span>
                       Présentation du service *
                     </label>
                     <p className="text-[11px] text-slate-500">Décrivez le service, les enjeux stratégiques, l'expertise mobilisée et le positionnement du cabinet.</p>
@@ -2713,7 +2597,7 @@ export default function AdminPanel({
                   {/* 2. Objectifs opérationnels */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">2</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">2</span>
                       Objectifs opérationnels (1 par ligne)
                     </label>
                     <p className="text-[11px] text-slate-500">Listez les buts concrets mesurables visés par l'intervention.</p>
@@ -2729,7 +2613,7 @@ export default function AdminPanel({
                   {/* 3. Démarche d’accompagnement */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">3</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">3</span>
                       Démarche d’accompagnement (1 étape / phase par ligne)
                     </label>
                     <p className="text-[11px] text-slate-500">Détaillez le cheminement méthodologique étape par étape (ex: Phase 1 : Cadrage, Phase 2 : Audit, etc.).</p>
@@ -2745,7 +2629,7 @@ export default function AdminPanel({
                   {/* 4. Résultats attendus */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">4</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">4</span>
                       Résultats attendus (1 par ligne)
                     </label>
                     <p className="text-[11px] text-slate-500">Livrables tangibles, documents remis ou transformations opérationnelles concrètes.</p>
@@ -2761,7 +2645,7 @@ export default function AdminPanel({
                   {/* 5. Impact pour l’entité */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">5</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">5</span>
                       Impact pour l’entité
                     </label>
                     <p className="text-[11px] text-slate-500">Gains de productivité, réduction des risques, retour sur investissement ou autonomie souveraine.</p>
@@ -2777,7 +2661,7 @@ export default function AdminPanel({
                   {/* 6. Méthode d'évaluation */}
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 shadow-xs">
                     <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-[10px]">6</span>
+                      <span className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center font-mono mr-2 text-xs">6</span>
                       Méthode d'évaluation (1 par ligne)
                     </label>
                     <p className="text-[11px] text-slate-500">Comment la qualité et le succès de l'accompagnement sont mesurés et audités.</p>
@@ -2794,7 +2678,7 @@ export default function AdminPanel({
                   <div className="bg-white dark:bg-slate-950 p-5 rounded-2xl border-2 border-emerald-500/40 dark:border-emerald-500/40 space-y-4 shadow-sm">
                     <div>
                       <label className="block font-extrabold text-xs text-brand-emerald uppercase tracking-wider flex items-center">
-                        <span className="w-5 h-5 rounded-full bg-brand-emerald text-white flex items-center justify-center font-mono mr-2 text-[10px] shadow-xs">7</span>
+                        <span className="w-5 h-5 rounded-full bg-brand-emerald text-white flex items-center justify-center font-mono mr-2 text-xs shadow-xs">7</span>
                         Logiciels impliqués (Insertion libre d'icônes &amp; logos)
                       </label>
                       <p className="text-[11px] text-slate-500 mt-1">
@@ -2804,7 +2688,7 @@ export default function AdminPanel({
 
                     {/* Quick Presets Chips */}
                     <div className="space-y-1.5 pt-1">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
                         Modèles fréquents (cliquez pour ajouter instantanément) :
                       </span>
                       <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto p-1 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
@@ -2820,7 +2704,7 @@ export default function AdminPanel({
                                 }
                               }}
                               disabled={isAlreadyAdded}
-                              className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-[10.5px] font-semibold transition-all border ${
+                              className={`inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold transition-all border ${
                                 isAlreadyAdded
                                   ? 'bg-slate-200/60 dark:bg-slate-800 text-slate-400 border-transparent cursor-not-allowed'
                                   : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border-slate-200 dark:border-slate-700 hover:border-brand-emerald hover:text-brand-emerald cursor-pointer shadow-2xs'
@@ -2844,7 +2728,7 @@ export default function AdminPanel({
 
                       <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
                         <div className="sm:col-span-5 space-y-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase">Nom du logiciel :</label>
+                          <label className="text-xs font-bold text-slate-500 uppercase">Nom du logiciel :</label>
                           <input
                             type="text"
                             placeholder="ex: ArcGIS Pro, Odoo, R Studio..."
@@ -2855,7 +2739,7 @@ export default function AdminPanel({
                         </div>
 
                         <div className="sm:col-span-5 space-y-1">
-                          <label className="text-[10px] font-bold text-slate-500 uppercase">URL de l'icône / logo (PNG, SVG, Web) :</label>
+                          <label className="text-xs font-bold text-slate-500 uppercase">URL de l'icône / logo (PNG, SVG, Web) :</label>
                           <div className="flex items-center space-x-2">
                             <input
                               type="url"
@@ -2892,7 +2776,7 @@ export default function AdminPanel({
 
                     {/* Selected Softwares Badges List */}
                     <div className="space-y-2">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider block">
                         Logiciels enregistrés pour cet accompagnement ({accSoftwareList.length}) :
                       </span>
                       {accSoftwareList.length === 0 ? (
@@ -3144,7 +3028,7 @@ export default function AdminPanel({
                         <h3 className="font-display text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">
                           Fichier Central des Devis, Inscriptions &amp; Prospects (Excel)
                         </h3>
-                        <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                        <span className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 text-xs font-bold px-2 py-0.5 rounded-full">
                           cabinetcicexf@gmail.com &amp; elearningciv@gmail.com
                         </span>
                       </div>
@@ -3279,7 +3163,7 @@ export default function AdminPanel({
                               <select
                                 value={p.status || 'Nouveau'}
                                 onChange={(e) => handleUpdateProspectStatus(p.id!, e.target.value as Prospect['status'])}
-                                className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full outline-none border cursor-pointer ${
+                                className={`text-xs font-black uppercase px-2.5 py-1 rounded-full outline-none border cursor-pointer ${
                                   p.status === 'Nouveau'
                                     ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border-amber-300'
                                     : p.status === 'Contacté'
@@ -3303,12 +3187,12 @@ export default function AdminPanel({
                             <td className="p-4 font-bold text-slate-900 dark:text-white">
                               <div>{p.name}</div>
                               {p.company && (
-                                <div className="text-[10px] font-semibold text-slate-400 flex items-center space-x-1 mt-0.5">
+                                <div className="text-xs font-semibold text-slate-400 flex items-center space-x-1 mt-0.5">
                                   <span>🏢</span>
                                   <span>{p.company}</span>
                                 </div>
                               )}
-                              <span className="inline-block mt-1 text-[9.5px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                              <span className="inline-block mt-1 text-[11px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
                                 {p.type}
                               </span>
                             </td>
@@ -3334,7 +3218,7 @@ export default function AdminPanel({
                               <div className="font-bold text-slate-800 dark:text-slate-100 leading-snug line-clamp-2">
                                 {p.target}
                               </div>
-                              <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-slate-500">
+                              <div className="flex flex-wrap items-center gap-1.5 mt-1 text-xs text-slate-500">
                                 {p.session && <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">📅 {p.session}</span>}
                                 {p.modality && <span className="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded font-mono">📍 {p.modality}</span>}
                               </div>
@@ -3342,7 +3226,7 @@ export default function AdminPanel({
 
                             {/* Canal */}
                             <td className="p-4 whitespace-nowrap">
-                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center space-x-1 ${
+                              <span className={`text-xs font-bold px-2 py-0.5 rounded-full inline-flex items-center space-x-1 ${
                                 p.channel === 'WhatsApp' 
                                   ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400'
                                   : p.channel === 'Email'
@@ -3439,7 +3323,7 @@ export default function AdminPanel({
                         </td>
                         <td className="p-4 font-semibold text-slate-800 dark:text-slate-200">
                           {v.email ? (
-                            <span className="bg-emerald-50 dark:bg-emerald-950/40 text-brand-emerald-light border border-brand-emerald/20 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                            <span className="bg-emerald-50 dark:bg-emerald-950/40 text-brand-emerald-light border border-brand-emerald/20 px-2.5 py-0.5 rounded-full text-xs font-bold">
                               {v.email}
                             </span>
                           ) : (
@@ -3447,12 +3331,12 @@ export default function AdminPanel({
                           )}
                         </td>
                         <td className="p-4">
-                          <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-350 px-2.5 py-0.5 rounded-lg font-bold uppercase text-[10px] tracking-wider">
+                          <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-350 px-2.5 py-0.5 rounded-lg font-bold uppercase text-xs tracking-wider">
                             {v.page}
                           </span>
                         </td>
-                        <td className="p-4 font-mono text-[10px] text-slate-400">{v.visitorId}</td>
-                        <td className="p-4 font-mono text-[10px] text-slate-400">{v.sessionId}</td>
+                        <td className="p-4 font-mono text-xs text-slate-400">{v.visitorId}</td>
+                        <td className="p-4 font-mono text-xs text-slate-400">{v.sessionId}</td>
                         <td className="p-4 max-w-[200px] truncate text-slate-400 flex items-center space-x-1.5" title={v.userAgent}>
                           <Monitor className="w-3.5 h-3.5 shrink-0" />
                           <span className="truncate">{v.userAgent}</span>
@@ -3488,7 +3372,7 @@ export default function AdminPanel({
                     filteredSubscribers.map((s) => (
                       <tr key={s.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors">
                         <td className="p-4 font-bold text-slate-900 dark:text-white">{s.email}</td>
-                        <td className="p-4 font-mono text-[10px] text-slate-400">{s.visitorId || 'Inconnu'}</td>
+                        <td className="p-4 font-mono text-xs text-slate-400">{s.visitorId || 'Inconnu'}</td>
                         <td className="p-4 text-slate-500 font-medium">
                           {s.subscribedAt ? s.subscribedAt.toLocaleString('fr-FR') : 'Non renseigné'}
                         </td>
@@ -3497,11 +3381,11 @@ export default function AdminPanel({
                         </td>
                         <td className="p-4">
                           {s.isSubscribed !== false ? (
-                            <span className="inline-flex items-center space-x-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold text-[10px]">
+                            <span className="inline-flex items-center space-x-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-2.5 py-0.5 rounded-full font-bold text-xs">
                               <span>Abonné</span>
                             </span>
                           ) : (
-                            <span className="inline-flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-bold text-[10px]">
+                            <span className="inline-flex items-center space-x-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-2.5 py-0.5 rounded-full font-bold text-xs">
                               <span>Désabonné</span>
                             </span>
                           )}
@@ -3509,7 +3393,7 @@ export default function AdminPanel({
                         <td className="p-4 text-center">
                           <button
                             onClick={() => handleToggleSubscription(s.id, s.isSubscribed !== false)}
-                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                               s.isSubscribed !== false 
                                 ? 'bg-slate-100 dark:bg-slate-800 text-slate-600 hover:bg-slate-200 hover:text-slate-800' 
                                 : 'bg-emerald-50 dark:bg-emerald-950/20 text-brand-emerald hover:bg-brand-emerald hover:text-white'
@@ -3573,19 +3457,19 @@ export default function AdminPanel({
                         </td>
                         <td className="p-4 font-semibold text-slate-800 dark:text-slate-200">
                           <div className="font-bold">{f.price}</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">{f.duration}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-normal">{f.duration}</div>
                         </td>
                         <td className="p-4 font-medium text-slate-600 dark:text-slate-300">
                           <div>{f.modality}</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">{f.level}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 font-bold">{f.level}</div>
                         </td>
                         <td className="p-4">
                           {f.isFeatured ? (
-                            <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 border border-orange-300/60 px-2 py-0.5 rounded text-[10px] font-bold">
+                            <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 border border-orange-300/60 px-2 py-0.5 rounded text-xs font-bold">
                               Phare
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[10px]">Standard</span>
+                            <span className="text-slate-400 text-xs">Standard</span>
                           )}
                         </td>
                         <td className="p-4 text-center">
@@ -3655,7 +3539,7 @@ export default function AdminPanel({
                           {acc.shortDescription}
                         </td>
                         <td className="p-4">
-                          <span className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800 px-2 py-0.5 rounded-full font-bold text-[10px]">
+                          <span className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800 px-2 py-0.5 rounded-full font-bold text-xs">
                             {acc.subDomains?.length || 0} axes spécialisés
                           </span>
                         </td>
@@ -3733,13 +3617,13 @@ export default function AdminPanel({
                           {proj.client}
                         </td>
                         <td className="p-4">
-                          <span className="bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800 px-2 py-0.5 rounded text-[10px] font-bold">
+                          <span className="bg-amber-50 dark:bg-amber-950/50 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-800 px-2 py-0.5 rounded text-xs font-bold">
                             {proj.category}
                           </span>
                         </td>
                         <td className="p-4 text-slate-600 dark:text-slate-400 font-medium">
                           <div>{proj.year}</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[120px]">{proj.location}</div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[120px]">{proj.location}</div>
                         </td>
                         <td className="p-4 text-center">
                           <div className="flex items-center justify-center space-x-2">
@@ -3804,22 +3688,22 @@ export default function AdminPanel({
                           {post.title}
                         </td>
                         <td className="p-4 text-slate-500 font-medium">
-                          <span className="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200/40 px-2 py-0.5 rounded text-[10px] font-bold">
+                          <span className="bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 border border-blue-200/40 px-2 py-0.5 rounded text-xs font-bold">
                             {post.category}
                           </span>
                         </td>
                         <td className="p-4 font-medium text-slate-500">
                           <div className="font-bold text-slate-800 dark:text-slate-200">{post.author?.name || 'Inconnu'}</div>
-                          <div className="text-[10px] text-slate-400">{post.author?.role}</div>
+                          <div className="text-xs text-slate-400">{post.author?.role}</div>
                         </td>
                         <td className="p-4 text-slate-500 font-mono font-medium">{post.date}</td>
                         <td className="p-4">
                           {post.isFeatured ? (
-                            <span className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border border-purple-200/40 px-2 py-0.5 rounded text-[10px] font-bold">
+                            <span className="bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 border border-purple-200/40 px-2 py-0.5 rounded text-xs font-bold">
                               Une
                             </span>
                           ) : (
-                            <span className="text-slate-400 text-[10px]">Normal</span>
+                            <span className="text-slate-400 text-xs">Normal</span>
                           )}
                         </td>
                         <td className="p-4 text-center">

@@ -412,7 +412,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
             <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
-              <span className="self-start font-mono font-bold text-[9.5px] sm:text-[10px] text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+              <span className="self-start font-mono font-bold text-[11px] sm:text-xs text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
                 Spécialité 0{sIdx + 1} &bull; Formations CICEXF
               </span>
               <h1 className="font-display font-extrabold text-lg sm:text-2xl lg:text-3xl text-white leading-tight drop-shadow-md max-w-4xl">
@@ -462,7 +462,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
           <div className="absolute bottom-3 left-3 right-3 flex flex-col space-y-1">
-            <span className="self-start font-mono font-bold text-[9px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+            <span className="self-start font-mono font-bold text-[11px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
               Spécialité 0{sIdx + 1}
             </span>
             <span className="font-display font-extrabold text-[12px] sm:text-[13.5px] text-white leading-tight drop-shadow-md">
@@ -483,7 +483,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
       >
         <button
           onClick={() => setActiveCardTab('info')}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
             activeCardTab === 'info'
               ? 'active-moving-tab text-white'
               : 'text-slate-500 hover:text-slate-850 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:scale-[1.01]'
@@ -493,7 +493,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         </button>
         <button
           onClick={() => setActiveCardTab('objectives')}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
             activeCardTab === 'objectives'
               ? 'active-moving-tab text-white'
               : 'text-slate-500 hover:text-slate-850 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:scale-[1.01]'
@@ -503,7 +503,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         </button>
         <button
           onClick={() => setActiveCardTab('results')}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
             activeCardTab === 'results'
               ? 'active-moving-tab text-white'
               : 'text-slate-500 hover:text-slate-850 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:scale-[1.01]'
@@ -513,7 +513,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         </button>
         <button
           onClick={() => setActiveCardTab('opportunities')}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
             activeCardTab === 'opportunities'
               ? 'active-moving-tab text-white'
               : 'text-slate-500 hover:text-slate-850 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:scale-[1.01]'
@@ -523,7 +523,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         </button>
         <button
           onClick={() => setActiveCardTab('plus')}
-          className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
             activeCardTab === 'plus'
               ? 'active-moving-tab text-white'
               : 'text-slate-500 hover:text-slate-850 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:scale-[1.01]'
@@ -550,8 +550,8 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             
             {/* Structured developed context */}
             <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 space-y-2">
-              <span className="text-[9px] font-extrabold text-brand-emerald uppercase tracking-widest block">Contexte &amp; Enjeux Stratégiques</span>
-              <p className="text-sm text-slate-950 dark:text-slate-50 leading-relaxed font-sans text-justify font-medium">
+              <span className="text-[11px] font-extrabold text-brand-emerald uppercase tracking-widest block">Contexte &amp; Enjeux Stratégiques</span>
+              <p className="text-sm text-slate-950 dark:text-slate-50 leading-relaxed font-sans font-medium">
                 {getDeepPresentation(sub).contexte}
               </p>
             </div>
@@ -560,8 +560,8 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
 
             {/* Added Plus-Value block */}
             <div className="p-4 rounded-2xl bg-brand-blue/5 dark:bg-blue-950/20 border border-brand-blue/10 space-y-1">
-              <span className="text-[9px] font-extrabold text-brand-blue dark:text-blue-450 uppercase tracking-widest block">Valeur Ajoutée CICEXF</span>
-              <p className="text-[13px] text-slate-950 dark:text-slate-50 leading-relaxed text-justify italic font-semibold">
+              <span className="text-[11px] font-extrabold text-brand-blue dark:text-blue-450 uppercase tracking-widest block">Valeur Ajoutée CICEXF</span>
+              <p className="text-[13px] text-slate-950 dark:text-slate-50 leading-relaxed italic font-semibold">
                 "{getDeepPresentation(sub).plusValue}"
               </p>
             </div>
@@ -569,12 +569,12 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             {/* Original elements, kept intact but visually polished */}
             {sub.keyPoints && sub.keyPoints.length > 0 && (
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Compétences d'Excellence Enseignées :</span>
+                <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Compétences d'Excellence Enseignées :</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                   {sub.keyPoints.map((kp, kpIdx) => (
                     <div key={kpIdx} className="flex items-start text-black dark:text-white">
                       <CheckCircle className="w-3.5 h-3.5 text-brand-emerald mr-2 shrink-0 mt-0.5" />
-                      <span className="leading-snug text-[10.5px] font-medium">{kp}</span>
+                      <span className="leading-snug text-xs font-medium">{kp}</span>
                     </div>
                   ))}
                 </div>
@@ -583,8 +583,8 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
 
             {sub.expertiseLevel && (
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Niveau d'Expertise Visé :</span>
-                <span className="bg-brand-emerald/10 text-brand-emerald text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Niveau d'Expertise Visé :</span>
+                <span className="bg-brand-emerald/10 text-brand-emerald text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   {sub.expertiseLevel}
                 </span>
               </div>
@@ -592,12 +592,12 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
 
             {sub.software && sub.software.length > 0 && (
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest">Logiciels &amp; Outils de Pointe :</span>
+                <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Logiciels &amp; Outils de Pointe :</span>
                 <div className="flex flex-wrap gap-1 font-mono">
                   {sub.software.map((sw, swIdx) => (
                     <span
                       key={swIdx}
-                      className="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[9px] font-semibold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700"
+                      className="bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[11px] font-semibold px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700"
                     >
                       {sw}
                     </span>
@@ -611,7 +611,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {activeCardTab === 'objectives' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             <div>
-              <span className="block text-[10px] font-bold text-brand-emerald uppercase tracking-widest mb-1">Objectifs d'apprentissage</span>
+              <span className="block text-xs font-bold text-brand-emerald uppercase tracking-widest mb-1">Objectifs d'apprentissage</span>
               <h4 className="font-display font-extrabold text-sm text-slate-900 dark:text-white leading-snug">
                 Qu'allez-vous maîtriser durant cette formation ?
               </h4>
@@ -622,7 +622,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             <div className="space-y-3 pt-1">
               {data.objectives.map((obj, oIdx) => (
                 <div key={oIdx} className="flex items-start">
-                  <div className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center text-[10px] font-bold mr-3 shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-brand-emerald/10 text-brand-emerald flex items-center justify-center text-xs font-bold mr-3 shrink-0 mt-0.5">
                     {oIdx + 1}
                   </div>
                   <span className="text-[13px] font-semibold text-slate-950 dark:text-slate-50 leading-relaxed text-left">
@@ -637,7 +637,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {activeCardTab === 'results' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             <div>
-              <span className="block text-[10px] font-bold text-brand-blue dark:text-blue-400 uppercase tracking-widest mb-1">Résultats de fin de formation</span>
+              <span className="block text-xs font-bold text-brand-blue dark:text-blue-400 uppercase tracking-widest mb-1">Résultats de fin de formation</span>
               <h4 className="font-display font-extrabold text-sm text-slate-900 dark:text-white leading-snug">
                 Ce avec quoi vous repartez concrètement :
               </h4>
@@ -661,7 +661,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {activeCardTab === 'opportunities' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             <div>
-              <span className="block text-[10px] font-bold text-purple-500 uppercase tracking-widest mb-1">Débouchés professionnels</span>
+              <span className="block text-xs font-bold text-purple-500 uppercase tracking-widest mb-1">Débouchés professionnels</span>
               <h4 className="font-display font-extrabold text-sm text-slate-900 dark:text-white leading-snug">
                 Perspectives et débouchés de carrière :
               </h4>
@@ -685,7 +685,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {activeCardTab === 'plus' && (
           <div className="space-y-4 animate-in fade-in duration-200">
             <div>
-              <span className="block text-[10px] font-bold text-brand-emerald uppercase tracking-widest mb-1">Autres axes importants</span>
+              <span className="block text-xs font-bold text-brand-emerald uppercase tracking-widest mb-1">Autres axes importants</span>
               <h4 className="font-display font-extrabold text-sm text-slate-900 dark:text-white leading-snug">
                 Piliers de réussite de nos cursus :
               </h4>
@@ -693,11 +693,11 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             <div className="space-y-3 pt-1">
               {data.extraAxes.map((axe, axIdx) => (
                 <div key={axIdx} className="space-y-1 p-2.5 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                  <span className="block text-[10px] font-extrabold text-brand-emerald uppercase tracking-wider flex items-center">
+                  <span className="block text-xs font-extrabold text-brand-emerald uppercase tracking-wider flex items-center">
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-emerald mr-2" />
                     {axe.label}
                   </span>
-                  <p className="text-[11px] text-slate-950 dark:text-slate-50 font-semibold leading-relaxed text-justify">
+                  <p className="text-[11px] text-slate-950 dark:text-slate-50 font-semibold leading-relaxed">
                     {axe.value}
                   </p>
                 </div>
@@ -716,7 +716,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
           }
         }}
       >
-        <span className="text-[10px] text-slate-400 font-sans uppercase">CICEXF Certifié</span>
+        <span className="text-xs text-slate-400 font-sans uppercase">CICEXF Certifié</span>
         {isLarge ? (
           <button
             onClick={() => {
@@ -1405,7 +1405,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 {isFilterDropdownOpen && (
                   <div className="absolute left-0 mt-2 w-72 sm:w-80 md:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                     <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
                         Thématiques de formation
                       </span>
                       {selectedDomain !== 'Tous' && (
@@ -1415,7 +1415,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             setSelectedDomain('Tous');
                             setIsFilterDropdownOpen(false);
                           }}
-                          className="text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors cursor-pointer"
+                          className="text-xs font-bold text-red-500 hover:text-red-600 transition-colors cursor-pointer"
                         >
                           Réinitialiser
                         </button>
@@ -1455,7 +1455,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                               )}
                               <span className="truncate">{theme === 'Tous' ? 'Toutes les thématiques' : theme}</span>
                             </div>
-                            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold shrink-0 ${
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-mono font-bold shrink-0 ${
                               isSelected
                                 ? 'bg-white/20 text-white'
                                 : 'bg-slate-100 dark:bg-slate-800 text-slate-500 group-hover:bg-brand-emerald/10 group-hover:text-brand-emerald'
@@ -1485,7 +1485,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Rechercher une formation, compétence..."
-                    className="w-full bg-transparent border-none outline-none text-xs sm:text-sm text-slate-800 dark:text-white placeholder-slate-400 focus:ring-0"
+                    className="w-full bg-transparent border-none outline-none text-xs sm:text-sm text-slate-800 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:ring-0"
                   />
                   {searchQuery && (
                     <button
@@ -1566,7 +1566,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                           
                           {/* Title and Badge on image */}
                           <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                            <span className="self-start font-mono font-bold text-[9px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                            <span className="self-start font-mono font-bold text-[11px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                               Domaine {displayNum}
                             </span>
                             <h3 className="font-display font-extrabold text-[12px] sm:text-[13.5px] text-white leading-tight drop-shadow-md">
@@ -1582,7 +1582,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
                         <div className="p-6 flex-grow flex flex-col justify-between">
                           <div className="space-y-2">
-                            <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3 text-justify">
+                            <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3">
                               {domain.shortDescription}
                             </p>
                           </div>
@@ -1636,7 +1636,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-6 sm:p-10 space-y-3">
-                        <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
+                        <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
                           {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
                           <span>Ingénierie CICEXF &bull; Pôle Académique</span>
                         </div>
@@ -1650,21 +1650,21 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
                       <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/50 dark:border-slate-800 shadow-sm flex flex-col justify-center">
                         <h3 className="text-xs uppercase font-extrabold tracking-widest text-brand-emerald mb-2">Présentation générale</h3>
-                        <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed text-justify">
+                        <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed">
                           {selectedDomainObj.description}
                         </p>
                       </div>
 
                       <div className="lg:col-span-4 bg-slate-900 text-white border border-slate-800 p-8 rounded-3xl flex flex-col justify-center space-y-4">
-                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Indicateurs de Performance</span>
+                        <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Indicateurs de Performance</span>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="border-l-2 border-brand-emerald pl-3">
                             <span className="block text-xl font-bold font-mono text-white">100%</span>
-                            <span className="block text-[9px] text-slate-400 uppercase">Pratique</span>
+                            <span className="block text-[11px] text-slate-400 uppercase">Pratique</span>
                           </div>
                           <div className="border-l-2 border-brand-blue pl-3">
                             <span className="block text-xl font-bold font-mono text-white">4.8/5</span>
-                            <span className="block text-[9px] text-slate-400 uppercase">Avis Experts</span>
+                            <span className="block text-[11px] text-slate-400 uppercase">Avis Experts</span>
                           </div>
                         </div>
                       </div>
@@ -1676,7 +1676,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         <h2 className="font-display text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                           Axes d'intervention &amp; Livrables clés
                         </h2>
-                        <p className="text-[10px] uppercase font-bold text-brand-emerald tracking-widest">
+                        <p className="text-xs uppercase font-bold text-brand-emerald tracking-widest">
                           Structure d'enseignement certifiante &amp; d'expertise
                         </p>
                       </div>
@@ -1714,7 +1714,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
                                   <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                                    <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                    <span className="self-start font-mono font-bold text-[11px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                       Spécialité 0{sIdx + 1} &bull; CICEXF
                                     </span>
                                   </div>
@@ -1735,12 +1735,12 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             </div>
 
                             <div className="p-4 bg-slate-50 dark:bg-slate-850/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                              <span className="text-[10px] text-brand-emerald font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform duration-300">
+                              <span className="text-xs text-brand-emerald font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform duration-300">
                                 <span>Consulter la spécialité</span>
                                 <ChevronRight className="w-3.5 h-3.5" />
                               </span>
                               {sub.expertiseLevel && (
-                                <span className="text-[8.5px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
+                                <span className="text-[11px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
                                   {sub.expertiseLevel}
                                 </span>
                               )}
@@ -1800,7 +1800,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     <div className="pt-10 border-t border-slate-200/60 dark:border-slate-800/60 space-y-6">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
-                          <span className="text-[10px] font-bold uppercase tracking-wider text-brand-emerald">
+                          <span className="text-xs font-bold uppercase tracking-wider text-brand-emerald">
                             Programmes Certifiants Rattachés
                           </span>
                           <h3 className="text-lg sm:text-xl font-display font-extrabold text-slate-900 dark:text-white">
@@ -1832,7 +1832,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200/60 dark:border-slate-800 shadow-sm hover:shadow-lg hover:border-brand-emerald/40 transition-all flex flex-col justify-between p-5 space-y-4 cursor-pointer group"
                           >
                             <div className="space-y-2.5">
-                              <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase">
+                              <div className="flex justify-between items-center text-xs font-bold text-slate-400 uppercase">
                                 <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1 text-brand-emerald" /> {rf.duration}</span>
                                 <span className="text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded font-bold">{rf.modality}</span>
                               </div>
@@ -1879,7 +1879,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             {/* Introductory panel */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="space-y-2 max-w-3xl text-left">
-                <span className="text-[10px] font-extrabold text-brand-emerald uppercase tracking-widest block">Nomenclature Officielle</span>
+                <span className="text-xs font-extrabold text-brand-emerald uppercase tracking-widest block">Nomenclature Officielle</span>
                 <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight">
                   Répertoire des 8 Thématiques et 34 Axes de Formation du Cabinet
                 </h2>
@@ -1919,7 +1919,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   placeholder="Rechercher par thématique, axe ou mot-clé (ex: QGIS, audit, comptabilité, SYSCOHADA, ISO...)"
                   value={axesSearchQuery}
                   onChange={(e) => setAxesSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-none outline-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:ring-0"
+                  className="w-full bg-transparent border-none outline-none text-xs text-slate-800 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-0"
                 />
                 {axesSearchQuery && (
                   <button
@@ -1962,7 +1962,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     <div className="bg-slate-900 text-white p-6 sm:p-8 relative overflow-hidden border-b border-slate-800">
                       <div className="absolute inset-0 grid-pattern opacity-5"></div>
                       <div className="space-y-3 relative z-10 text-left">
-                        <div className="inline-flex items-center space-x-2 bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                        <div className="inline-flex items-center space-x-2 bg-brand-emerald/20 text-brand-emerald border border-brand-emerald/30 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
                           Pôle Thématique 0{domainIdx + 1}
                         </div>
                         <h3 className="font-display text-base sm:text-lg lg:text-xl font-extrabold tracking-tight leading-snug text-white">
@@ -2011,14 +2011,14 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                 </div>
                               </div>
                               
-                              <div className="shrink-0 pt-1 text-slate-400 dark:text-slate-600 hover:text-brand-emerald dark:hover:text-brand-emerald transition-colors">
+                              <div className="shrink-0 pt-1 text-slate-500 dark:text-slate-600 hover:text-brand-emerald dark:hover:text-brand-emerald transition-colors">
                                 {isExpanded ? (
-                                  <span className="text-[10px] font-bold text-brand-emerald uppercase tracking-wider flex items-center gap-1">
+                                  <span className="text-xs font-bold text-brand-emerald uppercase tracking-wider flex items-center gap-1">
                                     Fermer
                                     <ChevronRight className="w-4 h-4 rotate-90 transition-transform duration-200" />
                                   </span>
                                 ) : (
-                                  <span className="text-[10px] font-bold text-slate-400 hover:text-brand-emerald uppercase tracking-wider flex items-center gap-1">
+                                  <span className="text-xs font-bold text-slate-400 hover:text-brand-emerald uppercase tracking-wider flex items-center gap-1">
                                     Détails
                                     <ChevronRight className="w-4 h-4 transition-transform duration-200" />
                                   </span>
@@ -2117,7 +2117,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                   
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-6 sm:p-8 items-start lg:items-center relative z-10">
                     <div className="w-full lg:w-7/12 min-w-0 flex-1 space-y-4">
-                      <span className="inline-block bg-brand-emerald text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
+                      <span className="inline-block bg-brand-emerald text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">
                         Certifications d'Excellence CICEXF
                       </span>
                       <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight leading-tight text-white break-words">
@@ -2246,18 +2246,18 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                           />
-                          <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[8.5px] font-bold px-2.5 py-1 rounded-full uppercase">
+                          <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full uppercase">
                             {formation.domain}
                           </div>
                           <div className="absolute top-3 right-3 flex items-center space-x-1">
                             {(formation.id.startsWith('f-') || formation.createdAt) && (
-                              <div className="bg-amber-500 text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md flex items-center space-x-1">
+                              <div className="bg-amber-700 text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md flex items-center space-x-1">
                                 <Sparkles className="w-2.5 h-2.5" />
                                 <span>Nouveau</span>
                               </div>
                             )}
                             {formation.isFeatured && (
-                              <div className="bg-brand-emerald text-white text-[8px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
+                              <div className="bg-brand-emerald text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
                                 ★ Phare
                               </div>
                             )}
@@ -2273,7 +2273,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                           }}
                           title={`Cliquer pour afficher les détails de la formation : ${formation.title}`}
                         >
-                          <div className="flex justify-between text-[9.5px] font-bold text-slate-400 uppercase">
+                          <div className="flex justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase">
                             <span className="flex items-center"><Clock className="w-3.5 h-3.5 mr-1 text-brand-emerald" /> {formation.duration}</span>
                             <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded">{formation.modality}</span>
                           </div>

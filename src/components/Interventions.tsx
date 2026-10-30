@@ -177,7 +177,7 @@ export default function Interventions({
                       
                       {/* Title and Badge on image - ensuring text is white */}
                       <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                        <span className="self-start font-mono font-bold text-[9px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                        <span className="self-start font-mono font-bold text-[11px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                           Domaine {displayNum}
                         </span>
                         <h3 className="font-display font-extrabold text-[12px] sm:text-[13px] text-white leading-tight drop-shadow-md">
@@ -193,7 +193,7 @@ export default function Interventions({
 
                     <div className="p-4 flex-grow flex flex-col justify-between">
                       <div className="space-y-2">
-                        <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3 text-justify">
+                        <p className="text-[11px] text-black dark:text-white font-sans font-medium leading-relaxed line-clamp-3">
                           {domain.shortDescription}
                         </p>
                       </div>
@@ -260,7 +260,7 @@ export default function Interventions({
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 space-y-2">
-                    <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[9px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
+                    <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
                       {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
                       <span>Ingénierie CICEXF &bull; Accompagnement</span>
                     </div>
@@ -306,7 +306,7 @@ export default function Interventions({
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
                               <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
-                                <span className="self-start font-mono font-bold text-[8.5px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
+                                <span className="self-start font-mono font-bold text-[11px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                   Axe #0{sIdx + 1} &bull; CICEXF
                                 </span>
                               </div>
@@ -329,11 +329,11 @@ export default function Interventions({
 
                         {/* Action link */}
                         <div className="p-4 bg-slate-50 dark:bg-slate-850/60 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                          <span className="text-[10px] text-[#8A1A24] dark:text-red-400 font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
+                          <span className="text-xs text-[#8A1A24] dark:text-red-400 font-extrabold uppercase tracking-wider flex items-center space-x-1 group-hover:translate-x-1 transition-transform">
                             <span>Consulter la spécialité</span>
                             <ChevronRight className="w-3.5 h-3.5" />
                           </span>
-                          <span className="text-[8.5px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
+                          <span className="text-[11px] bg-slate-200/70 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300 font-bold px-2 py-0.5 rounded-md uppercase">
                             Détails &amp; Inscription
                           </span>
                         </div>
@@ -388,7 +388,7 @@ export default function Interventions({
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
                             
                             <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
-                              <span className="self-start font-mono font-bold text-[9.5px] sm:text-[10px] text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
+                              <span className="self-start font-mono font-bold text-[11px] sm:text-xs text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
                                 Axe #0{sIdx + 1} &bull; Accompagnement CICEXF
                               </span>
                               <h2 className="font-display font-extrabold text-lg sm:text-2xl lg:text-3xl text-white leading-tight drop-shadow-md max-w-4xl">

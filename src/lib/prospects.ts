@@ -1,7 +1,8 @@
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { setVisitorEmail, getVisitorId } from './tracker';
-import * as XLSX from 'xlsx';
+// xlsx is heavy and only needed for admin exports: loaded on demand
+const loadXlsx = () => import('xlsx');
 
 export interface Prospect {
   id?: string;
@@ -72,7 +73,8 @@ export async function saveProspect(data: {
 /**
  * Exporte une liste de prospects vers un véritable fichier Excel (.xlsx)
  */
-export function exportProspectsToExcel(prospects: Prospect[], customFilename?: string) {
+export async function exportProspectsToExcel(prospects: Prospect[], customFilename?: string) {
+  const XLSX = await loadXlsx();
   const dateStr = new Date().toISOString().split('T')[0];
   const filename = customFilename || `Prospects_CICEXF_${dateStr}.xlsx`;
 
@@ -139,7 +141,8 @@ export function exportProspectsToExcel(prospects: Prospect[], customFilename?: s
 /**
  * Exporte une fiche individuelle de prospect sous forme de fichier Excel
  */
-export function exportSingleProspectToExcel(p: Prospect) {
+export async function exportSingleProspectToExcel(p: Prospect) {
+  const XLSX = await loadXlsx();
   let dateFormatted = 'Récent';
   if (p.createdAt) {
     if (p.createdAt instanceof Timestamp) {

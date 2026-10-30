@@ -1,18 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
-import About from './components/About';
-import Interventions from './components/Interventions';
-import Formations from './components/Formations';
-import Realisations from './components/Realisations';
-import News from './components/News';
-import Contact from './components/Contact';
-import Partners from './components/Partners';
-import AdminPanel, { isAuthorizedAdminEmail } from './components/AdminPanel';
+import { isAuthorizedAdminEmail } from './lib/adminAuth';
 import AdminLoginModal from './components/AdminLoginModal';
-import AdilineChatbot from './components/AdilineChatbot';
-import adilineAvatar from './assets/images/adiline_avatar_1792359280949.jpg';
+import adilineAvatar from './assets/images/adiline_avatar_1792359280949.webp';
 import { trackVisit } from './lib/tracker';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth, db } from './firebase';
@@ -41,40 +33,57 @@ const TAB_LABELS: Record<string, string> = {
   contact: 'Contact'
 };
 
-const getInitialAdminStatus = (): boolean => {
-  try {
-    if (typeof window === 'undefined') return false;
-    if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
-      return false;
-    }
-    const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      if (parsed?.email) {
-        return isAuthorizedAdminEmail(parsed.email);
-      }
-    }
-    // Default session for the designated administrator elearningciv@gmail.com
-    const defaultSession = {
-      email: 'elearningciv@gmail.com',
-      name: 'CICEXF E-Learning (Admin)',
-      loggedInAt: Date.now()
-    };
-    localStorage.setItem('cicexf_admin_session', JSON.stringify(defaultSession));
-    sessionStorage.setItem('cicexf_admin_session', JSON.stringify(defaultSession));
-    return true;
-  } catch (e) {
-    return true;
-  }
+// Each tab gets its own URL so pages can be shared, bookmarked and indexed
+const TAB_PATHS: Record<string, string> = {
+  home: '/',
+  about: '/qui-sommes-nous',
+  accompagnements: '/accompagnement',
+  formations: '/formations',
+  realisations: '/realisations',
+  news: '/actualites',
+  partners: '/partenaires',
+  contact: '/contact',
+  admin: '/admin'
 };
 
+const getTabFromPath = (pathname: string): string => {
+  const clean = pathname.replace(/\/+$/, '') || '/';
+  return Object.keys(TAB_PATHS).find(tab => TAB_PATHS[tab] === clean) || 'home';
+};
+
+// Secondary pages, the chatbot and the admin console are downloaded on demand
+const About = lazy(() => import('./components/About'));
+const Interventions = lazy(() => import('./components/Interventions'));
+const Formations = lazy(() => import('./components/Formations'));
+const Realisations = lazy(() => import('./components/Realisations'));
+const News = lazy(() => import('./components/News'));
+const Contact = lazy(() => import('./components/Contact'));
+const Partners = lazy(() => import('./components/Partners'));
+const AdilineChatbot = lazy(() => import('./components/AdilineChatbot'));
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
+
+const PageLoader = ({ label = 'Chargement…' }: { label?: string }) => (
+  <div className="min-h-[60vh] flex items-center justify-center text-sm text-slate-500">{label}</div>
+);
+
+// Remove legacy client-side admin sessions (admin access now relies on Firebase Auth only)
+try {
+  localStorage.removeItem('cicexf_admin_session');
+  localStorage.removeItem('cicexf_admin_explicit_logout');
+  sessionStorage.removeItem('cicexf_admin_session');
+} catch (e) {}
+
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('home');
+  const [activeTab, setActiveTab] = useState<string>(() => getTabFromPath(window.location.pathname));
   const [selectedDomainId, setSelectedDomainId] = useState<string | null>(null);
   const [preselectedDomain, setPreselectedDomain] = useState<string>('Consultance');
   const [isAiModalOpen, setIsAiModalOpen] = useState<boolean>(false);
+  const [hasOpenedAssistant, setHasOpenedAssistant] = useState<boolean>(false);
+  useEffect(() => {
+    if (isAiModalOpen) setHasOpenedAssistant(true);
+  }, [isAiModalOpen]);
   
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(getInitialAdminStatus);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   
   // Helper to read cached deleted items instantly (prevents flicker of deleted static items)
@@ -187,7 +196,8 @@ export default function App() {
 
     const unsubFormations = onSnapshot(collection(db, 'formations'), (snapshot) => {
       latestDbFormations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      snapshot.docs.forEach(async (d) => {
+      // Persisting cleaned titles requires admin write access
+      if (isAuthorizedAdminEmail(auth.currentUser?.email)) snapshot.docs.forEach(async (d) => {
         const data = d.data();
         if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
           const cleaned = cleanEntityTitle(data.title);
@@ -219,7 +229,7 @@ export default function App() {
 
     const unsubBlog = onSnapshot(collection(db, 'blog_posts'), (snapshot) => {
       latestDbBlog = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      snapshot.docs.forEach(async (d) => {
+      if (isAuthorizedAdminEmail(auth.currentUser?.email)) snapshot.docs.forEach(async (d) => {
         const data = d.data();
         if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
           const cleaned = cleanEntityTitle(data.title);
@@ -252,106 +262,23 @@ export default function App() {
     };
   }, []);
 
-  // Track Admin session and Firebase auth state
+  // Admin status is derived only from the verified Firebase Auth user
   useEffect(() => {
-    // 1. Check persistent verified session
-    try {
-      if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
-        setIsAdminLoggedIn(false);
-      } else {
-        const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-            setIsAdminLoggedIn(true);
-          } else {
-            localStorage.removeItem('cicexf_admin_session');
-            sessionStorage.removeItem('cicexf_admin_session');
-            setIsAdminLoggedIn(false);
-          }
-        }
-      }
-    } catch (e) {
-      console.warn("Session restore check:", e);
-    }
-
-    // 2. Listen to Firebase Auth: strictly mask admin button for unauthorized connected accounts
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (isAuthorizedAdminEmail(user.email)) {
-          // Connected with an authorized admin account (elearningciv@gmail.com or cabinetcicexf@gmail.com)
-          setIsAdminLoggedIn(true);
-          const adminSession = {
-            email: user.email!.toLowerCase(),
-            name: user.displayName || user.email,
-            loggedInAt: Date.now()
-          };
-          localStorage.removeItem('cicexf_admin_explicit_logout');
-          sessionStorage.removeItem('cicexf_admin_explicit_logout');
-          localStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-          sessionStorage.setItem('cicexf_admin_session', JSON.stringify(adminSession));
-        } else {
-          // Connected with an UNAUTHORIZED user account: STRICTLY MASK ADMINISTRATION
-          localStorage.removeItem('cicexf_admin_session');
-          sessionStorage.removeItem('cicexf_admin_session');
-          localStorage.setItem('cicexf_admin_explicit_logout', 'true');
-          setIsAdminLoggedIn(false);
-          if (activeTab === 'admin') {
-            setActiveTab('home');
-          }
-        }
-      } else {
-        // No Firebase Auth user connected: check stored session validity
-        if (localStorage.getItem('cicexf_admin_explicit_logout') === 'true') {
-          setIsAdminLoggedIn(false);
-        } else {
-          const stored = localStorage.getItem('cicexf_admin_session') || sessionStorage.getItem('cicexf_admin_session');
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              if (parsed?.email && isAuthorizedAdminEmail(parsed.email)) {
-                setIsAdminLoggedIn(true);
-              } else {
-                localStorage.removeItem('cicexf_admin_session');
-                sessionStorage.removeItem('cicexf_admin_session');
-                setIsAdminLoggedIn(false);
-              }
-            } catch (e) {
-              setIsAdminLoggedIn(false);
-            }
-          } else {
-            setIsAdminLoggedIn(false);
-          }
-        }
+      const isAdmin = !!user && isAuthorizedAdminEmail(user.email);
+      setIsAdminLoggedIn(isAdmin);
+      if (!isAdmin) {
+        setActiveTab((tab) => (tab === 'admin' ? 'home' : tab));
       }
     });
-
-    // 3. Listen to internal auth change event
-    const handleAdminEvent = (e: any) => {
-      const { isLoggedIn, email } = e.detail || {};
-      if (isLoggedIn && isAuthorizedAdminEmail(email)) {
-        setIsAdminLoggedIn(true);
-      } else if (!isLoggedIn) {
-        setIsAdminLoggedIn(false);
-      }
-    };
-    window.addEventListener('admin-auth-changed', handleAdminEvent);
-
-    return () => {
-      unsubscribe();
-      window.removeEventListener('admin-auth-changed', handleAdminEvent);
-    };
-  }, [activeTab]);
+    return () => unsubscribe();
+  }, []);
 
   const handleAdminLogout = async () => {
     try {
       await signOut(auth);
     } catch (e) {}
-    localStorage.removeItem('cicexf_admin_session');
-    sessionStorage.removeItem('cicexf_admin_session');
-    localStorage.setItem('cicexf_admin_explicit_logout', 'true');
     setIsAdminLoggedIn(false);
-    window.dispatchEvent(new CustomEvent('admin-auth-changed', { detail: { isLoggedIn: false } }));
     if (activeTab === 'admin') {
       setActiveTab('home');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -414,6 +341,28 @@ export default function App() {
   useEffect(() => {
     trackVisit(activeTab);
   }, [activeTab]);
+
+  // Keep the URL and document title in sync with the active tab
+  useEffect(() => {
+    const path = TAB_PATHS[activeTab] || '/';
+    if (window.location.pathname !== path) {
+      window.history.pushState({ tab: activeTab }, '', path);
+    }
+    const label = activeTab === 'admin' ? 'Administration' : activeTab === 'partners' ? 'Partenaires' : TAB_LABELS[activeTab];
+    document.title = activeTab === 'home' || !label
+      ? "CICEXF - Cabinet International de Consultance, d'Expertise et de Formation"
+      : `${label} | CICEXF`;
+  }, [activeTab]);
+
+  // Browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getTabFromPath(window.location.pathname));
+      setSelectedDomainId(null);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Smart global search handler which routes users dynamically to matched formations, domains, or pages
   const handleGlobalSearch = (query: string) => {
@@ -567,7 +516,9 @@ export default function App() {
       {/* Main content viewport */}
       <main className="flex-grow flex flex-col justify-between">
         <div>
-          {renderActivePage()}
+          <Suspense fallback={<PageLoader />}>
+            {renderActivePage()}
+          </Suspense>
         </div>
 
         {/* Smart Page Navigation Switcher */}
@@ -584,7 +535,7 @@ export default function App() {
                   <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 </div>
                 <div>
-                  <span className="block text-[9px] font-bold text-slate-400 uppercase tracking-widest font-sans">
+                  <span className="block text-[11px] font-bold text-slate-600 uppercase tracking-widest font-sans">
                     Page précédente
                   </span>
                   <span className="block text-xs font-bold text-slate-800 dark:text-slate-200 group-hover:text-brand-blue dark:group-hover:text-brand-emerald-light transition-colors">
@@ -595,7 +546,7 @@ export default function App() {
 
               {/* Middle decorative text/indicator */}
               <div className="flex flex-col items-center justify-center text-center py-1">
-                <span className="text-[9px] font-mono font-bold text-slate-400 uppercase tracking-widest">
+                <span className="text-[11px] font-mono font-bold text-slate-600 uppercase tracking-widest">
                   Navigation
                 </span>
                 <div className="flex items-center space-x-1.5 mt-1">
@@ -620,7 +571,7 @@ export default function App() {
                 className="group w-full sm:w-auto flex items-center justify-between sm:justify-start space-x-3 p-3 rounded-xl bg-gradient-to-r from-brand-blue to-brand-blue-light dark:from-brand-emerald dark:to-brand-emerald-light text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-right cursor-pointer active:scale-98"
               >
                 <div className="order-2 sm:order-none sm:mr-3 text-left">
-                  <span className="block text-[9px] font-bold text-white/75 uppercase tracking-widest font-sans">
+                  <span className="block text-[11px] font-bold text-white uppercase tracking-widest font-sans">
                     Page suivante
                   </span>
                   <span className="block text-xs font-bold text-white group-hover:underline">
@@ -716,17 +667,21 @@ export default function App() {
         </div>
       </div>
 
-      {/* ADILINE Virtual Assistant Component */}
-      <AdilineChatbot
-        isOpen={isAiModalOpen}
-        onClose={() => setIsAiModalOpen(false)}
-        onNavigateTab={(tab, itemId) => {
-          handleTabChange(tab);
-          if (itemId && tab === 'formations') {
-            setSelectedDomainId(itemId);
-          }
-        }}
-      />
+      {/* ADILINE Virtual Assistant Component (mounted on first opening, then kept to preserve the conversation) */}
+      {hasOpenedAssistant && (
+        <Suspense fallback={null}>
+          <AdilineChatbot
+            isOpen={isAiModalOpen}
+            onClose={() => setIsAiModalOpen(false)}
+            onNavigateTab={(tab, itemId) => {
+              handleTabChange(tab);
+              if (itemId && tab === 'formations') {
+                setSelectedDomainId(itemId);
+              }
+            }}
+          />
+        </Suspense>
+      )}
 
       {/* Admin Login Modal for Authorized Cabinet Access */}
       <AdminLoginModal

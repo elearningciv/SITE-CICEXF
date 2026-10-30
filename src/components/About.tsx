@@ -226,14 +226,14 @@ export default function About() {
                 <button
                   id="node-consultance"
                   onClick={() => setSelectedNode('Consultance')}
-                  className={`py-2 rounded-xl border font-bold text-[10px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Consultance' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                  className={`py-2 rounded-xl border font-bold text-xs tracking-wider uppercase text-center transition-all ${selectedNode === 'Consultance' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
                 >
                   Pôle Consultance
                 </button>
                 <button
                   id="node-formation"
                   onClick={() => setSelectedNode('Formation')}
-                  className={`py-2 rounded-xl border font-bold text-[10px] tracking-wider uppercase text-center transition-all ${selectedNode === 'Formation' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
+                  className={`py-2 rounded-xl border font-bold text-xs tracking-wider uppercase text-center transition-all ${selectedNode === 'Formation' ? 'bg-brand-blue text-white ring-4 ring-brand-emerald/30 border-transparent shadow-md' : 'bg-slate-50 dark:bg-slate-850 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100'}`}
                 >
                   Pôle Formation
                 </button>
@@ -243,7 +243,7 @@ export default function About() {
 
             {/* interactive node detail panel */}
             <div className="lg:col-span-5 bg-slate-50 dark:bg-slate-850 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800">
-              <span className="text-[10px] uppercase font-bold text-brand-emerald tracking-widest">
+              <span className="text-xs uppercase font-bold text-brand-emerald tracking-widest">
                 Fiche de Gouvernance
               </span>
               <h4 className="font-display text-lg font-bold text-slate-900 dark:text-white mt-1">
@@ -271,7 +271,7 @@ export default function About() {
             
             <div className="lg:col-span-5 space-y-4">
               <div>
-                <span className="text-[10px] uppercase font-bold text-brand-emerald tracking-widest">
+                <span className="text-xs uppercase font-bold text-brand-emerald tracking-widest">
                   IMPLANTATION GÉOGRAPHIQUE
                 </span>
                 <h3 className="font-display text-xl font-bold text-slate-900 dark:text-white mt-1">

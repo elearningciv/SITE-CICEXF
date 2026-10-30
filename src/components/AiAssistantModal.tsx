@@ -210,7 +210,7 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
                 <h3 className="font-display font-black text-base sm:text-lg md:text-xl tracking-wide text-white">
                   Conseiller Intelligent CICEXF
                 </h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-400 text-slate-900 shadow-xs">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-400 text-slate-900 shadow-xs">
                   Expertise Tous Onglets
                 </span>
                 <span className="hidden md:inline-block text-[11px] text-brand-emerald-light font-mono font-bold">
@@ -558,8 +558,7 @@ Consultez l'onglet **Actualités** pour lire l'intégralité des publications.`;
   // 11. SPECIFIC QUESTIONS ON ADMINISTRATION
   if (q.includes('admin') || q.includes('administration') || q.includes('connexion') || q.includes('mot de passe')) {
     return `**POINTS ESSENTIELS [Onglet Administration] :**
-• **Accès sécurisé :** Espace strictement réservé aux administrateurs autorisés (elearningciv@gmail.com et cabinetcicexf@gmail.com).
-• **Mot de passe par défaut :** 123456.
+• **Accès sécurisé :** Espace strictement réservé aux administrateurs habilités du Cabinet, avec authentification personnelle.
 • **Fonctionnalités :** Gestion du catalogue de formations, gestion des 8 pôles, publication d'articles sur le blog, suivi des réalisations et gestion centralisée des prospects.
 • **Accès :** Lien discret disponible dans le pied de page du site.`;
   }
