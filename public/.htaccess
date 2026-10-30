@@ -1,0 +1,10 @@
+# Hostinger (LiteSpeed/Apache): serve the single-page app for every page URL
+# (/formations, /contact, ...) so direct links and page refreshes work.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
