@@ -75,7 +75,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="bg-gradient-to-r from-[#003B6F] to-[#8A2E1C] p-5 text-white flex items-center justify-between">
+        <div className="bg-[#003B6F] p-5 text-white flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-xl bg-white/15 border border-white/25 flex items-center justify-center">
               <ShieldCheck className="w-4 h-4 text-yellow-300" />
@@ -182,7 +182,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-slate-950 text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider cursor-pointer flex items-center justify-center space-x-2 disabled:opacity-50 mt-2"
+              className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-xl shadow-md transition-all uppercase tracking-wider cursor-pointer flex items-center justify-center space-x-2 disabled:opacity-50 mt-2"
             >
               {loading ? (
                 <RefreshCw className="w-4 h-4 animate-spin" />

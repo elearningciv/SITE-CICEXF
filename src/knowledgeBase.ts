@@ -757,7 +757,7 @@ export function generateAdilineKnowledgeText(): string {
 
 ## 1. IDENTITÉ, COORDONNÉES ET GOUVERNANCE
 - **Nom officiel :** ${c.nom} (${c.sigle})
-- **Agrément ministériel :** ${c.agrementOfficiel} | N°IDU : ${c.numeroIDU}
+- **Agrément ministériel :** ${c.agrementOfficiel}
 - **Directeur Général & Associé Gérant :** ${c.directeurGeneral.nom} (${c.directeurGeneral.contactMail})
 - **Directeur Général & Co-fondateur :** ${c.directionAssociee.nom} (${c.directionAssociee.contactMail})
 - **DGA & Chef du Pôle Formation :** ${c.directionAcademique.nom} (${c.directionAcademique.contactMail})

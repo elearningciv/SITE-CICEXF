@@ -203,7 +203,7 @@
 
 /* Active tab highlight */
 .active-moving-tab {
-  background: linear-gradient(135deg, #8A2E1C, #003B6F) !important;
+  background: #8A2E1C !important;
   color: white !important;
   border-color: transparent !important;
   box-shadow: 0 4px 12px rgba(138, 46, 28, 0.25);

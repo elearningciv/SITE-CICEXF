@@ -15,11 +15,10 @@ import { Formation, DomainIntervention, Project, BlogPost } from './types';
 
 const NAVIGATION_ORDER = [
   'home',
-  'about',
   'accompagnements',
   'formations',
-  'realisations',
   'news',
+  'realisations',
   'contact'
 ];
 
@@ -267,9 +266,6 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       const isAdmin = !!user && isAuthorizedAdminEmail(user.email);
       setIsAdminLoggedIn(isAdmin);
-      if (!isAdmin) {
-        setActiveTab((tab) => (tab === 'admin' ? 'home' : tab));
-      }
     });
     return () => unsubscribe();
   }, []);
@@ -460,7 +456,7 @@ export default function App() {
       case 'formations':
         return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} />;
       case 'realisations':
-        return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} projects={realisations} />;
+        return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} projects={realisations} />;
       case 'news':
         return <News blogPosts={blogPosts} />;
       case 'partners':
@@ -570,7 +566,7 @@ export default function App() {
               {/* Right Button - Next Page */}
               <button
                 onClick={() => handleTabChange(nextTab)}
-                className="group w-full sm:w-auto flex items-center justify-between sm:justify-start space-x-3 p-3 rounded-xl bg-gradient-to-r from-brand-blue to-brand-blue-light dark:from-brand-emerald dark:to-brand-emerald-light text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-right cursor-pointer active:scale-98"
+                className="group w-full sm:w-auto flex items-center justify-between sm:justify-start space-x-3 p-3 rounded-xl bg-brand-blue dark:bg-brand-emerald text-white shadow-md hover:shadow-lg hover:scale-[1.02] transition-all duration-300 text-right cursor-pointer active:scale-98"
               >
                 <div className="order-2 sm:order-none sm:mr-3 text-left">
                   <span className="block text-[11px] font-bold text-white uppercase tracking-widest font-sans">
@@ -647,7 +643,7 @@ export default function App() {
             type="button"
             id="floating-adiline-btn"
             onClick={() => setIsAiModalOpen(true)}
-            className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-emerald-600 via-[#25D366] to-teal-500 p-0.5 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer ring-4 ring-emerald-500/20 hover:ring-emerald-500/40"
+            className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] p-0.5 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer ring-4 ring-emerald-500/20 hover:ring-emerald-500/40"
             aria-label="Discuter avec ADILINE - Assistante virtuelle"
             title="Discuter avec ADILINE, assistante d'accueil du cabinet"
           >

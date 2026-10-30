@@ -157,21 +157,14 @@ export default function Contact({ preselectedDomain, setPreselectedDomain }: Con
             </div>
 
             {/* Click-to-Chat WhatsApp CTA */}
-            <div className="bg-gradient-to-br from-brand-blue to-brand-emerald rounded-3xl p-8 text-white shadow-md space-y-4">
-              <div className="flex items-center space-x-3">
-                <MessageSquare className="w-6 h-6 text-white" />
-                <h4 className="font-display font-extrabold text-base text-white">Canal d'Échange WhatsApp</h4>
-              </div>
-              <p className="text-xs text-slate-100 font-sans leading-relaxed">
-                Vous souhaitez obtenir une réponse instantanée à vos questions sur les inscriptions, tarifs, ou disponibilités de nos programmes ? Chattez directement avec un chargé d'admission.
-              </p>
-              <div className="pt-2">
+            <div>
+              <div>
                 <a
                   href="https://wa.me/2250701970065"
                   target="_blank"
                   rel="noreferrer"
                   id="whatsapp-click-to-chat"
-                  className="inline-flex items-center space-x-2 bg-slate-950 hover:bg-slate-900 text-white px-5 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-lg"
+                  className="flex w-full items-center justify-center space-x-2 bg-emerald-700 hover:bg-emerald-800 text-white px-5 py-4 rounded-2xl text-sm font-bold transition-all cursor-pointer shadow-lg"
                 >
                   <span>Discuter sur WhatsApp (+225 07 01 97 00 65)</span>
                 </a>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AdminTestimonials from './AdminTestimonials';
 import { 
   auth, db 
 } from '../firebase';
@@ -29,7 +30,7 @@ import {
 import { 
   Lock, Mail, Key, LogOut, Users, Eye, CheckCircle2, 
   AlertCircle, Search, RefreshCw, Calendar, Monitor, Download, ArrowLeftRight,
-  Plus, Trash2, Edit3, Image, BookOpen, Layers, ExternalLink, Sparkles, Check, HelpCircle, MapPin, Tag, FileText,
+  Plus, Trash2, Edit3, Star, Image, BookOpen, Layers, ExternalLink, Sparkles, Check, HelpCircle, MapPin, Tag, FileText,
   FileSpreadsheet, Phone, MessageSquare, Send, CheckCheck, UserCheck, Filter, Clock, Briefcase, Award, Building, Compass,
   Target, ShieldCheck, Cpu
 } from 'lucide-react';
@@ -129,7 +130,7 @@ export default function AdminPanel({
   });
 
   const [dataLoading, setDataLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'visits' | 'subscribers'>('formations');
+  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form states for Formations
@@ -1312,7 +1313,7 @@ export default function AdminPanel({
         <div className="max-w-md w-full space-y-6">
           {/* Logo & Brand */}
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-2xl text-white font-extrabold text-2xl shadow-lg mb-3">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-blue rounded-2xl text-white font-extrabold text-2xl shadow-lg mb-3">
               CX
             </div>
             <h2 className="text-2xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -1608,7 +1609,7 @@ export default function AdminPanel({
             }`}
           >
             <div className="w-10 h-10 rounded-xl bg-rose-600 text-white flex items-center justify-center shrink-0 shadow-md">
-              <Sparkles className="w-5 h-5" />
+              <Users className="w-5 h-5" />
             </div>
             <div>
               <span className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Partenaires</span>
@@ -1718,8 +1719,20 @@ export default function AdminPanel({
                     : 'text-slate-700 dark:text-slate-300 hover:text-rose-600 hover:bg-white dark:hover:bg-slate-800'
                 }`}
               >
-                <Sparkles className="w-4 h-4" />
+                <Users className="w-4 h-4" />
                 <span>Partenaires</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('testimonials'); setSearchQuery(''); }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTab === 'testimonials'
+                    ? 'bg-amber-600 text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-amber-700 hover:bg-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <Star className="w-4 h-4" />
+                <span>Témoignages</span>
               </button>
 
               <button
@@ -3020,7 +3033,7 @@ export default function AdminPanel({
               <div className="space-y-4">
                 
                 {/* Banner Header with Excel download CTA & filters */}
-                <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-50 via-teal-50/40 to-slate-50 dark:from-emerald-950/30 dark:via-slate-900 dark:to-slate-900 border-b border-slate-200/80 dark:border-slate-800">
+                <div className="p-4 sm:p-5 bg-emerald-50 dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div>
                       <div className="flex items-center space-x-2">
@@ -3792,6 +3805,8 @@ export default function AdminPanel({
                 </tbody>
               </table>
             )}
+
+            {activeTab === 'testimonials' && <AdminTestimonials />}
 
           </div>
 

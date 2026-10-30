@@ -3,11 +3,13 @@ import {
   ArrowRight, Phone, Star, X, CheckCircle2, Clock, Presentation, Mail,
   GraduationCap, TrendingUp, Cpu, Compass, ShieldCheck, Target, BookOpen, Layers
 } from 'lucide-react';
-import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS, TESTIMONIALS, CABINET_INFO } from '../data';
+import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS, CABINET_INFO } from '../data';
 import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
 import { trackSubscription } from '../lib/tracker';
 import Carousel from './home/Carousel';
 import AboutSection from './home/AboutSection';
+import { useTestimonials } from '../lib/testimonials';
+import { TrainingModeModal, TrainingModeId } from './home/TrainingModes';
 import heroExecutiveImg from '../assets/images/african_executive_hero_1791597544124.webp';
 import consultingTeamImg from '../assets/images/african_consulting_team_1791597559536.webp';
 
@@ -60,6 +62,8 @@ export default function Home({
 }: HomeProps) {
   const currentDomains = accompagnements && accompagnements.length > 0 ? accompagnements : DOMAINS_INTERVENTION;
   const [showWelcome, setShowWelcome] = useState(false);
+  const [openMode, setOpenMode] = useState<TrainingModeId | null>(null);
+  const testimonials = useTestimonials();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -124,18 +128,21 @@ export default function Home({
 
   const approachTiles = [
     {
+      mode: 'presentiel' as TrainingModeId,
       title: 'Formation en présentiel',
       text: 'Nos experts vous accueillent dans nos salles du siège à Abidjan pour des sessions intensives et interactives.',
       image: unsplash('photo-1524178232363-1fb2b075b655'),
       tab: 'formations'
     },
     {
+      mode: 'hybride' as TrainingModeId,
       title: 'Formation hybride & en ligne',
       text: 'Cours en direct via Zoom, accès aux enregistrements et aux laboratoires : formez-vous où que vous soyez.',
       image: unsplash('photo-1588196749597-9ff075ee6b5b'),
       tab: 'formations'
     },
     {
+      mode: 'intra' as TrainingModeId,
       title: 'Formation intra-entreprise',
       text: 'Un programme conçu pour vos équipes, dans vos locaux ou les nôtres, avec convention et proforma sous 24 h.',
       image: unsplash('photo-1517245386807-bb43f82c33c4'),
@@ -153,6 +160,8 @@ export default function Home({
 
   return (
     <div id="home-view" className="relative font-sans overflow-hidden bg-white dark:bg-slate-950">
+
+      <TrainingModeModal modeId={openMode} onClose={() => setOpenMode(null)} goTo={goTo} />
 
       {/* Welcome pop-up */}
       {showWelcome && (
@@ -195,7 +204,6 @@ export default function Home({
           />
           <div className="relative px-4 sm:px-6 lg:absolute lg:inset-y-0 lg:left-8 lg:flex lg:items-center lg:px-0">
             <div className="-mt-20 mx-auto flex aspect-square w-[min(88vw,440px)] flex-col items-center justify-center rounded-full bg-[#002447] p-10 text-center text-white shadow-2xl ring-8 ring-white dark:ring-slate-950 sm:p-12 lg:mt-0 lg:w-[460px] animate-[popIn_.7s_ease-out]">
-              <p className="text-xs font-bold uppercase tracking-[0.25em] text-amber-300">Cabinet agréé</p>
               <h1 className="mt-3 font-display text-3xl font-extrabold leading-tight sm:text-4xl">
                 Bienvenue au<br />CICEXF
               </h1>
@@ -224,7 +232,7 @@ export default function Home({
             <button key={card.title} onClick={() => goTo(card.tab)} className="group text-left cursor-pointer">
               <div className="relative aspect-[16/10] overflow-hidden rounded-xl">
                 <img src={card.image} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-black/45" />
                 <h3 className="absolute bottom-4 left-4 right-4 font-display text-2xl font-extrabold leading-tight text-white">
                   <span className="bg-brand-emerald box-decoration-clone px-2 leading-[1.5]">{card.title}</span>
                 </h3>
@@ -269,7 +277,7 @@ export default function Home({
                 <div className="relative flex h-full flex-col p-8 text-white">
                   <h3 className="font-display text-2xl font-extrabold">{tile.title}</h3>
                   <p className="mt-4 text-base leading-relaxed text-slate-100">{tile.text}</p>
-                  <button onClick={() => goTo(tile.tab)} className="mt-auto self-start rounded-full bg-amber-400 px-6 py-2.5 text-sm font-bold text-[#001a33] hover:bg-amber-300 transition-colors cursor-pointer">
+                  <button onClick={() => setOpenMode(tile.mode)} className="mt-auto self-start rounded-full bg-amber-400 px-6 py-2.5 text-sm font-bold text-[#001a33] hover:bg-amber-300 transition-colors cursor-pointer">
                     En savoir plus
                   </button>
                 </div>
@@ -313,6 +321,7 @@ export default function Home({
       </section>
 
       {/* 7. Testimonials carousel on photo background */}
+      {testimonials.length > 0 && (
       <section id="testimonials-carousel" className="relative isolate overflow-hidden py-16 sm:py-20">
         <img src={unsplash('photo-1523580494863-6f3031224c94', 1600)} alt="" referrerPolicy="no-referrer" className="absolute inset-0 -z-10 h-full w-full object-cover" />
         <div className="absolute inset-0 -z-10 bg-[#001a33]/80" />
@@ -320,7 +329,7 @@ export default function Home({
           <h2 className="text-center font-display text-2xl font-extrabold text-white sm:text-3xl">Ce que disent nos participants…</h2>
           <div className="mt-10 px-6">
             <Carousel label="Témoignages" perView={{ base: 1, sm: 2, lg: 3 }} autoplay={5000} tone="dark" loop>
-              {TESTIMONIALS.map(t => (
+              {testimonials.map(t => (
                 <figure key={t.id} className="flex h-full flex-col items-center rounded-xl bg-white p-7 text-center shadow-xl">
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#002447] font-display text-lg font-bold text-white ring-4 ring-slate-100">{initials(t.name)}</span>
                   <div className="mt-4 flex gap-0.5 text-amber-500" aria-label={`${t.rating} étoiles sur 5`}>
@@ -338,6 +347,7 @@ export default function Home({
           </div>
         </div>
       </section>
+      )}
 
       {/* 8. Expertise areas carousel */}
       <section id="business-poles" className="py-16 sm:py-20 bg-slate-100 dark:bg-slate-900">
@@ -385,7 +395,7 @@ export default function Home({
             {gallery.map(g => (
               <figure key={g.caption} className="group relative aspect-[4/3] overflow-hidden rounded-xl">
                 <img src={g.image} alt={g.caption} loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 text-sm font-bold text-white">{g.caption}</figcaption>
+                <figcaption className="absolute inset-x-0 bottom-0 bg-black/65 p-4 text-sm font-bold text-white">{g.caption}</figcaption>
               </figure>
             ))}
           </Carousel>

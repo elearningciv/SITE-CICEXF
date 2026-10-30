@@ -410,7 +410,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="absolute inset-0 bg-slate-950/60"></div>
             <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
               <span className="self-start font-mono font-bold text-[11px] sm:text-xs text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
                 Spécialité 0{sIdx + 1} &bull; Formations CICEXF
@@ -460,7 +460,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
+          <div className="absolute inset-0 bg-slate-950/60"></div>
           <div className="absolute bottom-3 left-3 right-3 flex flex-col space-y-1">
             <span className="self-start font-mono font-bold text-[11px] text-white bg-brand-emerald/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
               Spécialité 0{sIdx + 1}
@@ -1562,7 +1562,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             referrerPolicy="no-referrer"
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
+                          <div className="absolute inset-0 bg-slate-950/60"></div>
                           
                           {/* Title and Badge on image */}
                           <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
@@ -1635,7 +1635,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-6 sm:p-10 space-y-3">
+                      <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-6 sm:p-10 space-y-3">
                         <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
                           {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
                           <span>Ingénierie CICEXF &bull; Pôle Académique</span>
@@ -1712,7 +1712,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                     referrerPolicy="no-referrer"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent"></div>
+                                  <div className="absolute inset-0 bg-slate-950/60"></div>
                                   <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
                                     <span className="self-start font-mono font-bold text-[11px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                       Spécialité 0{sIdx + 1} &bull; CICEXF
@@ -2113,7 +2113,6 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 {/* Course Header */}
                 <div className="bg-slate-900 text-white rounded-3xl overflow-hidden relative shadow-lg">
                   <div className="absolute inset-0 grid-pattern opacity-10"></div>
-                  <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-emerald/10 rounded-full blur-3xl"></div>
                   
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-6 sm:p-8 items-start lg:items-center relative z-10">
                     <div className="w-full lg:w-7/12 min-w-0 flex-1 space-y-4">
@@ -2248,19 +2247,6 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                           />
                           <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full uppercase">
                             {formation.domain}
-                          </div>
-                          <div className="absolute top-3 right-3 flex items-center space-x-1">
-                            {(formation.id.startsWith('f-') || formation.createdAt) && (
-                              <div className="bg-amber-700 text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md flex items-center space-x-1">
-                                <Sparkles className="w-2.5 h-2.5" />
-                                <span>Nouveau</span>
-                              </div>
-                            )}
-                            {formation.isFeatured && (
-                              <div className="bg-brand-emerald text-white text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-md">
-                                ★ Phare
-                              </div>
-                            )}
                           </div>
                         </div>
 

@@ -47,14 +47,6 @@ interface AdilineChatbotProps {
   onNavigateTab?: (tab: string, itemId?: string) => void;
 }
 
-const STARTER_QUESTIONS = [
-  "Présentez-vous : quel est votre rôle et votre raison d'être ?",
-  "Quelles sont les formations certifiantes disponibles ?",
-  "Quel est le prix et le programme de la formation Data Analyst ?",
-  "Calculer un devis pour 3 participants",
-  "Comment s'inscrire ou contacter le cabinet ?"
-];
-
 function formatDuration(totalSeconds: number): string {
   const mins = Math.floor(totalSeconds / 60);
   const secs = totalSeconds % 60;
@@ -881,7 +873,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
       >
         
         {/* HEADER BAR */}
-        <div className="bg-gradient-to-r from-brand-blue via-[#0d4b85] to-[#8A2E1C] p-3.5 sm:p-4 text-white flex items-center justify-between shrink-0 shadow-md">
+        <div className="bg-brand-blue p-3.5 sm:p-4 text-white flex items-center justify-between shrink-0 shadow-md">
           <div className="flex items-center space-x-3">
             <div className="relative">
               <img 
@@ -974,7 +966,6 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             onClick={() => setShowAdvisorModal(true)}
             className="flex-1 flex items-center justify-center space-x-1.5 py-1.5 px-2 rounded-lg bg-white dark:bg-slate-800 text-brand-blue dark:text-blue-300 border border-slate-200 dark:border-slate-700 shadow-2xs hover:bg-blue-50 dark:hover:bg-slate-750 transition-all cursor-pointer text-[11px]"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
             <span>Conseiller de parcours</span>
           </button>
           
@@ -1016,7 +1007,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <div 
                   className={`p-3.5 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
                     msg.role === 'user'
-                      ? 'bg-gradient-to-r from-brand-blue to-indigo-700 text-white rounded-br-none'
+                      ? 'bg-brand-blue text-white rounded-br-none'
                       : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200/80 dark:border-slate-800'
                   }`}
                 >
@@ -1208,27 +1199,6 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             </div>
           )}
 
-          {/* SUGGESTED STARTER QUESTIONS */}
-          {messages.length === 1 && (
-            <div className="pt-2 space-y-2">
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-1">
-                Questions fréquemment posées :
-              </p>
-              <div className="grid grid-cols-1 gap-1.5">
-                {STARTER_QUESTIONS.map((q, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleSendMessage(q)}
-                    className="text-left p-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-medium hover:border-brand-blue/40 hover:bg-blue-50/50 dark:hover:bg-slate-800 transition-all flex items-center justify-between group shadow-2xs cursor-pointer"
-                  >
-                    <span>{q}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div ref={messagesEndRef} />
         </div>
 
@@ -1363,7 +1333,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
               <button
                 type="button"
                 onClick={() => stopRecordingVoice(true)}
-                className="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
+                className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
                 title="Terminer et envoyer la note vocale à ADILINE"
                 aria-label="Envoyer la note vocale"
               >
@@ -1424,7 +1394,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
               <button
                 type="submit"
                 disabled={(!inputText.trim() && !attachedFile) || isStreaming}
-                className="p-2.5 bg-gradient-to-r from-brand-blue to-brand-emerald text-white rounded-xl hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
+                className="p-2.5 bg-brand-blue text-white rounded-xl hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
                 aria-label="Envoyer"
               >
                 <Send className="w-4 h-4" />
@@ -1432,9 +1402,8 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             </form>
           )}
 
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500 mt-2 px-1">
-            <span>Propulsé par Gemini &middot; Données officielles CICEXF</span>
-            <span>Micro & Note vocale activés</span>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 px-1">
+            <span>Données officielles CICEXF</span>
           </div>
         </div>
 
@@ -1446,7 +1415,6 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
           <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 text-brand-blue dark:text-cyan-400 font-bold text-sm">
-                <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>Conseiller de Parcours Personnalisé</span>
               </div>
               <button onClick={() => setShowAdvisorModal(false)} className="text-slate-400 hover:text-slate-600">

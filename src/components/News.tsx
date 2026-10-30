@@ -152,7 +152,6 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
             {/* Optional Lead capture for the article's downloadable guide */}
             {selectedArticle.guidePdfUrl && (
               <div className="bg-slate-900 text-white rounded-3xl p-8 border border-slate-800 shadow-md relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-emerald/10 rounded-full blur-2xl"></div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
                   <div className="md:col-span-7 space-y-4">
@@ -325,23 +324,9 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
 
             {/* Newsletter & generic lead capture block */}
             <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-lg relative overflow-hidden max-w-4xl mx-auto">
-              <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-brand-blue/10 rounded-full blur-2xl"></div>
               
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center relative z-10">
-                <div className="md:col-span-7 space-y-4 text-center md:text-left">
-                  <div className="inline-flex items-center space-x-1 bg-amber-400/10 text-amber-400 px-2.5 py-1 rounded text-xs font-bold">
-                    <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                    <span>Alerte Prochaines Sessions</span>
-                  </div>
-                  <h3 className="font-display text-base sm:text-lg font-bold text-white">
-                    Recevoir les Calendriers &amp; Guides trimestriels
-                  </h3>
-                  <p className="text-[11px] text-slate-300 leading-relaxed font-sans font-normal">
-                    Rejoignez plus de 1 500 professionnels abonnés et recevez directement dans votre boîte de messagerie nos guides thématiques sur le QHSE, les SIG, et le management stratégique.
-                  </p>
-                </div>
-
-                <div className="md:col-span-5 bg-slate-950 p-6 rounded-2xl border border-slate-800">
+                <div className="md:col-span-12 w-full max-w-md mx-auto bg-slate-950 p-6 rounded-2xl border border-slate-800">
                   <h4 className="font-bold text-[11px] text-slate-300 uppercase tracking-wider mb-4 text-center">Formulaire d'enregistrement :</h4>
                   
                   {leadSuccess && !requestedGuide ? (

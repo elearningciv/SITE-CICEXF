@@ -173,7 +173,7 @@ export default function Interventions({
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-transparent"></div>
+                      <div className="absolute inset-0 bg-slate-950/60"></div>
                       
                       {/* Title and Badge on image - ensuring text is white */}
                       <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
@@ -259,7 +259,7 @@ export default function Interventions({
                     referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/60 to-transparent flex flex-col justify-end p-4 sm:p-6 space-y-2">
+                  <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-4 sm:p-6 space-y-2">
                     <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
                       {renderIcon(selectedDomainObj.iconName, "w-3.5 h-3.5 mr-1")}
                       <span>Ingénierie CICEXF &bull; Accompagnement</span>
@@ -304,7 +304,7 @@ export default function Interventions({
                                 referrerPolicy="no-referrer"
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent"></div>
+                              <div className="absolute inset-0 bg-slate-950/60"></div>
                               <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
                                 <span className="self-start font-mono font-bold text-[11px] text-white bg-[#8A1A24] px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
                                   Axe #0{sIdx + 1} &bull; CICEXF
@@ -385,7 +385,7 @@ export default function Interventions({
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-slate-950/60"></div>
                             
                             <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
                               <span className="self-start font-mono font-bold text-[11px] sm:text-xs text-white bg-[#8A1A24] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-md">
@@ -426,14 +426,10 @@ export default function Interventions({
 
             {/* Main Action Call Grid block (Only on miniatures view) */}
             {activeSubIdx === null && (
-              <div className="bg-gradient-to-r from-brand-blue to-brand-emerald rounded-2xl p-5 sm:p-6 text-white flex flex-col md:flex-row justify-between items-center gap-4 shadow-md">
-                <div className="space-y-1">
-                  <h4 className="font-display font-bold text-sm sm:text-base text-white">Vous souhaitez faire auditer vos processus ou former vos équipes ?</h4>
-                  <p className="text-xs text-white/80 font-sans">Prenez contact pour obtenir une proposition technique et commerciale sur-mesure.</p>
-                </div>
+              <div className="flex justify-center">
                 <button
                   onClick={() => handleRequestAssistance(selectedDomainObj.title)}
-                  className="px-4 py-2.5 bg-slate-950 hover:bg-slate-900 rounded-xl text-xs font-bold uppercase tracking-wider text-white shrink-0 transition-colors cursor-pointer"
+                  className="px-6 py-3 bg-brand-emerald hover:bg-brand-emerald-dark rounded-xl text-sm font-bold uppercase tracking-wider text-white shrink-0 shadow-md transition-colors cursor-pointer"
                 >
                   Demander un accompagnement
                 </button>

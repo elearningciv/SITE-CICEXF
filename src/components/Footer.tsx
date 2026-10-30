@@ -56,8 +56,6 @@ export default function Footer({
   return (
     <footer id="institutional-footer" className="bg-brand-emerald dark:bg-[#54150A] text-white border-t border-[#B84F3D]/40 pt-4 pb-3 sm:pt-5 sm:pb-4 relative overflow-hidden transition-colors shadow-2xl">
       {/* Visual background details */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-black/25 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-3">
@@ -82,10 +80,7 @@ export default function Footer({
                 </span>
               </div>
               <p className="text-white text-xs font-medium">
-                Récépissé N°25343/GTCA/RC/2025
-              </p>
-              <p className="text-white text-xs font-medium">
-                N°IDU CI-2025-0058238 N &middot; Cocody Palmeraie
+                Cocody Palmeraie
               </p>
               <p className="text-white/90 text-xs">
                 Société de Consultance et Formation Agréée en Côte d'Ivoire
@@ -102,11 +97,6 @@ export default function Footer({
               <li>
                 <button onClick={() => handleLinkClick('home')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
                   Accueil
-                </button>
-              </li>
-              <li>
-                <button onClick={() => handleLinkClick('about')} className="text-white hover:text-yellow-300 hover:translate-x-0.5 transition-all duration-150 text-left cursor-pointer">
-                  Qui sommes-nous (Cabinet)
                 </button>
               </li>
               <li>
@@ -259,18 +249,7 @@ export default function Footer({
                   </button>
                 )}
               </div>
-            ) : (
-              onOpenAdminLogin && (
-                <button
-                  onClick={onOpenAdminLogin}
-                  className="text-white/80 hover:text-yellow-300 transition-colors flex items-center space-x-1 cursor-pointer text-xs"
-                  title="Accès réservé - Connexion administrateur"
-                >
-                  <Key className="w-2.5 h-2.5 text-white/80" />
-                  <span>Connexion</span>
-                </button>
-              )
-            )}
+            ) : null}
           </div>
         </div>
       </div>

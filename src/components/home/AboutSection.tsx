@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, BadgeCheck, Target, Eye, Gem, CheckCircle2, Facebook } from 'lucide-react';
+import { ArrowRight, Target, Eye, Gem, CheckCircle2, Facebook } from 'lucide-react';
 import { CABINET_INFO } from '../../data';
-import heroExecutiveImg from '../../assets/images/african_executive_hero_1791597544124.webp';
-import consultingTeamImg from '../../assets/images/african_consulting_team_1791597559536.webp';
 
 /** True once the element has scrolled into view (never resets). */
 function useInView<T extends Element>(threshold = 0.25) {
@@ -88,57 +86,8 @@ export default function AboutSection({ goTo }: { goTo: (tab: string) => void }) 
 
   return (
     <section id="about-preview" ref={sectionRef} className="relative overflow-hidden bg-slate-50 py-20 dark:bg-slate-900 sm:py-28">
-      {/* Decorative background shapes */}
-      <div className="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-[#002447]/5 blur-3xl dark:bg-white/5" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-brand-emerald/10 blur-3xl" />
 
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-
-        {/* Visual column: curtain-reveal photo, overlapping second photo, floating badge */}
-        <div className="relative pb-16 sm:pb-10 lg:pr-10">
-          <div
-            className="absolute -left-4 -top-4 h-40 w-40 opacity-60"
-            style={{ backgroundImage: 'radial-gradient(#8A2E1C 1.5px, transparent 1.5px)', backgroundSize: '14px 14px' }}
-          />
-          <div
-            className="relative overflow-hidden rounded-3xl shadow-2xl transition-[clip-path] duration-[1400ms] ease-[cubic-bezier(.77,0,.18,1)]"
-            style={{ clipPath: visible ? 'inset(0 0 0 0 round 24px)' : 'inset(0 100% 0 0 round 24px)' }}
-          >
-            <img
-              src={heroExecutiveImg}
-              alt={`${CABINET_INFO.directeurGeneral.nom}, ${CABINET_INFO.directeurGeneral.titre}`}
-              loading="lazy"
-              className={`aspect-[4/5] w-full object-cover object-top transition-transform duration-[1800ms] ease-out sm:aspect-[5/5] ${visible ? 'scale-100' : 'scale-125'}`}
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#001a33]/95 to-transparent p-6 pt-20">
-              <p className="font-display text-lg font-bold text-white">{CABINET_INFO.directeurGeneral.nom}</p>
-              <p className="text-sm text-slate-200">{CABINET_INFO.directeurGeneral.titre}</p>
-            </div>
-          </div>
-
-          <img
-            src={consultingTeamImg}
-            alt="Session de travail des consultants du CICEXF"
-            loading="lazy"
-            {...reveal(visible, 700, 'translate-y-16')}
-            className={`${reveal(visible, 700, 'translate-y-16').className} absolute -bottom-2 right-0 hidden w-1/2 rounded-2xl border-8 border-slate-50 object-cover shadow-2xl dark:border-slate-900 sm:block aspect-[4/3]`}
-          />
-
-          <div
-            {...reveal(visible, 1000, 'translate-y-4')}
-            className={`${reveal(visible, 1000, 'translate-y-4').className} absolute -bottom-4 left-4 sm:bottom-auto sm:left-auto sm:-right-2 sm:top-8`}
-          >
-            <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 shadow-xl ring-1 ring-slate-200 animate-[floatY_5s_ease-in-out_infinite] dark:bg-slate-950 dark:ring-slate-800">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
-                <BadgeCheck className="w-6 h-6" />
-              </span>
-              <span>
-                <span className="block text-sm font-bold text-slate-900 dark:text-white">Cabinet agréé</span>
-                <span className="block text-xs text-slate-600 dark:text-slate-400">{CABINET_INFO.agrementOfficiel}</span>
-              </span>
-            </div>
-          </div>
-        </div>
+      <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
 
         {/* Text column */}
         <div>

@@ -1,342 +1,446 @@
-import { useState, useEffect } from 'react';
-import { Camera, Layers, Award, Users, CheckCircle, ChevronRight, X, Play, Quote, Star, MessageSquare } from 'lucide-react';
-import { PROJECTS, TESTIMONIALS } from '../data';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ArrowRight, Building2, Calendar, CheckCircle2, ChevronRight, MapPin, Quote, Search, Star, Target, X,
+  ClipboardCheck, PenTool, Rocket, LineChart, Camera
+} from 'lucide-react';
+import { PROJECTS } from '../data';
+import { useTestimonials } from '../lib/testimonials';
 import { Project } from '../types';
+import Carousel from './home/Carousel';
 
 interface RealisationsProps {
   selectedDomainId?: string | null;
   setSelectedDomainId?: (id: string | null) => void;
   projects?: Project[];
+  setActiveTab?: (tab: string) => void;
 }
 
-export default function Realisations({ selectedDomainId, setSelectedDomainId, projects }: RealisationsProps) {
-  const allProjects = projects && projects.length > 0 ? projects : PROJECTS;
-  const [activeCaseStudy, setActiveCaseStudy] = useState<string>(allProjects[0]?.id || 'p1');
-  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=75';
 
+// Placeholder text typed while testing in the admin (e.g. "XXXX") must not be shown to visitors
+const isPlaceholder = (text?: string) => !text || /(.)\1{7,}/i.test(text.replace(/\s/g, ''));
+
+const initials = (name: string) =>
+  name.replace(/^(M\.|Mme|Dr\.|Pr\.)\s*/i, '').split(/\s+/).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+
+/** Projects created in the admin may miss optional fields: normalise them once */
+const normalise = (p: Project): Project => ({
+  ...p,
+  category: p.category || 'Mission',
+  client: p.client || '',
+  location: p.location || '',
+  description: isPlaceholder(p.description) ? '' : p.description,
+  imageUrl: p.imageUrl || FALLBACK_IMAGE,
+  stats: Array.isArray(p.stats) ? p.stats.filter(s => s && s.value) : [],
+  challenges: Array.isArray(p.challenges) ? p.challenges.filter(Boolean) : [],
+  solutions: Array.isArray(p.solutions) ? p.solutions.filter(Boolean) : []
+});
+
+function useInView<T extends Element>() {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
   useEffect(() => {
-    if (selectedDomainId) {
-      if (selectedDomainId === 'ing-formation' || selectedDomainId === 'data-gouvernance') {
-        setActiveCaseStudy('p3');
-      } else if (selectedDomainId === 'ing-territoriale' || selectedDomainId === 'ing-informatique') {
-        setActiveCaseStudy('p2');
-      } else {
-        setActiveCaseStudy(allProjects[0]?.id || 'p1');
-      }
-    }
+    const el = ref.current;
+    if (!el || inView) return;
+    if (!('IntersectionObserver' in window)) { setInView(true); return; }
+    const observer = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); observer.disconnect(); } }, { threshold: 0.3 });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [inView]);
+  return [ref, inView] as const;
+}
+
+function CountUp({ to, start, prefix = '', suffix = '' }: { to: number; start: boolean; prefix?: string; suffix?: string }) {
+  const [v, setV] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { setV(to); return; }
+    const t0 = performance.now();
+    let f = 0;
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / 1600);
+      setV(Math.round(to * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) f = requestAnimationFrame(tick);
+    };
+    f = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(f);
+  }, [start, to]);
+  return <>{prefix}{v.toLocaleString('fr-FR')}{suffix}</>;
+}
+
+const IMPACT = [
+  { to: 150, prefix: '+', label: "Missions d'envergure réalisées" },
+  { to: 2000, prefix: '+', label: 'Cadres et professionnels formés' },
+  { to: 50, prefix: '+', label: 'Partenaires institutionnels et bailleurs' },
+  { to: 5, label: "Pays d'intervention en Afrique de l'Ouest" }
+];
+
+const METHOD = [
+  { icon: ClipboardCheck, title: 'Diagnostic', text: "Analyse de la situation, des besoins et des contraintes avec les équipes du client." },
+  { icon: PenTool, title: 'Conception', text: 'Solution sur mesure : feuille de route, outils, programme de formation et plan de déploiement.' },
+  { icon: Rocket, title: 'Déploiement', text: 'Mise en œuvre accompagnée sur le terrain, avec transfert de compétences aux équipes locales.' },
+  { icon: LineChart, title: "Mesure d'impact", text: 'Indicateurs de résultats, rapport final et suivi pour pérenniser les acquis.' }
+];
+
+const GALLERY = [
+  { url: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=900&q=75', title: 'Atelier de formation à Abidjan' },
+  { url: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=900&q=75', title: 'Travaux pratiques en équipe' },
+  { url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=900&q=75', title: 'Soutenance de projets devant le jury' },
+  { url: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=900&q=75', title: 'Remise des certificats' },
+  { url: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=75', title: "Réunion d'assistance technique" },
+  { url: 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=900&q=75', title: 'Mission SIG sur le terrain' }
+];
+
+export default function Realisations({ selectedDomainId, setSelectedDomainId, projects, setActiveTab }: RealisationsProps) {
+  const allProjects = useMemo(
+    () => (projects && projects.length > 0 ? projects : PROJECTS).map(normalise),
+    [projects]
+  );
+  const categories = useMemo(() => ['Toutes', ...Array.from(new Set(allProjects.map(p => p.category)))], [allProjects]);
+  const [filter, setFilter] = useState('Toutes');
+  const [query, setQuery] = useState('');
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [impactRef, impactVisible] = useInView<HTMLDivElement>();
+  const testimonials = useTestimonials();
+
+  // A project can be opened directly (e.g. from the site search)
+  useEffect(() => {
+    if (selectedDomainId && allProjects.some(p => p.id === selectedDomainId)) setOpenId(selectedDomainId);
   }, [selectedDomainId, allProjects]);
 
-  const selectedProject = allProjects.find(p => p.id === activeCaseStudy) || allProjects[0] || PROJECTS[0];
+  const visibleProjects = allProjects.filter(p => {
+    if (filter !== 'Toutes' && p.category !== filter) return false;
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return [p.title, p.client, p.location, p.category, p.description].join(' ').toLowerCase().includes(q);
+  });
 
-  const galleryImages = [
-    { url: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80", title: "Atelier de formation Data Analyst à Abidjan" },
-    { url: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80", title: "Travaux pratiques sur le module KoboCollect" },
-    { url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80", title: "Soutenance de projets devant le jury d'experts" },
-    { url: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80", title: "Remise officielle des attestations professionnelles" },
-    { url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80", title: "Réunion d'assistance technique ministérielle" },
-    { url: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80", title: "Mission d'enquête SIG et d'aménagement sur le terrain" }
-  ];
+  const openProject = allProjects.find(p => p.id === openId) || null;
+
+  const closeProject = () => {
+    setOpenId(null);
+    if (setSelectedDomainId) setSelectedDomainId(null);
+  };
+
+  useEffect(() => {
+    if (!openProject && lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') { setLightbox(null); closeProject(); }
+      if (lightbox !== null && e.key === 'ArrowRight') setLightbox((lightbox + 1) % GALLERY.length);
+      if (lightbox !== null && e.key === 'ArrowLeft') setLightbox((lightbox - 1 + GALLERY.length) % GALLERY.length);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [openProject, lightbox]);
+
+  const goTo = (tab: string) => {
+    closeProject();
+    if (setActiveTab) setActiveTab(tab);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div id="realisations-view" className="py-6 bg-slate-50 dark:bg-slate-950 font-sans min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* 1. Global Impact Stats Panels */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-slate-800 text-brand-emerald flex items-center justify-center shrink-0">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <span className="block font-bold text-2xl text-slate-900 dark:text-white">+2 000</span>
-              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Cadres formés certifiés</span>
-            </div>
-          </div>
+    <div id="realisations-view" className="min-h-screen bg-white font-sans dark:bg-slate-950">
 
-          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-slate-800 text-brand-blue flex items-center justify-center shrink-0">
-              <Layers className="w-6 h-6 text-brand-emerald" />
-            </div>
-            <div>
-              <span className="block font-bold text-2xl text-slate-900 dark:text-white">+150</span>
-              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Missions d'envergure menées</span>
-            </div>
-          </div>
+      {/* 1. Page banner */}
+      <section className="relative isolate overflow-hidden bg-[#002447] text-white">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1600&q=70" alt="" referrerPolicy="no-referrer" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-20" />
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+          <nav aria-label="Fil d'Ariane" className="flex items-center gap-1.5 text-sm text-slate-200">
+            <button onClick={() => goTo('news')} className="hover:text-white hover:underline cursor-pointer">Actualités</button>
+            <ChevronRight className="w-4 h-4" />
+            <span className="font-semibold text-white">Nos réalisations</span>
+          </nav>
+          <h1 className="mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight sm:text-5xl animate-[fadeUp_.6s_ease-out]">
+            Nos réalisations
+          </h1>
+          <p className="mt-4 max-w-2xl text-base text-slate-200 sm:text-lg animate-[fadeUp_.8s_ease-out]">
+            Missions de conseil, d'expertise et de formation menées pour des administrations, des entreprises,
+            des projets de développement et des bailleurs internationaux.
+          </p>
+        </div>
+      </section>
 
-          <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-slate-800 text-purple-500 flex items-center justify-center shrink-0">
-              <Award className="w-6 h-6" />
+      {/* 2. Impact figures */}
+      <section className="relative z-10 -mt-10 px-4 sm:px-6 lg:px-8">
+        <div ref={impactRef} className="mx-auto grid max-w-6xl grid-cols-2 overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 lg:grid-cols-4">
+          {IMPACT.map((item, i) => (
+            <div key={item.label} className={`px-5 py-6 text-center ${i > 0 ? 'border-l border-slate-200 dark:border-slate-800' : ''} ${i === 2 ? 'border-l-0 lg:border-l' : ''} ${i >= 2 ? 'border-t border-slate-200 dark:border-slate-800 lg:border-t-0' : ''}`}>
+              <p className="font-display text-3xl font-extrabold text-[#002447] dark:text-white">
+                <CountUp to={item.to} start={impactVisible} prefix={item.prefix} />
+              </p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{item.label}</p>
             </div>
-            <div>
-              <span className="block font-bold text-2xl text-slate-900 dark:text-white">+50</span>
-              <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">Partenariats institutionnels</span>
-            </div>
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* 2. Advanced Case Studies Explorer (Études de cas) */}
-        <section id="case-studies" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 mb-8">
-          <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h3 className="font-display text-xl font-extrabold text-slate-900 dark:text-white">
-              Analyses de Cas d'École &amp; Projets de Référence
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-              Sélectionnez une étude de cas pour observer notre démarche de résolution de problèmes complexes.
-            </p>
+      {/* 3. Filters + project grid */}
+      <section id="case-studies" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Études de cas</p>
+            <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">Projets de référence</h2>
           </div>
+          <label className="relative w-full lg:w-80">
+            <span className="sr-only">Rechercher une réalisation</span>
+            <Search className="absolute left-3.5 top-1/2 w-4 h-4 -translate-y-1/2 text-slate-500" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Client, pays, domaine…"
+              className="w-full rounded-full border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 outline-none focus:border-brand-emerald dark:border-slate-700 dark:bg-slate-900 dark:text-white"
+            />
+          </label>
+        </div>
 
-          {/* horizontal selector tabs */}
-          <div className="flex flex-wrap gap-2.5 mb-6">
-            {allProjects.map(proj => (
-              <button
-                key={proj.id}
-                onClick={() => {
-                  setActiveCaseStudy(proj.id);
-                  if (setSelectedDomainId) {
-                    if (proj.id === 'p1') setSelectedDomainId('ing-financiere');
-                    else if (proj.id === 'p2') setSelectedDomainId('ing-territoriale');
-                    else if (proj.id === 'p3') setSelectedDomainId('ing-formation');
-                  }
-                }}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                  activeCaseStudy === proj.id
-                    ? 'bg-brand-blue text-white shadow dark:bg-brand-emerald dark:text-white'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-                }`}
+        <div role="tablist" aria-label="Filtrer par domaine" className="mt-6 flex flex-wrap gap-2">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              role="tab"
+              aria-selected={filter === cat}
+              onClick={() => setFilter(cat)}
+              className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors cursor-pointer ${filter === cat ? 'bg-[#002447] text-white' : 'bg-slate-100 text-slate-800 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700'}`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {visibleProjects.length === 0 ? (
+          <p className="mt-10 rounded-2xl bg-slate-50 p-8 text-center text-slate-600 dark:bg-slate-900 dark:text-slate-400">
+            Aucune réalisation ne correspond à votre recherche.
+          </p>
+        ) : (
+          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleProjects.map((p, i) => (
+              <article
+                key={p.id}
+                className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900 dark:ring-slate-800 animate-[fadeUp_.5s_ease-out_both]"
+                style={{ animationDelay: `${Math.min(i, 8) * 70}ms` }}
               >
-                {proj.title.split(':')[0]} {/* Shorten name for tab button */}
-              </button>
+                <button onClick={() => setOpenId(p.id)} className="relative aspect-[16/10] overflow-hidden bg-slate-200 cursor-pointer" aria-label={`Voir l'étude de cas : ${p.title}`}>
+                  <img src={p.imageUrl} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <span className="absolute left-3 top-3 rounded-full bg-[#002447] px-3 py-1 text-xs font-bold text-white">{p.category}</span>
+                </button>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+                    {p.year ? <span className="inline-flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{p.year}</span> : null}
+                    {p.location && <span className="inline-flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{p.location}</span>}
+                  </p>
+                  <h3 className="mt-2 font-display text-lg font-bold leading-snug text-slate-900 dark:text-white line-clamp-3">{p.title}</h3>
+                  {p.client && (
+                    <p className="mt-2 flex items-start gap-1.5 text-sm text-slate-600 dark:text-slate-400">
+                      <Building2 className="mt-0.5 w-4 h-4 shrink-0" /><span className="line-clamp-2">{p.client}</span>
+                    </p>
+                  )}
+                  {p.stats && p.stats[0] && (
+                    <div className="mt-4 rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-950">
+                      <p className="font-display text-xl font-extrabold text-brand-emerald dark:text-orange-300">{p.stats[0].value}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-400">{p.stats[0].label}</p>
+                    </div>
+                  )}
+                  <button onClick={() => setOpenId(p.id)} className="mt-auto inline-flex items-center gap-1 pt-5 text-sm font-bold text-brand-emerald hover:underline dark:text-orange-300 cursor-pointer">
+                    Lire l'étude de cas <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+                </div>
+              </article>
             ))}
           </div>
+        )}
+      </section>
 
-          {/* Selected Case Study Details block */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start animate-in fade-in duration-150">
-            
-            {/* case info column */}
-            <div className="lg:col-span-7 space-y-6">
-              <span className="text-xs uppercase font-bold text-brand-emerald bg-brand-emerald/10 px-3 py-1 rounded-full">
-                {selectedProject.category}
+      {/* 4. Method */}
+      <section className="bg-slate-50 py-16 dark:bg-slate-900 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Notre méthode</p>
+            <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">Une démarche éprouvée, de l'analyse à l'impact</h2>
+          </div>
+          <ol className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {METHOD.map((step, i) => (
+              <li key={step.title} className="relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-950 dark:ring-slate-800">
+                <span className="absolute right-5 top-4 font-display text-4xl font-extrabold text-slate-100 dark:text-slate-800">0{i + 1}</span>
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-[#002447] text-amber-300"><step.icon className="w-6 h-6" /></span>
+                <h3 className="relative mt-4 font-display text-lg font-bold text-slate-900 dark:text-white">{step.title}</h3>
+                <p className="relative mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{step.text}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* 5. Testimonials (managed in the admin console) */}
+      {testimonials.length > 0 && (
+      <section className="relative isolate overflow-hidden py-16 sm:py-20">
+        <div className="absolute inset-0 -z-10 bg-[#002447]" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-display text-2xl font-extrabold text-white sm:text-3xl">Ils témoignent</h2>
+          <div className="mt-10 px-6">
+            <Carousel label="Témoignages" perView={{ base: 1, sm: 2, lg: 3 }} autoplay={5500} tone="dark" loop>
+              {testimonials.map(t => (
+                <figure key={t.id} className="flex h-full flex-col rounded-xl bg-white p-7 shadow-xl">
+                  <Quote className="w-8 h-8 text-amber-500" />
+                  <div className="mt-3 flex gap-0.5 text-amber-500" aria-label={`${t.rating} étoiles sur 5`}>
+                    {Array.from({ length: t.rating }).map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                  </div>
+                  <blockquote className="mt-3 flex-1 text-sm italic leading-relaxed text-slate-700">« {t.text} »</blockquote>
+                  <figcaption className="mt-5 flex items-center gap-3 border-t border-slate-100 pt-4">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#002447] text-sm font-bold text-white">{initials(t.name)}</span>
+                    <span>
+                      <span className="block text-sm font-bold text-slate-900">{t.name}</span>
+                      <span className="block text-xs text-slate-600">{t.role} · {t.organization}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </Carousel>
+          </div>
+        </div>
+      </section>
+      )}
+
+      {/* 6. Gallery */}
+      <section id="photo-gallery-section" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+        <div className="max-w-2xl">
+          <p className="text-sm font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">En images</p>
+          <h2 className="mt-2 font-display text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">Sur le terrain et en salle</h2>
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
+          {GALLERY.map((img, i) => (
+            <button
+              key={img.url}
+              onClick={() => setLightbox(i)}
+              className={`group relative overflow-hidden rounded-2xl bg-slate-200 cursor-pointer ${i === 0 ? 'col-span-2 row-span-2 aspect-square lg:aspect-auto' : 'aspect-[4/3]'}`}
+              aria-label={`Agrandir : ${img.title}`}
+            >
+              <img src={img.url} alt={img.title} loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <span className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-black/65 p-3 text-left text-xs font-bold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:text-sm">
+                <Camera className="w-4 h-4 shrink-0" /> {img.title}
               </span>
-              <h4 className="font-display text-lg font-bold text-slate-900 dark:text-white leading-snug">
-                {selectedProject.title}
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans font-light">
-                {selectedProject.description}
-              </p>
+            </button>
+          ))}
+        </div>
+      </section>
 
-              {/* Challenge / Solution split list */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100 dark:border-slate-800">
-                <div className="space-y-2">
-                  <h5 className="font-bold text-xs text-red-700 dark:text-red-400 uppercase tracking-wider">Les Défis Clés :</h5>
-                  <ul className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400 font-sans">
-                    {selectedProject.challenges.map((c, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <span className="text-red-500 mr-2 font-bold shrink-0">•</span>
-                        <span>{c}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="space-y-2">
-                  <h5 className="font-bold text-xs text-brand-emerald uppercase tracking-wider">Solutions Apportées :</h5>
-                  <ul className="space-y-1.5 text-xs text-slate-500 dark:text-slate-400 font-sans">
-                    {selectedProject.solutions.map((s, idx) => (
-                      <li key={idx} className="flex items-start">
-                        <span className="text-brand-emerald mr-2 font-bold shrink-0">✔</span>
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+      {/* 7. Call to action */}
+      <section className="bg-brand-emerald py-14 text-white">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-5 px-4 text-center sm:flex-row sm:justify-between sm:text-left">
+          <div>
+            <h2 className="font-display text-2xl font-extrabold">Un projet similaire ?</h2>
+            <p className="mt-2 text-white/90">Nos experts étudient votre besoin et vous proposent une intervention sur mesure.</p>
+          </div>
+          <button onClick={() => goTo('contact')} className="shrink-0 rounded-full bg-white px-7 py-3 text-sm font-bold text-[#54150A] hover:bg-amber-100 cursor-pointer">
+            Parlons de votre projet
+          </button>
+        </div>
+      </section>
+
+      {/* Case study sheet */}
+      {openProject && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/60 sm:items-center sm:p-4 animate-[fadeIn_.25s_ease-out]" onClick={closeProject}>
+          <article
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="case-title"
+            onClick={(e) => e.stopPropagation()}
+            className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-950 sm:rounded-3xl animate-[popIn_.3s_ease-out]"
+          >
+            <div className="relative h-48 shrink-0 sm:h-64">
+              <img src={openProject.imageUrl} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-[#001a33]/65" />
+              <button onClick={closeProject} aria-label="Fermer" className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-900 hover:bg-white cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+              <div className="absolute inset-x-6 bottom-5 text-white sm:inset-x-8">
+                <span className="rounded-full bg-amber-400 px-3 py-1 text-xs font-bold text-[#001a33]">{openProject.category}</span>
+                <h2 id="case-title" className="mt-3 font-display text-xl font-extrabold leading-snug sm:text-2xl">{openProject.title}</h2>
               </div>
+            </div>
 
-              {/* Optional Case testimonial */}
-              {selectedProject.testimonial && (
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-850 border border-slate-100 dark:border-slate-800 space-y-2">
-                  <p className="text-xs italic text-slate-700 dark:text-slate-300 font-serif leading-relaxed">
-                    "{selectedProject.testimonial.text}"
-                  </p>
-                  <span className="block text-xs font-bold text-slate-500 dark:text-slate-400">
-                    — {selectedProject.testimonial.author}, {selectedProject.testimonial.role}
-                  </span>
+            <div className="overflow-y-auto px-6 py-7 sm:px-8">
+              <dl className="grid grid-cols-1 gap-4 rounded-2xl bg-slate-50 p-5 text-sm dark:bg-slate-900 sm:grid-cols-3">
+                <div><dt className="font-bold text-slate-900 dark:text-white">Client</dt><dd className="text-slate-700 dark:text-slate-300">{openProject.client || '—'}</dd></div>
+                <div><dt className="font-bold text-slate-900 dark:text-white">Lieu</dt><dd className="text-slate-700 dark:text-slate-300">{openProject.location || '—'}</dd></div>
+                <div><dt className="font-bold text-slate-900 dark:text-white">Année</dt><dd className="text-slate-700 dark:text-slate-300">{openProject.year || '—'}</dd></div>
+              </dl>
+
+              {openProject.description && (
+                <section className="mt-7">
+                  <h3 className="flex items-center gap-2 font-display text-lg font-bold text-slate-900 dark:text-white"><Target className="w-5 h-5 text-brand-emerald dark:text-orange-300" /> Contexte et mission</h3>
+                  <p className="mt-2 whitespace-pre-line text-base leading-relaxed text-slate-700 dark:text-slate-300">{openProject.description}</p>
+                </section>
+              )}
+
+              {(openProject.challenges.length > 0 || openProject.solutions.length > 0) && (
+                <div className="mt-7 grid grid-cols-1 gap-6 md:grid-cols-2">
+                  {openProject.challenges.length > 0 && (
+                    <section className="rounded-2xl p-5 ring-1 ring-slate-200 dark:ring-slate-800">
+                      <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">Les enjeux</h3>
+                      <ul className="mt-3 space-y-2">
+                        {openProject.challenges.map(c => <li key={c} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-600" />{c}</li>)}
+                      </ul>
+                    </section>
+                  )}
+                  {openProject.solutions.length > 0 && (
+                    <section className="rounded-2xl p-5 ring-1 ring-slate-200 dark:ring-slate-800">
+                      <h3 className="font-display text-base font-bold text-slate-900 dark:text-white">Notre intervention</h3>
+                      <ul className="mt-3 space-y-2">
+                        {openProject.solutions.map(s => <li key={s} className="flex gap-2 text-sm text-slate-700 dark:text-slate-300"><CheckCircle2 className="mt-0.5 w-4 h-4 shrink-0 text-emerald-700 dark:text-emerald-400" />{s}</li>)}
+                      </ul>
+                    </section>
+                  )}
                 </div>
+              )}
+
+              {openProject.stats && openProject.stats.length > 0 && (
+                <section className="mt-7">
+                  <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white">Résultats obtenus</h3>
+                  <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    {openProject.stats.map(s => (
+                      <div key={s.label} className="rounded-2xl bg-[#002447] p-5 text-white">
+                        <p className="font-display text-2xl font-extrabold text-amber-300">{s.value}</p>
+                        <p className="mt-1 text-sm text-slate-200">{s.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {openProject.testimonial && openProject.testimonial.text && (
+                <figure className="mt-7 rounded-2xl bg-amber-50 p-6 ring-1 ring-amber-200 dark:bg-amber-950/30 dark:ring-amber-900">
+                  <Quote className="w-7 h-7 text-amber-600" />
+                  <blockquote className="mt-2 text-base italic leading-relaxed text-slate-800 dark:text-slate-200">« {openProject.testimonial.text} »</blockquote>
+                  <figcaption className="mt-3 text-sm font-bold text-slate-900 dark:text-white">
+                    {openProject.testimonial.author}{openProject.testimonial.role && <span className="font-normal text-slate-600 dark:text-slate-400"> · {openProject.testimonial.role}</span>}
+                  </figcaption>
+                </figure>
               )}
             </div>
 
-            {/* case stats & image sidebar column */}
-            <div className="lg:col-span-5 space-y-6">
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow">
-                <img
-                  src={selectedProject.imageUrl}
-                  alt={selectedProject.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* stats display box */}
-              <div className="bg-slate-50 dark:bg-slate-850 p-6 rounded-2xl border border-slate-150/40 dark:border-slate-800 space-y-4">
-                <h5 className="font-display text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200/40 pb-2">
-                  Indicateurs de Performance (KPIs)
-                </h5>
-                <div className="space-y-3 font-sans text-xs">
-                  {selectedProject.stats?.map((stat, sIdx) => (
-                    <div key={sIdx} className="space-y-0.5">
-                      <span className="block font-bold text-base text-brand-emerald">{stat.value}</span>
-                      <span className="block text-[11px] text-slate-500 dark:text-slate-400">{stat.label}</span>
-                    </div>
-                  ))}
-                  <div className="pt-2">
-                    <span className="block text-xs text-slate-500 dark:text-slate-400">Client : {selectedProject.client}</span>
-                    <span className="block text-xs text-slate-500 dark:text-slate-400 mt-1">Lieu : {selectedProject.location} • Année : {selectedProject.year}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* 3. Immersive Photo Gallery with Lightbox */}
-        <section id="photo-gallery-section" className="py-6 mb-8">
-          <div className="text-center max-w-3xl mx-auto mb-6">
-            <h3 className="font-display text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
-              Galerie d'Images de nos Récents Travaux
-            </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 uppercase tracking-widest mt-1 font-semibold">
-              Des moments forts capturés en salle et sur le terrain
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {galleryImages.map((img, idx) => (
-              <div
-                key={idx}
-                id={`gallery-item-${idx}`}
-                onClick={() => setLightboxImage(img.url)}
-                className="relative group rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 dark:bg-slate-800 cursor-pointer shadow-sm hover:shadow-md transition-shadow"
-              >
-                <img
-                  src={img.url}
-                  alt={img.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-300"
-                />
-                {/* Hover overlay with Title */}
-                <div className="absolute inset-0 bg-slate-950/70 opacity-0 group-hover:opacity-100 flex flex-col justify-end p-5 transition-opacity duration-200">
-                  <div className="w-8 h-8 rounded-full bg-brand-emerald text-white flex items-center justify-center mb-2">
-                    <Camera className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-xs font-bold text-white font-sans">{img.title}</h4>
-                  <span className="text-[11px] text-slate-200 mt-0.5 uppercase tracking-wider">Agrandir la photo</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 4. Alumni Testimonials Segment (Témoignages d'anciens participants) */}
-        <section id="alumni-testimonials" className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl mb-8">
-          <div className="max-w-3xl mx-auto text-center mb-6">
-            <div className="inline-flex items-center space-x-1.5 bg-white/10 text-orange-300 px-3 py-1 rounded-full text-xs font-bold mb-3">
-              <MessageSquare className="w-4 h-4" />
-              <span>La voix de nos diplômés</span>
-            </div>
-            <h3 className="font-display text-xl sm:text-2xl font-extrabold">
-              Que Deviennent nos Anciens Auditeurs ?
-            </h3>
-            <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-              Le retour d'expérience de hauts cadres ayant suivi nos parcours de certifications.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {TESTIMONIALS.map(test => (
-              <div key={test.id} className="bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
-                <p className="text-xs italic text-slate-300 font-serif leading-relaxed">
-                  "{test.text}"
-                </p>
-                <div className="flex items-center space-x-3.5 pt-3 border-t border-slate-900">
-                  <img
-                    src={test.avatarUrl}
-                    alt={test.name}
-                    referrerPolicy="no-referrer"
-                    className="w-10 h-10 rounded-full object-cover border border-brand-emerald"
-                  />
-                  <div>
-                    <h5 className="font-bold text-xs text-white">{test.name}</h5>
-                    <p className="text-[11px] text-slate-300">{test.role} • {test.organization}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* 5. Executive video presentations option segment */}
-        <section id="video-introduction-spot" className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800 p-8 shadow-sm text-center max-w-4xl mx-auto space-y-6">
-          <h3 className="font-display text-lg font-bold text-slate-900 dark:text-white">
-            Présentation Institutionnelle en Vidéo (Enregistrements Académiques)
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-sans max-w-2xl mx-auto font-light">
-            Découvrez en moins de 3 minutes les coulisses de notre pôle académique, l'équipement de nos salles de classes d'Abidjan, et les témoignages vidéos de nos promotions d'anciens apprenants.
-          </p>
-
-          <div className="relative aspect-video max-w-xl mx-auto rounded-2xl overflow-hidden bg-slate-950 shadow-md group border border-slate-800">
-            <img
-              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80"
-              alt="Video Preview Presentation CICEXF"
-              referrerPolicy="no-referrer"
-              className="absolute inset-0 w-full h-full object-cover opacity-55"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                id="btn-play-simulated-video"
-                onClick={() => alert("Lancement de la vidéo de présentation institutionnelle du Cabinet CICEXF (Démonstration d'ambiance académique).")}
-                className="w-16 h-16 rounded-full bg-brand-emerald text-white flex items-center justify-center shadow-2xl hover:scale-108 transition-transform cursor-pointer"
-                aria-label="Lire la vidéo"
-              >
-                <Play className="w-6 h-6 fill-white" />
+            <footer className="flex flex-col gap-3 border-t border-slate-200 px-6 py-4 dark:border-slate-800 sm:flex-row sm:justify-end sm:px-8">
+              <button onClick={closeProject} className="rounded-full border border-slate-300 px-5 py-3 text-sm font-bold text-slate-900 hover:bg-slate-50 dark:border-slate-700 dark:text-white dark:hover:bg-slate-900 cursor-pointer">Fermer</button>
+              <button onClick={() => goTo('contact')} className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-emerald px-6 py-3 text-sm font-bold text-white hover:bg-brand-emerald-dark cursor-pointer">
+                Un projet similaire ? Contactez-nous <ArrowRight className="w-4 h-4" />
               </button>
-            </div>
-            <div className="absolute bottom-4 left-4 right-4 text-left bg-slate-950/80 backdrop-blur-md p-3 rounded-lg text-xs text-white">
-              <span className="block font-bold">CICEXF Academy : Tour de Table des Promotions</span>
-              <span className="block text-[11px] text-slate-300 mt-0.5">Durée : 02m 45s • Abidjan, Côte d'Ivoire</span>
-            </div>
-          </div>
-        </section>
-
-      </div>
-
-      {/* 6. Interactive Lightbox Modal overlay */}
-      {lightboxImage && (
-        <div
-          id="gallery-lightbox-modal"
-          className="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
-          onClick={() => setLightboxImage(null)}
-        >
-          <div className="relative max-w-4xl w-full flex flex-col items-center">
-            <button
-              onClick={() => setLightboxImage(null)}
-              className="absolute -top-12 right-0 p-2 text-white/80 hover:text-white transition-colors bg-white/10 rounded-full"
-              aria-label="Fermer"
-            >
-              <X className="w-6 h-6" />
-            </button>
-            <img
-              src={lightboxImage}
-              alt="Agrandissement de la réalisation du cabinet CICEXF"
-              referrerPolicy="no-referrer"
-              className="max-h-[80vh] object-contain rounded-xl shadow-2xl border border-white/10"
-            />
-            <p className="text-white text-xs mt-4 font-sans text-center">
-              Cliquez n'importe où en dehors pour fermer l'affichage grand écran.
-            </p>
-          </div>
+            </footer>
+          </article>
         </div>
       )}
 
+      {/* Gallery lightbox */}
+      {lightbox !== null && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/90 p-4 animate-[fadeIn_.2s_ease-out]" onClick={() => setLightbox(null)}>
+          <button onClick={() => setLightbox(null)} aria-label="Fermer" className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 cursor-pointer"><X className="w-6 h-6" /></button>
+          <figure className="max-w-5xl" onClick={(e) => e.stopPropagation()}>
+            <img src={GALLERY[lightbox].url.replace('w=900', 'w=1600')} alt={GALLERY[lightbox].title} referrerPolicy="no-referrer" className="max-h-[80vh] rounded-xl object-contain" />
+            <figcaption className="mt-3 text-center text-sm text-white">{GALLERY[lightbox].title} · {lightbox + 1}/{GALLERY.length}</figcaption>
+          </figure>
+        </div>
+      )}
     </div>
   );
 }

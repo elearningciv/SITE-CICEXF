@@ -372,14 +372,6 @@ export default function FlippingSheet({
                 transformStyle: 'preserve-3d'
               }}
             >
-              {/* Dynamic top ambient lighting */}
-              <div
-                className="absolute inset-0 pointer-events-none opacity-60"
-                style={{
-                  background:
-                    'radial-gradient(ellipse at top, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 65%)'
-                }}
-              ></div>
 
               {/* Elegant Curled Corner on top right */}
               <div className="absolute top-0 right-0 w-12 sm:w-16 h-12 sm:h-16 pointer-events-none overflow-hidden z-20">
@@ -394,7 +386,7 @@ export default function FlippingSheet({
                 >
                   <div className="absolute top-0 right-0 w-0 h-0 border-t-[48px] sm:border-t-[60px] border-t-slate-200/90 dark:border-t-slate-800 border-l-[48px] sm:border-l-[60px] border-l-transparent drop-shadow-md"></div>
                   <div className="absolute top-0 right-0 w-0 h-0 border-t-[45px] sm:border-t-[57px] border-t-white dark:border-t-slate-900 border-l-[45px] sm:border-l-[57px] border-l-transparent"></div>
-                  <div className="absolute -top-1 -right-1 w-7 sm:w-9 h-7 sm:h-9 bg-gradient-to-br from-black/20 to-transparent dark:from-black/50 rotate-45 transform origin-top-right"></div>
+                  <div className="absolute -top-1 -right-1 w-7 sm:w-9 h-7 sm:h-9 bg-black/10 dark:bg-black/30 rotate-45 transform origin-top-right"></div>
                 </motion.div>
               </div>
 
@@ -484,7 +476,6 @@ export default function FlippingSheet({
                 {/* Footer of the Sheet */}
                 <div className="pt-3 sm:pt-4 mt-4 sm:mt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-2.5">
                   <div className="flex items-center space-x-2 text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-300">
-                    <Sparkles className="w-3.5 h-3.5 text-brand-emerald shrink-0" />
                     <span>{currentItem.footerNote || 'Engagement institutionnel certifié CICEXF'}</span>
                   </div>
 

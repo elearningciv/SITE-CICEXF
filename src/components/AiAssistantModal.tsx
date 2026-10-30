@@ -170,7 +170,6 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
       if (isPointsEssentielsHeader) {
         return (
           <div key={idx} className="my-2.5 p-3 sm:p-4 rounded-2xl bg-amber-500/10 dark:bg-amber-500/15 border-l-4 border-amber-600 dark:border-amber-500 text-amber-950 dark:text-amber-200 font-black text-xs sm:text-sm md:text-[14px] flex items-center space-x-2.5 shadow-2xs">
-            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 dark:text-amber-400 shrink-0" />
             <span>{parts}</span>
           </div>
         );
@@ -200,10 +199,9 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
         className="bg-white dark:bg-[#020d1c] w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl h-[94vh] sm:h-[90vh] md:h-[88vh] rounded-3xl shadow-2xl border border-slate-200/90 dark:border-slate-800 flex flex-col overflow-hidden"
       >
         {/* Header - Enriched & Spacious */}
-        <div className="bg-gradient-to-r from-brand-blue-dark via-[#08284d] to-brand-emerald px-5 sm:px-8 py-4 sm:py-5 text-white flex items-center justify-between border-b border-white/10 shrink-0">
+        <div className="bg-brand-blue-dark px-5 sm:px-8 py-4 sm:py-5 text-white flex items-center justify-between border-b border-white/10 shrink-0">
           <div className="flex items-center space-x-3.5 sm:space-x-4">
             <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-inner shrink-0">
-              <Sparkles className="w-6 h-6 text-amber-300 animate-pulse" />
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
@@ -335,7 +333,6 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
                 disabled={loading}
                 className="w-full pl-5 pr-12 py-3 sm:py-3.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl text-xs sm:text-sm md:text-base text-slate-900 dark:text-white outline-none focus:border-brand-emerald focus:ring-2 focus:ring-brand-emerald/20 transition-all font-medium disabled:opacity-50"
               />
-              <Sparkles className="w-4 h-4 text-amber-500 absolute right-4 top-4 sm:top-4.5 pointer-events-none" />
             </div>
 
             <button

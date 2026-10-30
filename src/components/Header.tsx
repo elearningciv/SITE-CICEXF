@@ -23,7 +23,6 @@ interface HeaderProps {
 
 const MOBILE_TABS = [
   { id: 'home', label: 'Accueil' },
-  { id: 'about', label: 'À propos' },
   { id: 'accompagnements', label: 'Accompagnements' },
   { id: 'formations', label: 'Formations' },
   { id: 'realisations', label: 'Réalisations' },
@@ -168,6 +167,13 @@ export default function Header({
     }
   };
 
+  const openDomain = (domainId: string) => {
+    setActiveTab('accompagnements');
+    setSelectedDomainId(domainId);
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSelectResult = (tab: string, domainId: string | null) => {
     setActiveTab(tab);
     setSelectedDomainId(domainId);
@@ -256,7 +262,7 @@ export default function Header({
               className="flex items-center space-x-2 cursor-pointer group shrink-0"
               onClick={() => handleNavClick('home')}
             >
-              <div className="w-9 h-9 bg-gradient-to-br from-brand-blue to-brand-emerald rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:scale-105 transition-transform shrink-0">
+              <div className="w-9 h-9 bg-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:scale-105 transition-transform shrink-0">
                 CX
               </div>
               <div className="shrink-0 flex items-center leading-none">
@@ -286,11 +292,10 @@ export default function Header({
               <button
                 id="ai-mobile-btn"
                 onClick={() => setAiModalOpen(true)}
-                className="h-9 px-2.5 rounded-xl bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
+                className="h-9 px-2.5 rounded-xl bg-amber-700 hover:bg-amber-600 text-white shadow-xs flex items-center space-x-1 border border-amber-300/40 active:scale-95 cursor-pointer"
                 aria-label="Conseiller Intelligent"
                 title="Conseiller Intelligent CICEXF - Posez une question"
               >
-                <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-current animate-pulse" />
                 <span className="text-[11px] font-black uppercase tracking-wider text-white">IA</span>
               </button>
 
@@ -325,7 +330,7 @@ export default function Header({
                 className="flex items-center space-x-2 xl:space-x-2.5 cursor-pointer group shrink-0 mr-2 lg:mr-3"
                 onClick={() => handleNavClick('home')}
               >
-                <div className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 bg-gradient-to-br from-white/10 to-white/5 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm xl:text-base shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white/10 shrink-0">
+                <div className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 bg-white/10 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm xl:text-base shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white/10 shrink-0">
                   CX
                 </div>
                 <div className="shrink-0">
@@ -384,29 +389,42 @@ export default function Header({
                   Accueil
                 </button>
 
-                <button
-                  id="nav-about"
-                  onClick={() => handleNavClick('about')}
-                  className={`px-2 lg:px-2.5 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10.5px] lg:text-[11px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 whitespace-nowrap ${
-                    activeTab === 'about'
-                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  Qui sommes-nous
-                </button>
-
-                <button
-                  id="nav-accompagnements"
-                  onClick={() => handleNavClick('accompagnements')}
-                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
-                    activeTab === 'accompagnements'
-                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  Accompagnement
-                </button>
+                {/* Accompagnement, with the list of domains in its dropdown */}
+                <div className="relative group/acc shrink-0">
+                  <button
+                    id="nav-accompagnements"
+                    onClick={() => handleNavClick('accompagnements')}
+                    aria-haspopup="true"
+                    className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                      activeTab === 'accompagnements'
+                        ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    <span>Accompagnement</span>
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/acc:rotate-180" />
+                  </button>
+                  <div className="invisible opacity-0 group-hover/acc:visible group-hover/acc:opacity-100 group-focus-within/acc:visible group-focus-within/acc:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50">
+                    <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                      <p className="px-3 pt-1 pb-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nos domaines d'intervention</p>
+                      {domains.map(d => (
+                        <button
+                          key={d.id}
+                          onClick={() => openDomain(d.id)}
+                          className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${activeTab === 'accompagnements' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                        >
+                          {d.title}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => handleNavClick('accompagnements')}
+                        className="mt-1 w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-emerald dark:text-orange-300 border-t border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer"
+                      >
+                        Voir tous les accompagnements →
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Formations Nav Button */}
                 <button
@@ -421,33 +439,39 @@ export default function Header({
                   Formations
                 </button>
 
-                <button
-                  id="nav-realisations"
-                  onClick={() => handleNavClick('realisations')}
-                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
-                    activeTab === 'realisations'
-                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  Réalisations
-                </button>
-                
-                <button
-                  id="nav-news"
-                  onClick={() => handleNavClick('news')}
-                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
-                    activeTab === 'news'
-                      ? 'bg-red-600 text-white shadow-md scale-105'
-                      : 'bg-red-500/10 text-red-200 border border-red-500/30 hover:bg-red-500/25 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  <span>Actualités</span>
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-600"></span>
-                  </span>
-                </button>
+                {/* Actualités, with Réalisations in its dropdown */}
+                <div className="relative group/news shrink-0">
+                  <button
+                    id="nav-news"
+                    onClick={() => handleNavClick('news')}
+                    aria-haspopup="true"
+                    className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                      activeTab === 'news' || activeTab === 'realisations'
+                        ? 'bg-red-600 text-white shadow-md scale-105'
+                        : 'bg-red-500/10 text-red-200 border border-red-500/30 hover:bg-red-500/25 hover:text-white hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    <span>Actualités</span>
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/news:rotate-180" />
+                  </button>
+                  <div className="invisible opacity-0 group-hover/news:visible group-hover/news:opacity-100 group-focus-within/news:visible group-focus-within/news:opacity-100 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50">
+                    <div className="w-56 rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                      <button
+                        onClick={() => handleNavClick('news')}
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${activeTab === 'news' ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                      >
+                        Actualités & publications
+                      </button>
+                      <button
+                        id="nav-realisations"
+                        onClick={() => handleNavClick('realisations')}
+                        className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                      >
+                        Nos réalisations
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
                 <button
                   id="nav-contact"
@@ -484,10 +508,9 @@ export default function Header({
                 <button
                   id="bar-ai-btn"
                   onClick={() => setAiModalOpen(true)}
-                  className="px-2 lg:px-2.5 py-1 rounded-xl bg-gradient-to-r from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
+                  className="px-2 lg:px-2.5 py-1 rounded-xl bg-amber-700 hover:bg-amber-600 text-white font-bold text-[10.5px] lg:text-[11px] shadow-sm hover:scale-105 active:scale-95 transition-all cursor-pointer flex items-center space-x-1 border border-amber-300/40"
                   title="Conseiller Intelligent CICEXF - Posez vos questions sur les formations et expertises"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-amber-200 fill-current animate-pulse" />
                   <span className="hidden 2xl:inline tracking-wide font-black">Conseiller IA</span>
                   <span className="2xl:hidden font-black">IA</span>
                 </button>
@@ -502,45 +525,6 @@ export default function Header({
                   <Search className="w-4.5 h-4.5" />
                 </button>
 
-                {/* Theme Customizer Switcher */}
-                <div className="relative group/theme-bar">
-                  <button
-                    id="bar-theme-btn-customizer"
-                    className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-all flex items-center space-x-0.5 cursor-pointer"
-                    title="Thème de la marque"
-                  >
-                    <Sparkles className="w-4 h-4 text-brand-emerald-light" />
-                    <ChevronDown className="w-3 h-3" />
-                  </button>
-                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#020817] rounded-xl shadow-xl border border-slate-100 dark:border-white/10 p-2.5 hidden group-hover/theme-bar:block z-50 animate-in fade-in slide-in-from-top-1 duration-150">
-                    <span className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Palette de Marque</span>
-                    
-                    <button
-                      onClick={() => setBrandTheme('classic')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'classic' ? 'bg-slate-100 dark:bg-white/10 text-brand-blue dark:text-blue-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-[#003B6F]"></span>
-                      <span className="w-3 h-3 rounded-full bg-[#8A2E1C] -ml-1"></span>
-                      <span>Bleu & Marron</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBrandTheme('emerald')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'emerald' ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald dark:text-brand-emerald-light' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-[#009966]"></span>
-                      <span>Vert Émeraude</span>
-                    </button>
-
-                    <button
-                      onClick={() => setBrandTheme('tech')}
-                      className={`w-full text-left px-2 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-2 ${brandTheme === 'tech' ? 'bg-slate-100 dark:bg-white/10 text-cyan-500 dark:text-cyan-400' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5'}`}
-                    >
-                      <span className="w-3 h-3 rounded-full bg-cyan-600"></span>
-                      <span>Deep Tech Slate</span>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -582,7 +566,7 @@ export default function Header({
 
         {/* Mobile Slide-out Menu */}
         {isOpen && (
-          <div id="mobile-menu" className="xl:hiddenbg-white dark:bg-[#020817] border-t border-slate-100 dark:border-white/10 shadow-xl py-4 px-4 space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
+          <div id="mobile-menu" className="xl:hidden bg-white dark:bg-[#020817] border-t border-slate-100 dark:border-white/10 shadow-xl py-4 px-4 space-y-2 max-h-[calc(100vh-100px)] overflow-y-auto">
             {/* Quick Contact Buttons inside Mobile Menu */}
             <div className="grid grid-cols-2 gap-2 pb-2.5 mb-2 border-b border-slate-100 dark:border-slate-800">
               <a
@@ -613,18 +597,20 @@ export default function Header({
               Accueil
             </button>
             <button
-              onClick={() => handleNavClick('about')}
-              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'about' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
-            >
-              Qui sommes-nous
-            </button>
-
-            <button
               onClick={() => handleNavClick('accompagnements')}
               className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'accompagnements' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
             >
               Accompagnement
             </button>
+            {domains.map(d => (
+              <button
+                key={d.id}
+                onClick={() => openDomain(d.id)}
+                className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                ↳ {d.title}
+              </button>
+            ))}
 
             <button
               onClick={() => handleNavClick('formations')}
@@ -633,12 +619,6 @@ export default function Header({
               Formations
             </button>
 
-            <button
-              onClick={() => handleNavClick('realisations')}
-              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
-            >
-              Réalisations
-            </button>
             <button
               onClick={() => handleNavClick('news')}
               className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold flex items-center justify-between border-2 border-dashed border-red-500 animate-pulse bg-red-500/10 dark:bg-red-500/20 shadow-[0_0_15px_rgba(239,68,68,0.4)] ${activeTab === 'news' ? 'text-white bg-red-600 dark:bg-red-600 border-solid animate-none' : 'text-red-700 dark:text-red-300'}`}
@@ -650,8 +630,14 @@ export default function Header({
               </span>
             </button>
             <button
+              onClick={() => handleNavClick('realisations')}
+              className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+            >
+              ↳ Nos réalisations
+            </button>
+            <button
               onClick={() => handleNavClick('contact')}
-              className="block w-full text-center py-2.5 rounded-lg text-sm font-bold text-white bg-gradient-to-r from-brand-blue to-brand-emerald"
+              className="block w-full text-center py-2.5 rounded-lg text-sm font-bold text-white bg-brand-blue"
             >
               Contactez-nous
             </button>
@@ -667,15 +653,6 @@ export default function Header({
               </button>
             )}
 
-            {/* Mobile Theme Switcher */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-between px-4 text-xs font-semibold text-slate-500">
-              <span>Palette de marque :</span>
-              <div className="flex space-x-2">
-                <button onClick={() => setBrandTheme('classic')} className={`w-5 h-5 rounded-full bg-[#003B6F] ${brandTheme === 'classic' ? 'ring-2 ring-brand-emerald' : ''}`}></button>
-                <button onClick={() => setBrandTheme('emerald')} className={`w-5 h-5 rounded-full bg-[#009966] ${brandTheme === 'emerald' ? 'ring-2 ring-brand-blue' : ''}`}></button>
-                <button onClick={() => setBrandTheme('tech')} className={`w-5 h-5 rounded-full bg-cyan-600 ${brandTheme === 'tech' ? 'ring-2 ring-brand-emerald' : ''}`}></button>
-              </div>
-            </div>
           </div>
         )}
       </header>
@@ -705,10 +682,9 @@ export default function Header({
             </form>
 
             {/* Bannière Conseiller Intelligent dans la recherche */}
-            <div className="bg-gradient-to-r from-amber-500/15 via-brand-emerald/10 to-brand-blue/15 px-4 py-3 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="bg-amber-50 dark:bg-slate-900 px-4 py-3 border-b border-amber-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center space-x-2.5">
                 <div className="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                  <Sparkles className="w-4 h-4 fill-current" />
                 </div>
                 <div>
                   <p className="text-xs font-black text-slate-900 dark:text-white leading-tight">
