@@ -442,6 +442,7 @@ export default function App() {
             partners={partners}
             accompagnements={accompagnements}
             onOpenAssistant={() => setIsAiModalOpen(true)}
+            onSearch={handleGlobalSearch}
           />
         );
       case 'about':
@@ -486,6 +487,7 @@ export default function App() {
             partners={partners}
             accompagnements={accompagnements}
             onOpenAssistant={() => setIsAiModalOpen(true)}
+            onSearch={handleGlobalSearch}
           />
         );
     }
