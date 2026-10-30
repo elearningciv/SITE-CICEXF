@@ -36,6 +36,7 @@ import { DOMAINS_INTERVENTION } from '../data';
 import { DomainIntervention, SoftwareTool } from '../types';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../data/accompanimentEnrichments';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
+import { getDomainImage } from '../lib/domainImages';
 import InteractiveSectionTabs from './InteractiveSectionTabs';
 import { buildAccompanimentTabSections } from '../lib/interactiveTabsHelper';
 
@@ -131,16 +132,6 @@ export default function Interventions({
     }
   };
 
-  const domainIllustrations: Record<string, string> = {
-    'ing-formation': 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80',
-    'ing-financiere': 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=1200&q=80',
-    'ing-informatique': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-    'ing-territoriale': 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80',
-    'ing-qhse': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-    'ing-audit': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-    'ing-projets': 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
-    'ing-accompagnement': 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-  };
 
   const selectedDomainObj = allDomains.find(d => d.id === selectedDomainId) || null;
 
@@ -168,10 +159,10 @@ export default function Interventions({
                     {/* Domain Cover Image with text overlay in white */}
                     <div className="relative h-40 w-full overflow-hidden">
                       <img
-                        src={domainIllustrations[domain.id] || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80"}
+                        src={getDomainImage(domain)}
                         alt={domain.title}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-slate-950/60"></div>
                       
@@ -254,10 +245,10 @@ export default function Interventions({
                 {/* Beautiful Modern Domain Hero Header with top image banner */}
                 <div className="relative h-44 sm:h-52 rounded-2xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-300">
                   <img
-                    src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
+                    src={getDomainImage(selectedDomainObj)}
                     alt={selectedDomainObj.title}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain bg-slate-900"
                   />
                   <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-4 sm:p-6 space-y-2">
                     <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
@@ -282,7 +273,7 @@ export default function Interventions({
                     const enrichments = ACCOMPANIMENT_ENRICHMENTS[selectedDomainObj.id];
                     const enrichment = enrichments && enrichments[sIdx];
                     const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
-                    const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
+                    const finalImageUrl = sub.imageUrl || enrichment?.imageUrl;
                     const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
 
                     return (
@@ -302,7 +293,7 @@ export default function Interventions({
                                 src={finalImageUrl}
                                 alt={sub.title}
                                 referrerPolicy="no-referrer"
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500"
                               />
                               <div className="absolute inset-0 bg-slate-950/60"></div>
                               <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
@@ -351,7 +342,7 @@ export default function Interventions({
                   const enrichments = ACCOMPANIMENT_ENRICHMENTS[selectedDomainObj.id];
                   const enrichment = enrichments && enrichments[sIdx];
                   const finalIconName = enrichment ? enrichment.iconName : (sub.iconName || 'CheckSquare');
-                  const finalImageUrl = enrichment ? enrichment.imageUrl : sub.imageUrl;
+                  const finalImageUrl = sub.imageUrl || enrichment?.imageUrl;
                   const presentationService = sub.presentationService || enrichment?.presentationService || sub.description || enrichment?.diversifiedDescription || selectedDomainObj.shortDescription;
                   const sections = buildAccompanimentTabSections(sub, selectedDomainObj);
 
@@ -383,7 +374,7 @@ export default function Interventions({
                               src={finalImageUrl}
                               alt={sub.title}
                               referrerPolicy="no-referrer"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain bg-slate-900"
                             />
                             <div className="absolute inset-0 bg-slate-950/60"></div>
                             

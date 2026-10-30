@@ -7,8 +7,6 @@ export const CABINET_INFO = {
   nom: "Cabinet International de Consultance, d'Expertise et de Formation",
   sigle: "CICEXF",
   statutLegal: "Société de droit ivoirien agréée pour la formation professionnelle continue et l'ingénierie de conseil",
-  agrementOfficiel: "Récépissé N°25343/GTCA/RC/2025",
-  numeroIDU: "CI-2025-0058238 N",
   directeurGeneral: {
     nom: "Dr. Kouassi Marc-Aurèle",
     titre: "Directeur Général & Associé Gérant",
@@ -132,7 +130,7 @@ export const FORMATIONS: Formation[] = [
     ],
     faq: [
       { question: "La formation est-elle accessible aux débutants en informatique ?", answer: "Absolument. Le premier module reprend les bases méthodologiques et le tableur avant d'aborder progressivement SQL et Power BI." },
-      { question: "Le certificat est-il reconnu à l'international ?", answer: "Oui, le CICEXF est agréé sous le N°25343/GTCA/RC/2025 et le certificat valorise un portfolio concret de projets réels validés par des consultants seniors." }
+      { question: "Le certificat est-il reconnu à l'international ?", answer: "Oui, le certificat valorise un portfolio concret de projets réels validés par des consultants seniors." }
     ]
   },
   {
@@ -738,7 +736,7 @@ export const GLOBAL_FAQ = [
   },
   {
     question: "Les formations donnent-elles lieu à des certificats officiels ?",
-    answer: "Oui, tous nos cycles certifiants délivrent un certificat professionnel nominatif officiel du cabinet CICEXF (agréé sous le N°25343/GTCA/RC/2025). Pour le PMP, nous délivrons l'attestation officielle de 35 heures de contact de gestion de projet requise pour l'examen mondial du PMI."
+    answer: "Oui, tous nos cycles certifiants délivrent un certificat professionnel nominatif officiel du cabinet CICEXF. Pour le PMP, nous délivrons l'attestation officielle de 35 heures de contact de gestion de projet requise pour l'examen mondial du PMI."
   },
   {
     question: "Comment demander une mission de consultance ou un devis d'expertise ?",
@@ -757,7 +755,6 @@ export function generateAdilineKnowledgeText(): string {
 
 ## 1. IDENTITÉ, COORDONNÉES ET GOUVERNANCE
 - **Nom officiel :** ${c.nom} (${c.sigle})
-- **Agrément ministériel :** ${c.agrementOfficiel}
 - **Directeur Général & Associé Gérant :** ${c.directeurGeneral.nom} (${c.directeurGeneral.contactMail})
 - **Directeur Général & Co-fondateur :** ${c.directionAssociee.nom} (${c.directionAssociee.contactMail})
 - **DGA & Chef du Pôle Formation :** ${c.directionAcademique.nom} (${c.directionAcademique.contactMail})

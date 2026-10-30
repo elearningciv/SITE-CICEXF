@@ -174,6 +174,13 @@ export default function Header({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const openFormationsView = (target: string) => {
+    setActiveTab('formations');
+    setSelectedDomainId(target);
+    setIsOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSelectResult = (tab: string, domainId: string | null) => {
     setActiveTab(tab);
     setSelectedDomainId(domainId);
@@ -342,13 +349,10 @@ export default function Header({
                       EXF
                     </span>
                   </div>
-                  <p className="text-[9px] xl:text-[10px] font-semibold text-slate-300 dark:text-slate-300 font-mono leading-none mt-0.5 whitespace-nowrap">
-                    Agrément N°25343/GTCA/RC/2025
-                  </p>
                 </div>
               </div>
 
-              {/* Boutons WhatsApp et Mail directs du CICEXF placés devant Agrément N°25343/GTCA/RC/2025 pour nous contacter directement */}
+              {/* Boutons WhatsApp et Mail directs du CICEXF pour nous contacter directement */}
               <div id="direct-header-contacts" className="flex items-center space-x-1.5 lg:space-x-2 shrink-0 mr-auto">
                 <a
                   href="https://wa.me/2250701970065"
@@ -426,18 +430,48 @@ export default function Header({
                   </div>
                 </div>
 
-                {/* Formations Nav Button */}
-                <button
-                  id="nav-formations"
-                  onClick={() => handleNavClick('formations')}
-                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
-                    activeTab === 'formations'
-                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
-                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
-                  }`}
-                >
-                  Formations
-                </button>
+                {/* Formations, with the list of domains in its dropdown */}
+                <div className="relative group/form shrink-0">
+                  <button
+                    id="nav-formations"
+                    onClick={() => handleNavClick('formations')}
+                    aria-haspopup="true"
+                    className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 flex items-center space-x-1 ${
+                      activeTab === 'formations'
+                        ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
+                        : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
+                    }`}
+                  >
+                    <span>Formations</span>
+                    <ChevronDown className="w-3 h-3 transition-transform group-hover/form:rotate-180" />
+                  </button>
+                  <div className="invisible opacity-0 group-hover/form:visible group-hover/form:opacity-100 group-focus-within/form:visible group-focus-within/form:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50">
+                    <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                      <button
+                        onClick={() => openFormationsView('subtab-certifications')}
+                        className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-emerald dark:text-orange-300 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer"
+                      >
+                        Formations certifiantes
+                      </button>
+                      <p className="px-3 pt-2 pb-2 border-t border-slate-100 dark:border-white/10 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Domaines de formation</p>
+                      {domains.map(d => (
+                        <button
+                          key={d.id}
+                          onClick={() => openFormationsView(d.id)}
+                          className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${activeTab === 'formations' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}
+                        >
+                          {d.title}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => openFormationsView('subtab-axes')}
+                        className="mt-1 w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-emerald dark:text-orange-300 border-t border-slate-100 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer"
+                      >
+                        Tous les axes de formation →
+                      </button>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Actualités, with Réalisations in its dropdown */}
                 <div className="relative group/news shrink-0">
@@ -618,6 +652,15 @@ export default function Header({
             >
               Formations
             </button>
+            {domains.map(d => (
+              <button
+                key={d.id}
+                onClick={() => openFormationsView(d.id)}
+                className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'formations' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+              >
+                ↳ {d.title}
+              </button>
+            ))}
 
             <button
               onClick={() => handleNavClick('news')}

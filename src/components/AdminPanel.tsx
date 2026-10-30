@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminTestimonials from './AdminTestimonials';
+import AdminDomains from './AdminDomains';
 import { 
   auth, db 
 } from '../firebase';
@@ -778,7 +779,7 @@ export default function AdminPanel({
 
       const lines = accSubDomainsText.split('\n').map(l => l.trim().replace(/^[-*•0-9.]+\s*/, '')).filter(Boolean);
       const subDomainsList = lines.length > 0
-        ? lines.map((title) => ({
+        ? lines.map((title) => editingAccompagnement?.subDomains?.find((sd: any) => sd.title === title) || ({
             title,
             description: `Intervention spécialisée et cadrage opérationnel sur ${title}.`,
             presentationService: accPresentationService || `Intervention spécialisée et cadrage opérationnel sur ${title}.`,
@@ -1781,15 +1782,6 @@ export default function AdminPanel({
                 </button>
               )}
 
-              {activeTab === 'accompagnements' && (
-                <button
-                  onClick={() => { resetAccompagnementForm(); setEditingAccompagnement(null); setShowAccompagnementForm(true); }}
-                  className="bg-brand-emerald hover:bg-brand-emerald-dark text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center justify-center space-x-2 cursor-pointer shadow-sm hover:scale-102 active:scale-98"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Nouvel Accompagnement</span>
-                </button>
-              )}
 
               {activeTab === 'realisations' && (
                 <button
@@ -3512,76 +3504,11 @@ export default function AdminPanel({
 
             {/* TAB ACCOMPAGNEMENTS (DOMAINES D'INTERVENTION) */}
             {activeTab === 'accompagnements' && (
-              <table className="w-full min-w-[750px] text-left border-collapse text-xs font-sans">
-                <thead>
-                  <tr className="bg-slate-100/70 dark:bg-slate-950/70 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800 font-bold">
-                    <th className="p-4">Pôle / Domaine</th>
-                    <th className="p-4">Mission Synthétique</th>
-                    <th className="p-4">Axes Spécialisés</th>
-                    <th className="p-4">Missions Types</th>
-                    <th className="p-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-850">
-                  {filteredAccompagnements.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="p-12 text-center text-slate-500 dark:text-slate-400 font-semibold">
-                        <Briefcase className="w-10 h-10 text-slate-400 mx-auto mb-2 animate-bounce" />
-                        <span>Aucun accompagnement trouvé.</span>
-                        <p className="font-normal text-[11px] text-slate-400 mt-1">Ajoutez vos pôles d'expertise et d'assistance technique pour les entreprises et collectivités.</p>
-                        <button
-                          onClick={() => { resetAccompagnementForm(); setEditingAccompagnement(null); setShowAccompagnementForm(true); }}
-                          className="mt-3 px-4 py-2 bg-brand-emerald text-white rounded-xl font-bold text-xs hover:bg-brand-emerald-dark transition-all cursor-pointer shadow-sm"
-                        >
-                          + Nouvel Accompagnement
-                        </button>
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredAccompagnements.map((acc) => (
-                      <tr key={acc.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-900/40 transition-colors">
-                        <td className="p-4 font-bold text-slate-900 dark:text-white max-w-[220px]">
-                          <div className="flex items-center space-x-2.5">
-                            <div className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-950/50 text-brand-emerald flex items-center justify-center shrink-0">
-                              <Briefcase className="w-4 h-4" />
-                            </div>
-                            <span className="truncate" title={acc.title}>{acc.title}</span>
-                          </div>
-                        </td>
-                        <td className="p-4 text-slate-600 dark:text-slate-300 font-medium max-w-[260px] truncate" title={acc.shortDescription}>
-                          {acc.shortDescription}
-                        </td>
-                        <td className="p-4">
-                          <span className="bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800 px-2 py-0.5 rounded-full font-bold text-xs">
-                            {acc.subDomains?.length || 0} axes spécialisés
-                          </span>
-                        </td>
-                        <td className="p-4 text-slate-600 dark:text-slate-400 font-medium">
-                          {acc.examples?.length || 0} missions répertoriées
-                        </td>
-                        <td className="p-4 text-center">
-                          <div className="flex items-center justify-center space-x-2">
-                            <button
-                              onClick={() => handleEditAccompagnementClick(acc)}
-                              className="p-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-brand-emerald rounded-lg transition-all cursor-pointer"
-                              title="Modifier l'accompagnement"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteAccompagnement(acc.id)}
-                              className="p-1.5 bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 hover:bg-red-600 hover:text-white rounded-lg transition-all cursor-pointer"
-                              title="Supprimer l'accompagnement"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+              <AdminDomains
+                domains={mergedAccompagnements}
+                onDeleteDomain={handleDeleteAccompagnement}
+                onAdvancedEdit={handleEditAccompagnementClick}
+              />
             )}
 
             {/* TAB REALISATIONS (PROJETS & CHANTIERS) */}

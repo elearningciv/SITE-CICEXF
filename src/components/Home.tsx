@@ -7,6 +7,7 @@ import { FORMATIONS, DOMAINS_INTERVENTION, PARTNERS, BLOG_POSTS, CABINET_INFO } 
 import { Formation, BlogPost, Partner, DomainIntervention } from '../types';
 import { trackSubscription } from '../lib/tracker';
 import Carousel from './home/Carousel';
+import { getDomainImage } from '../lib/domainImages';
 import AboutSection from './home/AboutSection';
 import { useTestimonials } from '../lib/testimonials';
 import { TrainingModeModal, TrainingModeId } from './home/TrainingModes';
@@ -26,9 +27,6 @@ interface HomeProps {
 
 const unsplash = (id: string, w = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=75`;
 
-const DOMAIN_ICONS: Record<string, typeof GraduationCap> = {
-  GraduationCap, TrendingUp, Cpu, Compass, ShieldCheck, Target, BookOpen, Layers
-};
 
 // Placeholder text typed while testing in the admin (e.g. "XXXX", "AAAA") must not be shown to visitors
 const isPlaceholder = (text?: string) => !text || /(.)\1{7,}/i.test(text.replace(/\s/g, ''));
@@ -226,7 +224,7 @@ export default function Home({
       </section>
 
       {/* 2. Three value-proposition picture cards */}
-      <section id="value-cards" className="py-14 sm:py-16 bg-white dark:bg-slate-950">
+      <section id="value-cards" className="py-8 sm:py-10 bg-white dark:bg-slate-950">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-3 lg:px-8">
           {valueCards.map(card => (
             <button key={card.title} onClick={() => goTo(card.tab)} className="group text-left cursor-pointer">
@@ -244,14 +242,14 @@ export default function Home({
       </section>
 
       {/* 3. Who we are */}
-      <AboutSection goTo={goTo} />
+      <AboutSection goTo={goTo} poles={currentDomains} onOpenDomain={openDomain} />
 
       {/* 4. Partners carousel (hidden while no partner is published) */}
       {partners.length > 0 && (
-      <section id="partners-section" className="py-14 bg-white dark:bg-slate-950">
+      <section id="partners-section" className="py-10 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Nos partenaires</SectionTitle>
-          <div className="mt-10 px-6">
+          <div className="mt-8 px-6">
             <Carousel label="Nos partenaires" perView={{ base: 2, sm: 3, lg: 5 }} autoplay={2500} showDots={false} loop>
               {partners.map(p => (
                 <div key={p.id} className="flex h-28 flex-col items-center justify-center rounded-xl bg-white px-4 text-center shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
@@ -266,7 +264,7 @@ export default function Home({
       )}
 
       {/* 5. Training approach tiles */}
-      <section id="why-choose-us" className="py-16 sm:py-20 bg-slate-100 dark:bg-slate-900">
+      <section id="why-choose-us" className="py-10 sm:py-12 bg-slate-100 dark:bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Notre approche de formation</SectionTitle>
           <div className="mt-10 grid grid-cols-1 overflow-hidden rounded-xl md:grid-cols-3">
@@ -288,10 +286,10 @@ export default function Home({
       </section>
 
       {/* 6. Course catalogue carousel (live content) */}
-      <section id="recent-news-preview" className="py-16 sm:py-20 bg-white dark:bg-slate-950">
+      <section id="recent-news-preview" className="py-10 sm:py-12 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Nos formations certifiantes</SectionTitle>
-          <div className="mt-10 px-6">
+          <div className="mt-8 px-6">
             <Carousel label="Nos formations certifiantes" perView={{ base: 1, sm: 2, lg: 3 }} autoplay={6000}>
               {formations.map(f => (
                 <article key={f.id} className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
@@ -322,12 +320,12 @@ export default function Home({
 
       {/* 7. Testimonials carousel on photo background */}
       {testimonials.length > 0 && (
-      <section id="testimonials-carousel" className="relative isolate overflow-hidden py-16 sm:py-20">
+      <section id="testimonials-carousel" className="relative isolate overflow-hidden py-10 sm:py-12">
         <img src={unsplash('photo-1523580494863-6f3031224c94', 1600)} alt="" referrerPolicy="no-referrer" className="absolute inset-0 -z-10 h-full w-full object-cover" />
         <div className="absolute inset-0 -z-10 bg-[#001a33]/80" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-display text-2xl font-extrabold text-white sm:text-3xl">Ce que disent nos participants…</h2>
-          <div className="mt-10 px-6">
+          <div className="mt-8 px-6">
             <Carousel label="Témoignages" perView={{ base: 1, sm: 2, lg: 3 }} autoplay={5000} tone="dark" loop>
               {testimonials.map(t => (
                 <figure key={t.id} className="flex h-full flex-col items-center rounded-xl bg-white p-7 text-center shadow-xl">
@@ -350,24 +348,23 @@ export default function Home({
       )}
 
       {/* 8. Expertise areas carousel */}
-      <section id="business-poles" className="py-16 sm:py-20 bg-slate-100 dark:bg-slate-900">
+      <section id="business-poles" className="py-10 sm:py-12 bg-slate-100 dark:bg-slate-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Nos pôles d'expertise</SectionTitle>
-          <div className="mt-10 px-6">
+          <div className="mt-8 px-6">
             <Carousel label="Nos pôles d'expertise" perView={{ base: 1, sm: 2, lg: 4 }} autoplay={4000} loop>
-              {currentDomains.map(d => {
-                const Icon = DOMAIN_ICONS[d.iconName] || Layers;
-                return (
-                  <button key={d.id} onClick={() => openDomain(d.id)} className="group flex h-full w-full flex-col rounded-xl bg-white p-6 text-left shadow-sm ring-1 ring-slate-200 transition-all hover:-translate-y-1 hover:shadow-lg dark:bg-slate-950 dark:ring-slate-800 cursor-pointer">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#002447] text-amber-300 transition-colors group-hover:bg-brand-emerald group-hover:text-white">
-                      <Icon className="w-6 h-6" />
-                    </span>
-                    <h3 className="mt-4 font-display text-base font-bold leading-snug text-slate-900 dark:text-white">{d.title}</h3>
-                    {d.subDomains?.length > 0 && <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">{d.subDomains.length} domaines d'intervention</p>}
-                    <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-bold text-brand-emerald dark:text-orange-300">Découvrir <ArrowRight className="w-4 h-4" /></span>
-                  </button>
-                );
-              })}
+              {currentDomains.map(d => (
+                <button key={d.id} onClick={() => openDomain(d.id)} className="group flex h-full w-full flex-col overflow-hidden rounded-xl bg-white text-left shadow-sm ring-1 ring-slate-200 transition-all hover:-translate-y-1 hover:shadow-lg dark:bg-slate-950 dark:ring-slate-800 cursor-pointer" aria-label={`Voir le domaine : ${d.title}`}>
+                  <span className="block aspect-[4/3] overflow-hidden bg-slate-200 dark:bg-slate-800">
+                    <img src={getDomainImage(d)} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  </span>
+                  <span className="flex flex-1 flex-col p-5">
+                    <span className="font-display text-base font-bold leading-snug text-slate-900 dark:text-white">{d.title}</span>
+                    {d.subDomains?.length > 0 && <span className="mt-1.5 text-xs text-slate-600 dark:text-slate-400">{d.subDomains.length} axes d'intervention</span>}
+                    <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-bold text-brand-emerald dark:text-orange-300">Voir le détail <ArrowRight className="w-4 h-4" /></span>
+                  </span>
+                </button>
+              ))}
             </Carousel>
           </div>
         </div>
@@ -386,7 +383,7 @@ export default function Home({
       </section>
 
       {/* 10. Photo gallery carousel */}
-      <section id="social-proof-band" className="py-16 sm:py-20 bg-white dark:bg-slate-950">
+      <section id="social-proof-band" className="py-10 sm:py-12 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle>Nos moments forts en images</SectionTitle>
         </div>
@@ -403,7 +400,7 @@ export default function Home({
       </section>
 
       {/* 12. Newsletter */}
-      <section id="newsletter" className="py-16 bg-white dark:bg-slate-950">
+      <section id="newsletter" className="py-10 bg-white dark:bg-slate-950">
         <div className="mx-auto max-w-3xl px-4 text-center sm:px-6">
           <Mail className="mx-auto w-9 h-9 text-brand-emerald dark:text-orange-300" />
           <h2 className="mt-3 font-display text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">Inscrivez-vous à notre lettre d'information</h2>

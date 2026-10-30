@@ -8,6 +8,7 @@ import {
   UserCheck, ShieldCheck
 } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION } from '../data';
+import { getDomainImage } from '../lib/domainImages';
 import { Formation, DomainIntervention, SubDomain } from '../types';
 import { saveProspect } from '../lib/prospects';
 import InteractiveSectionTabs from './InteractiveSectionTabs';
@@ -408,7 +409,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
               src={sub.imageUrl}
               alt={sub.title}
               referrerPolicy="no-referrer"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-slate-900"
             />
             <div className="absolute inset-0 bg-slate-950/60"></div>
             <div className="absolute bottom-5 left-6 right-6 flex flex-col space-y-2 z-10">
@@ -458,7 +459,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
             src={sub.imageUrl}
             alt={sub.title}
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
+            className="w-full h-full object-contain bg-slate-900 group-hover:scale-103 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-slate-950/60"></div>
           <div className="absolute bottom-3 left-3 right-3 flex flex-col space-y-1">
@@ -754,18 +755,9 @@ interface FormationsProps {
   setActiveTab: (tab: string) => void;
   defaultSubTab?: 'domains' | 'axes' | 'certifications';
   formations?: Formation[];
+  domains?: DomainIntervention[];
 }
 
-const domainIllustrations: Record<string, string> = {
-  'ing-formation': 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80',
-  'ing-financiere': 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?auto=format&fit=crop&w=1200&q=80',
-  'ing-informatique': 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
-  'ing-territoriale': 'https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80',
-  'ing-qhse': 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80',
-  'ing-audit': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80',
-  'ing-projets': 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80',
-  'ing-accompagnement': 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80',
-};
 
 const ROMAN_THEMATICS = [
   "I. INGÉNIERIE DE FORMATION ET DE RENFORCEMENT DE CAPACITÉS",
@@ -801,14 +793,16 @@ export const COUNTRIES_LIST = [
   { code: 'AUTRE', name: 'Autre pays', dial: '+', flag: '🌐' },
 ];
 
-export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS }: FormationsProps) {
+export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS, domains }: FormationsProps) {
+  // Domains managed in the admin (falls back to the built-in list)
+  const allDomains = domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION;
   // Determine if outer routing requires a specific tab or selection
   const matchedFormation = selectedDomainId
     ? formations.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
     : null;
   const isOuterCert = !!matchedFormation;
   const matchedOuterDomain = selectedDomainId && !matchedFormation
-    ? DOMAINS_INTERVENTION.find(d => d.id === selectedDomainId)
+    ? allDomains.find(d => d.id === selectedDomainId)
     : null;
 
   // Active sub-tab state: 'domains', 'axes', or 'certifications'
@@ -865,7 +859,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
         setSelectedFormation(foundFormation);
         setSelectedDomainObj(null);
       } else if (selectedDomainId) {
-        const found = DOMAINS_INTERVENTION.find(d => d.id === selectedDomainId);
+        const found = allDomains.find(d => d.id === selectedDomainId);
         if (found) {
           setActiveSubTab('domains');
           setSelectedDomainObj(found);
@@ -881,7 +875,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
       const customEvent = e as CustomEvent<{ domainId: string; index: number }>;
       if (customEvent && customEvent.detail) {
         const { domainId, index } = customEvent.detail;
-        const found = DOMAINS_INTERVENTION.find(d => d.id === domainId);
+        const found = allDomains.find(d => d.id === domainId);
         if (found) {
           setActiveSubTab('domains');
           setSelectedDomainObj(found);
@@ -1544,7 +1538,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             {!selectedDomainObj ? (
               <div className="space-y-8 animate-in fade-in duration-300">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {DOMAINS_INTERVENTION.map((domain, index) => {
+                  {allDomains.map((domain, index) => {
                     // Skip or include all based on index
                     const displayNum = `0${index + 1}`;
                     return (
@@ -1557,10 +1551,10 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         {/* Domain Cover Image */}
                         <div className="relative h-48 w-full overflow-hidden">
                           <img
-                            src={domain.subDomains[0]?.imageUrl || "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80"}
+                            src={getDomainImage(domain)}
                             alt={domain.title}
                             referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500"
                           />
                           <div className="absolute inset-0 bg-slate-950/60"></div>
                           
@@ -1630,10 +1624,10 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                     {/* Beautiful Modern Domain Hero Header with top image banner */}
                     <div className="relative h-64 sm:h-80 rounded-3xl overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800">
                       <img
-                        src={domainIllustrations[selectedDomainObj.id] || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1200&q=80'}
+                        src={getDomainImage(selectedDomainObj)}
                         alt={selectedDomainObj.title}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain bg-slate-900"
                       />
                       <div className="absolute inset-0 bg-slate-950/60 flex flex-col justify-end p-6 sm:p-10 space-y-3">
                         <div className="inline-flex items-center space-x-2 bg-brand-emerald/25 text-brand-emerald-light border border-brand-emerald/35 text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest self-start">
@@ -1710,7 +1704,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                     src={sub.imageUrl}
                                     alt={sub.title}
                                     referrerPolicy="no-referrer"
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                                    className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500 ease-out"
                                   />
                                   <div className="absolute inset-0 bg-slate-950/60"></div>
                                   <div className="absolute bottom-3 left-4 right-4 flex flex-col space-y-1 z-10">
@@ -1891,7 +1885,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 <button
                   onClick={() => {
                     const titles: string[] = [];
-                    DOMAINS_INTERVENTION.forEach(d => {
+                    allDomains.forEach(d => {
                       d.subDomains.forEach(sub => titles.push(sub.title));
                     });
                     expandAllAxes(titles);
@@ -1934,7 +1928,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
 
             {/* Directory Grid/List of Thematics */}
             <div className="space-y-10">
-              {DOMAINS_INTERVENTION.map((domain, domainIdx) => {
+              {allDomains.map((domain, domainIdx) => {
                 const romanTitle = ROMAN_THEMATICS[domainIdx] || domain.title;
                 
                 // Filter sub-domains (axes) based on search query
@@ -2061,7 +2055,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             </div>
 
             {/* Zero matching axes state */}
-            {DOMAINS_INTERVENTION.every(domain => 
+            {allDomains.every(domain => 
               domain.subDomains.filter(sub => {
                 if (!axesSearchQuery) return true;
                 const query = axesSearchQuery.toLowerCase();
@@ -2158,7 +2152,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                           <span>S'inscrire</span>
                         </button>
                         <span className="text-[11px] text-slate-400">
-                          Agrément N°25343/GTCA/RC/2025 &bull; Traitement sous 24h
+                          Traitement sous 24h
                         </span>
                       </div>
                     </div>
@@ -2168,7 +2162,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                         src={selectedFormation.featuredImage}
                         alt={selectedFormation.title}
                         referrerPolicy="no-referrer"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain bg-slate-900"
                       />
                     </div>
                   </div>
@@ -2243,7 +2237,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             src={formation.featuredImage}
                             alt={formation.title}
                             referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                            className="w-full h-full object-contain bg-slate-900 group-hover:scale-105 transition-transform duration-500 ease-out"
                           />
                           <div className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full uppercase">
                             {formation.domain}

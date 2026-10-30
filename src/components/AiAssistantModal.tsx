@@ -30,7 +30,7 @@ export default function AiAssistantModal({ isOpen, onClose, onNavigate }: AiAssi
 Je maîtrise l'intégralité des informations publiées sur l'ensemble des rubriques et onglets du cabinet :
 • **Onglet Formations :** Programmes détaillés (Data Analyst, PMP 35 PDU, Auditeur QHSE ISO, Finance & Modélisation Excel, SIG QGIS, Gestion des équipes), durées, modules et tarifs officiels en FCFA.
 • **Onglet Accompagnement :** Les 8 grands pôles d'ingénierie et 34 sous-domaines de consultance de haut niveau.
-• **Onglet Qui sommes-nous :** Agrément officiel N°25343/GTCA/RC/2025, Direction Générale (Dr. Kouassi Marc-Aurèle) et équipe de direction.
+• **Onglet Qui sommes-nous :** Direction Générale (Dr. Kouassi Marc-Aurèle) et équipe de direction.
 • **Onglet Réalisations :** Les grands chantiers (Secteur Énergie, Cadastre métropolitain, 150 cadres humanitaires formés) et chiffres d'impact.
 • **Onglet Actualités :** Articles techniques de référence (KoboCollect, ISO 9001 v2015, SIG municipal) et calendrier des rentrées.
 • **Onglet Contact & Inscription :** WhatsApp direct (+225 07 01 97 00 65), adresses à Cocody Angré 8e Tranche, horaires et paiements échelonnés.
@@ -210,9 +210,6 @@ Posez directement votre question ci-dessous pour obtenir immédiatement les **in
                 </h3>
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-black uppercase tracking-wider bg-amber-400 text-slate-900 shadow-xs">
                   Expertise Tous Onglets
-                </span>
-                <span className="hidden md:inline-block text-[11px] text-brand-emerald-light font-mono font-bold">
-                  Agrément N°25343/GTCA/RC/2025
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-slate-200 font-medium mt-0.5">
@@ -477,7 +474,6 @@ Consultez l'onglet **Contact** pour nous rendre visite ou échanger en direct.`;
   // 5. SPECIFIC QUESTIONS ON MINISTERIAL AGREEMENT / STATUT
   if (q.includes('agrément') || q.includes('agrement') || q.includes('autorisation') || q.includes('licence') || q.includes('légal') || q.includes('statut juridique')) {
     return `**POINTS ESSENTIELS [Onglet Qui sommes-nous & Accueil] :**
-• **Agrément officiel de l'État :** Société agréée sous le numéro **N°25343/GTCA/RC/2025** en République de Côte d'Ivoire.
 • **Dénomination sociale :** Cabinet International de Consultance, d'Expertise et de Formation (CICEXF).
 • **Direction Générale :** Dr. Kouassi Marc-Aurèle, Directeur Général & Associé Gérant.
 • **Siège social :** Abidjan, Cocody Angré 8e Tranche.
@@ -508,7 +504,6 @@ Les chiffres clés audités publiés sur notre site officiel sont :
 • **+150** Missions d'envergure réalisées avec succès
 • **+50** Partenaires institutionnels, ministères et bailleurs (Banque Mondiale, BAD, AFD, PNUD, CEDEAO)
 • **95%** Taux de satisfaction globale des participants audités
-• **Agrément d'État :** N°25343/GTCA/RC/2025
 • **6 Engagements Qualité :** Expertise internationale, consultants certifiés, approche pratique, suivi personnalisé 3 mois, innovation numérique & IA, culture de l'excellence.
 
 Consultez l'onglet **Accueil** pour en savoir plus.`;

@@ -454,7 +454,7 @@ export default function App() {
           />
         );
       case 'formations':
-        return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} />;
+        return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} domains={accompagnements} />;
       case 'realisations':
         return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} projects={realisations} />;
       case 'news':

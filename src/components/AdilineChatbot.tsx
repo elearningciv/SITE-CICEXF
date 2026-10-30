@@ -125,7 +125,7 @@ Je suis à votre entière disposition pour vous renseigner avec précision sur :
 
 Comment puis-je vous accompagner aujourd'hui ?`,
       timestamp: new Date(),
-      sources: ["Site officiel CICEXF", "Catalogue des formations 2026", "Agrément N°25343/GTCA/RC/2025"]
+      sources: ["Site officiel CICEXF", "Catalogue des formations 2026"]
     }
   ]);
 
@@ -1007,13 +1007,13 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <div 
                   className={`p-3.5 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
                     msg.role === 'user'
-                      ? 'bg-brand-blue text-white rounded-br-none'
+                      ? 'bg-blue-50 text-slate-900 border border-blue-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 rounded-br-none'
                       : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200/80 dark:border-slate-800'
                   }`}
                 >
                   {/* File badge if message contained non-audio attachment */}
                   {msg.attachmentName && !msg.audioUrl && (
-                    <div className="mb-2 p-2 rounded-lg bg-white/15 dark:bg-white/10 flex items-center space-x-2 text-xs font-semibold">
+                    <div className="mb-2 p-2 rounded-lg bg-white/70 dark:bg-white/10 flex items-center space-x-2 text-xs font-semibold">
                       <FileText className="w-4 h-4" />
                       <span className="truncate">{msg.attachmentName}</span>
                     </div>
@@ -1021,8 +1021,8 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                   {/* Audio player if voice note was recorded */}
                   {msg.audioUrl && (
-                    <div className="mb-2.5 p-2 rounded-xl bg-white/20 dark:bg-slate-800/80 border border-white/20 dark:border-slate-700 space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] font-semibold text-white/90 dark:text-slate-200">
+                    <div className="mb-2.5 p-2 rounded-xl bg-white/70 dark:bg-slate-800/80 border border-blue-200 dark:border-slate-700 space-y-1.5">
+                      <div className="flex items-center justify-between text-[11px] font-semibold text-slate-700 dark:text-slate-200">
                         <div className="flex items-center space-x-1.5">
                           <Mic className="w-3.5 h-3.5 text-rose-300" />
                           <span>{msg.attachmentName || 'Note vocale'}</span>

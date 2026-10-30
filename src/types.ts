@@ -37,6 +37,7 @@ export interface DomainIntervention {
   softwareTools?: SoftwareTool[]; // 7. Logiciels impliqués avec icônes
   software?: string[];
   iconName: string;
+  imageUrl?: string;
   subDomains: SubDomain[];
   examples: string[];
   createdAt?: any;

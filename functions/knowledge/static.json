@@ -4,7 +4,6 @@
   "nom": "Cabinet International de Consultance, d'Expertise et de Formation",
   "sigle": "CICEXF",
   "statutLegal": "Société de droit ivoirien agréée pour la formation professionnelle continue et l'ingénierie de conseil",
-  "agrementOfficiel": "Récépissé N°25343/GTCA/RC/2025",
   "directeurGeneral": {
    "nom": "Dr. Kouassi Marc-Aurèle",
    "titre": "Directeur Général & Associé Gérant",
@@ -226,7 +225,7 @@
     },
     {
      "question": "Le certificat est-il reconnu à l'international ?",
-     "answer": "Oui, le CICEXF est agréé sous le N°25343/GTCA/RC/2025 et le certificat valorise un portfolio concret de projets réels validés par des consultants seniors."
+     "answer": "Oui, le certificat valorise un portfolio concret de projets réels validés par des consultants seniors."
     }
    ]
   },
@@ -1688,7 +1687,7 @@
   },
   {
    "question": "Les formations donnent-elles lieu à des certificats officiels ?",
-   "answer": "Oui, tous nos cycles certifiants délivrent un certificat professionnel nominatif officiel du cabinet CICEXF (agréé sous le N°25343/GTCA/RC/2025). Pour le PMP, nous délivrons l'attestation officielle de 35 heures de contact de gestion de projet requise pour l'examen mondial du PMI."
+   "answer": "Oui, tous nos cycles certifiants délivrent un certificat professionnel nominatif officiel du cabinet CICEXF. Pour le PMP, nous délivrons l'attestation officielle de 35 heures de contact de gestion de projet requise pour l'examen mondial du PMI."
   },
   {
    "question": "Comment demander une mission de consultance ou un devis d'expertise ?",

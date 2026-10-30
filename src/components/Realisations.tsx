@@ -223,7 +223,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
                 style={{ animationDelay: `${Math.min(i, 8) * 70}ms` }}
               >
                 <button onClick={() => setOpenId(p.id)} className="relative aspect-[16/10] overflow-hidden bg-slate-200 cursor-pointer" aria-label={`Voir l'étude de cas : ${p.title}`}>
-                  <img src={p.imageUrl} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <img src={p.imageUrl} alt="" loading="lazy" referrerPolicy="no-referrer" className="h-full w-full object-contain bg-slate-900 transition-transform duration-700 group-hover:scale-110" />
                   <span className="absolute left-3 top-3 rounded-full bg-[#002447] px-3 py-1 text-xs font-bold text-white">{p.category}</span>
                 </button>
                 <div className="flex flex-1 flex-col p-6">
@@ -350,7 +350,7 @@ export default function Realisations({ selectedDomainId, setSelectedDomainId, pr
             className="relative flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl dark:bg-slate-950 sm:rounded-3xl animate-[popIn_.3s_ease-out]"
           >
             <div className="relative h-48 shrink-0 sm:h-64">
-              <img src={openProject.imageUrl} alt="" referrerPolicy="no-referrer" className="h-full w-full object-cover" />
+              <img src={openProject.imageUrl} alt="" referrerPolicy="no-referrer" className="h-full w-full object-contain bg-slate-900" />
               <div className="absolute inset-0 bg-[#001a33]/65" />
               <button onClick={closeProject} aria-label="Fermer" className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-900 hover:bg-white cursor-pointer">
                 <X className="w-5 h-5" />

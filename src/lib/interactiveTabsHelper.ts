@@ -203,8 +203,7 @@ export function buildFormationTabSections(
       intro: 'Conditions d\'admission, souplesse d\'accès et calendrier officiel :',
       items: accessList,
       extraDetails: [
-        { label: 'Durée', value: formation.duration || '6 semaines' },
-        { label: 'Agrément', value: 'Récépissé N°25343/GTCA/RC/2025' }
+        { label: 'Durée', value: formation.duration || '6 semaines' }
       ]
     },
     {
@@ -435,8 +434,7 @@ export function buildAccompanimentTabSections(
         "Facilités de paiement pour les partenariats pluriannuels et les conventions-cadres institutionnelles."
       ],
       extraDetails: [
-        { label: 'Proposition', value: 'Devis sur-mesure sous 48h' },
-        { label: 'Agrément', value: 'Récépissé N°25343/GTCA/RC/2025' }
+        { label: 'Proposition', value: 'Devis sur-mesure sous 48h' }
       ]
     },
     {

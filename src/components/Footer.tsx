@@ -70,15 +70,7 @@ export default function Footer({
                 CIC<span className="text-yellow-400">EXF</span>
               </span>
             </div>
-
-            {/* Références Officielles du Cabinet et Numéro d'Agrément */}
             <div className="pt-1 text-xs space-y-1 font-sans">
-              <div className="flex items-center space-x-1.5 flex-wrap">
-                <span className="text-yellow-400 font-extrabold uppercase tracking-wide">Agrément Officiel :</span>
-                <span className="text-white font-extrabold font-mono bg-black/25 px-1.5 py-0.5 rounded border border-white/30 text-xs">
-                  N°25343/GTCA/RC/2025
-                </span>
-              </div>
               <p className="text-white text-xs font-medium">
                 Cocody Palmeraie
               </p>
@@ -221,13 +213,11 @@ export default function Footer({
 
         {/* Legal Mentions and Certifications Footer */}
         <div className="border-t border-white/20 pt-2.5 mt-2 flex flex-col md:flex-row justify-between items-center text-xs text-white font-medium gap-1.5">
-          <p className="text-white">© {new Date().getFullYear()} CICEXF &middot; Agrément N°25343/GTCA/RC/2025. Tous droits réservés.</p>
+          <p className="text-white">© {new Date().getFullYear()} CICEXF. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end text-white">
             <a href="#mentions" className="hover:text-yellow-300 transition-colors text-white">Mentions Légales</a>
             <span className="text-white/40">|</span>
             <a href="#confidentiality" className="hover:text-yellow-300 transition-colors text-white">Politique de Confidentialité</a>
-            <span className="text-white/40">|</span>
-            <span className="text-yellow-400 font-semibold">Agrément N°25343/GTCA/RC/2025</span>
             <span className="text-white/40">|</span>
             {isAdminLoggedIn ? (
               <div className="flex items-center space-x-1.5">
