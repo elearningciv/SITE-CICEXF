@@ -12,6 +12,7 @@ import { CABINET_INFO, FORMATIONS, TEAM_MEMBERS } from '../knowledgeBase';
 import { saveProspect } from '../lib/prospects';
 import { getCatalogueMeta, useCatalogueMeta } from '../lib/catalogue';
 import CatalogueActions from './CatalogueActions';
+import { useRegistration, REGISTRATION_RE, RegistrationFormation, ProformaAttachment } from './adiline/useRegistration';
 
 // Visitor asks for the catalogue / brochure (any phrasing)
 const CATALOGUE_RE = /catalogu|brochure|plaquette|liste (compl[eè]te )?des formations/i;
@@ -46,12 +47,16 @@ export interface ChatMessage {
   audioUrl?: string; // Voice note playback URL
   feedback?: 'like' | 'dislike';
   showCatalogue?: boolean; // the training catalogue PDF is attached to this answer
+  choices?: string[]; // answer buttons (guided registration)
+  proforma?: ProformaAttachment; // proforma invoice produced at the end of a registration
 }
 
 interface AdilineChatbotProps {
   isOpen: boolean;
   onClose: () => void;
   onNavigateTab?: (tab: string, itemId?: string) => void;
+  /** Formations as published on the site (admin content included) */
+  formations?: RegistrationFormation[];
 }
 
 function formatDuration(totalSeconds: number): string {
@@ -117,7 +122,7 @@ function FormattedMessageText({ text }: { text: string }) {
   );
 }
 
-export default function AdilineChatbot({ isOpen, onClose, onNavigateTab }: AdilineChatbotProps) {
+export default function AdilineChatbot({ isOpen, onClose, onNavigateTab, formations }: AdilineChatbotProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
@@ -183,6 +188,16 @@ Comment puis-je vous accompagner aujourd'hui ?`,
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { meta: catalogueMeta } = useCatalogueMeta();
+
+  // Guided registration + proforma, with the formations published on the site
+  const registration = useRegistration(
+    (formations && formations.length ? formations : FORMATIONS).filter(f => f.title && !/(.)\1{7,}/i.test(f.title.replace(/\s/g, ''))),
+    (message) => setMessages(prev => [...prev, message as ChatMessage])
+  );
+  const startRegistration = (requestText = '') => {
+    setShowLeadModal(false);
+    registration.start(requestText);
+  };
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll on new message
@@ -658,6 +673,14 @@ Comment puis-je vous accompagner aujourd'hui ?`,
 
     setMessages(prev => [...prev, userMessage]);
     setInputText('');
+
+    // Guided registration: answers stay in the browser, no AI call
+    if (!attachedFile && registration.handle(query)) return;
+    if (!attachedFile && query.length < 120 && REGISTRATION_RE.test(query) && !CATALOGUE_RE.test(query)) {
+      registration.start(query);
+      return;
+    }
+
     const currentAttachment = attachedFile;
     setAttachedFile(null);
     setIsStreaming(true);
@@ -1004,11 +1027,11 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
           </button>
           
           <button
-            onClick={() => setShowLeadModal(true)}
+            onClick={() => startRegistration()}
             className="flex items-center justify-center space-x-1 py-1.5 px-2.5 rounded-lg bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-2xs hover:bg-emerald-50 dark:hover:bg-slate-750 transition-all cursor-pointer text-[11px]"
           >
             <Calculator className="w-3.5 h-3.5" />
-            <span>Demander un devis</span>
+            <span>S'inscrire · proforma</span>
           </button>
 
           <button
@@ -1069,6 +1092,40 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                   {/* Render text with clean paragraphs, parsed bolding and bullet styling */}
                   <FormattedMessageText text={msg.text} />
+
+                  {/* Proforma invoice produced by the guided registration */}
+                  {msg.proforma && (
+                    <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800/60">
+                      <p className="flex items-center gap-2 text-xs font-bold text-slate-900 dark:text-white">
+                        <FileText className="w-4 h-4 shrink-0 text-red-700 dark:text-red-300" />
+                        <span className="truncate">Proforma n° {msg.proforma.number} · {msg.proforma.total}</span>
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <a href={msg.proforma.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-900 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-900 dark:text-white">
+                          Ouvrir
+                        </a>
+                        <a href={msg.proforma.url} download={msg.proforma.fileName} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-emerald px-3 py-2 text-xs font-bold text-white hover:bg-brand-emerald-dark">
+                          Télécharger la proforma (PDF)
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Answer buttons of the guided registration (only on the latest message) */}
+                  {msg.choices && msg.choices.length > 0 && msg.id === messages[messages.length - 1]?.id && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {msg.choices.map(choice => (
+                        <button
+                          key={choice}
+                          type="button"
+                          onClick={() => handleSendMessage(choice)}
+                          className="rounded-full border border-brand-blue/30 bg-white px-3 py-1.5 text-left text-xs font-semibold text-brand-blue hover:bg-blue-50 dark:border-sky-400/30 dark:bg-slate-900 dark:text-sky-300 dark:hover:bg-slate-800 cursor-pointer"
+                        >
+                          {choice}
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Training catalogue attached to the answer */}
                   {msg.showCatalogue && catalogueMeta && (
@@ -1143,10 +1200,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                                   Voir la fiche
                                 </button>
                                 <button
-                                  onClick={() => {
-                                    setLeadFormation(card.title);
-                                    setShowLeadModal(true);
-                                  }}
+                                  onClick={() => startRegistration(card.title)}
                                   className="flex-1 py-1 px-2 rounded-lg bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition-colors text-center"
                                 >
                                   S'inscrire

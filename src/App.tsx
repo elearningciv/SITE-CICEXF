@@ -731,6 +731,7 @@ export default function App() {
           <AdilineChatbot
             isOpen={isAiModalOpen}
             onClose={() => setIsAiModalOpen(false)}
+            formations={formations}
             onNavigateTab={(tab, itemId) => {
               handleTabChange(tab);
               if (itemId && tab === 'formations') {
