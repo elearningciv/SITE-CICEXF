@@ -1,5 +1,6 @@
-import { collection, addDoc, doc, setDoc, getDocs, query, where, Timestamp } from 'firebase/firestore';
-import { db } from '../firebase';
+// Firebase is loaded on demand so it never delays the first display of the site
+const loadDb = () => Promise.all([import('../firebase'), import('firebase/firestore')])
+  .then(([{ db }, firestore]) => ({ db, ...firestore }));
 
 // Helper to generate a simple unique ID
 function generateId(): string {
@@ -43,6 +44,7 @@ export async function trackVisit(page: string) {
     const sessionId = getSessionId();
     const email = getVisitorEmail();
     const userAgent = navigator.userAgent;
+    const { db, collection, addDoc, doc, setDoc, Timestamp } = await loadDb();
 
     // Log the visit to Firestore
     await addDoc(collection(db, 'visits'), {
@@ -75,6 +77,7 @@ export async function trackSubscription(email: string, isSubscribed: boolean = t
     
     // Save locally
     setVisitorEmail(cleanEmail);
+    const { db, doc, setDoc, Timestamp } = await loadDb();
 
     // Save to Firestore subscribers collection
     await setDoc(doc(db, 'subscribers', cleanEmail), {

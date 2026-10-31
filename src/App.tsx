@@ -1,14 +1,10 @@
-import { useState, useEffect, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import { isAuthorizedAdminEmail } from './lib/adminAuth';
-import AdminLoginModal from './components/AdminLoginModal';
 import adilineAvatar from './assets/images/adiline_avatar_1792359280949.webp';
 import { trackVisit } from './lib/tracker';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { auth, db } from './firebase';
-import { collection, onSnapshot, doc, updateDoc } from 'firebase/firestore';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS, PROJECTS } from './data';
 import { Formation, DomainIntervention, Project, BlogPost } from './types';
@@ -64,6 +60,13 @@ const Contact = lazy(() => import('./components/Contact'));
 const Partners = lazy(() => import('./components/Partners'));
 const AdilineChatbot = lazy(() => import('./components/AdilineChatbot'));
 const AdminPanel = lazy(() => import('./components/AdminPanel'));
+const AdminLoginModal = lazy(() => import('./components/AdminLoginModal'));
+
+// Firebase is downloaded after the first render (it is the heaviest part of the site)
+const loadFirebase = () => import('./firebase');
+const loadAuth = () => import('./firebaseAuth');
+// Set once an administrator has signed in on this browser: only then is Firebase Auth loaded on every visit
+const ADMIN_DEVICE_KEY = 'cicexf_admin_device';
 
 const PageLoader = ({ label = 'Chargement…' }: { label?: string }) => (
   <div className="min-h-[60vh] flex items-center justify-center text-sm text-slate-500">{label}</div>
@@ -94,6 +97,9 @@ export default function App() {
   }, []);
   
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(false);
+  // Read by the Firestore listeners (set up once) to know whether title clean-ups may be saved
+  const isAdminRef = useRef(false);
+  useEffect(() => { isAdminRef.current = isAdminLoggedIn; }, [isAdminLoggedIn]);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState<boolean>(false);
   
   // Helper to read cached deleted items instantly (prevents flicker of deleted static items)
@@ -184,6 +190,11 @@ export default function App() {
       setPartners(mergedPart.filter(p => !deletedMap.partners.includes(p.id)));
     };
 
+    let cancelled = false;
+    const unsubscribers: Array<() => void> = [];
+    Promise.all([loadFirebase(), import('firebase/firestore')]).then(([{ db }, { collection, onSnapshot, doc, updateDoc }]) => {
+    if (cancelled) return;
+
     // Listen to deleted items
     const unsubDeleted = onSnapshot(doc(db, 'app_settings', 'deleted_items'), (snapshot) => {
       if (snapshot.exists()) {
@@ -207,7 +218,7 @@ export default function App() {
     const unsubFormations = onSnapshot(collection(db, 'formations'), (snapshot) => {
       latestDbFormations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       // Persisting cleaned titles requires admin write access
-      if (isAuthorizedAdminEmail(auth.currentUser?.email)) snapshot.docs.forEach(async (d) => {
+      if (isAdminRef.current) snapshot.docs.forEach(async (d) => {
         const data = d.data();
         if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
           const cleaned = cleanEntityTitle(data.title);
@@ -239,7 +250,7 @@ export default function App() {
 
     const unsubBlog = onSnapshot(collection(db, 'blog_posts'), (snapshot) => {
       latestDbBlog = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      if (isAuthorizedAdminEmail(auth.currentUser?.email)) snapshot.docs.forEach(async (d) => {
+      if (isAdminRef.current) snapshot.docs.forEach(async (d) => {
         const data = d.data();
         if (data.title && /Nouvelle\s+Formation\s+d['’]Excellence/i.test(data.title)) {
           const cleaned = cleanEntityTitle(data.title);
@@ -262,29 +273,46 @@ export default function App() {
       console.error("Error syncing partners:", err);
     });
 
+    unsubscribers.push(unsubDeleted, unsubFormations, unsubAccomp, unsubReal, unsubBlog, unsubPartners);
+    }).catch((err) => console.error('Firebase loading error:', err));
+
     return () => {
-      unsubDeleted();
-      unsubFormations();
-      unsubAccomp();
-      unsubReal();
-      unsubBlog();
-      unsubPartners();
+      cancelled = true;
+      unsubscribers.forEach(unsub => unsub());
     };
   }, []);
 
-  // Admin status is derived only from the verified Firebase Auth user
+  // Admin status is derived only from the verified Firebase Auth user.
+  // Visitors never download Firebase Auth: it is loaded on the /admin page or on a device an admin used.
+  const [needsAuth, setNeedsAuth] = useState<boolean>(() => {
+    try { return !!localStorage.getItem(ADMIN_DEVICE_KEY); } catch { return false; }
+  });
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      const isAdmin = !!user && isAuthorizedAdminEmail(user.email);
-      setIsAdminLoggedIn(isAdmin);
-    });
-    return () => unsubscribe();
-  }, []);
+    if (activeTab === 'admin' || isAdminLoginModalOpen) setNeedsAuth(true);
+  }, [activeTab, isAdminLoginModalOpen]);
+  useEffect(() => {
+    if (!needsAuth) return;
+    let unsubscribe = () => {};
+    let cancelled = false;
+    Promise.all([loadAuth(), import('firebase/auth')]).then(([{ auth }, { onAuthStateChanged }]) => {
+      if (cancelled) return;
+      unsubscribe = onAuthStateChanged(auth, (user) => {
+        const isAdmin = !!user && isAuthorizedAdminEmail(user.email);
+        setIsAdminLoggedIn(isAdmin);
+        try {
+          if (isAdmin) localStorage.setItem(ADMIN_DEVICE_KEY, '1');
+        } catch {}
+      });
+    }).catch((err) => console.error('Firebase Auth loading error:', err));
+    return () => { cancelled = true; unsubscribe(); };
+  }, [needsAuth]);
 
   const handleAdminLogout = async () => {
     try {
+      const [{ auth }, { signOut }] = await Promise.all([loadAuth(), import('firebase/auth')]);
       await signOut(auth);
     } catch (e) {}
+    try { localStorage.removeItem(ADMIN_DEVICE_KEY); } catch {}
     setIsAdminLoggedIn(false);
     if (activeTab === 'admin') {
       setActiveTab('home');
@@ -694,16 +722,20 @@ export default function App() {
         </Suspense>
       )}
 
-      {/* Admin Login Modal for Authorized Cabinet Access */}
-      <AdminLoginModal
-        isOpen={isAdminLoginModalOpen}
-        onClose={() => setIsAdminLoginModalOpen(false)}
-        onSuccess={(_adminEmail) => {
-          setIsAdminLoggedIn(true);
-          setActiveTab('admin');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-      />
+      {/* Admin Login Modal for Authorized Cabinet Access (downloaded only when opened) */}
+      {isAdminLoginModalOpen && (
+        <Suspense fallback={null}>
+          <AdminLoginModal
+            isOpen={isAdminLoginModalOpen}
+            onClose={() => setIsAdminLoginModalOpen(false)}
+            onSuccess={(_adminEmail) => {
+              setIsAdminLoggedIn(true);
+              setActiveTab('admin');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

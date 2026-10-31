@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Lock, Mail, Key, CheckCircle2, AlertCircle, RefreshCw, ShieldCheck } from 'lucide-react';
-import { auth } from '../firebase';
+import { auth } from '../firebaseAuth';
 import { signInWithEmailAndPassword, signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
 import { isAuthorizedAdminEmail, getAuthErrorMessage } from '../lib/adminAuth';
 

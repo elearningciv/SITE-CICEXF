@@ -198,6 +198,8 @@ export default function Home({
           <img
             src={consultingTeamImg}
             alt="Formation d'experts au siège du CICEXF à Abidjan"
+            fetchPriority="high"
+            decoding="async"
             className="h-64 w-full object-cover sm:h-80 lg:absolute lg:inset-y-0 lg:right-0 lg:h-full lg:w-[72%] lg:rounded-bl-[120px]"
           />
           <div className="relative px-4 sm:px-6 lg:absolute lg:inset-y-0 lg:left-8 lg:flex lg:items-center lg:px-0">
@@ -321,7 +323,7 @@ export default function Home({
       {/* 7. Testimonials carousel on photo background */}
       {testimonials.length > 0 && (
       <section id="testimonials-carousel" className="relative isolate overflow-hidden py-10 sm:py-12">
-        <img src={unsplash('photo-1523580494863-6f3031224c94', 1600)} alt="" referrerPolicy="no-referrer" className="absolute inset-0 -z-10 h-full w-full object-cover" />
+        <img src={unsplash('photo-1523580494863-6f3031224c94', 1600)} alt="" loading="lazy" referrerPolicy="no-referrer" className="absolute inset-0 -z-10 h-full w-full object-cover" />
         <div className="absolute inset-0 -z-10 bg-[#001a33]/80" />
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-display text-2xl font-extrabold text-white sm:text-3xl">Ce que disent nos participants…</h2>

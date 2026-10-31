@@ -3,9 +3,8 @@ import AdminTestimonials from './AdminTestimonials';
 import AdminDomains from './AdminDomains';
 import AdminCatalogue from './AdminCatalogue';
 import DomainAxisSelect from './DomainAxisSelect';
-import { 
-  auth, db 
-} from '../firebase';
+import { db } from '../firebase';
+import { auth } from '../firebaseAuth';
 import { 
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
