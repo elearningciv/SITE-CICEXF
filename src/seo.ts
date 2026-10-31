@@ -69,17 +69,10 @@ export const SEO_PAGES: Record<string, SeoPage> = {
     priority: 0.8,
     changefreq: 'monthly'
   },
-  mentions: {
-    path: '/mentions-legales',
-    title: 'Mentions légales | CICEXF',
-    description: "Mentions légales du site du CICEXF : éditeur, hébergement, propriété intellectuelle et droit applicable.",
-    priority: 0.2,
-    changefreq: 'monthly'
-  },
   confidentialite: {
     path: '/confidentialite',
     title: 'Politique de confidentialité | CICEXF',
-    description: "Comment le CICEXF collecte, utilise et protège vos données personnelles (formulaires, ADILINE, réseaux sociaux) et comment exercer vos droits.",
+    description: "Les informations collectées par le CICEXF, leur utilisation pour vos candidatures et demandes, et la sécurité de vos données.",
     priority: 0.3,
     changefreq: 'monthly'
   },

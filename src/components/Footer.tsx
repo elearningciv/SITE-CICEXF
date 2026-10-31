@@ -215,8 +215,6 @@ export default function Footer({
         <div className="border-t border-white/20 pt-2.5 mt-2 flex flex-col md:flex-row justify-between items-center text-xs text-white font-medium gap-1.5">
           <p className="text-white">© {new Date().getFullYear()} CICEXF. Tous droits réservés.</p>
           <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end text-white">
-            <a href="/mentions-legales" onClick={(e) => { e.preventDefault(); handleLinkClick('mentions'); }} className="hover:text-yellow-300 transition-colors text-white">Mentions Légales</a>
-            <span className="text-white/40">|</span>
             <a href="/confidentialite" onClick={(e) => { e.preventDefault(); handleLinkClick('confidentialite'); }} className="hover:text-yellow-300 transition-colors text-white">Politique de Confidentialité</a>
             <span className="text-white/40">|</span>
             {isAdminLoggedIn ? (
