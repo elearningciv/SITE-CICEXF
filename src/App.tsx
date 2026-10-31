@@ -471,7 +471,7 @@ export default function App() {
       case 'realisations':
         return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} projects={realisations} />;
       case 'news':
-        return <News blogPosts={blogPosts} />;
+        return <News blogPosts={blogPosts} formations={formations} />;
       case 'partners':
         return <Partners partners={partners} />;
       case 'contact':

@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { Search, BookOpen, Clock, FileText, CheckCircle, ArrowRight, CornerDownRight, X, Mail, Download, Sparkles, HelpCircle } from 'lucide-react';
 import { BLOG_POSTS } from '../data';
-import { BlogPost } from '../types';
+import { BlogPost, Formation } from '../types';
+import FormationDetail from './FormationDetail';
+import { ViewCatalogueButton } from './CatalogueActions';
+import ArticleContent from './ArticleContent';
+import CatalogueActions from './CatalogueActions';
+import { useCatalogueMeta } from '../lib/catalogue';
 
 interface NewsProps {
   blogPosts?: BlogPost[];
+  formations?: Formation[];
 }
 
-export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
+export default function News({ blogPosts = BLOG_POSTS, formations = [] }: NewsProps) {
   const [selectedArticle, setSelectedArticle] = useState<BlogPost | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('Tous');
+  const { meta: catalogueMeta } = useCatalogueMeta();
+
+  // Announcement of a formation (created with it in the admin: id "p-f-<formation id>", or same title)
+  const linkedFormation = selectedArticle
+    ? formations.find(f => selectedArticle.id === `p-f-${f.id}`)
+      || formations.find(f => f.title.trim().toLowerCase() === selectedArticle.title.trim().toLowerCase())
+    : undefined;
 
   // Listen to select-article event from the ticker
   React.useEffect(() => {
@@ -93,61 +106,78 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
         
         {/* ------------------ VIEW 1: FULL EXPANDED ARTICLE VIEW ------------------ */}
         {selectedArticle ? (
-          <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
+          linkedFormation ? (
+          <div className="space-y-6 animate-in fade-in duration-200">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <button
+                onClick={handleCloseArticle}
+                className="inline-flex items-center space-x-2 text-sm font-bold text-slate-600 hover:text-brand-emerald dark:text-slate-400 transition-colors cursor-pointer"
+              >
+                <span>← Retour aux actualités</span>
+              </button>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Actualité · {selectedArticle.date}</span>
+            </div>
+            <FormationDetail
+              formation={linkedFormation}
+              extraActions={<ViewCatalogueButton />}
+            />
+          </div>
+          ) : (
+          <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-200">
             {/* Back button */}
             <button
               onClick={handleCloseArticle}
               id="btn-back-to-blog"
-              className="inline-flex items-center space-x-2 text-xs font-bold text-slate-500 hover:text-brand-emerald transition-colors"
+              className="inline-flex items-center space-x-2 text-sm font-bold text-slate-600 hover:text-brand-emerald dark:text-slate-400 transition-colors cursor-pointer"
             >
-              <span>← Retourner aux actualités</span>
+              <span>← Retour aux actualités</span>
             </button>
 
-            {/* Article cover */}
-            <div className="relative aspect-video rounded-3xl overflow-hidden shadow">
-              <img
-                src={selectedArticle.imageUrl}
-                alt={selectedArticle.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-contain bg-white dark:bg-slate-800"
-              />
-              <div className="absolute top-4 left-4 bg-brand-emerald text-white text-xs font-bold px-3 py-1 rounded">
+            {/* Article header */}
+            <header className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:p-10">
+              <span className="inline-block rounded-full bg-brand-emerald/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand-emerald dark:text-orange-300">
                 {selectedArticle.category}
-              </div>
-            </div>
-
-            {/* Metadata & Title */}
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-slate-400">{selectedArticle.date} • {selectedArticle.readTime}</span>
-              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-snug">
+              </span>
+              <h1 className="mt-4 max-w-4xl font-display text-2xl font-extrabold leading-tight tracking-tight text-slate-900 dark:text-white sm:text-4xl">
                 {selectedArticle.title}
               </h1>
-              
-              {/* Author display */}
-              <div className="flex items-center space-x-3.5 pt-2 border-b border-slate-150 dark:border-slate-800 pb-4">
-                <img
-                  src={selectedArticle.author.avatarUrl}
-                  alt={selectedArticle.author.name}
-                  referrerPolicy="no-referrer"
-                  className="w-10 h-10 rounded-full object-cover border-2 border-brand-emerald"
-                />
-                <div>
-                  <h4 className="font-bold text-xs text-slate-950 dark:text-white">{selectedArticle.author.name}</h4>
-                  <p className="text-xs text-slate-400 font-medium">{selectedArticle.author.role}</p>
-                </div>
+              {selectedArticle.excerpt && !/(.)\1{7,}/i.test(selectedArticle.excerpt.replace(/\s/g, '')) && (
+                <p className="mt-4 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">{selectedArticle.excerpt}</p>
+              )}
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-slate-100 pt-5 text-sm dark:border-slate-800">
+                <span className="flex items-center gap-3">
+                  <img
+                    src={selectedArticle.author.avatarUrl}
+                    alt=""
+                    referrerPolicy="no-referrer"
+                    className="h-10 w-10 rounded-full object-cover ring-2 ring-brand-emerald/40"
+                  />
+                  <span>
+                    <span className="block font-bold text-slate-900 dark:text-white">{selectedArticle.author.name}</span>
+                    <span className="block text-xs text-slate-500 dark:text-slate-400">{selectedArticle.author.role}</span>
+                  </span>
+                </span>
+                <span className="flex items-center gap-1.5 text-slate-600 dark:text-slate-400"><Clock className="w-4 h-4" /> {selectedArticle.date} · {selectedArticle.readTime}</span>
               </div>
-            </div>
+            </header>
 
-            {/* Rich Article text content block */}
-            <div className="prose prose-slate dark:prose-invert max-w-none text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-sans font-normal space-y-6">
-              {/* Process standard paragraphs split by newlines */}
-              {selectedArticle.content.split('\n\n').map((paragraph, idx) => {
-                if (paragraph.startsWith('###')) {
-                  return <h3 key={idx} className="font-display text-base sm:text-lg font-bold text-slate-900 dark:text-white pt-4">{paragraph.replace('###', '').trim()}</h3>;
-                }
-                return <p key={idx}>{paragraph}</p>;
-              })}
-            </div>
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+              {/* Main column */}
+              <div className="min-w-0 space-y-8">
+                {selectedArticle.imageUrl && (
+                  <div className="aspect-video overflow-hidden rounded-3xl bg-white ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                    <img
+                      src={selectedArticle.imageUrl}
+                      alt={selectedArticle.title}
+                      referrerPolicy="no-referrer"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                )}
+
+                <article className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 sm:p-10">
+                  <ArticleContent content={selectedArticle.content} />
+                </article>
 
             {/* Optional Lead capture for the article's downloadable guide */}
             {selectedArticle.guidePdfUrl && (
@@ -212,16 +242,58 @@ export default function News({ blogPosts = BLOG_POSTS }: NewsProps) {
               </div>
             )}
 
-            {/* Back button at footer */}
-            <div className="pt-8 border-t border-slate-150 dark:border-slate-800 flex justify-start">
+            <div className="flex justify-start">
               <button
                 onClick={handleCloseArticle}
-                className="text-xs font-bold text-slate-500 hover:text-brand-emerald transition-colors"
+                className="text-sm font-bold text-slate-600 hover:text-brand-emerald dark:text-slate-400 transition-colors cursor-pointer"
               >
-                ← Retourner à la liste des articles
+                ← Retour à la liste des articles
               </button>
             </div>
+              </div>
+
+              {/* Sidebar */}
+              <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
+                <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                  <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">En bref</h2>
+                  <dl className="mt-3 space-y-2.5 text-sm">
+                    <div className="flex justify-between gap-3"><dt className="text-slate-500 dark:text-slate-400">Rubrique</dt><dd className="text-right font-semibold text-slate-900 dark:text-white">{selectedArticle.category}</dd></div>
+                    <div className="flex justify-between gap-3"><dt className="text-slate-500 dark:text-slate-400">Publié le</dt><dd className="text-right font-semibold text-slate-900 dark:text-white">{selectedArticle.date}</dd></div>
+                    <div className="flex justify-between gap-3"><dt className="text-slate-500 dark:text-slate-400">Lecture</dt><dd className="text-right font-semibold text-slate-900 dark:text-white">{selectedArticle.readTime}</dd></div>
+                  </dl>
+                  {selectedArticle.tags?.filter(t => t && t !== selectedArticle.category).length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-100 pt-4 dark:border-slate-800">
+                      {selectedArticle.tags.filter(t => t && t !== selectedArticle.category).map(t => (
+                        <span key={t} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {catalogueMeta && (
+                  <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                    <p className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white">
+                      <FileText className="w-5 h-5 text-red-700 dark:text-red-300" /> Catalogue des formations
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">Programmes, durées et tarifs (PDF)</p>
+                    <div className="mt-4"><CatalogueActions meta={catalogueMeta} compact /></div>
+                  </div>
+                )}
+
+                <div className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+                  <p className="font-display text-base font-bold text-slate-900 dark:text-white">Une question sur cette annonce ?</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">ADILINE, notre assistante virtuelle, vous répond immédiatement.</p>
+                  <button
+                    onClick={() => window.dispatchEvent(new Event('cicexf:open-adiline'))}
+                    className="mt-4 w-full rounded-xl bg-brand-emerald px-4 py-3 text-sm font-bold text-white hover:bg-brand-emerald-dark cursor-pointer"
+                  >
+                    Discuter avec ADILINE
+                  </button>
+                </div>
+              </aside>
+            </div>
           </div>
+          )
         ) : (
           /* ------------------ VIEW 2: FILTERABLE LIST & SEARCH ------------------ */
           <div className="space-y-6 animate-in fade-in duration-200">

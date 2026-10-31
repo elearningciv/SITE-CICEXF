@@ -117,3 +117,15 @@ export async function downloadCatalogue(meta: CatalogueMeta): Promise<void> {
 
 export const formatSize = (bytes: number) =>
   bytes >= 1024 * 1024 ? `${(bytes / (1024 * 1024)).toFixed(1).replace('.', ',')} Mo` : `${Math.max(1, Math.round(bytes / 1024))} Ko`;
+
+/**
+ * Shareable links: /catalogue?action=ouvrir shows the PDF in the visitor's browser,
+ * /catalogue?action=telecharger saves it. The Catalogue page runs the action on arrival.
+ */
+export type CatalogueLinkAction = 'ouvrir' | 'telecharger';
+export const catalogueLink = (action: CatalogueLinkAction) => `${window.location.origin}/catalogue?action=${action}`;
+
+/** Shows the PDF in the current tab (used when arriving from a shared "open" link) */
+export async function openCatalogueHere(meta: CatalogueMeta): Promise<void> {
+  window.location.href = URL.createObjectURL(await loadCatalogueBlob(meta));
+}

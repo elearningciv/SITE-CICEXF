@@ -16,7 +16,7 @@ import CatalogueActions from './CatalogueActions';
 // Visitor asks for the catalogue / brochure (any phrasing)
 const CATALOGUE_RE = /catalogu|brochure|plaquette|liste (compl[eè]te )?des formations/i;
 // ...and only wants the document (short request, or explicit "send / download / see" verbs)
-const CATALOGUE_ONLY_RE = /(envoi|envoy|t[ée]l[ée]charg|donne|avoir|obtenir|recevoir|voir|consulter|partag|pdf|o[uù] (est|trouver))/i;
+const CATALOGUE_ONLY_RE = /(lien|envoi|envoy|t[ée]l[ée]charg|donne|avoir|obtenir|recevoir|voir|consulter|partag|pdf|o[uù] (est|trouver))/i;
 
 // Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
 const ADILINE_API_URL = import.meta.env.VITE_ADILINE_API_URL
@@ -582,22 +582,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
 
     setMessages(prev => [...prev, initialAssistantMsg]);
 
-    // Catalogue requests: the PDF is attached to the answer (when one is published in the admin)
-    const asksCatalogue = !!query && CATALOGUE_RE.test(query);
-    const catalogue = asksCatalogue ? (catalogueMeta || await getCatalogueMeta().catch(() => null)) : null;
-    if (catalogue && (query.length < 90 || CATALOGUE_ONLY_RE.test(query))) {
-      setMessages(prev => prev.map(m => m.id === assistantMsgId ? {
-        ...m,
-        text: "Avec plaisir ! Voici le **catalogue des formations CICEXF** : vous pouvez le consulter directement ou le télécharger ci-dessous.\n\nVous y trouverez nos programmes, durées et tarifs. Souhaitez-vous que je vous aide à choisir une formation ou à préparer un devis ?",
-        sources: ['Catalogue officiel CICEXF'],
-        showCatalogue: true
-      } : m));
-      setIsStreaming(false);
-      return;
-    }
-    if (catalogue) {
-      setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, showCatalogue: true } : m));
-    }
+    if (await attachCatalogue(query, assistantMsgId)) return;
 
     try {
       const recentHistory = messages.slice(-10).map(m => ({
@@ -637,6 +622,28 @@ Comment puis-je vous accompagner aujourd'hui ?`,
   };
 
   // Send message to ADILINE API with streaming
+  /**
+   * Catalogue requests (typed or spoken): the PDF is attached to ADILINE's answer.
+   * Returns true when the request is fully answered here (no call to the AI needed).
+   */
+  const attachCatalogue = async (query: string, assistantMsgId: string): Promise<boolean> => {
+    if (!query || !CATALOGUE_RE.test(query)) return false;
+    const catalogue = catalogueMeta || await getCatalogueMeta().catch(() => null);
+    if (!catalogue) return false;
+    if (query.length < 90 || CATALOGUE_ONLY_RE.test(query)) {
+      setMessages(prev => prev.map(m => m.id === assistantMsgId ? {
+        ...m,
+        text: "Avec plaisir ! Voici le **catalogue des formations CICEXF** : vous pouvez le consulter directement, le télécharger, ou garder le lien direct ci-dessous pour l’ouvrir plus tard.\n\nVous y trouverez nos programmes, durées et tarifs. Souhaitez-vous que je vous aide à choisir une formation ou à préparer un devis ?",
+        sources: ['Catalogue officiel CICEXF'],
+        showCatalogue: true
+      } : m));
+      setIsStreaming(false);
+      return true;
+    }
+    setMessages(prev => prev.map(m => m.id === assistantMsgId ? { ...m, showCatalogue: true } : m));
+    return false;
+  };
+
   const handleSendMessage = async (textToSend?: string) => {
     const query = (textToSend || inputText).trim();
     if ((!query && !attachedFile) || isStreaming) return;
@@ -666,6 +673,8 @@ Comment puis-je vous accompagner aujourd'hui ?`,
     };
 
     setMessages(prev => [...prev, initialAssistantMsg]);
+
+    if (await attachCatalogue(query, assistantMsgId)) return;
 
     try {
       const recentHistory = messages.slice(-10).map(m => ({
@@ -1069,7 +1078,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                         <FileText className="w-4 h-4 shrink-0 text-red-700 dark:text-red-300" />
                         <span className="truncate">{catalogueMeta.name}</span>
                       </p>
-                      <CatalogueActions meta={catalogueMeta} compact />
+                      <CatalogueActions meta={catalogueMeta} compact withLinks />
                     </div>
                   )}
 
