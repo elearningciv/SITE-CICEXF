@@ -467,7 +467,7 @@ export default function RegistrationGrandPlanForm({
                 className="mt-0.5 shrink-0 accent-[#8A1A24] w-3.5 h-3.5 cursor-pointer"
               />
               <span className="text-xs text-slate-600 dark:text-slate-400 leading-tight font-normal">
-                J'autorise le Cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier de candidature.
+                J'autorise le Cabinet CICEXF à enregistrer mes informations de contact pour le traitement réglementaire de mon dossier de candidature (<a href="/confidentialite" target="_blank" rel="noreferrer" className="font-semibold underline">politique de confidentialité</a>).
               </span>
             </label>
             {errors.terms && <span className="text-xs text-red-500 font-semibold block mt-1">{errors.terms}</span>}

@@ -1,6 +1,7 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
+import { captureVisitSource } from './lib/visitSource';
 import './index.css';
 
 // After a new deployment, a page kept open (or cached) may request build files that
@@ -18,6 +19,9 @@ window.addEventListener('vite:preloadError', (event) => {
 window.setTimeout(() => {
   try { sessionStorage.removeItem('cicexf_reloaded_after_deploy'); } catch {}
 }, 15000);
+
+// Remember the social network a visitor came from (links shared from the admin carry it)
+captureVisitSource();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -217,7 +217,7 @@ export default function Footer({
           <div className="flex flex-wrap gap-2 md:space-x-3 items-center justify-center md:justify-end text-white">
             <a href="#mentions" className="hover:text-yellow-300 transition-colors text-white">Mentions Légales</a>
             <span className="text-white/40">|</span>
-            <a href="#confidentiality" className="hover:text-yellow-300 transition-colors text-white">Politique de Confidentialité</a>
+            <a href="/confidentialite" onClick={(e) => { e.preventDefault(); handleLinkClick('confidentialite'); }} className="hover:text-yellow-300 transition-colors text-white">Politique de Confidentialité</a>
             <span className="text-white/40">|</span>
             {isAdminLoggedIn ? (
               <div className="flex items-center space-x-1.5">

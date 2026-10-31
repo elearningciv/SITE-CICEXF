@@ -8,6 +8,10 @@ const nodemailer = require('nodemailer');
 // Assistante virtuelle ADILINE (Gemini + contenu du site)
 exports.adilineChat = require('./adiline').adilineChat;
 
+// Facebook & Instagram : prospects des publicités à formulaire et réponses d'ADILINE aux messages
+// (à déployer seulement après avoir enregistré les codes META_* : voir le guide dans l'administration)
+exports.metaWebhook = require('./meta').metaWebhook;
+
 // Compte Gmail qui envoie les notifications, et destinataires
 // (le mot de passe d'application GMAIL_APP_PASSWORD appartient à ce compte)
 const SENDER = 'elearningciv@gmail.com';

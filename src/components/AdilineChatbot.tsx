@@ -19,8 +19,7 @@ const CATALOGUE_RE = /catalogu|brochure|plaquette|liste (compl[eè]te )?des form
 const CATALOGUE_ONLY_RE = /(lien|envoi|envoy|t[ée]l[ée]charg|donne|avoir|obtenir|recevoir|voir|consulter|partag|pdf|o[uù] (est|trouver))/i;
 
 // Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
-const ADILINE_API_URL = import.meta.env.VITE_ADILINE_API_URL
-  || 'https://europe-west1-project-a93f5a0f-743d-4552-852.cloudfunctions.net/adilineChat';
+import { ADILINE_API_URL } from '../lib/adilineApi';
 
 export interface RichCard {
   type: 'formation' | 'session' | 'expert' | 'devis';

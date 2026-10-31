@@ -8,6 +8,7 @@ import { trackVisit } from './lib/tracker';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS, PROJECTS } from './data';
 import { Formation, DomainIntervention, Project, BlogPost } from './types';
+import { SEO_PAGES, SITE_URL } from './seo';
 
 const NAVIGATION_ORDER = [
   'home',
@@ -41,6 +42,7 @@ const TAB_PATHS: Record<string, string> = {
   catalogue: '/catalogue',
   partners: '/partenaires',
   contact: '/contact',
+  confidentialite: '/confidentialite',
   admin: '/admin'
 };
 
@@ -55,6 +57,7 @@ const Interventions = lazy(() => import('./components/Interventions'));
 const Formations = lazy(() => import('./components/Formations'));
 const Realisations = lazy(() => import('./components/Realisations'));
 const Catalogue = lazy(() => import('./components/Catalogue'));
+const Privacy = lazy(() => import('./components/Privacy'));
 const News = lazy(() => import('./components/News'));
 const Contact = lazy(() => import('./components/Contact'));
 const Partners = lazy(() => import('./components/Partners'));
@@ -383,10 +386,24 @@ export default function App() {
     if (window.location.pathname !== path) {
       window.history.pushState({ tab: activeTab }, '', path);
     }
-    const label = activeTab === 'admin' ? 'Administration' : activeTab === 'partners' ? 'Partenaires' : TAB_LABELS[activeTab];
-    document.title = activeTab === 'home' || !label
-      ? "CICEXF - Cabinet International de Consultance, d'Expertise et de Formation"
-      : `${label} | CICEXF`;
+    // Title, description and canonical address of the page (search engines and link previews)
+    const seo = SEO_PAGES[activeTab];
+    document.title = seo ? seo.title : activeTab === 'admin' ? 'Administration | CICEXF' : `${TAB_LABELS[activeTab] || 'CICEXF'} | CICEXF`;
+    const setMeta = (selector: string, attr: 'content' | 'href', value: string, create: () => HTMLElement) => {
+      let el = document.head.querySelector(selector) as HTMLElement | null;
+      if (!el) { el = create(); document.head.appendChild(el); }
+      el.setAttribute(attr, value);
+    };
+    if (seo) {
+      const url = SITE_URL + seo.path;
+      setMeta('meta[name="description"]', 'content', seo.description, () => Object.assign(document.createElement('meta'), { name: 'description' }));
+      setMeta('link[rel="canonical"]', 'href', url, () => Object.assign(document.createElement('link'), { rel: 'canonical' }));
+      setMeta('meta[property="og:title"]', 'content', seo.title, () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:title'); return m; });
+      setMeta('meta[property="og:description"]', 'content', seo.description, () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:description'); return m; });
+      setMeta('meta[property="og:url"]', 'content', url, () => { const m = document.createElement('meta'); m.setAttribute('property', 'og:url'); return m; });
+    }
+    // The admin console stays out of search results
+    setMeta('meta[name="robots"]', 'content', activeTab === 'admin' ? 'noindex, nofollow' : 'index, follow, max-image-preview:large', () => Object.assign(document.createElement('meta'), { name: 'robots' }));
   }, [activeTab]);
 
   // Browser back/forward buttons
@@ -502,6 +519,8 @@ export default function App() {
         return <News blogPosts={blogPosts} formations={formations} />;
       case 'partners':
         return <Partners partners={partners} />;
+      case 'confidentialite':
+        return <Privacy />;
       case 'contact':
         return <Contact preselectedDomain={preselectedDomain} setPreselectedDomain={setPreselectedDomain} />;
       case 'admin':

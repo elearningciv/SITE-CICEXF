@@ -309,3 +309,20 @@
   border-color: #60a5fa;
   box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.2);
 }
+
+/* Privacy policy: readable lists, tables and links */
+.privacy-content ul { list-style: disc; padding-left: 1.25rem; display: grid; gap: 0.4rem; }
+.privacy-content a { color: #003b6f; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.dark .privacy-content a { color: #7dd3fc; }
+.privacy-content table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.privacy-content th, .privacy-content td { border: 1px solid #e2e8f0; padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; }
+.privacy-content th { background: #f8fafc; color: #0f172a; font-weight: 700; }
+.dark .privacy-content th, .dark .privacy-content td { border-color: #334155; }
+.dark .privacy-content th { background: #0f172a; color: #f1f5f9; }
+@media (max-width: 640px) {
+  .privacy-content table, .privacy-content tbody, .privacy-content tr, .privacy-content td { display: block; width: 100%; }
+  .privacy-content thead { display: none; }
+  .privacy-content tr { margin-bottom: 0.75rem; }
+  .privacy-content td:first-child { font-weight: 700; background: #f8fafc; }
+  .dark .privacy-content td:first-child { background: #0f172a; }
+}

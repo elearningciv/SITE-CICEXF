@@ -206,6 +206,45 @@ async function generate(params) {
   throw lastErr;
 }
 
+// Réponse complète d'ADILINE (contenu du site + outil de devis), réutilisée par le site et par les messageries
+async function answer(contents) {
+  const live = await getLiveContent();
+  const config = { systemInstruction: buildSystemInstruction(live), temperature: 0.3, maxOutputTokens: 2048, tools: TOOLS };
+
+  let response = await generate({ contents, config });
+  let cards = [];
+
+  // Boucle d'outils (au plus 3 appels successifs)
+  for (let i = 0; i < 3 && response.functionCalls && response.functionCalls.length; i++) {
+    const call = response.functionCalls[0];
+    const out = call.name === 'calculer_devis' ? calculerDevis(call.args || {}, live) : { result: { erreur: 'Outil inconnu' }, cards: [] };
+    cards = cards.concat(out.cards);
+    contents.push(response.candidates[0].content);
+    contents.push({ role: 'user', parts: [{ functionResponse: { name: call.name, response: out.result } }] });
+    response = await generate({ contents, config });
+  }
+  return { text: response.text || '', cards };
+}
+
+/**
+ * Réponse en texte simple pour les messageries (Messenger, Instagram).
+ * history : [{ role: 'user' | 'model', text }] du plus ancien au plus récent.
+ */
+async function answerVisitor(text, history = []) {
+  const contents = history.slice(-12)
+    .filter(h => h && h.text)
+    .map(h => ({ role: h.role === 'model' ? 'model' : 'user', parts: [{ text: String(h.text).slice(0, 2000) }] }));
+  contents.push({
+    role: 'user',
+    parts: [{ text: `${String(text).slice(0, 2000)}\n\n(Conversation sur une messagerie sociale : réponds en texte simple, sans mise en forme Markdown, en 900 caractères au plus.)` }]
+  });
+  const { text: reply } = await answer(contents);
+  return reply.replace(/\*\*/g, '').replace(/^#+\s*/gm, '').trim();
+}
+
+exports.answerVisitor = answerVisitor;
+exports.db = db;
+
 exports.adilineChat = onRequest(
   { region: 'europe-west1', invoker: 'public', timeoutSeconds: 120, memory: '512MiB', maxInstances: 5, concurrency: 40 },
   async (req, res) => {
@@ -242,24 +281,10 @@ exports.adilineChat = onRequest(
     const send = (payload) => res.write(`data: ${JSON.stringify(payload)}\n\n`);
 
     try {
-      const live = await getLiveContent();
-      const config = { systemInstruction: buildSystemInstruction(live), temperature: 0.3, maxOutputTokens: 2048, tools: TOOLS };
-
-      let response = await generate({ contents, config });
-      let cards = [];
-
-      // Boucle d'outils (au plus 3 appels successifs)
-      for (let i = 0; i < 3 && response.functionCalls && response.functionCalls.length; i++) {
-        const call = response.functionCalls[0];
-        const out = call.name === 'calculer_devis' ? calculerDevis(call.args || {}, live) : { result: { erreur: 'Outil inconnu' }, cards: [] };
-        cards = cards.concat(out.cards);
-        contents.push(response.candidates[0].content);
-        contents.push({ role: 'user', parts: [{ functionResponse: { name: call.name, response: out.result } }] });
-        response = await generate({ contents, config });
-      }
+      const { text: reply, cards } = await answer(contents);
 
       if (cards.length) send({ type: 'cards', cards });
-      send({ type: 'chunk', text: response.text || "Je n'ai pas pu formuler de réponse. Notre secrétariat reste joignable au **+225 07 01 97 00 65**." });
+      send({ type: 'chunk', text: reply || "Je n'ai pas pu formuler de réponse. Notre secrétariat reste joignable au **+225 07 01 97 00 65**." });
       send({ type: 'done', sources: ['Site officiel CICEXF'], cards });
     } catch (err) {
       logger.error('ADILINE : échec de la génération', { error: err.message });

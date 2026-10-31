@@ -1,6 +1,7 @@
 import { collection, addDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 import { setVisitorEmail, getVisitorId } from './tracker';
+import { getVisitSource } from './visitSource';
 // xlsx is heavy and only needed for admin exports: loaded on demand
 const loadXlsx = () => import('xlsx');
 
@@ -16,7 +17,7 @@ export interface Prospect {
   company?: string;
   participants?: string;
   notes?: string;
-  channel: 'En ligne' | 'WhatsApp' | 'Email';
+  channel: 'En ligne' | 'WhatsApp' | 'Email' | 'Facebook' | 'Instagram';
   status: 'Nouveau' | 'Contacté' | 'En cours' | 'Inscrit' | 'Archivé';
   createdAt?: any;
 }
@@ -56,7 +57,7 @@ export async function saveProspect(data: {
       modality: data.modality || 'Non précisé',
       company: data.company || '',
       participants: data.participants || '1',
-      notes: data.notes || '',
+      notes: [data.notes, getVisitSource() && `Source : ${getVisitSource()}`].filter(Boolean).join(' | '),
       channel: data.channel,
       status: data.status || 'Nouveau',
       visitorId: getVisitorId(),

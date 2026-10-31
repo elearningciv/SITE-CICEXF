@@ -179,7 +179,7 @@ export default function Home({
               <h2 id="welcome-title" className="font-display text-xl font-extrabold text-slate-900">Bienvenue au CICEXF</h2>
               <p className="mt-2 text-sm text-slate-700">
                 Découvrez nos formations certifiantes{nextSession ? <> · prochaine session : <strong>{nextSession.date}</strong></> : ''}.
-                Paiement en 2 ou 3 fois sans frais.
+                Paiement en 2 ou 3 tranches
               </p>
               <button
                 onClick={() => { closeWelcome(); goTo('formations'); }}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>CICEXF - Cabinet International de Consultance, d'Expertise et de Formation</title>
     <meta name="description" content="Cabinet International de Consultance, d'Expertise et de Formation (CICEXF), Abidjan : accompagnement des organisations, formations certifiantes (Data, PMP, QHSE, SIG, finance) et expertise technique." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#003B6F" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
@@ -21,7 +22,7 @@
     <meta property="og:site_name" content="CICEXF" />
     <meta property="og:title" content="CICEXF - Cabinet International de Consultance, d'Expertise et de Formation" />
     <meta property="og:description" content="Accompagnement des organisations, formations certifiantes et expertise technique depuis Abidjan." />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image" content="https://cicexf.gestionsaas.org/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -29,21 +30,49 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "ProfessionalService",
-        "name": "CICEXF - Cabinet International de Consultance, d'Expertise et de Formation",
-        "telephone": "+225 07 01 97 00 65",
-        "email": "cabinetcicexf@gmail.com",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, 3e étage",
-          "addressLocality": "Abidjan",
-          "addressCountry": "CI"
-        }
+        "@graph": [
+          {
+            "@type": ["EducationalOrganization", "ProfessionalService"],
+            "@id": "https://cicexf.gestionsaas.org/#organisation",
+            "name": "CICEXF - Cabinet International de Consultance, d'Expertise et de Formation",
+            "alternateName": "CICEXF",
+            "url": "https://cicexf.gestionsaas.org/",
+            "logo": "https://cicexf.gestionsaas.org/favicon.svg",
+            "image": "https://cicexf.gestionsaas.org/og-image.jpg",
+            "description": "Formations certifiantes, accompagnement des organisations et expertise technique depuis Abidjan, Côte d'Ivoire.",
+            "telephone": "+225 07 01 97 00 65",
+            "email": "cabinetcicexf@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, 3e étage",
+              "addressLocality": "Abidjan",
+              "addressCountry": "CI"
+            },
+            "areaServed": ["Côte d'Ivoire", "Bénin", "Togo", "Mali", "Burkina Faso"],
+            "sameAs": ["https://www.facebook.com/CabinetCICEXF"]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://cicexf.gestionsaas.org/#site",
+            "url": "https://cicexf.gestionsaas.org/",
+            "name": "CICEXF",
+            "inLanguage": "fr",
+            "publisher": { "@id": "https://cicexf.gestionsaas.org/#organisation" }
+          }
+        ]
       }
     </script>
   </head>
   <body>
-    <noscript>Ce site nécessite JavaScript. Contact : +225 07 01 97 00 65 · cabinetcicexf@gmail.com</noscript>
+    <noscript>
+      <h1>CICEXF - Cabinet International de Consultance, d'Expertise et de Formation</h1>
+      <p>Formations certifiantes, accompagnement des organisations et expertise technique à Abidjan. Contact : +225 07 01 97 00 65 · cabinetcicexf@gmail.com</p>
+      <nav>
+        <a href="/formations">Formations</a> · <a href="/accompagnement">Accompagnement</a> · <a href="/catalogue">Catalogue</a> ·
+        <a href="/actualites">Actualités</a> · <a href="/realisations">Réalisations</a> · <a href="/qui-sommes-nous">Qui sommes-nous</a> ·
+        <a href="/partenaires">Partenaires</a> · <a href="/contact">Contact</a>
+      </nav>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

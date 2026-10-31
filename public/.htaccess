@@ -7,6 +7,10 @@
   # Missing build files must stay real 404s (never the HTML page), otherwise an
   # outdated page loads HTML as JavaScript and stays blank
   RewriteRule ^assets/ - [L]
+  # Each page has its own HTML (title, description, canonical for search engines):
+  # /formations -> formations.html, /contact -> contact.html, ...
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^([a-z-]+)$ /$1.html [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminTestimonials from './AdminTestimonials';
 import AdminDomains from './AdminDomains';
 import AdminCatalogue from './AdminCatalogue';
+import AdminProspection from './AdminProspection';
 import DomainAxisSelect from './DomainAxisSelect';
 import { db } from '../firebase';
 import { auth } from '../firebaseAuth';
@@ -132,7 +133,7 @@ export default function AdminPanel({
   });
 
   const [dataLoading, setDataLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'visits' | 'subscribers'>('formations');
+  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'prospection' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form states for Formations
@@ -1755,6 +1756,18 @@ export default function AdminPanel({
               >
                 <FileText className="w-4 h-4" />
                 <span>Catalogue PDF</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('prospection'); setSearchQuery(''); }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTab === 'prospection'
+                    ? 'bg-brand-blue text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-brand-blue hover:bg-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <Users className="w-4 h-4" />
+                <span>Prospection</span>
               </button>
 
               <button
@@ -3741,6 +3754,8 @@ export default function AdminPanel({
             {activeTab === 'testimonials' && <AdminTestimonials />}
 
             {activeTab === 'catalogue' && <AdminCatalogue />}
+
+            {activeTab === 'prospection' && <AdminProspection formations={mergedFormations} />}
 
           </div>
 
