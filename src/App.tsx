@@ -43,6 +43,7 @@ const TAB_PATHS: Record<string, string> = {
   partners: '/partenaires',
   contact: '/contact',
   confidentialite: '/confidentialite',
+  mentions: '/mentions-legales',
   admin: '/admin'
 };
 
@@ -58,6 +59,7 @@ const Formations = lazy(() => import('./components/Formations'));
 const Realisations = lazy(() => import('./components/Realisations'));
 const Catalogue = lazy(() => import('./components/Catalogue'));
 const Privacy = lazy(() => import('./components/Privacy'));
+const LegalNotice = lazy(() => import('./components/LegalNotice'));
 const News = lazy(() => import('./components/News'));
 const Contact = lazy(() => import('./components/Contact'));
 const Partners = lazy(() => import('./components/Partners'));
@@ -519,6 +521,8 @@ export default function App() {
         return <News blogPosts={blogPosts} formations={formations} />;
       case 'partners':
         return <Partners partners={partners} />;
+      case 'mentions':
+        return <LegalNotice />;
       case 'confidentialite':
         return <Privacy />;
       case 'contact':

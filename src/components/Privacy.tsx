@@ -62,29 +62,8 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     )
   },
   {
-    id: 'destinataires',
-    title: '4. Qui peut accéder à vos données ?',
-    body: (
-      <>
-        <p>
-          Seuls les membres habilités du CICEXF y ont accès. <strong>Nous ne vendons ni ne louons vos données.</strong> Elles sont
-          hébergées et traitées, pour notre compte, par les prestataires techniques suivants :
-        </p>
-        <ul>
-          <li><strong>Google (Firebase et Google Cloud)</strong> : base de données du site et fonctionnement d'ADILINE (modèle Gemini) ; serveurs situés notamment dans l'Union européenne.</li>
-          <li><strong>Hostinger</strong> : hébergement des pages du site.</li>
-          <li><strong>Meta (Facebook, Instagram)</strong> : pour les formulaires de publicité et les messages adressés à nos comptes, selon les règles de Meta.</li>
-        </ul>
-        <p>
-          Ces prestataires peuvent traiter les données hors de Côte d'Ivoire ; ils appliquent des mesures de sécurité et de confidentialité
-          conformes aux standards internationaux.
-        </p>
-      </>
-    )
-  },
-  {
     id: 'conservation',
-    title: '5. Combien de temps les conservons-nous ?',
+    title: '4. Combien de temps les conservons-nous ?',
     body: (
       <ul>
         <li>Demandes, inscriptions et échanges commerciaux : <strong>3 ans</strong> après notre dernier contact, puis suppression.</li>
@@ -97,7 +76,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
   },
   {
     id: 'droits',
-    title: '6. Quels sont vos droits ?',
+    title: '5. Quels sont vos droits ?',
     body: (
       <>
         <p>
@@ -112,15 +91,14 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
         </ul>
         <p>
           Écrivez-nous à <a href="mailto:cabinetcicexf@gmail.com">cabinetcicexf@gmail.com</a> en précisant votre demande ; nous répondons
-          dans un délai d'un mois au plus. Si vous estimez que vos droits ne sont pas respectés, vous pouvez saisir l'Autorité de Régulation des
-          Télécommunications/TIC de Côte d'Ivoire (<a href="https://www.artci.ci" target="_blank" rel="noreferrer">ARTCI</a>).
+          dans un délai d'un mois au plus.
         </p>
       </>
     )
   },
   {
     id: 'stockage',
-    title: '7. Cookies et stockage dans votre navigateur',
+    title: '6. Cookies et stockage dans votre navigateur',
     body: (
       <>
         <p>
@@ -134,17 +112,17 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
   },
   {
     id: 'securite',
-    title: '8. Sécurité',
+    title: '7. Sécurité',
     body: (
       <p>
-        Les échanges avec le site sont chiffrés (HTTPS) et les données sont chiffrées sur les serveurs de nos prestataires. L'accès à
-        l'administration du site est réservé aux comptes autorisés du cabinet, protégés par l'authentification Google.
+        Les échanges avec le site sont chiffrés (HTTPS) et les données sont chiffrées sur les serveurs. L'accès à
+        l'administration du site est réservé aux comptes autorisés du cabinet.
       </p>
     )
   },
   {
     id: 'modifications',
-    title: '9. Modifications de cette politique',
+    title: '8. Modifications de cette politique',
     body: (
       <p>
         Nous pouvons mettre à jour cette politique pour tenir compte de l'évolution de nos services ou de la loi. La date de dernière mise
