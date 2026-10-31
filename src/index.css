@@ -326,3 +326,30 @@
   .privacy-content td:first-child { font-weight: 700; background: #f8fafc; }
   .dark .privacy-content td:first-child { background: #0f172a; }
 }
+
+/* Header dropdown lists: a separator between entries and an unmistakable hover state */
+.nav-dd > button {
+  position: relative;
+  border-radius: 0.5rem;
+  border-left: 3px solid transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, padding-left 0.15s ease;
+}
+.nav-dd > button + button {
+  margin-top: 1px;
+  box-shadow: 0 -1px 0 #eef2f6;
+}
+.nav-dd > button:hover,
+.nav-dd > button:focus-visible {
+  background-color: #fbeee9 !important;
+  color: #8a2e1c !important;
+  border-left-color: #8a2e1c;
+  padding-left: 1rem;
+  outline: none;
+}
+.dark .nav-dd > button + button { box-shadow: 0 -1px 0 rgba(255, 255, 255, 0.08); }
+.dark .nav-dd > button:hover,
+.dark .nav-dd > button:focus-visible {
+  background-color: rgba(253, 186, 116, 0.12) !important;
+  color: #fdba74 !important;
+  border-left-color: #fdba74;
+}

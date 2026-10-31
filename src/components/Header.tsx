@@ -422,7 +422,7 @@ export default function Header({
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/acc:rotate-180" />
                   </button>
                   <div className="invisible opacity-0 group-hover/acc:visible group-hover/acc:opacity-100 group-focus-within/acc:visible group-focus-within/acc:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50" style={closedMenu === "acc" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
-                    <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                    <div className="nav-dd w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <p className="px-3 pt-1 pb-2 text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nos domaines d'intervention</p>
                       {domains.map(d => (
                         <button
@@ -464,7 +464,7 @@ export default function Header({
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/form:rotate-180" />
                   </button>
                   <div className="invisible opacity-0 group-hover/form:visible group-hover/form:opacity-100 group-focus-within/form:visible group-focus-within/form:opacity-100 transition-all duration-200 absolute left-0 top-full pt-2 z-50" style={closedMenu === "form" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
-                    <div className="w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                    <div className="nav-dd w-80 max-h-[70vh] overflow-y-auto rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <button
                         onClick={() => openFormationsView('subtab-certifications')}
                         className="w-full text-left px-3 py-2.5 rounded-lg text-sm font-bold text-brand-emerald dark:text-orange-300 hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer"
@@ -512,7 +512,7 @@ export default function Header({
                     <ChevronDown className="w-3 h-3 transition-transform group-hover/news:rotate-180" />
                   </button>
                   <div className="invisible opacity-0 group-hover/news:visible group-hover/news:opacity-100 group-focus-within/news:visible group-focus-within/news:opacity-100 transition-all duration-200 absolute left-1/2 -translate-x-1/2 top-full pt-2 z-50" style={closedMenu === "news" ? { visibility: "hidden", opacity: 0, transition: "none" } : undefined}>
-                    <div className="w-56 rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
+                    <div className="nav-dd w-56 rounded-xl bg-white dark:bg-[#020817] shadow-xl ring-1 ring-slate-200 dark:ring-white/10 p-2">
                       <button
                         onClick={() => handleNavClick('news')}
                         className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${activeTab === 'news' ? 'bg-slate-100 dark:bg-white/10 text-brand-emerald' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/5'}`}
