@@ -355,18 +355,34 @@
   border-left-color: #fdba74;
 }
 
-/* Phone menu: unfolded lists framed, one clear line between entries, touch feedback */
-.nav-dd-mobile > button {
-  padding-top: 0.7rem;
-  padding-bottom: 0.7rem;
+/* Phone menu: every entry clearly framed, and each unfolded list set apart with visible lines */
+#mobile-menu > button {
+  border: 1px solid #cbd5e1;
 }
-.nav-dd-mobile > button:active {
+.dark #mobile-menu > button { border-color: rgba(255, 255, 255, 0.18); }
+.nav-dd-m {
+  margin: 4px 0 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #8a2e1c;
+  border-radius: 0 12px 12px 0;
+  background: #f8fafc;
+  overflow: hidden;
+}
+.nav-dd-m > button {
+  border-radius: 0 !important;
+  padding-top: 0.7rem !important;
+  padding-bottom: 0.7rem !important;
+  padding-left: 0.9rem !important;
+}
+.nav-dd-m > button + button { border-top: 1px solid #cbd5e1; }
+.nav-dd-m > button:hover,
+.nav-dd-m > button:active,
+.nav-dd-m > button:focus-visible {
   background-color: #fbeee9 !important;
   color: #8a2e1c !important;
-  border-left-color: #8a2e1c;
+  outline: none;
 }
-.dark .nav-dd-mobile > button:active {
-  background-color: rgba(253, 186, 116, 0.12) !important;
-  color: #fdba74 !important;
-  border-left-color: #fdba74;
-}
+.dark .nav-dd-m { background: #0f172a; border-color: rgba(255, 255, 255, 0.18); border-left-color: #fdba74; }
+.dark .nav-dd-m > button + button { border-top-color: rgba(255, 255, 255, 0.18); }
+.dark .nav-dd-m > button:hover,
+.dark .nav-dd-m > button:active { background-color: rgba(253, 186, 116, 0.12) !important; color: #fdba74 !important; }

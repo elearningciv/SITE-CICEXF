@@ -674,7 +674,7 @@ export default function Header({
               <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'acc' ? 'rotate-180' : ''}`} />
             </button>
             {mobileGroup === 'acc' && (
-              <div className="nav-dd nav-dd-mobile mx-1 mb-2 overflow-hidden rounded-xl border border-slate-300 bg-white dark:border-white/20 dark:bg-slate-900">
+              <div className="nav-dd-m">
                 <button onClick={() => handleNavClick('accompagnements')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && !selectedDomainId ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Tous les accompagnements</button>
                 {domains.map(d => (
                   <button key={d.id} onClick={() => openDomain(d.id)} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'accompagnements' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>{d.title}</button>
@@ -691,7 +691,7 @@ export default function Header({
               <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'form' ? 'rotate-180' : ''}`} />
             </button>
             {mobileGroup === 'form' && (
-              <div className="nav-dd nav-dd-mobile mx-1 mb-2 overflow-hidden rounded-xl border border-slate-300 bg-white dark:border-white/20 dark:bg-slate-900">
+              <div className="nav-dd-m">
                 <button onClick={() => openFormationsView('subtab-certifications')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${false ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Formations certifiantes</button>
                 {domains.map(d => (
                   <button key={d.id} onClick={() => openFormationsView(d.id)} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'formations' && selectedDomainId === d.id ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>{d.title}</button>
@@ -709,7 +709,7 @@ export default function Header({
               <ChevronDown className={`w-4 h-4 transition-transform ${mobileGroup === 'news' ? 'rotate-180' : ''}`} />
             </button>
             {mobileGroup === 'news' && (
-              <div className="nav-dd nav-dd-mobile mx-1 mb-2 overflow-hidden rounded-xl border border-slate-300 bg-white dark:border-white/20 dark:bg-slate-900">
+              <div className="nav-dd-m">
                 <button onClick={() => handleNavClick('news')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'news' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Actualités & publications</button>
                 <button onClick={() => handleNavClick('realisations')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Nos réalisations</button>
               </div>
