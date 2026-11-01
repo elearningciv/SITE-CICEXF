@@ -11,6 +11,8 @@ export interface ProformaData {
   participants: number;
   unitPrice: number | null; // FCFA, null when the formation has no published price
   client: { name: string; company?: string; phone: string; email: string; isCompany: boolean };
+  /** Cancelled invoices are printed with a visible ANNULÉE mark */
+  cancelled?: boolean;
 }
 
 /** Same rules as ADILINE's quote tool: -10 % from 3 participants, -15 % from 5 */
@@ -36,10 +38,6 @@ export function parsePrice(price?: string): number | null {
 /** 1250000 -> "1 250 000 FCFA" (plain spaces: the PDF fonts have no narrow no-break space) */
 export const fcfa = (n: number) => `${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} FCFA`;
 
-export function newProformaNumber(date = new Date()) {
-  const ymd = date.toISOString().slice(0, 10).replace(/-/g, '');
-  return `PF-${ymd}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-}
 
 const CABINET = {
   name: "Cabinet International de Consultance, d'Expertise et de Formation",
@@ -173,6 +171,13 @@ export async function buildProformaPdf(p: ProformaData): Promise<Blob> {
     "- Document établi automatiquement par ADILINE, l'assistante virtuelle du CICEXF ; un conseiller vous contacte pour finaliser l'inscription."
   ];
   doc.text(doc.splitTextToSize(terms.join('\n'), W - 2 * M), M, y + 6);
+
+  if (p.cancelled) {
+    doc.setTextColor(220, 38, 38);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(48);
+    doc.text('ANNULÉE', W / 2, 170, { align: 'center', angle: 20 });
+  }
 
   // Footer
   doc.setDrawColor(...terracotta);

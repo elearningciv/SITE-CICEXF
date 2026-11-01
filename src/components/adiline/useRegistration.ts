@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { saveProspect } from '../../lib/prospects';
-import { buildProformaPdf, computeTotals, fcfa, newProformaNumber, parsePrice, ProformaData } from '../../lib/proforma';
+import { buildProformaPdf, computeTotals, fcfa, parsePrice, ProformaData } from '../../lib/proforma';
+import { createInvoice } from '../../lib/invoices';
 
 /**
  * Guided registration inside the ADILINE conversation: one question at a time (with answer
@@ -141,7 +142,28 @@ export function useRegistration(
     const a = answers.current;
     const unit = parsePrice(a.formation!.price);
     const totals = computeTotals({ participants: a.participants!, unitPrice: unit });
-    const number = newProformaNumber();
+    const invoiceData: Omit<ProformaData, 'number' | 'date'> = {
+      formation: a.formation!.title,
+      modality: a.modality!,
+      session: a.session!,
+      duration: a.formation!.duration,
+      participants: a.participants!,
+      unitPrice: unit,
+      client: { name: a.name!, company: a.company, phone: a.phone!, email: a.email!, isCompany: !!a.isCompany }
+    };
+
+    // Official sequential number, stored with the invoice in the admin's "Factures" folder
+    let number: string;
+    let date: Date;
+    try {
+      ({ number, date } = await createInvoice(invoiceData));
+    } catch (err) {
+      console.error('Invoice numbering error:', err);
+      say("Je n'ai pas pu établir votre proforma (problème de connexion). Merci de réessayer dans un instant, ou écrivez-nous sur WhatsApp au **+225 07 01 97 00 65**.", [CONFIRM, CANCEL]);
+      setStep('confirm');
+      return;
+    }
+
     const id = await saveProspect({
       name: a.name!,
       email: a.email!,
@@ -155,24 +177,9 @@ export function useRegistration(
       notes: `Inscription via ADILINE · Proforma ${number} · ${totals ? `Total ${fcfa(totals.total)}` : 'Montant à confirmer'}`,
       channel: 'En ligne'
     });
-    if (!id) {
-      say("Je n'ai pas pu enregistrer votre inscription (problème de connexion). Merci de réessayer, ou écrivez-nous sur WhatsApp au **+225 07 01 97 00 65**.", [RESTART]);
-      setStep('confirm');
-      return;
-    }
+    if (!id) console.warn('Prospect not saved; the invoice', number, 'is stored in the Factures folder');
     try {
-      const data: ProformaData = {
-        number,
-        date: new Date(),
-        formation: a.formation!.title,
-        modality: a.modality!,
-        session: a.session!,
-        duration: a.formation!.duration,
-        participants: a.participants!,
-        unitPrice: unit,
-        client: { name: a.name!, company: a.company, phone: a.phone!, email: a.email!, isCompany: !!a.isCompany }
-      };
-      const blob = await buildProformaPdf(data);
+      const blob = await buildProformaPdf({ ...invoiceData, number, date });
       say(
         `Votre inscription est enregistrée, merci **${a.name}** !\n\nVoici votre **facture proforma n° ${number}**. Un conseiller vous contacte au ${a.phone} pour confirmer votre place et les modalités de paiement.`,
         undefined,

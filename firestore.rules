@@ -35,6 +35,34 @@ service cloud.firestore {
       allow read, update, delete: if isAdmin();
     }
 
+    // Numérotation des factures proforma : un compteur par année, qui n'avance que de 1,
+    // et seulement si la facture de ce numéro est créée dans la même transaction.
+    match /invoice_counters/{year} {
+      allow read: if true;
+      allow create: if year.matches('^20[0-9]{2}$')
+        && request.resource.data.keys().hasOnly(['last'])
+        && request.resource.data.last == 1
+        && existsAfter(/databases/$(database)/documents/proformas/$(year + '-1'));
+      allow update: if request.resource.data.keys().hasOnly(['last'])
+        && request.resource.data.last == resource.data.last + 1
+        && existsAfter(/databases/$(database)/documents/proformas/$(year + '-' + string(request.resource.data.last)));
+      allow delete: if false;
+    }
+
+    // Factures proforma : créées par ADILINE (une seule fois par numéro), consultées par l'admin
+    match /proformas/{invoiceId} {
+      allow create: if invoiceId.matches('^20[0-9]{2}-[0-9]+$')
+        && request.resource.data.seq == int(invoiceId.split('-')[1])
+        && request.resource.data.year == int(invoiceId.split('-')[0])
+        && getAfter(/databases/$(database)/documents/invoice_counters/$(invoiceId.split('-')[0])).data.last == request.resource.data.seq
+        && request.resource.data.number is string && request.resource.data.number.size() == 10
+        && request.resource.data.status == 'Émise'
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.keys().hasOnly(['number', 'seq', 'year', 'status', 'formation', 'modality', 'session', 'duration', 'participants', 'unitPrice', 'subtotal', 'discount', 'total', 'client', 'source', 'visitorId', 'createdAt']);
+      allow read, update: if isAdmin();
+      allow delete: if false;
+    }
+
     // Contenus publics du site : lecture libre, modification admin uniquement
     match /formations/{id} {
       allow read: if true;
