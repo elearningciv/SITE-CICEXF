@@ -361,22 +361,38 @@ export default function Interventions({
                       >
                         {/* Axis header: description left, photo right */}
                         {finalImageUrl && (
-                          <div className="grid grid-cols-1 items-start gap-6 bg-white p-5 dark:bg-slate-900 sm:p-8 lg:grid-cols-2 lg:gap-10">
-                            <div className="order-2 space-y-3 lg:order-1">
+                          <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-5 lg:gap-6 bg-white p-5 dark:bg-slate-900 sm:p-6">
+                            <div className="order-2 w-full lg:w-auto min-w-0 flex-1 space-y-3 lg:order-1">
                               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Axe {String(sIdx + 1).padStart(2, '0')} · Accompagnement CICEXF</p>
-                              <h2 className="font-display text-xl font-extrabold leading-snug text-slate-900 dark:text-white sm:text-2xl">
+                              <h2 className="font-display text-xl sm:text-2xl font-extrabold leading-tight text-slate-900 dark:text-white break-words">
                                 {sub.title}
                               </h2>
                               {presentationService && (
-                                <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300 line-clamp-5">{presentationService}</p>
+                                <div id={`axis-header-description-${sIdx}`} className="scroll-mt-28">
+                                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Description de l'accompagnement</p>
+                                  <p className="mt-1.5 whitespace-pre-line text-sm sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">{presentationService}</p>
+                                </div>
                               )}
+                              <div className="border-t border-slate-200 pt-5 mt-2 dark:border-slate-800">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSubTabMap(prev => ({ ...prev, [sIdx]: 'sinscrire' }));
+                                    setTimeout(() => document.getElementById('registration-form-card')?.scrollIntoView({ behavior: 'smooth' }), 80);
+                                  }}
+                                  className="px-5 py-2 bg-[#8A1A24] hover:bg-[#6D141C] text-white font-extrabold text-xs uppercase tracking-wider rounded-lg inline-flex items-center space-x-2 shadow-md transition-all cursor-pointer active:scale-95"
+                                >
+                                  <ArrowRight className="w-4 h-4" />
+                                  <span>Demander un devis</span>
+                                </button>
+                              </div>
                             </div>
-                            <div className="order-1 aspect-[16/10] overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-800 lg:order-2">
+                            <div className="order-1 relative w-full lg:w-80 xl:w-96 min-w-0 shrink-0 aspect-[4/3] lg:aspect-auto lg:min-h-[240px] overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950 lg:order-2">
                               <img
                                 src={finalImageUrl}
                                 alt={sub.title}
                                 referrerPolicy="no-referrer"
-                                className="h-full w-full object-contain"
+                                className="h-full w-full object-contain lg:absolute lg:inset-0 lg:object-cover"
                               />
                             </div>
                           </div>
@@ -387,8 +403,9 @@ export default function Interventions({
                           <InteractiveSectionTabs
                             description={presentationService}
                             sections={sections}
-                            defaultTabId="description"
-                            activeTabId={subTabMap[sIdx] || 'description'}
+                            defaultTabId="objectifs"
+                            activeTabId={subTabMap[sIdx] || 'objectifs'}
+                            scrollLinks={finalImageUrl && presentationService ? { description: `axis-header-description-${sIdx}` } : undefined}
                             onTabChange={(tabId) => setSubTabMap(prev => ({ ...prev, [sIdx]: tabId }))}
                             onActionClick={() => {
                               setSubTabMap(prev => ({ ...prev, [sIdx]: 'sinscrire' }));

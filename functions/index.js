@@ -17,7 +17,7 @@ exports.metaWebhook = require('./meta').metaWebhook;
 const SENDER = 'elearningciv@gmail.com';
 const RECIPIENTS = ['cabinetcicexf@gmail.com'];
 const CC = ['elearningciv@gmail.com'];
-const ADMIN_URL = 'https://cicexf.gestionsaas.org/admin';
+const ADMIN_URL = 'https://cicexf.com/admin';
 
 // Mot de passe d'application Gmail, stocké dans Secret Manager (jamais dans le code)
 const GMAIL_APP_PASSWORD = defineSecret('GMAIL_APP_PASSWORD');
@@ -70,7 +70,7 @@ exports.notifyNewProspect = onDocumentCreated(
     const html = `
       <div style="font-family:Arial,Helvetica,sans-serif;max-width:640px">
         <h2 style="color:#003B6F;margin:0 0 4px">Nouvelle demande reçue sur le site</h2>
-        <p style="color:#475569;margin:0 0 16px">Enregistrée automatiquement depuis cicexf.gestionsaas.org</p>
+        <p style="color:#475569;margin:0 0 16px">Enregistrée automatiquement depuis cicexf.com</p>
         <table style="border-collapse:collapse;width:100%;border:1px solid #e2e8f0">${rows}</table>
         <p style="margin:20px 0">
           <a href="${ADMIN_URL}" style="background:#8A2E1C;color:#ffffff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Ouvrir l'administration</a>

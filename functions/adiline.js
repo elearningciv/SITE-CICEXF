@@ -14,7 +14,7 @@ const path = require('path');
 
 const DATABASE_ID = 'ai-studio-cicexfcabinetint-be0c0f21-7527-4112-ae7f-82c61d321a9c';
 const PROJECT_ID = process.env.GCLOUD_PROJECT || process.env.GCP_PROJECT || 'project-a93f5a0f-743d-4552-852';
-const ALLOWED_ORIGINS = ['https://cicexf.gestionsaas.org', 'http://localhost:3000', 'http://localhost:5173'];
+const ALLOWED_ORIGINS = ['https://cicexf.com', 'https://www.cicexf.com', 'https://cicexf.gestionsaas.org', 'http://localhost:3000', 'http://localhost:5173'];
 
 // Modèles essayés dans l'ordre ; le premier disponible est retenu pour les requêtes suivantes
 const MODEL_CANDIDATES = (process.env.ADILINE_MODELS || 'gemini-3-flash-preview,gemini-3.0-flash,gemini-2.5-flash')

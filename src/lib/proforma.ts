@@ -43,7 +43,7 @@ const CABINET = {
   name: "Cabinet International de Consultance, d'Expertise et de Formation",
   address: 'Cocody Palmeraie, Rue de la Clinique, Immeuble Prestige, 3e étage - Abidjan, Côte d\'Ivoire',
   contact: 'Tél. / WhatsApp : +225 07 01 97 00 65 · +225 05 74 22 22 46 · cabinetcicexf@gmail.com',
-  site: 'cicexf.gestionsaas.org'
+  site: 'cicexf.com'
 };
 
 export async function buildProformaPdf(p: ProformaData): Promise<Blob> {

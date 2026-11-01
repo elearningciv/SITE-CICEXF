@@ -1,4 +1,4 @@
-# Textes publiés sur les pages du site CICEXF (cicexf.gestionsaas.org)
+# Textes publiés sur les pages du site CICEXF (cicexf.com)
 
 ## Page « Qui sommes-nous » (onglet Qui sommes-nous)
 

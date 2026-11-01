@@ -2,7 +2,7 @@
 // while browsing) and at build time (one static HTML per page, sitemap.xml, robots.txt).
 // Keep titles under ~60 characters and descriptions under ~160.
 
-export const SITE_URL = 'https://cicexf.gestionsaas.org';
+export const SITE_URL = 'https://cicexf.com';
 
 export interface SeoPage {
   path: string;

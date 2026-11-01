@@ -26,6 +26,8 @@ interface InteractiveSectionTabsProps {
   defaultTabId?: string;
   activeTabId?: string;
   onTabChange?: (tabId: string) => void;
+  /** Menu entries that scroll to an element of the page (tab id → element id) instead of opening a section */
+  scrollLinks?: Record<string, string>;
   title?: string;
   onActionClick?: () => void;
   actionLabel?: string;
@@ -38,6 +40,7 @@ export default function InteractiveSectionTabs({
   defaultTabId,
   activeTabId: externalActiveTabId,
   onTabChange,
+  scrollLinks,
   title,
   onActionClick,
   actionLabel = "S'inscrire / Demander un devis",
@@ -58,6 +61,11 @@ export default function InteractiveSectionTabs({
   const detailsRef = useRef<HTMLDivElement>(null);
 
   const handleTabClick = (sectionId: string) => {
+    const target = scrollLinks?.[sectionId] && document.getElementById(scrollLinks[sectionId]);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     setInternalTabId(sectionId);
     if (onTabChange) {
       onTabChange(sectionId);

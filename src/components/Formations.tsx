@@ -395,7 +395,7 @@ function generateUniformDescription(sub: any) {
 
 function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, isLarge, onSelectDomain, currentDomainId }: any) {
   const [activeCardTab, setActiveCardTab] = useState<'info' | 'objectives' | 'results' | 'opportunities' | 'plus'>('info');
-  const [cardTabId, setCardTabId] = useState<string>('description');
+  const [cardTabId, setCardTabId] = useState<string>('objectifs');
   const data = getTailoredDataForAxis(sub.title, sub);
 
   if (isLarge) {
@@ -933,7 +933,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   const [formTerms, setFormTerms] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [formationActiveTab, setFormationActiveTab] = useState<string>('description');
+  const [formationActiveTab, setFormationActiveTab] = useState<string>('objectifs');
 
   // Corporate Domain Quote Form States
   const [corpCompany, setCorpCompany] = useState('');
@@ -952,7 +952,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
   const handleSelectFormation = (formation: Formation) => {
     setSelectedFormation(formation);
     setSelectedDomainId(null);
-    setFormationActiveTab('description');
+    setFormationActiveTab('objectifs');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -960,7 +960,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
     setSelectedFormation(null);
     setSelectedDomainId(null);
     setSubmitSuccess(false);
-    setFormationActiveTab('description');
+    setFormationActiveTab('objectifs');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

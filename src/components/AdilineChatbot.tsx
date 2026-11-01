@@ -102,10 +102,10 @@ function FormattedMessageText({ text }: { text: string }) {
   if (!text) return null;
   const lines = text.split('\n');
   return (
-    <div className="space-y-1.5 leading-relaxed text-[12.5px] sm:text-[13px]">
+    <div className="space-y-1 leading-normal text-[12.5px] sm:text-[13px]">
       {lines.map((line, lIdx) => {
         const trimmed = line.trim();
-        if (!trimmed) return <div key={lIdx} className="h-1" />;
+        if (!trimmed) return <div key={lIdx} className="h-0.5" />;
 
         const isBullet = trimmed.startsWith('•') || trimmed.startsWith('- ') || trimmed.startsWith('* ');
         const content = isBullet ? trimmed.replace(/^[•\-\*]\s*/, '') : trimmed;
@@ -1019,12 +1019,12 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
         </div>
 
         {/* MESSAGES LIST AREA */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y px-2 py-3 sm:px-6 sm:py-5 space-y-4 bg-slate-50/70 dark:bg-slate-950/40 [overflow-wrap:anywhere]">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain touch-pan-y px-2 py-2 sm:px-6 sm:py-3 space-y-2 bg-slate-50/70 dark:bg-slate-950/40 [overflow-wrap:anywhere]">
           
           {messages.map((msg) => (
             <div 
               key={msg.id} 
-              className={`flex min-w-0 flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-1.5`}
+              className={`flex min-w-0 flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} space-y-0.5`}
             >
               <div className={`flex min-w-0 items-end space-x-2 ${msg.role === 'user' ? 'max-w-[88%] sm:max-w-[70%]' : 'w-full max-w-full'}`}>
                 {msg.role === 'assistant' && (
@@ -1036,7 +1036,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 )}
 
                 <div 
-                  className={`min-w-0 max-w-full ${msg.role === 'assistant' ? 'flex-1' : ''} p-3 sm:p-4 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
+                  className={`min-w-0 max-w-full ${msg.role === 'assistant' ? 'flex-1' : ''} px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl text-[12.5px] sm:text-[13px] leading-relaxed shadow-sm font-sans ${
                     msg.role === 'user'
                       ? 'bg-blue-50 text-slate-900 border border-blue-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 rounded-br-none'
                       : 'bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 rounded-bl-none border border-slate-200/80 dark:border-slate-800'
@@ -1198,7 +1198,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                   {/* CITATION DES SOURCES */}
                   {msg.sources && msg.sources.length > 0 && (
-                    <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-500 flex items-center space-x-1">
+                    <div className="mt-1.5 pt-1.5 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-500 flex items-center space-x-1">
                       <Shield className="w-3 h-3 text-brand-emerald shrink-0" />
                       <span className="truncate">
                         Sources : {msg.sources.join(' · ')}

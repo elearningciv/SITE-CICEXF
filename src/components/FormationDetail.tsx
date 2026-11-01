@@ -18,7 +18,7 @@ interface FormationDetailProps {
 
 /** Full presentation of a formation: header with key facts, section tabs (with registration) and FAQ */
 export default function FormationDetail({ formation, activeTab, onTabChange, extraActions }: FormationDetailProps) {
-  const [localTab, setLocalTab] = useState('description');
+  const [localTab, setLocalTab] = useState('objectifs');
   const tab = activeTab ?? localTab;
   const setTab = onTabChange ?? setLocalTab;
 
@@ -36,16 +36,16 @@ export default function FormationDetail({ formation, activeTab, onTabChange, ext
     <>
       {/* Course Header: title, description, then the key facts */}
       <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden relative shadow-sm ring-1 ring-slate-200 dark:ring-slate-800">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 p-6 sm:p-8 items-start lg:items-center relative z-10">
-          <div className="w-full lg:w-7/12 min-w-0 flex-1 space-y-5">
-            <h1 className="font-display text-2xl sm:text-3xl font-extrabold leading-tight text-slate-900 dark:text-white break-words">
+        <div className="flex flex-col lg:flex-row gap-5 lg:gap-6 p-5 sm:p-6 items-start lg:items-stretch relative z-10">
+          <div className="w-full lg:w-auto min-w-0 flex-1 space-y-3">
+            <h1 className="font-display text-xl sm:text-2xl font-extrabold leading-tight text-slate-900 dark:text-white break-words">
               {formation.title}
             </h1>
 
             {desc && (
-              <div>
+              <div id="formation-header-description" className="scroll-mt-28">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Description de la formation</p>
-                <p className="mt-2 whitespace-pre-line text-base sm:text-lg leading-relaxed text-slate-700 dark:text-slate-200 line-clamp-[10]">{desc}</p>
+                <p className="mt-1.5 whitespace-pre-line text-sm sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">{desc}</p>
               </div>
             )}
 
@@ -78,12 +78,12 @@ export default function FormationDetail({ formation, activeTab, onTabChange, ext
             </div>
           </div>
 
-          <div className="w-full lg:w-5/12 min-w-0 shrink-0 aspect-[4/3] rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950">
+          <div className="w-full lg:w-80 xl:w-96 min-w-0 relative shrink-0 aspect-[4/3] lg:aspect-auto lg:min-h-[240px] rounded-2xl overflow-hidden shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950">
             <img
               src={formation.featuredImage}
               alt={formation.title}
               referrerPolicy="no-referrer"
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain lg:absolute lg:inset-0 lg:object-cover"
             />
           </div>
         </div>
@@ -95,7 +95,8 @@ export default function FormationDetail({ formation, activeTab, onTabChange, ext
           title={formation.title}
           description={formation.shortDescription || formation.context}
           sections={buildFormationTabSections(formation)}
-          defaultTabId="description"
+          defaultTabId="objectifs"
+          scrollLinks={{ description: 'formation-header-description' }}
           activeTabId={tab}
           onTabChange={setTab}
           onActionClick={goToRegistration}
