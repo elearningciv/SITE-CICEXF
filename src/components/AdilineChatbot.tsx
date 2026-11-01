@@ -66,6 +66,38 @@ function formatDuration(totalSeconds: number): string {
 }
 
 // Renders text with bold parsing (**mot**) and bullet points cleanly
+// Contacts in ADILINE's answers are clickable: the cabinet's WhatsApp number opens WhatsApp,
+// other Ivorian numbers start a call, e-mail addresses open the mail app, web addresses open the page.
+const WHATSAPP_DIGITS = '2250701970065';
+const CONTACT_RE = /([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|((?:\+?225[\s.-]?)?(?:0[1579]|2[1-7])(?:[\s.-]?\d{2}){4})|((?:https?:\/\/|www\.)[^\s<)]+[^\s<).,;:!?])/g;
+const LINK_CLASS = 'font-semibold text-brand-blue underline underline-offset-2 hover:text-brand-blue-dark dark:text-sky-300 break-words';
+
+function linkifyContacts(str: string, keyPrefix: string): React.ReactNode[] {
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  CONTACT_RE.lastIndex = 0;
+  while ((m = CONTACT_RE.exec(str))) {
+    if (m.index > last) out.push(str.slice(last, m.index));
+    const key = `${keyPrefix}-${m.index}`;
+    if (m[1]) {
+      out.push(<a key={key} href={`mailto:${m[1]}?subject=${encodeURIComponent("Demande d'information - CICEXF")}`} className={LINK_CLASS}>{m[1]}</a>);
+    } else if (m[2]) {
+      const digits = m[2].replace(/\D/g, '');
+      const full = digits.startsWith('225') ? digits : `225${digits}`;
+      out.push(full === WHATSAPP_DIGITS
+        ? <a key={key} href={`https://wa.me/${WHATSAPP_DIGITS}?text=${encodeURIComponent('Bonjour CICEXF, je vous contacte depuis votre site.')}`} target="_blank" rel="noreferrer" className={LINK_CLASS} title="Écrire sur WhatsApp">{m[2]}</a>
+        : <a key={key} href={`tel:+${full}`} className={LINK_CLASS} title="Appeler">{m[2]}</a>);
+    } else if (m[3]) {
+      const href = m[3].startsWith('http') ? m[3] : `https://${m[3]}`;
+      out.push(<a key={key} href={href} target="_blank" rel="noreferrer" className={LINK_CLASS}>{m[3]}</a>);
+    }
+    last = CONTACT_RE.lastIndex;
+  }
+  if (last < str.length) out.push(str.slice(last));
+  return out;
+}
+
 function FormattedMessageText({ text }: { text: string }) {
   if (!text) return null;
   const lines = text.split('\n');
@@ -84,11 +116,11 @@ function FormattedMessageText({ text }: { text: string }) {
             if (part.startsWith('**') && part.endsWith('**') && part.length > 4) {
               return (
                 <strong key={pIdx} className="font-semibold text-slate-900 dark:text-white">
-                  {part.slice(2, -2)}
+                  {linkifyContacts(part.slice(2, -2), `${lIdx}-${pIdx}`)}
                 </strong>
               );
             }
-            return <span key={pIdx}>{part}</span>;
+            return <span key={pIdx}>{linkifyContacts(part, `${lIdx}-${pIdx}`)}</span>;
           });
         };
 
