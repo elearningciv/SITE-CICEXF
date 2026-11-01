@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { SoftwareTool } from '../types';
 
@@ -16,6 +16,8 @@ export interface TabSectionItem {
   content?: React.ReactNode;
   softwareTools?: SoftwareTool[];
   extraDetails?: { label: string; value: string }[];
+  /** Lists shown under their own sub-heading (e.g. Objectifs / Résultats) */
+  groups?: { title: string; items: string[] }[];
 }
 
 interface InteractiveSectionTabsProps {
@@ -53,10 +55,16 @@ export default function InteractiveSectionTabs({
   const currentTabId = externalActiveTabId !== undefined ? externalActiveTabId : internalTabId;
   const activeSection = sections.find(s => s.id === currentTabId) || sections[0];
 
+  const detailsRef = useRef<HTMLDivElement>(null);
+
   const handleTabClick = (sectionId: string) => {
     setInternalTabId(sectionId);
     if (onTabChange) {
       onTabChange(sectionId);
+    }
+    // On phones the menu sits under the details: bring the chosen section into view
+    if (window.innerWidth < 768 && detailsRef.current) {
+      setTimeout(() => detailsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     }
   };
 
@@ -67,11 +75,11 @@ export default function InteractiveSectionTabs({
         : 'rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200/70 dark:border-slate-800 shadow-md'
     }`}>
       
-      {/* Side-by-side Layout: Details on LEFT (wide and screen-adapted), Burgundy Menu on RIGHT (narrow) */}
-      <div className="flex flex-col-reverse md:flex-row items-stretch">
+      {/* Details first (left on computers, on top on phones), burgundy menu on the right / underneath */}
+      <div className="flex flex-col md:flex-row items-stretch">
         
         {/* LEFT COLUMN: ACTIVE SECTION DETAILS (Agrandis et adaptés à la taille de l'écran) */}
-        <div className="flex-1 min-w-0 p-6 sm:p-8 lg:p-10 bg-white dark:bg-slate-900 flex flex-col justify-between">
+        <div ref={detailsRef} className="scroll-mt-24 flex-1 min-w-0 p-6 sm:p-8 lg:p-10 bg-white dark:bg-slate-900 flex flex-col justify-between">
           <div>
             {/* Header of Active Section with color badge and title (Suppressed on S'INSCRIRE) */}
             {activeSection.id !== 'sinscrire' && (
@@ -155,6 +163,23 @@ export default function InteractiveSectionTabs({
               </div>
             )}
 
+            {/* Lists under their own sub-heading */}
+            {activeSection.groups && activeSection.groups.filter(g => g.items.length > 0).map((group, gIdx) => (
+              <div key={group.title} className={`font-sans ${gIdx > 0 ? 'mt-6 pt-5 border-t border-slate-200 dark:border-slate-800' : ''}`}>
+                <h4 className="mb-3 text-sm font-extrabold uppercase tracking-wider text-[#8A1A24] dark:text-red-300">{group.title}</h4>
+                <div className="space-y-3">
+                  {group.items.map((item, idx) => (
+                    <div key={idx} className="flex items-start text-slate-850 dark:text-slate-200 text-[13.5px] sm:text-[14px] leading-relaxed">
+                      <span className="w-[18px] h-[18px] rounded-full border-2 border-[#F25C05] flex items-center justify-center shrink-0 mt-0.5 mr-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#F25C05]"></span>
+                      </span>
+                      <span className="font-normal">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
             {/* Software Tools if present */}
             {activeSection.softwareTools && activeSection.softwareTools.length > 0 && (
               <div className="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
@@ -234,7 +259,7 @@ export default function InteractiveSectionTabs({
         </div>
 
         {/* RIGHT COLUMN: BURGUNDY VERTICAL MENU (#8A1A24) (Pas large, aligné à droite) */}
-        <div className="w-full md:w-56 lg:w-64 xl:w-72 shrink-0 bg-[#8A1A24] dark:bg-[#6D141C] flex flex-col justify-start border-b md:border-b-0 md:border-l border-white/10 shadow-md">
+        <div className="w-full md:w-56 lg:w-64 xl:w-72 shrink-0 bg-[#8A1A24] dark:bg-[#6D141C] flex flex-col justify-start border-t md:border-t-0 md:border-l border-white/10 shadow-md">
           <div className="py-2.5 px-4 bg-black/20 text-white/90 border-b border-white/10 text-center">
             <span className="text-[11px] font-mono font-extrabold uppercase tracking-widest text-amber-200">
               Rubriques &bull; Navigation

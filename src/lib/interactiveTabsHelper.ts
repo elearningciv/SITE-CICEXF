@@ -176,7 +176,10 @@ export function buildFormationTabSections(
       id: 'objectifs',
       label: 'OBJECTIFS',
       intro: 'Les travaux de cette formation permettront aux personnes engagées ou non dans la vie active de :',
-      items: [...objectivesList, ...resultsList.map(r => `Résultat certifié : ${r}`)]
+      groups: [
+        { title: 'Objectifs', items: objectivesList },
+        { title: 'Résultats', items: resultsList }
+      ]
     },
     {
       id: 'public',
