@@ -354,3 +354,19 @@
   color: #fdba74 !important;
   border-left-color: #fdba74;
 }
+
+/* Phone menu: unfolded lists framed, one clear line between entries, touch feedback */
+.nav-dd-mobile > button {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+}
+.nav-dd-mobile > button:active {
+  background-color: #fbeee9 !important;
+  color: #8a2e1c !important;
+  border-left-color: #8a2e1c;
+}
+.dark .nav-dd-mobile > button:active {
+  background-color: rgba(253, 186, 116, 0.12) !important;
+  color: #fdba74 !important;
+  border-left-color: #fdba74;
+}
