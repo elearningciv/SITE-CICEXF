@@ -17,7 +17,7 @@ exports.metaWebhook = require('./meta').metaWebhook;
 const SENDER = 'elearningciv@gmail.com';
 const RECIPIENTS = ['cabinetcicexf@gmail.com'];
 const CC = ['elearningciv@gmail.com'];
-const ADMIN_URL = 'https://cicexf.com/admin';
+const ADMIN_URL = 'https://www.cicexf.com/admin';
 
 // Mot de passe d'application Gmail, stocké dans Secret Manager (jamais dans le code)
 const GMAIL_APP_PASSWORD = defineSecret('GMAIL_APP_PASSWORD');

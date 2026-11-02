@@ -20,7 +20,7 @@ const META_APP_SECRET = defineSecret('META_APP_SECRET');
 const META_PAGE_TOKEN = defineSecret('META_PAGE_TOKEN');
 
 const GRAPH = 'https://graph.facebook.com/v23.0';
-const FALLBACK_REPLY = "Merci pour votre message ! Un conseiller du CICEXF vous répond très vite. Vous pouvez aussi nous joindre au +225 07 01 97 00 65 (WhatsApp) ou sur https://cicexf.com";
+const FALLBACK_REPLY = "Merci pour votre message ! Un conseiller du CICEXF vous répond très vite. Vous pouvez aussi nous joindre au +225 07 01 97 00 65 (WhatsApp) ou sur https://www.cicexf.com";
 
 async function graph(pathAndQuery, token, init = {}) {
   const sep = pathAndQuery.includes('?') ? '&' : '?';

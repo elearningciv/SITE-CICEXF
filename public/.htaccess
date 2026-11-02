@@ -3,6 +3,9 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # The site's main address is www.cicexf.com: send cicexf.com there permanently
+  RewriteCond %{HTTP_HOST} ^cicexf\.com$ [NC]
+  RewriteRule ^(.*)$ https://www.cicexf.com/$1 [R=301,L]
   RewriteRule ^index\.html$ - [L]
   # Missing build files must stay real 404s (never the HTML page), otherwise an
   # outdated page loads HTML as JavaScript and stays blank
