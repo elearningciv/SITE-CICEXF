@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 
 /** Privacy policy (/confidentialite), kept short on purpose; also the URL given to Meta for lead ads */
 
-const UPDATED = '31 octobre 2026';
+const UPDATED = '2 novembre 2026';
 
 const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
   {
@@ -16,7 +16,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
           <li>votre identité : nom et prénom ;</li>
           <li>vos coordonnées : téléphone, WhatsApp et adresse e-mail ;</li>
           <li>votre situation professionnelle : entreprise ou organisation, fonction ;</li>
-          <li>la formation ou le service qui vous intéresse, et vos messages.</li>
+          <li>la formation ou le service qui vous intéresse, et vos messages, y compris vos échanges avec notre assistante virtuelle ADILINE.</li>
         </ul>
         <p>Le site enregistre aussi quelques données techniques de visite (pages consultées, type de navigateur) pour améliorer son fonctionnement.</p>
       </>
@@ -30,6 +30,10 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
         <p>
           Ces informations servent uniquement à <strong>vous identifier et traiter votre candidature ou votre demande</strong>, et à vous
           présenter nos offres de formation et d'accompagnement.
+        </p>
+        <p>
+          Vos échanges avec ADILINE sont enregistrés et relus par le cabinet pour assurer le suivi de votre demande. ADILINE peut vous
+          proposer de laisser votre numéro WhatsApp afin qu'un conseiller vous recontacte : c'est toujours facultatif.
         </p>
         <p>
           <strong>Aucune information sensible ou confidentielle n'est collectée</strong> : ni données de santé, de religion ou d'opinion, ni

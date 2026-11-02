@@ -25,6 +25,7 @@ export interface Invoice extends Omit<ProformaData, 'date'> {
   discount: number | null;
   total: number | null;
   source?: string;
+  visitorId?: string;
 }
 
 export const formatInvoiceNumber = (year: number, seq: number) =>

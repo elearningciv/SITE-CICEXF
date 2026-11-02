@@ -7,7 +7,7 @@
 const { onRequest } = require('firebase-functions/v2/https');
 const { logger } = require('firebase-functions');
 const { initializeApp, getApps } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
+const { getFirestore, FieldValue, Timestamp } = require('firebase-admin/firestore');
 const { GoogleGenAI, Type } = require('@google/genai');
 const fs = require('fs');
 const path = require('path');
@@ -64,6 +64,23 @@ async function getLiveContent() {
   });
   liveCache = { at: Date.now(), data };
   return data;
+}
+
+// Consignes ajoutées pour les visiteurs du site : relation chaleureuse et numéro WhatsApp, toujours facultatif
+function buildContactInstruction(contact) {
+  const known = contact && contact.whatsapp
+    ? `Le numéro WhatsApp de ce visiteur est déjà connu : ne le redemande pas.`
+    : `Tu ne connais pas encore le numéro WhatsApp de ce visiteur.`;
+  const name = contact && contact.name ? `Son prénom ou nom : ${contact.name}. Utilise-le naturellement.` : '';
+  return `
+
+RELATION AVEC LE VISITEUR ET NUMÉRO WHATSAPP
+- Crée une relation amicale et sincère : montre un réel intérêt pour son projet, encourage-le, remercie-le de sa confiance, reste simple et souriante, tout en le vouvoyant.
+- Après l'avoir vraiment aidé (à partir de ton 2e ou 3e échange, jamais dans ta première réponse), demande-lui une seule fois et avec beaucoup de gentillesse son numéro WhatsApp, en expliquant à quoi il servira : par exemple pour qu'un conseiller du cabinet lui envoie le programme et les prochaines dates, et suive son projet avec lui. Varie la formulation et intègre-la naturellement à la fin de ta réponse.
+- C'est toujours facultatif : réponds à ses questions même sans numéro. S'il refuse ou ne répond pas, dis que ce n'est pas un problème, continue avec la même chaleur et ne redemande plus. Pas de pression, pas d'urgence inventée, pas de promesse absente des sources.
+- Si le visiteur donne son numéro ou son prénom, appelle l'outil enregistrer_contact puis remercie-le chaleureusement.
+- Si on te demande si tu es une personne réelle, précise que tu es l'assistante virtuelle du cabinet.
+- ${known} ${name}`;
 }
 
 function buildSystemInstruction(live) {
@@ -126,6 +143,18 @@ const TOOLS = [{
   }]
 }];
 
+const CONTACT_TOOL = {
+  name: 'enregistrer_contact',
+  description: "Enregistre le prénom et/ou le numéro WhatsApp que le visiteur vient de donner lui-même dans la conversation.",
+  parameters: {
+    type: Type.OBJECT,
+    properties: {
+      prenom: { type: Type.STRING, description: 'Prénom ou nom donné par le visiteur' },
+      whatsapp: { type: Type.STRING, description: 'Numéro WhatsApp donné par le visiteur, avec son indicatif si connu' }
+    }
+  }
+};
+
 function calculerDevis(args, live) {
   const q = String(args.formation || '').toLowerCase();
   const f = live.formations.find(x => x.id === args.formation)
@@ -153,12 +182,13 @@ function calculerDevis(args, live) {
 // Garde-fous : origine autorisée, taille des requêtes, débit par adresse IP
 // ---------------------------------------------------------------------------
 const hits = new Map();
-function rateLimited(ip) {
+const logHits = new Map();
+function rateLimited(ip, store = hits, max = 30) {
   const now = Date.now();
-  const recent = (hits.get(ip) || []).filter(t => now - t < 10 * 60 * 1000);
+  const recent = (store.get(ip) || []).filter(t => now - t < 10 * 60 * 1000);
   recent.push(now);
-  hits.set(ip, recent);
-  return recent.length > 30;
+  store.set(ip, recent);
+  return recent.length > max;
 }
 
 // Modèles Gemini réellement proposés au projet, du plus récent au plus ancien (« flash » : rapide et économique)
@@ -206,10 +236,74 @@ async function generate(params) {
   throw lastErr;
 }
 
-// Réponse complète d'ADILINE (contenu du site + outil de devis), réutilisée par le site et par les messageries
-async function answer(contents) {
+// ---------------------------------------------------------------------------
+// Discussions enregistrées : une fiche par interlocuteur, ses messages à part
+// ---------------------------------------------------------------------------
+const CONVERSATION_ID_RE = /^v_[a-z0-9]{6,40}$/;
+const MESSAGE_ID_RE = /^[\w-]{1,80}$/;
+const PHONE_RE = /(?:\+|00)\d[\d\s.-]{7,16}\d|\b(?:225[\s.-]?)?0\d(?:[\s.-]?\d{2}){4}\b/;
+const EMAIL_RE = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
+
+const conversationRef = (id) => db.collection('adiline_conversations').doc(id);
+
+async function saveContact(conversationId, { name, whatsapp, email }) {
+  const contact = {};
+  if (name) contact.name = String(name).slice(0, 120);
+  if (whatsapp) contact.whatsapp = String(whatsapp).slice(0, 40);
+  if (email) contact.email = String(email).slice(0, 160);
+  if (Object.keys(contact).length) await conversationRef(conversationId).set({ contact }, { merge: true });
+}
+
+// Ajoute des messages à la fiche de l'interlocuteur (identifiant de message fixe : un renvoi ne crée pas de doublon)
+async function logMessages(conversationId, rawMessages) {
+  const messages = rawMessages
+    .filter(m => m && MESSAGE_ID_RE.test(String(m.id)) && (m.role === 'user' || m.role === 'assistant') && String(m.text || '').trim())
+    .slice(0, 30);
+  if (!messages.length) return;
+
+  const ref = conversationRef(conversationId);
+  const snap = await ref.get();
+  const batch = db.batch();
+  for (const m of messages) {
+    const at = new Date(m.at);
+    batch.set(ref.collection('messages').doc(String(m.id)), {
+      role: m.role,
+      text: String(m.text).slice(0, 8000),
+      at: Number.isNaN(at.getTime()) ? Timestamp.now() : Timestamp.fromDate(at),
+      seq: Number(m.seq) || 0,
+      attachmentName: String(m.attachmentName || '').slice(0, 200)
+    });
+  }
+  const parent = {
+    lastMessageAt: Timestamp.now(),
+    messageCount: FieldValue.increment(messages.length),
+    lastPreview: String(messages[messages.length - 1].text).slice(0, 200)
+  };
+  if (!snap.exists || !snap.data().startedAt) parent.startedAt = Timestamp.now();
+  batch.set(ref, parent, { merge: true });
+  await batch.commit();
+
+  const said = messages.filter(m => m.role === 'user').map(m => String(m.text)).join('\n');
+  const known = (snap.exists && snap.data().contact) || {};
+  await saveContact(conversationId, {
+    whatsapp: known.whatsapp ? '' : (said.match(PHONE_RE) || [''])[0].trim(),
+    email: known.email ? '' : (said.match(EMAIL_RE) || [''])[0]
+  });
+}
+
+// Réponse complète d'ADILINE (contenu du site + outil de devis), réutilisée par le site et par les messageries.
+// conversationId : visiteur du site, dont la fiche est enregistrée (absent pour les outils d'administration et les messageries)
+async function answer(contents, conversationId) {
   const live = await getLiveContent();
-  const config = { systemInstruction: buildSystemInstruction(live), temperature: 0.3, maxOutputTokens: 2048, tools: TOOLS };
+  let systemInstruction = buildSystemInstruction(live);
+  let tools = TOOLS;
+  if (conversationId) {
+    let contact = null;
+    try { contact = ((await conversationRef(conversationId).get()).data() || {}).contact || null; } catch (err) { logger.warn('Fiche visiteur illisible', { error: err.message }); }
+    systemInstruction += buildContactInstruction(contact);
+    tools = [{ functionDeclarations: [...TOOLS[0].functionDeclarations, CONTACT_TOOL] }];
+  }
+  const config = { systemInstruction, temperature: 0.3, maxOutputTokens: 2048, tools };
 
   let response = await generate({ contents, config });
   let cards = [];
@@ -217,7 +311,13 @@ async function answer(contents) {
   // Boucle d'outils (au plus 3 appels successifs)
   for (let i = 0; i < 3 && response.functionCalls && response.functionCalls.length; i++) {
     const call = response.functionCalls[0];
-    const out = call.name === 'calculer_devis' ? calculerDevis(call.args || {}, live) : { result: { erreur: 'Outil inconnu' }, cards: [] };
+    let out = { result: { erreur: 'Outil inconnu' }, cards: [] };
+    if (call.name === 'calculer_devis') out = calculerDevis(call.args || {}, live);
+    if (call.name === 'enregistrer_contact' && conversationId) {
+      await saveContact(conversationId, { name: call.args?.prenom, whatsapp: call.args?.whatsapp })
+        .catch(err => logger.warn('Contact non enregistré', { error: err.message }));
+      out = { result: { enregistre: true }, cards: [] };
+    }
     cards = cards.concat(out.cards);
     contents.push(response.candidates[0].content);
     contents.push({ role: 'user', parts: [{ functionResponse: { name: call.name, response: out.result } }] });
@@ -260,9 +360,24 @@ exports.adilineChat = onRequest(
     if (origin && !ALLOWED_ORIGINS.includes(origin)) return res.status(403).json({ error: 'Origine non autorisée' });
 
     const ip = (req.get('x-forwarded-for') || req.ip || '').split(',')[0].trim();
+
+    // Enregistrement des messages d'une discussion (aucune réponse d'IA)
+    if (req.body && req.body.action === 'log') {
+      const { conversationId, messages } = req.body;
+      if (!CONVERSATION_ID_RE.test(String(conversationId)) || !Array.isArray(messages)) return res.status(400).json({ error: 'Requête invalide' });
+      if (rateLimited(ip, logHits, 200)) return res.status(429).json({ error: 'Trop de requêtes' });
+      try {
+        await logMessages(conversationId, messages);
+        return res.json({ ok: true });
+      } catch (err) {
+        logger.error('Discussion non enregistrée', { error: err.message });
+        return res.status(500).json({ error: 'Enregistrement impossible' });
+      }
+    }
+
     if (rateLimited(ip)) return res.status(429).json({ error: 'Trop de messages. Merci de patienter quelques minutes.' });
 
-    const { message, history = [], attachment } = req.body || {};
+    const { message, history = [], attachment, conversationId } = req.body || {};
     const text = String(message || '').slice(0, 4000).trim();
 
     const parts = [];
@@ -281,7 +396,7 @@ exports.adilineChat = onRequest(
     const send = (payload) => res.write(`data: ${JSON.stringify(payload)}\n\n`);
 
     try {
-      const { text: reply, cards } = await answer(contents);
+      const { text: reply, cards } = await answer(contents, CONVERSATION_ID_RE.test(String(conversationId)) ? conversationId : undefined);
 
       if (cards.length) send({ type: 'cards', cards });
       send({ type: 'chunk', text: reply || "Je n'ai pas pu formuler de réponse. Notre secrétariat reste joignable au **+225 07 01 97 00 65**." });

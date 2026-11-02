@@ -63,6 +63,14 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Discussions avec ADILINE : écrites uniquement par le serveur, consultées par l'admin
+    match /adiline_conversations/{conversationId} {
+      allow read, delete: if isAdmin();
+      match /messages/{messageId} {
+        allow read, delete: if isAdmin();
+      }
+    }
+
     // Contenus publics du site : lecture libre, modification admin uniquement
     match /formations/{id} {
       allow read: if true;

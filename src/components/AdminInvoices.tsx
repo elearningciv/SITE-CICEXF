@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
-import { Ban, Download, Loader2, RotateCcw, Search } from 'lucide-react';
+import { Ban, Download, FileText, Loader2, RotateCcw, Search } from 'lucide-react';
 import { Invoice, setInvoiceStatus, toProformaData, useInvoices } from '../lib/invoices';
 import { buildProformaPdf, fcfa } from '../lib/proforma';
+import { buildInvoicesHtml, downloadHtml, reportDate } from '../lib/adminReports';
+import { Formation } from '../types';
 
 /** Admin tab "Factures": every proforma issued by ADILINE, with its PDF */
-export default function AdminInvoices() {
+export default function AdminInvoices({ formations }: { formations: Formation[] }) {
   const { invoices, loading, error } = useInvoices();
   const [search, setSearch] = useState('');
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -46,6 +48,11 @@ export default function AdminInvoices() {
     try { await setInvoiceStatus(inv.id, next); } catch { setActionError('Modification impossible. Réessayez.'); } finally { setBusyId(null); }
   };
 
+  const downloadFile = () => downloadHtml(
+    buildInvoicesHtml(invoices.map(inv => ({ ...inv, date: inv.createdAt ? inv.createdAt.toDate() : null })), formations),
+    `Factures-ADILINE-par-domaine-${reportDate()}.html`
+  );
+
   const dateOf = (inv: Invoice) => inv.createdAt ? inv.createdAt.toDate().toLocaleDateString('fr-FR') : '—';
 
   return (
@@ -72,6 +79,14 @@ export default function AdminInvoices() {
         <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900"><p className="text-xs font-bold uppercase text-slate-500">Montant total</p><p className="mt-1 text-xl font-black text-slate-900 dark:text-white">{fcfa(totalIssued)}</p></div>
         <div className="rounded-2xl bg-slate-50 p-4 dark:bg-slate-900"><p className="text-xs font-bold uppercase text-slate-500">Annulées</p><p className="mt-1 text-xl font-black text-slate-900 dark:text-white">{invoices.length - issued.length}</p></div>
       </div>
+
+      <button
+        onClick={downloadFile}
+        disabled={!invoices.length}
+        className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-emerald-800 disabled:opacity-50 cursor-pointer"
+      >
+        <FileText className="w-4 h-4" /> Télécharger le fichier des factures (HTML, par domaine et thématique)
+      </button>
 
       {(error || actionError) && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">{error || actionError}</p>}
 

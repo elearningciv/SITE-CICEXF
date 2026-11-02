@@ -4,6 +4,7 @@ import AdminDomains from './AdminDomains';
 import AdminCatalogue from './AdminCatalogue';
 import AdminProspection from './AdminProspection';
 import AdminInvoices from './AdminInvoices';
+import AdminConversations from './AdminConversations';
 import DomainAxisSelect from './DomainAxisSelect';
 import { db } from '../firebase';
 import { auth } from '../firebaseAuth';
@@ -134,7 +135,7 @@ export default function AdminPanel({
   });
 
   const [dataLoading, setDataLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'prospection' | 'factures' | 'visits' | 'subscribers'>('formations');
+  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'prospection' | 'factures' | 'discussions' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form states for Formations
@@ -1781,6 +1782,18 @@ export default function AdminPanel({
               >
                 <FileText className="w-4 h-4" />
                 <span>Factures</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('discussions'); setSearchQuery(''); }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTab === 'discussions'
+                    ? 'bg-brand-blue text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-brand-blue hover:bg-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Discussions</span>
               </button>
 
               <button
@@ -3770,7 +3783,9 @@ export default function AdminPanel({
 
             {activeTab === 'prospection' && <AdminProspection formations={mergedFormations} />}
 
-            {activeTab === 'factures' && <AdminInvoices />}
+            {activeTab === 'factures' && <AdminInvoices formations={mergedFormations} />}
+
+            {activeTab === 'discussions' && <AdminConversations />}
 
           </div>
 

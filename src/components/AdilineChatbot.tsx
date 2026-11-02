@@ -21,6 +21,7 @@ const CATALOGUE_ONLY_RE = /(lien|envoi|envoy|t[ée]l[ée]charg|donne|avoir|obten
 
 // Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
 import { ADILINE_API_URL } from '../lib/adilineApi';
+import { getVisitorId } from '../lib/tracker';
 
 export interface RichCard {
   type: 'formation' | 'session' | 'expert' | 'devis';
@@ -232,6 +233,30 @@ Comment puis-je vous accompagner aujourd'hui ?`,
     registration.start(requestText);
   };
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Every finished message goes to this visitor's conversation file in the admin
+  const loggedIds = useRef(new Set(['welcome']));
+  useEffect(() => {
+    if (isStreaming || !messages.some(m => m.role === 'user')) return;
+    const fresh = messages
+      .map((m, seq) => ({ id: m.id, role: m.role, text: m.text, at: m.timestamp, seq, attachmentName: m.attachmentName }))
+      .filter(m => !loggedIds.current.has(m.id) && m.text.trim())
+      .slice(0, 30);
+    if (!fresh.length) return;
+    fresh.forEach(m => loggedIds.current.add(m.id));
+    fetch(ADILINE_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      keepalive: true,
+      body: JSON.stringify({ action: 'log', conversationId: getVisitorId(), messages: fresh })
+    })
+      .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); })
+      .catch(err => {
+        // Sent again with the next message
+        console.warn('Conversation log note:', err);
+        fresh.forEach(m => loggedIds.current.delete(m.id));
+      });
+  }, [messages, isStreaming]);
 
   // Auto-scroll on new message
   useEffect(() => {
@@ -643,6 +668,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
         body: JSON.stringify({
           message: query || "Voici ma note vocale avec ma question. Merci d'y répondre avec précision selon les données officielles du cabinet.",
           history: recentHistory,
+          conversationId: getVisitorId(),
           attachment: {
             mimeType: mimeType || 'audio/webm',
             data: base64Data,
@@ -743,6 +769,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
         body: JSON.stringify({
           message: query,
           history: recentHistory,
+          conversationId: getVisitorId(),
           attachment: currentAttachment ? {
             mimeType: currentAttachment.mimeType,
             data: currentAttachment.data,
@@ -1483,7 +1510,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
           )}
 
           <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 px-1">
-            <span>Données officielles CICEXF</span>
+            <span>Données officielles CICEXF · Vos échanges avec ADILINE sont enregistrés par le cabinet pour mieux vous répondre (<a href="/confidentialite" target="_blank" rel="noreferrer" className="underline">confidentialité</a>).</span>
           </div>
         </div>
 
