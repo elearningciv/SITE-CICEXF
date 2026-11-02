@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   GraduationCap, 
   TrendingUp, 
@@ -37,6 +37,8 @@ import { DomainIntervention, SoftwareTool } from '../types';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../data/accompanimentEnrichments';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
 import { getDomainImage } from '../lib/domainImages';
+import { enrichDomains } from '../data/domainContent';
+import DomainOverview from './DomainOverview';
 import InteractiveSectionTabs from './InteractiveSectionTabs';
 import { buildAccompanimentTabSections } from '../lib/interactiveTabsHelper';
 
@@ -55,7 +57,7 @@ export default function Interventions({
   setPreselectedDomain,
   domains
 }: InterventionsProps) {
-  const allDomains = domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION;
+  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION), [domains]);
   const [subTabMap, setSubTabMap] = useState<Record<number, string>>({});
   const [activeSubIdx, setActiveSubIdx] = useState<number | null>(null);
 
@@ -260,6 +262,8 @@ export default function Interventions({
                     />
                   </div>
                 </div>
+
+                <DomainOverview domain={selectedDomainObj} />
               </>
             )}
 

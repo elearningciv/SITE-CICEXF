@@ -268,7 +268,7 @@ export function buildAccompanimentTabSections(
       ];
 
   // 3. Public / Target entities
-  const publicList = [
+  const publicList = sub.publicCible && sub.publicCible.length > 0 ? sub.publicCible : [
     "Directions Générales, Directions Financières, Directions Techniques et comités de gouvernance.",
     "Institutions publiques, ministères sectoriels et agences gouvernementales d'exécution.",
     "Projets sous financements internationaux (Banque Mondiale, BAD, AFD, Union Européenne).",
@@ -351,7 +351,6 @@ export function buildAccompanimentTabSections(
 
   const pedagogyList = [
     `Impact stratégique : ${sub.impactEntite || 'Autonomie opérationnelle renforcée, réduction des risques et souveraineté décisionnelle.'}`,
-    ...resultsExpected.map(r => `Résultat attendu : ${r}`),
     ...evalMethods.map(e => `Protocole d'évaluation : ${e}`)
   ];
 
@@ -397,13 +396,16 @@ export function buildAccompanimentTabSections(
     {
       id: 'objectifs',
       label: 'OBJECTIFS',
-      intro: 'L\'accompagnement technique et stratégique du Cabinet CICEXF permet à votre entité de :',
-      items: objectivesList
+      intro: 'Cet axe permet à votre organisation et à vos équipes de :',
+      groups: [
+        { title: 'Objectifs', items: objectivesList },
+        { title: 'Résultats attendus', items: resultsExpected }
+      ]
     },
     {
       id: 'public',
       label: 'PUBLIC',
-      intro: 'Ce pôle d\'expertise et de conseil s\'adresse en priorité aux entités et organisations suivantes :',
+      intro: 'Cet axe s\'adresse en priorité à :',
       items: publicList
     },
     {

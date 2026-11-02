@@ -16,6 +16,10 @@ import {
   GLOBAL_FAQ
 } from '../src/knowledgeBase';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../src/data/accompanimentEnrichments';
+import { AXIS_SHEETS, ContentSheet, DOMAIN_SHEETS } from '../src/data/domainContent';
+
+const withoutImages = (sheets: Record<string, ContentSheet>) =>
+  Object.fromEntries(Object.entries(sheets).map(([key, { imageUrl, ...sheet }]) => [key, sheet]));
 
 // Images, icônes et liens d'avatars n'apportent rien à l'assistante : on les retire
 const DROP_KEYS = new Set(['featuredImage', 'imageUrl', 'iconName', 'avatarUrl', 'logoUrl', 'icon', 'iconUrl', 'image']);
@@ -37,6 +41,8 @@ const knowledge = strip({
   formations: FORMATIONS,
   accompagnements: DOMAINS_INTERVENTION,
   accompagnementsDetails: ACCOMPANIMENT_ENRICHMENTS,
+  fichesDomaines: withoutImages(DOMAIN_SHEETS),
+  fichesAxes: withoutImages(AXIS_SHEETS),
   equipe: TEAM_MEMBERS,
   realisations: PROJECTS,
   actualites: BLOG_POSTS,

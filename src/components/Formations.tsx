@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { enrichDomains } from '../data/domainContent';
+import DomainOverview from './DomainOverview';
 import { 
   Search, SlidersHorizontal, BookOpen, Clock, BarChart, GraduationCap, 
   MapPin, CheckCircle, Calendar, Send, HelpCircle, ArrowLeft, Terminal, 
@@ -405,22 +407,22 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
       >
         {/* Axis header: description left, photo right */}
         {sub.imageUrl && (
-          <div className="grid grid-cols-1 items-start gap-6 bg-white p-5 dark:bg-slate-900 sm:p-8 lg:grid-cols-2 lg:gap-10">
-            <div className="order-2 space-y-3 lg:order-1">
+          <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-5 lg:gap-6 bg-white p-5 dark:bg-slate-900 sm:p-6">
+            <div className="order-2 w-full lg:w-auto min-w-0 flex-1 space-y-3 lg:order-1">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Spécialité {String(sIdx + 1).padStart(2, '0')} · Formations CICEXF</p>
               <h1 className="font-display text-xl font-extrabold leading-snug text-slate-900 dark:text-white sm:text-2xl">
                 {sub.title}
               </h1>
               {(sub.presentationService || sub.description) && (
-                <p className="text-base leading-relaxed text-slate-700 dark:text-slate-300 line-clamp-5">{(sub.presentationService || sub.description)}</p>
+                <p id={`formation-axis-description-${sIdx}`} className="scroll-mt-28 whitespace-pre-line text-sm sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">{(sub.presentationService || sub.description)}</p>
               )}
             </div>
-            <div className="order-1 aspect-[16/10] overflow-hidden rounded-2xl bg-slate-50 dark:bg-slate-800 lg:order-2">
+            <div className="order-1 relative w-full lg:w-80 xl:w-96 min-w-0 shrink-0 aspect-[4/3] lg:aspect-auto lg:min-h-[240px] overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950 lg:order-2">
               <img
                 src={sub.imageUrl}
                 alt={sub.title}
                 referrerPolicy="no-referrer"
-                className="h-full w-full object-contain"
+                className="h-full w-full object-contain lg:absolute lg:inset-0 lg:object-cover"
               />
             </div>
           </div>
@@ -430,7 +432,8 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
           <InteractiveSectionTabs
             description={sub.presentationService || sub.description}
             sections={buildAccompanimentTabSections(sub, DOMAINS_INTERVENTION.find(d => d.id === currentDomainId) || DOMAINS_INTERVENTION[0])}
-            defaultTabId="description"
+            defaultTabId="objectifs"
+            scrollLinks={sub.imageUrl ? { description: `formation-axis-description-${sIdx}` } : undefined}
             activeTabId={cardTabId}
             onTabChange={setCardTabId}
             onActionClick={() => setCardTabId('sinscrire')}
@@ -760,14 +763,7 @@ interface FormationsProps {
 }
 
 
-const ROMAN_THEMATICS = [
-  "I. INGÉNIERIE DE FORMATION ET DE RENFORCEMENT DE CAPACITÉS",
-  "II. INGÉNIERIE FINANCIÈRE ET DE L'INVESTISSEMENT",
-  "III. INGÉNIERIE INFORMATIQUE ET SYSTÈMES DE RÉSEAUX",
-  "IV. INGÉNIERIE DE DÉVELOPPEMENT TERRITORIAL",
-  "V. INGÉNIERIE QHSE (QUALITÉ – HYGIÈNE – SÉCURITÉ – ENVIRONNEMENT)",
-  "VI. AUDIT, CONSULTANCE ET STRATÉGIE DE DÉVELOPPEMENT DES ORGANISATIONS",
-];
+const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
 
 export const COUNTRIES_LIST = [
   { code: 'CI', name: 'Côte d’Ivoire', dial: '+225', flag: '🇨🇮' },
@@ -796,7 +792,7 @@ export const COUNTRIES_LIST = [
 
 export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS, domains }: FormationsProps) {
   // Domains managed in the admin (falls back to the built-in list)
-  const allDomains = domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION;
+  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION), [domains]);
   // Determine if outer routing requires a specific tab or selection
   const matchedFormation = selectedDomainId
     ? formations.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
@@ -1641,29 +1637,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                       </div>
                     </div>
 
-                    {/* Description & KPI Card */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                      <div className="lg:col-span-8 bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/50 dark:border-slate-800 shadow-sm flex flex-col justify-center">
-                        <h3 className="text-xs uppercase font-extrabold tracking-widest text-brand-emerald mb-2">Présentation générale</h3>
-                        <p className="text-xs sm:text-sm text-black dark:text-white font-sans font-medium leading-relaxed">
-                          {selectedDomainObj.description}
-                        </p>
-                      </div>
-
-                      <div className="lg:col-span-4 bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 p-8 rounded-3xl flex flex-col justify-center space-y-4 shadow-sm">
-                        <span className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Indicateurs de Performance</span>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div className="border-l-2 border-brand-emerald pl-3">
-                            <span className="block text-xl font-bold font-mono text-slate-900 dark:text-white">100%</span>
-                            <span className="block text-[11px] text-slate-600 dark:text-slate-400 uppercase">Pratique</span>
-                          </div>
-                          <div className="border-l-2 border-brand-blue pl-3">
-                            <span className="block text-xl font-bold font-mono text-slate-900 dark:text-white">4.8/5</span>
-                            <span className="block text-[11px] text-slate-600 dark:text-slate-400 uppercase">Avis Experts</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    <DomainOverview domain={selectedDomainObj} />
 
                     {/* SUB-ELEMENTS GRID HEADER */}
                     <div id="domain-specialties-header" className="space-y-8 scroll-mt-20">
@@ -1868,7 +1842,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
               <div className="space-y-2 max-w-3xl text-left">
                 <span className="text-xs font-extrabold text-brand-emerald uppercase tracking-widest block">Nomenclature Officielle</span>
                 <h2 className="font-display text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-tight">
-                  Répertoire des 8 Thématiques et 34 Axes de Formation du Cabinet
+                  Répertoire des {allDomains.length} Thématiques et {allDomains.reduce((sum, d) => sum + d.subDomains.length, 0)} Axes de Formation du Cabinet
                 </h2>
                 <p className="text-xs text-slate-550 dark:text-slate-400 font-sans leading-relaxed">
                   Découvrez l'ensemble de notre offre de formation structurée par expertises clés. Cliquez sur un axe pour consulter le détail de ses modules, compétences enseignées, outils logiciels associés et niveau visé, puis effectuez une demande de devis en un clic.
@@ -1922,7 +1896,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
             {/* Directory Grid/List of Thematics */}
             <div className="space-y-10">
               {allDomains.map((domain, domainIdx) => {
-                const romanTitle = ROMAN_THEMATICS[domainIdx] || domain.title;
+                const romanTitle = `${ROMAN_NUMERALS[domainIdx] ? `${ROMAN_NUMERALS[domainIdx]}. ` : ''}${domain.title.toUpperCase()}`;
                 
                 // Filter sub-domains (axes) based on search query
                 const matchingAxes = domain.subDomains.filter(sub => {
@@ -2065,7 +2039,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                 <SlidersHorizontal className="w-12 h-12 text-slate-300 mx-auto" />
                 <h3 className="font-display text-base font-bold text-slate-800 dark:text-slate-200">Aucun axe trouvé</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-450 leading-relaxed">
-                  Aucun des 34 axes ne correspond à vos critères de recherche actuels. Veuillez essayer en réinitialisant ou modifiant le mot-clé.
+                  Aucun des axes ne correspond à vos critères de recherche actuels. Veuillez essayer en réinitialisant ou modifiant le mot-clé.
                 </p>
                 <button
                   onClick={() => setAxesSearchQuery('')}

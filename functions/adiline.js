@@ -112,6 +112,12 @@ ${JSON.stringify(STATIC.cabinet)}
 === DÉTAIL DES ACCOMPAGNEMENTS PAR SOUS-DOMAINE (identifiant du pôle -> sous-domaines dans l'ordre) ===
 ${JSON.stringify(STATIC.accompagnementsDetails)}
 
+=== FICHES DES DOMAINES (identifiant du pôle -> présentation, objectifs, public cible, résultats attendus) ===
+${JSON.stringify(STATIC.fichesDomaines)}
+
+=== FICHES DES AXES (intitulé sans numéro ni accents -> présentation, objectifs, public cible, résultats attendus) ===
+${JSON.stringify(STATIC.fichesAxes)}
+
 === ÉQUIPE ===
 ${JSON.stringify(STATIC.equipe)}
 
