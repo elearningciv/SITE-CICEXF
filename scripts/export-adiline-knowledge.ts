@@ -16,9 +16,9 @@ import {
   GLOBAL_FAQ
 } from '../src/knowledgeBase';
 import { ACCOMPANIMENT_ENRICHMENTS } from '../src/data/accompanimentEnrichments';
-import { AXIS_SHEETS, ContentSheet, DOMAIN_SHEETS } from '../src/data/domainContent';
+import { AXIS_SHEETS, DomainSheet, DOMAIN_SHEETS } from '../src/data/domainContent';
 
-const withoutImages = (sheets: Record<string, ContentSheet>) =>
+const withoutImages = (sheets: Record<string, DomainSheet>) =>
   Object.fromEntries(Object.entries(sheets).map(([key, { imageUrl, ...sheet }]) => [key, sheet]));
 
 // Images, icônes et liens d'avatars n'apportent rien à l'assistante : on les retire

@@ -263,7 +263,7 @@ export default function Interventions({
                   </div>
                 </div>
 
-                <DomainOverview domain={selectedDomainObj} />
+                <DomainOverview domain={selectedDomainObj} audienceLabel="Pour les organisations et les particuliers" />
               </>
             )}
 
@@ -367,7 +367,7 @@ export default function Interventions({
                         {finalImageUrl && (
                           <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-5 lg:gap-6 bg-white p-5 dark:bg-slate-900 sm:p-6">
                             <div className="order-2 w-full lg:w-auto min-w-0 flex-1 space-y-3 lg:order-1">
-                              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Axe {String(sIdx + 1).padStart(2, '0')} · Accompagnement CICEXF</p>
+                              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Axe {String(sIdx + 1).padStart(2, '0')} · Accompagnement · Organisations et particuliers</p>
                               <h2 className="font-display text-xl sm:text-2xl font-extrabold leading-tight text-slate-900 dark:text-white break-words">
                                 {sub.title}
                               </h2>

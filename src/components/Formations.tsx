@@ -409,12 +409,15 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         {sub.imageUrl && (
           <div className="flex flex-col lg:flex-row items-start lg:items-stretch gap-5 lg:gap-6 bg-white p-5 dark:bg-slate-900 sm:p-6">
             <div className="order-2 w-full lg:w-auto min-w-0 flex-1 space-y-3 lg:order-1">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Spécialité {String(sIdx + 1).padStart(2, '0')} · Formations CICEXF</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A1A24] dark:text-red-300">Spécialité {String(sIdx + 1).padStart(2, '0')} · Formation · Particuliers et organisations</p>
               <h1 className="font-display text-xl font-extrabold leading-snug text-slate-900 dark:text-white sm:text-2xl">
                 {sub.title}
               </h1>
               {(sub.presentationService || sub.description) && (
+                <>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Description de la formation</p>
                 <p id={`formation-axis-description-${sIdx}`} className="scroll-mt-28 whitespace-pre-line text-sm sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">{(sub.presentationService || sub.description)}</p>
+                </>
               )}
             </div>
             <div className="order-1 relative w-full lg:w-80 xl:w-96 min-w-0 shrink-0 aspect-[4/3] lg:aspect-auto lg:min-h-[240px] overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950 lg:order-2">
@@ -431,7 +434,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
         <div className="p-0 border-t border-slate-100 dark:border-slate-800">
           <InteractiveSectionTabs
             description={sub.presentationService || sub.description}
-            sections={buildAccompanimentTabSections(sub, DOMAINS_INTERVENTION.find(d => d.id === currentDomainId) || DOMAINS_INTERVENTION[0])}
+            sections={buildAccompanimentTabSections(sub, DOMAINS_INTERVENTION.find(d => d.id === currentDomainId) || DOMAINS_INTERVENTION[0], undefined, 'formation')}
             defaultTabId="objectifs"
             scrollLinks={sub.imageUrl ? { description: `formation-axis-description-${sIdx}` } : undefined}
             activeTabId={cardTabId}
@@ -1637,7 +1640,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                       </div>
                     </div>
 
-                    <DomainOverview domain={selectedDomainObj} />
+                    <DomainOverview domain={selectedDomainObj} audienceLabel="Pour les particuliers et les organisations" />
 
                     {/* SUB-ELEMENTS GRID HEADER */}
                     <div id="domain-specialties-header" className="space-y-8 scroll-mt-20">
@@ -1993,7 +1996,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                 <div className="px-4 pb-6 sm:px-6 sm:pb-8 pt-2 animate-in slide-in-from-top-2 duration-200 space-y-4 border-l-4 border-[#8A1A24] ml-6 sm:ml-9 text-left">
                                   <InteractiveSectionTabs
                                     description={sub.presentationService || sub.description}
-                                    sections={buildAccompanimentTabSections(sub, domain)}
+                                    sections={buildAccompanimentTabSections(sub, domain, undefined, 'formation')}
                                     defaultTabId="objectifs"
                                     onActionClick={() => handleRequestQuoteForAxis(domain, sub.title)}
                                     actionLabel="S'inscrire / Devis pour cet axe"

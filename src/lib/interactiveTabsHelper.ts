@@ -249,11 +249,17 @@ export function buildFormationTabSections(
  * 7. FINANCEMENT
  * 8. S'INSCRIRE (dernier)
  */
+/** "formation" puts individuals first, "accompagnement" puts organizations first; both are always addressed */
+export type AxisAudience = 'formation' | 'accompagnement';
+
 export function buildAccompanimentTabSections(
   sub: SubDomain,
   domain: DomainIntervention,
-  registrationContent?: React.ReactNode
+  registrationContent?: React.ReactNode,
+  audience: AxisAudience = 'accompagnement'
 ): TabSectionItem[] {
+  const isFormation = audience === 'formation';
+
   // 1. Description
   const descText = sub.presentationService || sub.description || domain.description || "Mission d'assistance technique, d'audit opérationnel et d'accompagnement stratégique réalisée par le Cabinet CICEXF.";
 
@@ -268,7 +274,11 @@ export function buildAccompanimentTabSections(
       ];
 
   // 3. Public / Target entities
-  const publicList = sub.publicCible && sub.publicCible.length > 0 ? sub.publicCible : [
+  const hasAudiences = !!(sub.publicParticuliers?.length || sub.publicOrganisations?.length);
+  const publicList = hasAudiences ? [
+    ...(isFormation ? sub.publicParticuliers || [] : sub.publicOrganisations || []),
+    ...(isFormation ? sub.publicOrganisations || [] : sub.publicParticuliers || [])
+  ] : [
     "Directions Générales, Directions Financières, Directions Techniques et comités de gouvernance.",
     "Institutions publiques, ministères sectoriels et agences gouvernementales d'exécution.",
     "Projets sous financements internationaux (Banque Mondiale, BAD, AFD, Union Européenne).",
@@ -330,7 +340,10 @@ export function buildAccompanimentTabSections(
   }
 
   // 5. Accessibility / Intervention modalities
-  const accessList = [
+  const applyLine = isFormation
+    ? "Inscription individuelle en ligne ou avec ADILINE ; une organisation peut aussi inscrire un groupe ou demander une session sur mesure."
+    : "Pour une organisation : un échange permet de cadrer vos besoins et votre calendrier ; un particulier peut aussi être accompagné selon son projet.";
+  const accessList = sub.admission && sub.admission.length > 0 ? [...sub.admission, applyLine] : [
     "Intervention sur site dans vos locaux à Abidjan, sur l'ensemble du territoire ivoirien et dans la sous-région ouest-africaine.",
     "Modalités agiles : Formules en immersion continue, missions modulaires ou assistance technique per diem.",
     "Équipe dédiée d'experts pluridisciplinaires chevronnés encadrée par un chef de mission sénior dédié.",
@@ -396,7 +409,9 @@ export function buildAccompanimentTabSections(
     {
       id: 'objectifs',
       label: 'OBJECTIFS',
-      intro: 'Cet axe permet à votre organisation et à vos équipes de :',
+      intro: isFormation
+        ? 'Un parcours pratique qui vous fait monter en compétences, que vous vous formiez à titre personnel ou avec votre organisation :'
+        : 'Un accompagnement concret qui renforce votre organisation et les personnes qui la font vivre, y compris les particuliers qui nous sollicitent :',
       groups: [
         { title: 'Objectifs', items: objectivesList },
         { title: 'Résultats attendus', items: resultsExpected }
@@ -405,7 +420,7 @@ export function buildAccompanimentTabSections(
     {
       id: 'public',
       label: 'PUBLIC',
-      intro: 'Cet axe s\'adresse en priorité à :',
+      intro: isFormation ? 'Cette formation s\'adresse aux particuliers comme aux organisations :' : 'Cet accompagnement s\'adresse aux organisations comme aux particuliers :',
       items: publicList
     },
     {
@@ -417,7 +432,7 @@ export function buildAccompanimentTabSections(
     {
       id: 'admission',
       label: 'ADMISSION',
-      intro: 'Modalités de déploiement, calendrier et conditions d\'intervention du cabinet :',
+      intro: sub.admission && sub.admission.length > 0 ? 'Conditions d\'admission à ce programme :' : 'Modalités de déploiement, calendrier et conditions d\'intervention du cabinet :',
       items: accessList
     },
     {
@@ -432,6 +447,7 @@ export function buildAccompanimentTabSections(
       label: 'FINANCEMENT',
       intro: 'Dispositifs de financement, conventions d\'entreprise et facilités de règlement :',
       items: [
+        "Particuliers : paiement possible en 2 ou 3 tranches.",
         "Éligibilité aux conventions d'appui et prises en charge d'ingénierie (conventions FDFP et équivalents régionaux).",
         "Financement institutionnel et programmes d'assistance technique bilatéraux (Banque Mondiale, BAD, AFD, UE).",
         "Cadrage budgétaire ferme et définitif formalisé par une convention d'intervention claire et sans frais cachés.",
@@ -447,7 +463,7 @@ export function buildAccompanimentTabSections(
       label: "S'INSCRIRE",
       content: registrationContent || React.createElement(RegistrationGrandPlanForm, {
         targetTitle: `${domain.title} — ${sub.title}`,
-        defaultType: 'Demande Entreprise'
+        defaultType: isFormation ? 'Inscription Individuelle' : 'Demande Entreprise'
       })
     }
   ];

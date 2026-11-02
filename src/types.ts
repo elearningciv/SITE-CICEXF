@@ -9,7 +9,9 @@ export interface SubDomain {
   description: string;
   presentationService?: string; // 1. Présentation du service
   objectives?: string[]; // 2. Objectifs opérationnels
-  publicCible?: string[];
+  publicParticuliers?: string[];
+  publicOrganisations?: string[];
+  admission?: string[];
   demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
   resultatsAttendus?: string[]; // 4. Résultats attendus
   impactEntite?: string; // 5. Impact pour l'entité
@@ -31,7 +33,6 @@ export interface DomainIntervention {
   description: string;
   presentationService?: string; // 1. Présentation du service
   objectives?: string[]; // 2. Objectifs opérationnels
-  publicCible?: string[];
   demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
   resultatsAttendus?: string[]; // 4. Résultats attendus
   impactEntite?: string; // 5. Impact pour l'entité
