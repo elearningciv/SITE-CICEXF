@@ -3,8 +3,9 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  # The site's main address is www.cicexf.com: send cicexf.com there permanently
-  RewriteCond %{HTTP_HOST} ^cicexf\.com$ [NC]
+  # The site's main address is www.cicexf.com: send cicexf.com and the former
+  # address cicexf.gestionsaas.org there permanently (same page path)
+  RewriteCond %{HTTP_HOST} ^(cicexf\.com|cicexf\.gestionsaas\.org)$ [NC]
   RewriteRule ^(.*)$ https://www.cicexf.com/$1 [R=301,L]
   RewriteRule ^index\.html$ - [L]
   # Missing build files must stay real 404s (never the HTML page), otherwise an
