@@ -12,6 +12,8 @@ export interface SubDomain {
   publicParticuliers?: string[];
   publicOrganisations?: string[];
   admission?: string[];
+  programme?: { module: string; details: string[] }[];
+  offer?: { price: number; hours: number; modality: string };
   demarcheAccompagnement?: string[]; // 3. Démarche d'accompagnement
   resultatsAttendus?: string[]; // 4. Résultats attendus
   impactEntite?: string; // 5. Impact pour l'entité

@@ -1,4 +1,6 @@
 import React from 'react';
+import type { AxisAudience } from '../data/domainContent';
+import { formatOfferPrice } from '../data/formationOffers';
 import { Formation, DomainIntervention, SubDomain, SoftwareTool } from '../types';
 import { TabSectionItem, ProgramModule } from '../components/InteractiveSectionTabs';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
@@ -249,9 +251,6 @@ export function buildFormationTabSections(
  * 7. FINANCEMENT
  * 8. S'INSCRIRE (dernier)
  */
-/** "formation" puts individuals first, "accompagnement" puts organizations first; both are always addressed */
-export type AxisAudience = 'formation' | 'accompagnement';
-
 export function buildAccompanimentTabSections(
   sub: SubDomain,
   domain: DomainIntervention,
@@ -288,7 +287,9 @@ export function buildAccompanimentTabSections(
 
   // 4. Program / Démarche d'accompagnement (Phases in bold, details points in normal font, no "sous point" text)
   let programModules: ProgramModule[] = [];
-  if (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0) {
+  if (sub.programme && sub.programme.length > 0) {
+    programModules = sub.programme;
+  } else if (sub.demarcheAccompagnement && sub.demarcheAccompagnement.length > 0) {
     programModules = sub.demarcheAccompagnement.map(step => {
       const parts = step.split(':');
       if (parts.length > 1) {
@@ -362,8 +363,20 @@ export function buildAccompanimentTabSections(
     "Indicateurs de performance avant/après et mesure des gains d'efficacité à J+60."
   ];
 
+  const modalityLine: Record<string, string> = {
+    'Hybride': "Format hybride : des séances en salle pour pratiquer ensemble, et des séances à distance pour avancer à votre rythme.",
+    'En ligne': "Format 100 % en ligne : suivez la formation depuis Abidjan, l'intérieur du pays ou l'étranger.",
+    'Présentiel': "Format présentiel : un apprentissage en groupe, avec des mises en situation et des échanges directs."
+  };
+  const formationPedagogy = [
+    ...(sub.offer ? [modalityLine[sub.offer.modality]] : []),
+    "Apprentissage par la pratique : cas concrets, exercices guidés et retours sur votre travail.",
+    "Vous repartez avec une réalisation personnelle, élaborée pendant le projet final.",
+    "Vos acquis sont évalués au fil du parcours, pour mesurer vos progrès."
+  ];
+
   const pedagogyList = [
-    `Impact stratégique : ${sub.impactEntite || 'Autonomie opérationnelle renforcée, réduction des risques et souveraineté décisionnelle.'}`,
+    `Impact attendu : ${sub.impactEntite || 'Une organisation mieux outillée et des équipes plus autonomes.'}`,
     ...evalMethods.map(e => `Protocole d'évaluation : ${e}`)
   ];
 
@@ -410,8 +423,8 @@ export function buildAccompanimentTabSections(
       id: 'objectifs',
       label: 'OBJECTIFS',
       intro: isFormation
-        ? 'Un parcours pratique qui vous fait monter en compétences, que vous vous formiez à titre personnel ou avec votre organisation :'
-        : 'Un accompagnement concret qui renforce votre organisation et les personnes qui la font vivre, y compris les particuliers qui nous sollicitent :',
+        ? 'Ce que vous allez maîtriser, et ce que vous saurez faire à la fin de la formation :'
+        : 'Ce que notre mission vous apporte, et ce que vous recevez à son terme :',
       groups: [
         { title: 'Objectifs', items: objectivesList },
         { title: 'Résultats attendus', items: resultsExpected }
@@ -426,35 +439,44 @@ export function buildAccompanimentTabSections(
     {
       id: 'programme',
       label: 'PROGRAMME',
-      intro: 'Démarche d\'accompagnement et étapes méthodologiques de la mission :',
+      intro: isFormation ? 'Votre parcours, module après module :' : 'Les étapes de notre mission à vos côtés :',
       programModules: programModules
     },
     {
       id: 'admission',
-      label: 'ADMISSION',
-      intro: sub.admission && sub.admission.length > 0 ? 'Conditions d\'admission à ce programme :' : 'Modalités de déploiement, calendrier et conditions d\'intervention du cabinet :',
+      label: isFormation ? 'ADMISSION' : 'MODALITÉS',
+      intro: !(sub.admission && sub.admission.length > 0)
+        ? 'Modalités de déploiement, calendrier et conditions d\'intervention du cabinet :'
+        : isFormation ? 'Conditions d\'admission à cette formation :' : 'Pour démarrer la mission, préparez simplement :',
       items: accessList
     },
     {
       id: 'pedagogie',
-      label: 'PÉDAGOGIE',
-      intro: 'Méthodes d\'évaluation de l\'impact, résultats attendus et outils déployés :',
-      items: pedagogyList,
+      label: isFormation ? 'PÉDAGOGIE' : 'MÉTHODE',
+      intro: isFormation ? 'Comment vous allez apprendre :' : 'Notre méthode de travail et le suivi de la mission :',
+      items: isFormation ? formationPedagogy : pedagogyList,
       softwareTools: tools
     },
     {
       id: 'financement',
       label: 'FINANCEMENT',
-      intro: 'Dispositifs de financement, conventions d\'entreprise et facilités de règlement :',
-      items: [
-        "Particuliers : paiement possible en 2 ou 3 tranches.",
+      intro: isFormation ? 'Tarif et facilités de paiement :' : 'Dispositifs de financement, conventions d\'entreprise et facilités de règlement :',
+      items: isFormation && sub.offer ? [
+        `Tarif : ${formatOfferPrice(sub.offer.price)} par participant, pour ${sub.offer.hours} heures de formation.`,
+        "Particuliers et organisations : paiement possible en 2 ou 3 tranches.",
+        "Inscription de groupe : remise de 10 % dès 3 participants et de 15 % dès 5 participants.",
+        "Organisations : session sur mesure possible, sur devis."
+      ] : [
+        "Particuliers : devis adapté à votre projet.",
         "Éligibilité aux conventions d'appui et prises en charge d'ingénierie (conventions FDFP et équivalents régionaux).",
         "Financement institutionnel et programmes d'assistance technique bilatéraux (Banque Mondiale, BAD, AFD, UE).",
         "Cadrage budgétaire ferme et définitif formalisé par une convention d'intervention claire et sans frais cachés.",
         "Facturation progressive échelonnée selon la validation effective des jalons contractuels et des livrables.",
         "Facilités de paiement pour les partenariats pluriannuels et les conventions-cadres institutionnelles."
       ],
-      extraDetails: [
+      extraDetails: isFormation && sub.offer ? [
+        { label: 'Tarif', value: formatOfferPrice(sub.offer.price) }
+      ] : [
         { label: 'Proposition', value: 'Devis sur-mesure sous 48h' }
       ]
     },

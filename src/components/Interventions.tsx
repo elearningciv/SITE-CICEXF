@@ -57,7 +57,7 @@ export default function Interventions({
   setPreselectedDomain,
   domains
 }: InterventionsProps) {
-  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION), [domains]);
+  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION, 'accompagnement'), [domains]);
   const [subTabMap, setSubTabMap] = useState<Record<number, string>>({});
   const [activeSubIdx, setActiveSubIdx] = useState<number | null>(null);
 

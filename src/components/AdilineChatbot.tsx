@@ -22,6 +22,7 @@ const CATALOGUE_ONLY_RE = /(lien|envoi|envoy|t[ée]l[ée]charg|donne|avoir|obten
 // Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
 import { ADILINE_API_URL } from '../lib/adilineApi';
 import { getVisitorId } from '../lib/tracker';
+import { FORMATION_OFFERS, formatOfferPrice } from '../data/formationOffers';
 
 export interface RichCard {
   type: 'formation' | 'session' | 'expert' | 'devis';
@@ -225,7 +226,10 @@ Comment puis-je vous accompagner aujourd'hui ?`,
 
   // Guided registration + proforma, with the formations published on the site
   const registration = useRegistration(
-    (formations && formations.length ? formations : FORMATIONS).filter(f => f.title && !/(.)\1{7,}/i.test(f.title.replace(/\s/g, ''))),
+    [
+      ...(formations && formations.length ? formations : FORMATIONS).filter(f => f.title && !/(.)\1{7,}/i.test(f.title.replace(/\s/g, ''))),
+      ...Object.entries(FORMATION_OFFERS).map(([id, o]) => ({ id, title: o.title, price: formatOfferPrice(o.price), modality: o.modality, duration: `${o.hours} heures` }))
+    ],
     (message) => setMessages(prev => [...prev, message as ChatMessage])
   );
   const startRegistration = (requestText = '') => {

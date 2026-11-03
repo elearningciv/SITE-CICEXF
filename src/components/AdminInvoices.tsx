@@ -4,6 +4,7 @@ import { Invoice, setInvoiceStatus, toProformaData, useInvoices } from '../lib/i
 import { buildProformaPdf, fcfa } from '../lib/proforma';
 import { buildInvoicesHtml, downloadHtml, reportDate } from '../lib/adminReports';
 import { Formation } from '../types';
+import { FORMATION_OFFERS } from '../data/formationOffers';
 
 /** Admin tab "Factures": every proforma issued by ADILINE, with its PDF */
 export default function AdminInvoices({ formations }: { formations: Formation[] }) {
@@ -49,7 +50,10 @@ export default function AdminInvoices({ formations }: { formations: Formation[] 
   };
 
   const downloadFile = () => downloadHtml(
-    buildInvoicesHtml(invoices.map(inv => ({ ...inv, date: inv.createdAt ? inv.createdAt.toDate() : null })), formations),
+    buildInvoicesHtml(invoices.map(inv => ({ ...inv, date: inv.createdAt ? inv.createdAt.toDate() : null })), [
+      ...formations,
+      ...Object.values(FORMATION_OFFERS).map(o => ({ title: o.title, domain: o.domain, thematic: o.title }))
+    ]),
     `Factures-ADILINE-par-domaine-${reportDate()}.html`
   );
 

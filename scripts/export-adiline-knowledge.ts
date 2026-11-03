@@ -15,8 +15,10 @@ import {
   PARTNERS,
   GLOBAL_FAQ
 } from '../src/knowledgeBase';
-import { ACCOMPANIMENT_ENRICHMENTS } from '../src/data/accompanimentEnrichments';
 import { AXIS_SHEETS, DomainSheet, DOMAIN_SHEETS } from '../src/data/domainContent';
+import { ACCOMPANIMENT_DOMAINS, ACCOMPANIMENT_SHEETS } from '../src/data/accompanimentSheets';
+import { FORMATION_OFFERS } from '../src/data/formationOffers';
+import { FORMATION_PROGRAMS } from '../src/data/formationPrograms';
 
 const withoutImages = (sheets: Record<string, DomainSheet>) =>
   Object.fromEntries(Object.entries(sheets).map(([key, { imageUrl, ...sheet }]) => [key, sheet]));
@@ -40,9 +42,10 @@ const knowledge = strip({
   cabinet: CABINET_INFO,
   formations: FORMATIONS,
   accompagnements: DOMAINS_INTERVENTION,
-  accompagnementsDetails: ACCOMPANIMENT_ENRICHMENTS,
-  fichesDomaines: withoutImages(DOMAIN_SHEETS),
-  fichesAxes: withoutImages(AXIS_SHEETS),
+  domainesFormation: withoutImages(DOMAIN_SHEETS),
+  domainesAccompagnement: ACCOMPANIMENT_DOMAINS,
+  fichesFormations: Object.fromEntries(Object.entries(withoutImages(AXIS_SHEETS)).map(([key, sheet]) => [key, { ...sheet, ...FORMATION_OFFERS[key], programme: FORMATION_PROGRAMS[key] }])),
+  fichesAccompagnements: ACCOMPANIMENT_SHEETS,
   equipe: TEAM_MEMBERS,
   realisations: PROJECTS,
   actualites: BLOG_POSTS,

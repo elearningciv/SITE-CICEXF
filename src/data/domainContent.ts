@@ -1,10 +1,12 @@
 import { DomainIntervention, SubDomain } from '../types';
+import { ACCOMPANIMENT_DOMAINS, ACCOMPANIMENT_SHEETS } from './accompanimentSheets';
+import { FORMATION_OFFERS } from './formationOffers';
+import { FORMATION_PROGRAMS } from './formationPrograms';
 
 /**
- * Reference sheets of the domains and axes shown on the "Accompagnement" and "Formations" tabs.
- * Written for both individuals and organizations; each tab lists first the audience it puts forward.
- * Filled in only where the admin left a field empty or generic (see enrichDomains):
- * what is entered in the admin always takes precedence.
+ * Sheets of the domains and axes on the "Formations" tab, written for the learner and for both
+ * individuals and organizations. The "Accompagnement" tab has its own sheets (accompanimentSheets.ts).
+ * enrichDomains gives each tab its own content.
  */
 
 export interface DomainSheet {
@@ -754,8 +756,31 @@ export const axisKey = (title: string) => title
 const MIN_DESCRIPTION = 120;
 const isThinList = (list?: string[]) => !list || list.length < 2 || list.every(item => item.length < 40);
 
-function enrichAxis(sub: SubDomain): SubDomain {
-  const sheet = AXIS_SHEETS[axisKey(sub.title)];
+export type AxisAudience = 'formation' | 'accompagnement';
+
+/** Formations tab: the training sheet of the axis. The admin edits the mission, so only its image is kept. */
+function formationAxis(sub: SubDomain): SubDomain {
+  const key = axisKey(sub.title);
+  const sheet = AXIS_SHEETS[key];
+  if (!sheet) return sub;
+  return {
+    ...sub,
+    presentationService: sheet.description,
+    objectives: sheet.objectives,
+    resultatsAttendus: sheet.resultatsAttendus,
+    publicParticuliers: sheet.publicParticuliers,
+    publicOrganisations: sheet.publicOrganisations,
+    admission: sheet.admission,
+    programme: FORMATION_PROGRAMS[key],
+    offer: FORMATION_OFFERS[key],
+    imageUrl: sub.imageUrl || sheet.imageUrl
+  };
+}
+
+/** Accompagnement tab: what the admin entered, completed by the mission sheet of the axis */
+function accompanimentAxis(sub: SubDomain): SubDomain {
+  const key = axisKey(sub.title);
+  const sheet = ACCOMPANIMENT_SHEETS[key];
   if (!sheet) return sub;
   return {
     ...sub,
@@ -765,19 +790,23 @@ function enrichAxis(sub: SubDomain): SubDomain {
     publicParticuliers: sub.publicParticuliers?.length ? sub.publicParticuliers : sheet.publicParticuliers,
     publicOrganisations: sub.publicOrganisations?.length ? sub.publicOrganisations : sheet.publicOrganisations,
     admission: sub.admission?.length ? sub.admission : sheet.admission,
-    imageUrl: sub.imageUrl || sheet.imageUrl
+    programme: sub.demarcheAccompagnement?.length ? undefined : sheet.programme,
+    imageUrl: sub.imageUrl || AXIS_SHEETS[key]?.imageUrl
   };
 }
 
-/** The domains as displayed: what the admin entered, completed by the reference sheets */
-export function enrichDomains<T extends DomainIntervention>(domains: T[]): T[] {
+/** The domains as displayed on each tab */
+export function enrichDomains<T extends DomainIntervention>(domains: T[], audience: AxisAudience): T[] {
   return domains.map(domain => {
     const sheet = DOMAIN_SHEETS[domain.id];
+    const missionText = ACCOMPANIMENT_DOMAINS[domain.id];
     return {
       ...domain,
-      subDomains: (domain.subDomains || []).map(enrichAxis),
+      subDomains: (domain.subDomains || []).map(audience === 'formation' ? formationAxis : accompanimentAxis),
       ...(sheet ? {
-        description: (domain.description || '').length >= 200 ? domain.description : sheet.description,
+        description: audience === 'formation'
+          ? sheet.description
+          : (domain.description || '').length >= 200 ? domain.description : missionText,
         imageUrl: domain.imageUrl || sheet.imageUrl
       } : {})
     };

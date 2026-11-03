@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { enrichDomains } from '../data/domainContent';
 import DomainOverview from './DomainOverview';
+import FormationFacts from './FormationFacts';
 import { 
   Search, SlidersHorizontal, BookOpen, Clock, BarChart, GraduationCap, 
   MapPin, CheckCircle, Calendar, Send, HelpCircle, ArrowLeft, Terminal, 
@@ -419,6 +420,7 @@ function SubDomainCard({ sub, sIdx, setCorpInterest, renderIcon, onClickCard, is
                 <p id={`formation-axis-description-${sIdx}`} className="scroll-mt-28 whitespace-pre-line text-sm sm:text-[15px] leading-relaxed text-slate-700 dark:text-slate-200">{(sub.presentationService || sub.description)}</p>
                 </>
               )}
+              <FormationFacts offer={sub.offer} />
             </div>
             <div className="order-1 relative w-full lg:w-80 xl:w-96 min-w-0 shrink-0 aspect-[4/3] lg:aspect-auto lg:min-h-[240px] overflow-hidden rounded-2xl shadow-md ring-1 ring-slate-200 dark:ring-slate-800 bg-slate-100 dark:bg-slate-950 lg:order-2">
               <img
@@ -795,7 +797,7 @@ export const COUNTRIES_LIST = [
 
 export default function Formations({ selectedDomainId, setSelectedDomainId, setActiveTab, defaultSubTab, formations = FORMATIONS, domains }: FormationsProps) {
   // Domains managed in the admin (falls back to the built-in list)
-  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION), [domains]);
+  const allDomains = useMemo(() => enrichDomains(domains && domains.length > 0 ? domains : DOMAINS_INTERVENTION, 'formation'), [domains]);
   // Determine if outer routing requires a specific tab or selection
   const matchedFormation = selectedDomainId
     ? formations.find(f => f.id === selectedDomainId || f.slug === selectedDomainId || (selectedDomainId === 'data-analyst' && f.id === 'da-master'))
@@ -1696,6 +1698,8 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                                   {sub.title}
                                 </h3>
                                 
+                                <FormationFacts offer={sub.offer} compact />
+
                                 {/* Petite description de la spécialité */}
                                 <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-3 leading-relaxed">
                                   {shortDesc}
@@ -1994,6 +1998,7 @@ export default function Formations({ selectedDomainId, setSelectedDomainId, setA
                             {isExpanded && (() => {
                               return (
                                 <div className="px-4 pb-6 sm:px-6 sm:pb-8 pt-2 animate-in slide-in-from-top-2 duration-200 space-y-4 border-l-4 border-[#8A1A24] ml-6 sm:ml-9 text-left">
+                                  <FormationFacts offer={sub.offer} />
                                   <InteractiveSectionTabs
                                     description={sub.presentationService || sub.description}
                                     sections={buildAccompanimentTabSections(sub, domain, undefined, 'formation')}

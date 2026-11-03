@@ -1,5 +1,5 @@
 {
- "exportedAt": "2026-11-02T23:40:15.811Z",
+ "exportedAt": "2026-11-03T00:13:33.647Z",
  "cabinet": {
   "nom": "Cabinet International de Consultance, d'Expertise et de Formation",
   "sigle": "CICEXF",
@@ -1069,322 +1069,7 @@
    ]
   }
  ],
- "accompagnementsDetails": {
-  "ing-formation": [
-   {
-    "diversifiedDescription": "Plutôt que d'appliquer des méthodologies standards, notre démarche s'aligne rigoureusement sur vos processus internes pour cartographier de manière scientifique vos besoins de compétences. Nous diagnostiquons les écarts entre les compétences installées et celles requises par vos orientations stratégiques, assurant ainsi que chaque investissement en formation réponde directement à un impératif de performance opérationnelle.",
-    "objectives": [
-     "Réaliser un diagnostic de compétences exhaustif et cartographier 100% des postes clés.",
-     "Établir un référentiel de compétences opérationnel et directement actionnable par les RH.",
-     "Concevoir un plan de formation pluriannuel optimisé budgétairement et fiscalement."
-    ],
-    "expectedChanges": "L'entité dispose d'une visibilité souveraine sur ses ressources, élimine les actions de formation non productives (gain budgétaire moyen de 25%) et sécurise l'évolution de ses effectifs face aux mutations de son secteur."
-   },
-   {
-    "diversifiedDescription": "Nous fusionnons l'andragogie moderne et la technopédagogie pour concevoir des curricula innovants adaptés au rythme et aux exigences opérationnelles des entreprises. En s'appuyant sur l'Approche Par Compétences (APC), notre pôle d'ingénierie crée des architectures de formation hybrides et des supports interactifs qui facilitent un ancrage mémoriel fort et durable.",
-    "objectives": [
-     "Structurer des programmes de formation modulaires basés sur l'andragogie active et l'APC.",
-     "Développer des boîtes à outils pédagogiques standardisées (guides, simulateurs, supports digitaux).",
-     "Modéliser et scénariser des parcours e-learning interactifs pour une diffusion à grande échelle."
-    ],
-    "expectedChanges": "Pour l'entité concernée, cela permet l'internalisation d'un patrimoine pédagogique propre, une réduction de 40% du temps d'intégration (onboarding) et une autonomisation des formateurs internes."
-   },
-   {
-    "diversifiedDescription": "Notre excellence opérationnelle garantit une animation andragogique d'impact menée exclusivement par des praticiens-experts de haut niveau. Nous déployons des ateliers de codéveloppement, des mises en situation réelles et des méthodes d'apprentissage collaboratives qui suscitent un haut niveau d'engagement de la part des participants.",
-    "objectives": [
-     "Assurer des sessions animées par des experts qualifiés avec un taux de satisfaction supérieur à 95%.",
-     "Mettre en œuvre des ateliers de résolution de problèmes réels rencontrés au quotidien par l'entité.",
-     "Piloter le déploiement logistique multi-sites de manière fluide et transparente pour l'organisation."
-    ],
-    "expectedChanges": "Les collaborateurs acquièrent des réflexes professionnels immédiats, renforcent la synergie de groupe et appliquent les meilleures pratiques dès le retour à leur poste de travail."
-   },
-   {
-    "diversifiedDescription": "En refusant les bilans de fin de formation purement formels, nous centrons notre démarche sur l'évaluation scientifique de l'impact réel de l'apprentissage sur vos indicateurs de productivité. Nous mettons en œuvre des protocoles d'évaluation multicritères pour mesurer le transfert effectif des compétences et analyser le retour sur investissement (ROI).",
-    "objectives": [
-     "Déployer des évaluations rigoureuses d'impact sur poste à J+30 et J+90 (Kirkpatrick Niveaux 3 & 4).",
-     "Quantifier l'évolution des performances opérationnelles directement corrélée à la formation.",
-     "Rédiger un rapport de capitalisation pour la Direction Générale justifiant les gains financiers."
-    ],
-    "expectedChanges": "L'entité objective scientifiquement la rentabilité de ses investissements de formation, valorise ses talents internes de manière équitable et adapte en continu sa politique de formation."
-   }
-  ],
-  "ing-financiere": [
-   {
-    "diversifiedDescription": "Sécuriser les bases de vos grands projets nécessite une maîtrise absolue de l'ingénierie financière et du dialogue avec les bailleurs. Notre cabinet conçoit des schémas d'optimisation financière complexes (fonds propres, endettement syndiqué, subventions d'appui) et structure des dossiers d'investissement conformes aux critères de bancabilité les plus stricts.",
-    "objectives": [
-     "Établir des modèles de projection financière auditables selon les standards bancaires de premier rang.",
-     "Optimiser la structure de capital afin de réduire le coût moyen pondéré du capital (CMPC).",
-     "Négocier des conditions de financement préférentielles auprès de bailleurs nationaux et multilatéraux."
-    ],
-    "expectedChanges": "L'entité garantit le bouclage financier rapide de ses projets à fort impact, réduit son exposition aux risques de liquidité et assure une gouvernance financière solide."
-   },
-   {
-    "diversifiedDescription": "Nous dotons les comités de direction d'outils analytiques robustes pour rationaliser chaque arbitrage d'investissement et sécuriser les allocations de ressources. En combinant modélisations de scénarios et analyses de sensibilité poussées, nous protégeons vos placements et maximisons vos retours de capitaux.",
-    "objectives": [
-     "Réaliser des simulations Monte Carlo pour évaluer la sensibilité des projets aux risques de marché.",
-     "Calculer avec précision les indicateurs clés de rendement (VAN, TRI, Indice de Profitabilité, payback).",
-     "Établir des stratégies de couverture efficaces contre les fluctuations de taux et de change."
-    ],
-    "expectedChanges": "Pour l'entité en question, le risque d'erreur d'investissement est réduit de 85%, et le rendement global du portefeuille d'actifs est significativement maximisé."
-   },
-   {
-    "diversifiedDescription": "Nous structurons vos fonctions comptables et fiscales pour en faire de véritables leviers de conformité, de transparence et d'optimisation budgétaire. En intégrant les impératifs des référentiels comptables régionaux et internationaux, nous auditons et sécurisons vos flux financiers.",
-    "objectives": [
-     "Implémenter des procédures de contrôle interne rigoureuses selon le référentiel SYSCOHADA révisé.",
-     "Optimiser l'assiette et la charge fiscale d'exploitation dans le strict respect de la réglementation.",
-     "Mettre en place des tableaux de bord budgétaires consolidés facilitant l'aide à la décision."
-    ],
-    "expectedChanges": "L'organisation élimine les risques de redressement fiscal ou comptable, fluidifie ses relations avec ses commissaires aux comptes et optimise son besoin en fonds de roulement."
-   },
-   {
-    "diversifiedDescription": "Propulser l'initiative privée exige un encadrement stratégique pragmatique alliant structuration d'affaires et mentorat entrepreneurial de haut niveau. Nous collaborons avec les start-up et PME d'envergure pour formuler des plans d'affaires bancables et accroître leur maturité managériale face aux investisseurs.",
-    "objectives": [
-     "Structurer et valider le modèle d'affaires (Business Model Canvas) au regard des réalités du marché.",
-     "Concevoir des dossiers de levée de fonds complets et percutants (pitch deck, mémorandum d'information).",
-     "Former les repreneurs et dirigeants à la gestion de la croissance et à la résilience entrepreneuriale."
-    ],
-    "expectedChanges": "L'entité accélère sa courbe de croissance, réussit l'intégration de capitaux extérieurs de premier tour et s'établit durablement sur ses marchés cibles."
-   }
-  ],
-  "ing-informatique": [
-   {
-    "diversifiedDescription": "Nous concevons et déployons des parcs informatiques résilients, agiles et alignés sur les exigences de haute disponibilité indispensables aux grandes entités modernes. De l'audit réseau à la migration Cloud, notre pôle technologique garantit l'évolution sécurisée de vos infrastructures.",
-    "objectives": [
-     "Concevoir des parcs serveurs et des réseaux locaux hautement sécurisés et redondés à 99.99%.",
-     "Piloter l'architecture et la migration hybride vers les plateformes Cloud leaders (AWS, Google Cloud, Azure).",
-     "Assurer la virtualisation optimale de vos serveurs pour réduire la consommation d'énergie et de matériel."
-    ],
-    "expectedChanges": "L'entité supprime les goulots d'étranglement de bande passante, réduit de 35% ses coûts de maintenance matérielle et assure un service continu et performant."
-   },
-   {
-    "diversifiedDescription": "Notre ingénierie logicielle conçoit des solutions d'affaires sur-mesure visant à automatiser l'intégralité de vos processus opérationnels les plus critiques. À travers une méthodologie agile rigoureuse, nous créons des outils intuitifs de gestion intégrée, des portails métiers sécurisés et des API de haute performance.",
-    "objectives": [
-     "Développer des solutions applicatives robustes adaptées aux spécificités de votre secteur.",
-     "Concevoir des API unifiées facilitant l'interconnexion sécurisée entre vos progiciels.",
-     "Déployer des usines logicielles modernes (CI/CD) pour un déploiement continu et sans faille."
-    ],
-    "expectedChanges": "Pour l'entité concernée, l'automatisation des flux élimine le risque d'erreur humaine de saisie, divise par deux le délai de traitement des tâches et accroît l'efficacité globale."
-   },
-   {
-    "diversifiedDescription": "Protéger l'intégrité de vos flux de données stratégiques face aux cybermenaces émergentes est au cœur de nos audits de cybersécurité de haut niveau. Nous réalisons des cartographies de risques informatiques, mettons en conformité vos traitements et élaborons des plans de résilience d'urgence.",
-    "objectives": [
-     "Réaliser des tests d'intrusion (PenTest) et des audits de vulnérabilité de l'infrastructure.",
-     "Élaborer et tester de manière pratique des Plans de Reprise d'Activité (PRA) face aux rançongiciels.",
-     "Assurer la conformité réglementaire de traitement de vos données sensibles."
-    ],
-    "expectedChanges": "L'organisation minimise drastiquement sa surface d'attaque, prévient les fuites de données confidentielles et garantit une résilience immédiate en cas de sinistre."
-   },
-   {
-    "diversifiedDescription": "Nous transformons vos flux documentaires et accélérons la dématérialisation de vos processus les plus chronophages pour libérer la productivité humaine. À travers la mise en place d'automates logiciels (RPA) et de plateformes de support, nous orchestrons la conduite du changement digital.",
-    "objectives": [
-     "Mettre en place des plateformes collaboratives intégrées simplifiant la gestion de l'information.",
-     "Déployer un centre de support technique (Helpdesk) performant de niveau 1-2-3.",
-     "Conduire des ateliers d'appropriation technologique pour éliminer la résistance au changement."
-    ],
-    "expectedChanges": "L'entité bascule vers un fonctionnement 'sans papier' (paperless), améliore la traçabilité des dossiers de 95% et réduit de moitié le temps moyen de résolution des incidents internes."
-   }
-  ],
-  "ing-territoriale": [
-   {
-    "diversifiedDescription": "L'intégration fine de la cartographie numérique et de l'analyse spatiale constitue le point de départ de toute politique de développement territorial moderne et éclairée. Nous dotons les collectivités territoriales de Systèmes d'Information Géographique (SIG) performants pour piloter les infrastructures et évaluer les dynamiques géographiques.",
-    "objectives": [
-     "Structurer une base de données SIG moderne et actualisable (QGIS / PostGIS).",
-     "Traiter par télédétection les images satellites et de drones pour l'analyse des sols.",
-     "Modéliser des cartes thématiques stratégiques pour l'aide à la décision publique."
-    ],
-    "expectedChanges": "L'entité publique ou municipale dispose d'une maîtrise cartographique rigoureuse de son territoire, facilitant le ciblage des investissements publics de 30% d'efficacité supplémentaire."
-   },
-   {
-    "diversifiedDescription": "Nous concevons des schémas d'urbanisme résilients face aux défis d'expansion démographique et de dérèglement climatique. Nos urbanistes et planificateurs structurent vos politiques d'aménagement urbain, de mobilité durable et d'implantation de zones d'activités.",
-    "objectives": [
-     "Concevoir et rédiger les Schémas Directeurs d'Aménagement Urbain (SDAU).",
-     "Analyser et planifier des maillages de transport et de mobilité intermodale fluide.",
-     "Intégrer les variables climatiques dans la planification spatiale locale."
-    ],
-    "expectedChanges": "La collectivité territoriale régule sainement son expansion urbaine, anticipe et réduit l'impact des inondations et valorise de nouvelles zones d'activités économiques."
-   },
-   {
-    "diversifiedDescription": "Le renforcement du dynamisme fiscal et de l'autonomie financière des communes est la clé de voûte de toute décentralisation réussie. Nous dispensons des appuis méthodologiques pointus aux équipes municipales pour optimiser la levée des ressources locales et piloter les budgets participatifs.",
-    "objectives": [
-     "Moderniser les méthodes d'assiette et de recouvrement de la fiscalité locale de manière éthique.",
-     "Former les élus et équipes communales à la maîtrise d'ouvrage et à la passation de marchés locaux.",
-     "Mettre en place des mécanismes transparents de budgets participatifs impliquant les citoyens."
-    ],
-    "expectedChanges": "L'entité locale augmente de 40% ses recettes fiscales propres, finance de manière autonome ses services de proximité et renforce la confiance citoyenne."
-   },
-   {
-    "diversifiedDescription": "Suivre en temps réel l'impact socio-économique des projets territoriaux d'envergure nécessite la mise en place d'observatoires pluridisciplinaires structurés. Nous développons des grilles d'indicateurs géolocalisés et outillons vos services pour piloter l'économie circulaire de proximité.",
-    "objectives": [
-     "Concevoir et animer un observatoire territorial d'indicateurs de développement durable.",
-     "Assurer le suivi spatialisé en temps réel des chantiers et infrastructures communales.",
-     "Modéliser et valoriser les chaînes de valeur agricoles ou artisanales locales."
-    ],
-    "expectedChanges": "L'entité régule ses plans de développement à l'aide de données scientifiques fiables et géolocalisées, améliorant de 20% l'efficience d'allocation des fonds de développement."
-   }
-  ],
-  "ing-qhse": [
-   {
-    "diversifiedDescription": "Intégrer la prévention, l'excellence opérationnelle et la responsabilité sociétale au cœur de vos flux industriels est indispensable pour asseoir votre compétitivité. Nos ingénieurs-conseils rédigent et consolident des Systèmes de Management Intégrés (SMI) rigoureux, favorisant une forte culture HSE de terrain.",
-    "objectives": [
-     "Formaliser des manuels QHSE intégrés et des fiches réflexes de sécurité immédiatement applicables.",
-     "Réduire de manière drastique les taux de fréquence (TF) et de gravité (TG) des accidents du travail.",
-     "Structurer des instances de sécurité actives et animer des rituels sécurité de premier ordre (1/4 d'heure sécurité)."
-    ],
-    "expectedChanges": "L'entité industrielle élimine l'apparition d'accidents du travail majeurs, réduit les coûts associés à l'absentéisme et insuffle un climat de confiance partagé par l'ensemble des collaborateurs."
-   },
-   {
-    "diversifiedDescription": "Nous accompagnons pas à pas votre organisation dans l'obtention de certifications internationales majeures de référence, véritables gages de confiance sur vos marchés cibles. À travers des diagnostics d'écarts stricts et des audits à blanc, nous garantissons l'obtention de vos labels ISO.",
-    "objectives": [
-     "Réaliser un diagnostic de conformité normatif complet par rapport aux référentiels ISO d'intérêt.",
-     "Former un pôle solide d'auditeurs internes certifiés au sein de votre entreprise.",
-     "Accompagner l'entité lors des audits officiels de certification avec un taux d'obtention de 100%."
-    ],
-    "expectedChanges": "Pour l'entité en question, l'obtention de la certification internationale ouvre les portes des marchés grands comptes mondiaux et atteste d'une rigueur managériale indiscutable."
-   },
-   {
-    "diversifiedDescription": "Maîtriser les scénarios de défaillance technologique et protéger l'outil de production exige une cartographie exhaustive de vos risques procédés. Nos experts de haut niveau rédigent des documents uniques conformes et mettent en œuvre des procédures de consignation pointues.",
-    "objectives": [
-     "Établir et mettre à jour le Document Unique d'Évaluation des Risques (DUER) de l'entreprise.",
-     "Mener des analyses de risques procédés avancées (HAZOP / Bow-Tie) pour l'industrie lourde.",
-     "Implémenter des protocoles de consignation (Lock-Out / Tag-Out - LOTO) et des plans d'urgence."
-    ],
-    "expectedChanges": "L'organisation sécurise son outil industriel, évite les arrêts de production non programmés extrêmement coûteux et garantit la conformité totale de ses installations réglementées."
-   },
-   {
-    "diversifiedDescription": "Incarner la transition écologique industrielle implique d'implémenter des plans de préservation des ressources et de réduction d'empreinte carbone rigoureux. Nous formons vos équipes de terrain pour fédérer l'intelligence collective autour de l'impact environnemental de vos sites.",
-    "objectives": [
-     "Réaliser un audit de conformité environnemental et mesurer l'empreinte carbone globale du site.",
-     "Concevoir des plans de réduction et de revalorisation des déchets industriels (économie circulaire).",
-     "Dispenser des parcours éducatifs engageants pour mobiliser l'ensemble des salariés autour des éco-gestes."
-    ],
-    "expectedChanges": "L'entité réduit de 30% ses rejets polluants, optimise le coût d'élimination de ses déchets et améliore son image de marque auprès des investisseurs et parties prenantes."
-   }
-  ],
-  "ing-audit": [
-   {
-    "diversifiedDescription": "Résoudre durablement les inefficacités opérationnelles exige une analyse rigoureuse des chaînes de commandement et des adéquations postes-profils de vos effectifs. Notre pôle d'experts réalise des audits de processus transversaux et conçoit des organigrammes optimisés pour libérer les énergies de vos collaborateurs.",
-    "objectives": [
-     "Analyser de manière critique l'organisation interne, identifier les doublons et les pertes de charge.",
-     "Évaluer l'adéquation postes-profils de 100% du comité de direction et des encadrants clés.",
-     "Cartographier les processus décisionnels pour en diviser le temps de traitement par deux."
-    ],
-    "expectedChanges": "L'entité gagne en agilité managériale, dissipe les tensions interservices de manière rationnelle et augmente sa réactivité opérationnelle globale."
-   },
-   {
-    "diversifiedDescription": "Définir l'ambition stratégique à 5 ou 10 ans requiert un alignement parfait de votre capital humain, de vos ressources financières et de vos actifs technologiques. Nous modélisons des feuilles de route stratégiques robustes assorties d'indicateurs d'exécution de premier ordre.",
-    "objectives": [
-     "Concevoir des plans de développement stratégique ou des plans nationaux sectoriels (PND).",
-     "Déployer des Balanced Scorecards (tableaux de bord prospectifs) déclinés par service.",
-     "Faciliter l'appropriation managériale des nouveaux objectifs à travers des plans de conduite du changement."
-    ],
-    "expectedChanges": "Pour l'entité en question, la vision à long terme est claire et partagée par l'ensemble des salariés, ce qui accélère la réalisation des objectifs stratégiques de 20%."
-   },
-   {
-    "diversifiedDescription": "Instaurer des mécanismes de gouvernance d'excellence constitue le plus puissant rempart pour garantir la pérennité institutionnelle et rassurer vos investisseurs. Nous vous accompagnons dans la rédaction de chartes de gouvernance vertueuses et la structuration de comités spécialisés.",
-    "objectives": [
-     "Rédiger des chartes de gouvernance et formaliser les responsabilités des administrateurs.",
-     "Structurer des comités d'audit, de gestion des risques et de rémunérations conformes aux meilleures pratiques.",
-     "Déployer des dispositifs rigoureux d'éthique des affaires et de conformité réglementaire."
-    ],
-    "expectedChanges": "L'organisation rassure pleinement ses partenaires financiers, pérennise ses processus de décision stratégiques et élimine le risque d'infractions réglementaires."
-   },
-   {
-    "diversifiedDescription": "Faire du capital humain le principal levier de performance passe par des politiques de motivation, d'évaluation objective et d'accompagnement de carrières d'excellence. Nous élaborons des dispositifs innovants de gestion prévisionnelle des effectifs et concevons vos académies d'entreprise.",
-    "objectives": [
-     "Concevoir des grilles d'évaluation de la performance individuelle corrélées à des plans d'intéressement.",
-     "Déployer une démarche de Gestion Prévisionnelle des Emplois et des Compétences (GPEC) innovante.",
-     "Accompagner de bout en bout l'ingénierie et le design d'universités ou d'académies internes d'entreprise."
-    ],
-    "expectedChanges": "L'entité retient ses hauts potentiels, réduit son taux de rotation du personnel de 25% et accélère l'acquisition de compétences stratégiques."
-   }
-  ],
-  "ing-projets": [
-   {
-    "diversifiedDescription": "Nous menons des études pluridisciplinaires approfondies pour vérifier scientifiquement la viabilité de vos chantiers et de vos investissements de croissance. En alliant études de marché quantitatives et modélisations économiques poussées, nous apportons des éclairages précis à votre comité stratégique.",
-    "objectives": [
-     "Réaliser des analyses d'opportunité sectorielles et des études de marché approfondies.",
-     "Modéliser des études de faisabilité technique, juridique et de rentabilité économique (VAN, TRI).",
-     "Rédiger des notes stratégiques d'aide à la décision d'investissement conformes aux critères bancaires."
-    ],
-    "expectedChanges": "L'entité valide ou ajuste ses projets d'expansion en s'appuyant sur des bases scientifiques irréprochables, éliminant ainsi les projets non viables en amont."
-   },
-   {
-    "diversifiedDescription": "Nous garantissons des investissements d'infrastructures ou de développements socialement équitables et parfaitement intégrés dans leur écosystème naturel. Nos spécialistes mènent des consultations inclusives et des études d'impact rigoureuses conformément aux exigences ESG.",
-    "objectives": [
-     "Réaliser des Études d'Impact Environnemental et Social (EIES) conformes aux exigences nationales et internationales.",
-     "Concevoir des Plans d'Action de Réinstallation (PAR) équitables de populations affectées.",
-     "Mettre en conformité vos chantiers avec les critères ESG stricts des banques de développement."
-    ],
-    "expectedChanges": "L'entité s'assure de la non-interruption de ses projets pour motifs sociaux ou administratifs, sécurise ses autorisations d'exploitation et valorise sa politique RSE."
-   },
-   {
-    "diversifiedDescription": "Notre cabinet traduit les ambitions de développement de nos partenaires en cadres logiques rigoureux, théories du changement limpides et planifications de gestion de risques robustes. Nous préparons des dossiers d'ingénierie de projets prêts pour le financement multi-bailleurs.",
-    "objectives": [
-     "Formaliser la Théorie du Changement et concevoir des cadres logiques irréprochables.",
-     "Bâtir des planifications opérationnelles fines (WBS, GANTT) avec identification du chemin critique (PERT).",
-     "Établir des plans de gestion des risques inhérents à l'exécution du projet de développement."
-    ],
-    "expectedChanges": "Les promoteurs de projet augmentent de 80% l'acceptabilité de leurs dossiers de financement auprès des bailleurs de fonds mondiaux et maîtrisent les délais de réalisation."
-   },
-   {
-    "diversifiedDescription": "Nous outillons les coordinateurs de programmes pour assurer un pilotage de terrain fondé sur la remontée de données fiables et en temps réel. Grâce à l'automatisation de la collecte de données sur mobile, nous créons des tableaux de bord dynamiques pour des évaluations rigoureuses.",
-    "objectives": [
-     "Déployer des dispositifs de Suivi-Évaluation (M&E) axés sur les résultats opérationnels.",
-     "Automatiser la collecte de données mobiles de terrain via des outils performants (KoboCollect / ODK).",
-     "Concevoir des rapports d'impact à mi-parcours et des études de capitalisation scientifique de premier plan."
-    ],
-    "expectedChanges": "L'organisation identifie immédiatement les écarts d'exécution de ses programmes, prend des mesures correctives éclairées et rend des comptes clairs et transparents aux bailleurs."
-   }
-  ],
-  "ing-accompagnement": [
-   {
-    "diversifiedDescription": "Garantir le succès des politiques publiques et la mise en œuvre de programmes complexes exige l'intégration à vos côtés d'experts techniques résidents de haut niveau. Notre assistance technique permanente soutient la montée en compétences quotidienne de vos cadres.",
-    "objectives": [
-     "Accompagner les Unités de Gestion de Projets (UGP) dans l'exécution opérationnelle rigoureuse de leurs mandats.",
-     "Optimiser la gestion administrative, comptable et budgétaire des programmes d'aide multilatéraux.",
-     "Transférer au quotidien et de manière formelle les compétences clés de gestion de projets de développement."
-    ],
-    "expectedChanges": "L'entité publique ou le ministère sectoriel enregistre un taux de décaissement de ses lignes de financement historique, et pérennise l'autonomie technique de ses équipes."
-   },
-   {
-    "diversifiedDescription": "Nous sécurisons vos opérations de gestion et de passation de marchés en formalisant des manuels de procédures de gestion clairs, hautement transparents et conformes. Nos équipes forment vos personnels à l'application stricte et éthique de ces règles.",
-    "objectives": [
-     "Concevoir et rédiger des manuels de procédures administratives, comptables, financières et de passation des marchés.",
-     "Former de manière pratique les commissions internes à l'instruction rigoureuse des appels d'offres.",
-     "Mettre en place des protocoles d'audit interne pour prévenir les risques de mauvaise gestion financière."
-    ],
-    "expectedChanges": "Pour l'entité concernée, le risque de non-conformité face aux bailleurs ou de recours sur passation de marchés est neutralisé, renforçant la crédibilité institutionnelle."
-   },
-   {
-    "diversifiedDescription": "La coordination opérationnelle de coalitions multi-acteurs d'envergure nécessite un dialogue constructif continu et une gouvernance de consortium solide. Nous facilitons les synergies opérationnelles de terrain et alignons stratégiquement l'ensemble de vos bailleurs.",
-    "objectives": [
-     "Structurer et administrer des consortia de développement nationaux ou sous-régionaux performants.",
-     "Assurer la facilitation et l'alignement continu des visions de l'ensemble des bailleurs de fonds.",
-     "Établir des mécanismes de reporting unifié de haut niveau reflétant de manière consolidée l'avancement global."
-    ],
-    "expectedChanges": "Les partenaires travaillent en harmonie totale, évitent les duplications d'efforts sur le terrain et maximisent de 30% l'impact cumulé de leurs budgets de développement."
-   },
-   {
-    "diversifiedDescription": "Nous soutenons les instances dirigeantes dans le dialogue institutionnel et la formulation de plaidoyers stratégiques à l'échelle régionale et internationale. Notre cabinet prépare vos instances de négociation et élabore des tables rondes d'investissement réussies.",
-    "objectives": [
-     "Rédiger des dossiers stratégiques d'intelligence économique et institutionnelle d'aide à la négociation.",
-     "Organiser et animer des ateliers d'influence réglementaire et de plaidoyer de haut niveau.",
-     "Concevoir l'ingénierie professionnelle de tables rondes d'investissement et de levées de fonds bailleurs."
-    ],
-    "expectedChanges": "L'entité publique ou associative fait adopter de nouvelles réglementations structurantes et réussit à mobiliser des financements additionnels auprès des coopérations multilatérales."
-   },
-   {
-    "diversifiedDescription": "Guider les restructurations internes d'organisations d'importance stratégique exige d'allier sens de la gouvernance et techniques de management agile. Nous conseillons vos comités exécutifs dans l'instauration d'objectifs OKR et de dynamiques d'amélioration de l'engagement.",
-    "objectives": [
-     "Dispenser un coaching de haut niveau auprès des comités de direction sur les démarches de leadership moderne.",
-     "Déployer la méthodologie des OKR (Objectives & Key Results) pour matérialiser la feuille de route stratégique.",
-     "Animer des ateliers de réorganisation organisationnelle et d'amélioration continue du capital humain."
-    ],
-    "expectedChanges": "L'entité libère pleinement l'initiative de ses collaborateurs, aligne ses objectifs d'équipe et de service de manière limpide et accroît l'implication opérationnelle globale."
-   }
-  ]
- },
- "fichesDomaines": {
+ "domainesFormation": {
   "ing-financiere": {
    "description": "Savoir lire les chiffres, c'est décider mieux, négocier mieux et avancer plus vite. Ce domaine vous donne cette maîtrise, que vous soyez un professionnel décidé à accélérer votre carrière, un entrepreneur qui veut financer son projet ou une organisation qui veut fiabiliser sa gestion. À partir de cas concrets, vous apprenez à monter un dossier de financement, à construire un modèle financier, à tenir une comptabilité conforme et à sécuriser vos obligations fiscales. Vous en sortez avec des compétences immédiatement utiles et l'assurance de défendre vos chiffres devant une banque, un investisseur ou une direction."
   },
@@ -1410,7 +1095,17 @@
    "description": "Les grandes réussites naissent d'une vision claire, d'équipes alignées et d'une gouvernance solide. Ce domaine vous donne les méthodes des consultants pour analyser une situation, décider des priorités et conduire le changement. Il s'adresse au manager qui veut prendre de la hauteur, au futur consultant, à l'entrepreneur qui structure sa croissance, comme aux organisations qui veulent gagner en efficacité. Vous travaillez sur des cas concrets et vous repartez avec des outils directement applicables et une posture de leader plus affirmée."
   }
  },
- "fichesAxes": {
+ "domainesAccompagnement": {
+  "ing-financiere": "Vos décisions d'investissement, vos comptes et vos dossiers de financement méritent un regard expert. Le CICEXF intervient à vos côtés pour structurer vos projets, sécuriser vos chiffres et préparer vos échanges avec les banques, les investisseurs et les bailleurs. Nous travaillons avec les directions, les PME et les institutions, ainsi qu'avec les entrepreneurs et les porteurs de projets individuels. Vous obtenez des livrables concrets, directement utilisables pour décider et avancer.",
+  "ing-qhse": "Un accident, un audit raté ou une non-conformité environnementale peuvent coûter très cher. Le CICEXF vous aide à maîtriser ces risques : diagnostic de vos pratiques, mise en place de systèmes de management, préparation aux certifications et conformité aux exigences des bailleurs. Nous intervenons auprès des entreprises, des projets et des institutions, et conseillons aussi les consultants et responsables qui gèrent ces sujets. Vous gagnez en sécurité, en conformité et en crédibilité.",
+  "ing-formation": "Vos formations produisent-elles réellement les résultats attendus ? Le CICEXF conçoit et pilote avec vous des dispositifs de développement des compétences alignés sur votre stratégie : diagnostic des besoins, plan de formation, ingénierie pédagogique et mesure des effets. Nous accompagnons les directions RH, les ministères, les ONG et les centres de formation, ainsi que les formateurs indépendants qui structurent leur offre. Votre investissement en formation devient lisible, mesuré et utile.",
+  "ing-informatique": "Vos systèmes d'information doivent soutenir votre activité, sans la freiner ni l'exposer. Le CICEXF audite vos infrastructures, sécurise vos données, développe les applications dont vous avez besoin et conduit votre transformation numérique. Nous intervenons auprès des entreprises, des administrations et des institutions, et conseillons aussi les entrepreneurs et les porteurs de projets numériques. Vous disposez de solutions fiables, documentées et maîtrisées par vos équipes.",
+  "ing-territoriale": "Planifier une ville, renforcer une mairie, structurer une filière ou fiabiliser un cadastre demande une expertise de terrain. Le CICEXF accompagne les ministères, les collectivités et les organisations de producteurs, ainsi que les leaders locaux et les promoteurs individuels, de l'analyse jusqu'aux outils de décision. Nos missions associent les acteurs concernés et produisent des documents réellement exploitables par ceux qui doivent agir.",
+  "ing-gestion-projets": "Un programme se juge à ses résultats. Le CICEXF renforce vos projets à chaque étape : conception, dispositif de suivi, évaluation indépendante et digitalisation des données. Nous appuyons les unités de gestion, les ministères, les ONG et les organisations internationales, ainsi que les consultants et porteurs de projets qui ont besoin d'un appui ponctuel. Vous disposez d'informations fiables pour piloter, rendre compte et convaincre vos partenaires.",
+  "etudes-recherches": "Besoin de données fiables pour décider ? Le CICEXF réalise pour vous enquêtes, études de marché, études socio-économiques et sectorielles ainsi qu'analyses statistiques avancées. Nous prenons en charge la méthodologie, le terrain, l'analyse et la restitution pour les institutions, les bailleurs, les entreprises et les ONG, et nous appuyons aussi les chercheurs et entrepreneurs dans leurs travaux. Vous recevez des résultats vérifiables, clairs et utiles à la décision.",
+  "conseil-strategique": "Croissance, réorganisation, succession, crise de gouvernance : certains moments exigent un regard extérieur. Le CICEXF accompagne les dirigeants et leurs équipes pour définir une stratégie, simplifier l'organisation, structurer les ressources humaines et conduire le changement. Nous intervenons auprès des entreprises, des institutions et des ONG, et conseillons aussi les dirigeants et entrepreneurs à titre individuel. Vos décisions gagnent en clarté et vos équipes avancent dans la même direction."
+ },
+ "fichesFormations": {
   "structuration et financement des projets": {
    "description": "Une bonne idée ne suffit pas : c'est un dossier solide qui convainc une banque ou un investisseur. Ici, vous apprenez à transformer un projet en proposition finançable, de l'étude de faisabilité au plan de financement, en passant par la présentation aux partenaires. Que le projet soit le vôtre ou celui de votre organisation, vous avancez sur des cas concrets et vous ressortez avec une méthode éprouvée, un dossier mieux construit et l'assurance de défendre vos chiffres face à ceux qui décident.",
    "objectives": [
@@ -1437,6 +1132,53 @@
     "Profil conseillé : avoir un projet à financer ou s'intéresser aux métiers du financement.",
     "Prérequis conseillé : notions simples de gestion et d'utilisation d'Excel.",
     "À prévoir : un ordinateur portable et, si possible, une idée de projet à travailler."
+   ],
+   "title": "Structuration et financement des projets",
+   "domain": "Ingénierie financière et de l'investissement",
+   "price": 140000,
+   "hours": 24,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Passer de l'idée au projet finançable",
+     "details": [
+      "Ce qu'une banque et un investisseur regardent vraiment",
+      "Formuler le problème, la solution et le marché en une page",
+      "Atelier : le test de solidité de votre projet"
+     ]
+    },
+    {
+     "module": "Module 2 : Vérifier que le projet tient debout",
+     "details": [
+      "Étude de marché et étude technique simplifiées",
+      "Coûts d'investissement et charges d'exploitation",
+      "Analyse des risques et solutions de repli"
+     ]
+    },
+    {
+     "module": "Module 3 : Construire le plan de financement",
+     "details": [
+      "Fonds propres, crédit bancaire, subventions, crédit-bail",
+      "Capacité de remboursement et échéancier",
+      "Exercice : équilibrer les ressources et les emplois"
+     ]
+    },
+    {
+     "module": "Module 4 : Convaincre les financeurs",
+     "details": [
+      "Structure d'un dossier bancable et d'un résumé exécutif",
+      "Identifier les bons guichets : banques, fonds, bailleurs",
+      "Simulation d'entretien avec un financeur"
+     ]
+    },
+    {
+     "module": "Projet final : votre dossier de financement",
+     "details": [
+      "Rédaction de la trame complète",
+      "Présentation orale devant le groupe",
+      "Retours personnalisés et plan d'action"
+     ]
+    }
    ]
   },
   "analyse financiere et modelisation": {
@@ -1465,6 +1207,53 @@
     "Profil conseillé : formation ou expérience en gestion, finance ou comptabilité.",
     "Prérequis conseillé : pratique courante d'Excel et lecture de base d'un bilan.",
     "À prévoir : un ordinateur portable équipé d'Excel."
+   ],
+   "title": "Analyse financière et modélisation",
+   "domain": "Ingénierie financière et de l'investissement",
+   "price": 150000,
+   "hours": 30,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Lire la santé d'une activité en quelques minutes",
+     "details": [
+      "Bilan, compte de résultat et tableau de flux",
+      "Soldes de gestion et ratios essentiels",
+      "Cas pratique : diagnostiquer une PME"
+     ]
+    },
+    {
+     "module": "Module 2 : Excel au service du financier",
+     "details": [
+      "Structure d'un modèle : hypothèses, calculs, résultats",
+      "Fonctions financières, recherche et scénarios",
+      "Bonnes pratiques pour un fichier fiable et lisible"
+     ]
+    },
+    {
+     "module": "Module 3 : Construire le modèle pas à pas",
+     "details": [
+      "Prévisions de ventes et de charges",
+      "Investissements, amortissements et besoin en fonds de roulement",
+      "Dette, capitaux propres et états financiers reliés entre eux"
+     ]
+    },
+    {
+     "module": "Module 4 : Décider avec les chiffres",
+     "details": [
+      "VAN, TRI et délai de récupération",
+      "Scénarios et analyse de sensibilité",
+      "Tableau de bord pour la direction"
+     ]
+    },
+    {
+     "module": "Projet final : votre modèle financier complet",
+     "details": [
+      "Modélisation d'un cas réel de bout en bout",
+      "Contrôle de cohérence du modèle",
+      "Présentation de la recommandation d'investissement"
+     ]
+    }
    ]
   },
   "gestion comptable fiscale et audit": {
@@ -1493,6 +1282,53 @@
     "Profil conseillé : débutant motivé ou professionnel de la comptabilité souhaitant se mettre à niveau.",
     "Prérequis conseillé : notions de calcul et aisance avec les outils bureautiques.",
     "À prévoir : un ordinateur portable et, si possible, des exemples de pièces comptables anonymisées."
+   ],
+   "title": "Gestion comptable, fiscale et audit",
+   "domain": "Ingénierie financière et de l'investissement",
+   "price": 130000,
+   "hours": 30,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Les bases solides du SYSCOHADA révisé",
+     "details": [
+      "Plan comptable et logique des écritures",
+      "Pièces justificatives et organisation des journaux",
+      "Exercices : enregistrer les opérations courantes"
+     ]
+    },
+    {
+     "module": "Module 2 : De la saisie aux états financiers",
+     "details": [
+      "Rapprochements bancaires et travaux d'inventaire",
+      "Amortissements, provisions et régularisations",
+      "Lecture des états financiers annuels"
+     ]
+    },
+    {
+     "module": "Module 3 : Maîtriser ses obligations fiscales et sociales",
+     "details": [
+      "Panorama des principaux impôts et déclarations en Côte d'Ivoire",
+      "Calendrier déclaratif et pièces à conserver",
+      "Cas pratique : prévenir pénalités et redressements"
+     ]
+    },
+    {
+     "module": "Module 4 : Contrôle interne et audit",
+     "details": [
+      "Séparation des tâches et procédures clés",
+      "Déroulement d'une mission d'audit",
+      "Exercice : repérer les anomalies dans un dossier"
+     ]
+    },
+    {
+     "module": "Projet final : un cycle comptable complet",
+     "details": [
+      "Traitement d'un mois d'opérations d'une structure fictive",
+      "Production des états de synthèse simplifiés",
+      "Liste de contrôle personnelle à réutiliser"
+     ]
+    }
    ]
   },
   "entrepreneuriat et developpement de pme": {
@@ -1521,6 +1357,53 @@
     "Profil conseillé : toute personne ayant une idée ou une activité à développer.",
     "Prérequis : pas de diplôme particulier, seulement une vraie motivation à entreprendre.",
     "À prévoir : les informations disponibles sur votre projet ou votre activité."
+   ],
+   "title": "Entrepreneuriat et développement de PME",
+   "domain": "Ingénierie financière et de l'investissement",
+   "price": 90000,
+   "hours": 18,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Trouver l'idée qui répond à un vrai besoin",
+     "details": [
+      "Observer son marché et ses futurs clients",
+      "Formuler une offre qui se distingue",
+      "Atelier : votre modèle économique sur une page"
+     ]
+    },
+    {
+     "module": "Module 2 : Se lancer dans les règles",
+     "details": [
+      "Choisir une forme juridique adaptée",
+      "Démarches de création et obligations de base",
+      "Protéger son nom et son activité"
+     ]
+    },
+    {
+     "module": "Module 3 : Vendre et fidéliser",
+     "details": [
+      "Fixer le bon prix",
+      "Trouver ses premiers clients avec peu de moyens",
+      "WhatsApp, réseaux sociaux et bouche-à-oreille"
+     ]
+    },
+    {
+     "module": "Module 4 : Gérer son argent sans se perdre",
+     "details": [
+      "Séparer la caisse de l'entreprise et la sienne",
+      "Suivi des ventes, des charges et de la trésorerie",
+      "Calculer son seuil de rentabilité"
+     ]
+    },
+    {
+     "module": "Projet final : votre plan d'affaires",
+     "details": [
+      "Rédaction et chiffrage du plan",
+      "Pitch de cinq minutes devant le groupe",
+      "Feuille de route pour vos 90 premiers jours"
+     ]
+    }
    ]
   },
   "systemes de management integre smi": {
@@ -1549,6 +1432,53 @@
     "Profil conseillé : expérience ou fort intérêt pour la qualité, la sécurité ou l'environnement.",
     "Prérequis conseillé : connaissance générale du fonctionnement d'une entreprise.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Systèmes de management intégré (SMI)",
+   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "price": 150000,
+   "hours": 30,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre la logique commune des normes",
+     "details": [
+      "Structure commune de l'ISO 9001, de l'ISO 14001 et de l'ISO 45001",
+      "Approche processus, risques et cycle PDCA",
+      "Quiz et analyse d'une entreprise type"
+     ]
+    },
+    {
+     "module": "Module 2 : Construire le système",
+     "details": [
+      "Contexte, parties intéressées et politique QSE",
+      "Cartographie des processus et documentation utile",
+      "Atelier : cartographier une organisation"
+     ]
+    },
+    {
+     "module": "Module 3 : Auditer selon l'ISO 19011",
+     "details": [
+      "Programme et plan d'audit",
+      "Techniques d'entretien et collecte de preuves",
+      "Rédaction de constats et de non-conformités"
+     ]
+    },
+    {
+     "module": "Module 4 : Faire vivre le système",
+     "details": [
+      "Indicateurs et revue de direction",
+      "Actions correctives et amélioration continue",
+      "Préparer l'audit de certification"
+     ]
+    },
+    {
+     "module": "Projet final : un audit interne simulé",
+     "details": [
+      "Préparation du plan et de la liste de contrôle",
+      "Jeu de rôle auditeur et audité",
+      "Rapport d'audit et restitution"
+     ]
+    }
    ]
   },
   "hygiene et securite au travail sst": {
@@ -1577,6 +1507,53 @@
     "Profil conseillé : toute personne amenée à encadrer ou à travailler sur le terrain.",
     "Prérequis : pas de prérequis technique, seulement une bonne capacité d'observation.",
     "À prévoir : de quoi prendre des notes et, si possible, des exemples de situations vécues."
+   ],
+   "title": "Hygiène et sécurité au travail (SST)",
+   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "price": 120000,
+   "hours": 21,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Voir les dangers que les autres ne voient plus",
+     "details": [
+      "Danger, risque et prévention",
+      "Accidents, maladies professionnelles et leurs coûts",
+      "Exercice d'observation à partir de photos de postes"
+     ]
+    },
+    {
+     "module": "Module 2 : Évaluer les risques",
+     "details": [
+      "Méthode d'analyse par unité de travail",
+      "Cotation et hiérarchisation",
+      "Rédaction du Document Unique"
+     ]
+    },
+    {
+     "module": "Module 3 : Prévenir au quotidien",
+     "details": [
+      "Hiérarchie des mesures de prévention",
+      "Équipements de protection et ergonomie",
+      "Consignes, permis de travail et causeries sécurité"
+     ]
+    },
+    {
+     "module": "Module 4 : Réagir et apprendre",
+     "details": [
+      "Situations d'urgence et incendie",
+      "Analyse d'accident par l'arbre des causes",
+      "Indicateurs et suivi des actions"
+     ]
+    },
+    {
+     "module": "Projet final : votre plan de prévention",
+     "details": [
+      "Évaluation complète d'un poste ou d'un chantier",
+      "Plan d'action chiffré",
+      "Animation d'une causerie sécurité devant le groupe"
+     ]
+    }
    ]
   },
   "environnement et developpement durable": {
@@ -1605,6 +1582,53 @@
     "Profil conseillé : formation scientifique, technique ou sociale, ou forte motivation pour l'environnement.",
     "Prérequis conseillé : aisance à l'écrit et notions de calcul.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Environnement et développement durable",
+   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "price": 110000,
+   "hours": 24,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Les grands enjeux, de la planète à votre activité",
+     "details": [
+      "Climat, ressources, déchets et biodiversité",
+      "Cadre réglementaire et attentes des financeurs",
+      "Atelier : vos impacts en un coup d'œil"
+     ]
+    },
+    {
+     "module": "Module 2 : Évaluer les impacts",
+     "details": [
+      "Étapes d'une étude d'impact environnemental et social",
+      "Identifier et coter les impacts",
+      "Cas pratique sur un projet d'infrastructure"
+     ]
+    },
+    {
+     "module": "Module 3 : Mesurer son empreinte carbone",
+     "details": [
+      "Principes d'un bilan carbone et périmètres",
+      "Collecte des données et calculs simplifiés",
+      "Bâtir un plan de réduction"
+     ]
+    },
+    {
+     "module": "Module 4 : Agir et le faire savoir",
+     "details": [
+      "Plan de gestion environnementale et sociale",
+      "Démarche RSE et parties prenantes",
+      "Éviter l'écoblanchiment et communiquer avec justesse"
+     ]
+    },
+    {
+     "module": "Projet final : un plan d'action environnemental",
+     "details": [
+      "Analyse d'une activité réelle",
+      "Rédaction du plan d'action et des indicateurs",
+      "Présentation devant le groupe"
+     ]
+    }
    ]
   },
   "securite sanitaire et agroalimentaire": {
@@ -1633,6 +1657,53 @@
     "Profil conseillé : toute personne travaillant ou souhaitant travailler dans l'alimentation.",
     "Prérequis : pas de prérequis scientifique avancé.",
     "À prévoir : si possible, la description d'un produit ou d'un procédé à étudier."
+   ],
+   "title": "Sécurité sanitaire et agroalimentaire",
+   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "price": 120000,
+   "hours": 21,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre ce qui rend un aliment dangereux",
+     "details": [
+      "Dangers biologiques, chimiques et physiques",
+      "Toxi-infections alimentaires : causes et conséquences",
+      "Étude de cas réels"
+     ]
+    },
+    {
+     "module": "Module 2 : Installer les bonnes pratiques",
+     "details": [
+      "Méthode des 5M et hygiène du personnel",
+      "Nettoyage, désinfection et chaîne du froid",
+      "Audit d'hygiène à partir d'une grille"
+     ]
+    },
+    {
+     "module": "Module 3 : Construire son plan HACCP",
+     "details": [
+      "Les sept principes et les douze étapes",
+      "Diagramme de fabrication et points critiques",
+      "Atelier sur un produit de votre choix"
+     ]
+    },
+    {
+     "module": "Module 4 : Traçabilité et conformité",
+     "details": [
+      "Exigences essentielles de l'ISO 22000",
+      "Traçabilité, rappel de produits et gestion de crise",
+      "Préparer une inspection"
+     ]
+    },
+    {
+     "module": "Projet final : le plan HACCP de votre produit",
+     "details": [
+      "Analyse complète des dangers",
+      "Définition des limites et des contrôles",
+      "Présentation et retours personnalisés"
+     ]
+    }
    ]
   },
   "sauvegarde environnementale et sociale ses": {
@@ -1661,6 +1732,53 @@
     "Profil conseillé : expérience ou intérêt pour les projets de développement.",
     "Prérequis conseillé : bonne capacité de rédaction.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Sauvegarde environnementale et sociale (SES)",
+   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+   "price": 120000,
+   "hours": 18,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Pourquoi les sauvegardes décident du financement",
+     "details": [
+      "Principes et enjeux de la sauvegarde environnementale et sociale",
+      "Cadres des bailleurs et réglementation nationale",
+      "Étude d'un projet stoppé faute de conformité"
+     ]
+    },
+    {
+     "module": "Module 2 : Identifier et classer les risques",
+     "details": [
+      "Tri préliminaire et catégorisation des projets",
+      "Impacts sur l'environnement et les communautés",
+      "Atelier d'analyse de risques"
+     ]
+    },
+    {
+     "module": "Module 3 : Élaborer les instruments",
+     "details": [
+      "CGES, EIES et PGES : rôle et contenu",
+      "Réinstallation, genre et groupes vulnérables",
+      "Exercice de rédaction d'un PGES simplifié"
+     ]
+    },
+    {
+     "module": "Module 4 : Travailler avec les communautés",
+     "details": [
+      "Plan de mobilisation des parties prenantes",
+      "Mécanisme de gestion des plaintes",
+      "Jeu de rôle : consultation publique"
+     ]
+    },
+    {
+     "module": "Projet final : un dossier de suivi",
+     "details": [
+      "Indicateurs et rapport de conformité",
+      "Cas pratique complet sur un projet",
+      "Restitution devant le groupe"
+     ]
+    }
    ]
   },
   "analyse et planification des dispositifs de formation": {
@@ -1689,6 +1807,53 @@
     "Profil conseillé : expérience en formation ou en ressources humaines, ou projet professionnel dans ce domaine.",
     "Prérequis conseillé : aisance à l'écrit et à l'oral.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Analyse et planification des dispositifs de formation",
+   "domain": "Ingénierie de formation et de renforcement de capacités",
+   "price": 100000,
+   "hours": 18,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Poser le bon diagnostic",
+     "details": [
+      "Besoin de formation ou autre problème ?",
+      "Les niveaux de besoins : organisation, métier, individu",
+      "Atelier à partir d'une demande réelle"
+     ]
+    },
+    {
+     "module": "Module 2 : Recueillir les besoins",
+     "details": [
+      "Entretiens, questionnaires et observation",
+      "Construire et administrer ses outils",
+      "Exercice d'entretien en binôme"
+     ]
+    },
+    {
+     "module": "Module 3 : Bâtir un référentiel de compétences",
+     "details": [
+      "Du métier aux activités, puis aux compétences",
+      "Évaluer les écarts",
+      "Cartographie d'un métier de votre choix"
+     ]
+    },
+    {
+     "module": "Module 4 : Construire le plan de formation",
+     "details": [
+      "Prioriser selon les enjeux et les budgets",
+      "Chiffrer et planifier les actions",
+      "Choisir la bonne modalité et le bon prestataire"
+     ]
+    },
+    {
+     "module": "Projet final : votre plan de formation",
+     "details": [
+      "Formalisation complète",
+      "Argumentaire pour la direction",
+      "Présentation et retours"
+     ]
+    }
    ]
   },
   "conception pedagogique et innovation educative": {
@@ -1717,6 +1882,53 @@
     "Profil conseillé : toute personne qui a un savoir à transmettre.",
     "Prérequis conseillé : aisance de base avec un ordinateur.",
     "À prévoir : un ordinateur portable et un thème de formation à travailler."
+   ],
+   "title": "Conception pédagogique et innovation éducative",
+   "domain": "Ingénierie de formation et de renforcement de capacités",
+   "price": 110000,
+   "hours": 24,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Comment les adultes apprennent vraiment",
+     "details": [
+      "Motivation, attention et mémoire",
+      "Les principes de la pédagogie active",
+      "Analyse d'une séquence de formation"
+     ]
+    },
+    {
+     "module": "Module 2 : Définir ce que l'apprenant saura faire",
+     "details": [
+      "Objectifs observables et taxonomie de Bloom",
+      "Alignement entre objectifs, activités et évaluation",
+      "Atelier de réécriture d'objectifs"
+     ]
+    },
+    {
+     "module": "Module 3 : Scénariser un parcours captivant",
+     "details": [
+      "Structure d'une séquence et rythme",
+      "Études de cas, jeux de rôle et ludification",
+      "Storyboard de votre module"
+     ]
+    },
+    {
+     "module": "Module 4 : Créer ses contenus numériques",
+     "details": [
+      "Supports attractifs et vidéos courtes",
+      "Outils auteur et plateformes d'apprentissage",
+      "Transformer un cours présentiel en parcours hybride"
+     ]
+    },
+    {
+     "module": "Projet final : votre module de formation",
+     "details": [
+      "Production d'un module complet",
+      "Test auprès du groupe",
+      "Améliorations à partir des retours"
+     ]
+    }
    ]
   },
   "mise en oeuvre des formations": {
@@ -1745,6 +1957,53 @@
     "Profil conseillé : toute personne amenée à former ou à animer un groupe.",
     "Prérequis : une maîtrise du sujet que vous souhaitez transmettre.",
     "À prévoir : une courte séquence à présenter pendant les mises en situation."
+   ],
+   "title": "Mise en œuvre des formations",
+   "domain": "Ingénierie de formation et de renforcement de capacités",
+   "price": 100000,
+   "hours": 18,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Préparer pour réussir",
+     "details": [
+      "Analyser son public et ses attentes",
+      "Déroulé pédagogique et logistique",
+      "Liste de contrôle de la session idéale"
+     ]
+    },
+    {
+     "module": "Module 2 : Prendre sa place devant un groupe",
+     "details": [
+      "Voix, posture et gestion du trac",
+      "Bien démarrer et capter l'attention",
+      "Passage filmé et retours"
+     ]
+    },
+    {
+     "module": "Module 3 : Faire participer tout le monde",
+     "details": [
+      "Techniques d'animation actives",
+      "Questions, travaux de groupe et mises en situation",
+      "Atelier : animer une séquence de dix minutes"
+     ]
+    },
+    {
+     "module": "Module 4 : Gérer les situations délicates",
+     "details": [
+      "Participants difficiles et conflits",
+      "Animer à distance sans perdre son public",
+      "Évaluer et clôturer une session"
+     ]
+    },
+    {
+     "module": "Projet final : votre session animée",
+     "details": [
+      "Animation d'une séquence complète",
+      "Évaluation par les pairs",
+      "Votre plan de progression de formateur"
+     ]
+    }
    ]
   },
   "evaluation et developpement professionnel": {
@@ -1773,6 +2032,53 @@
     "Profil conseillé : expérience en formation, en RH ou en gestion d'équipe.",
     "Prérequis conseillé : notions de base en tableur.",
     "À prévoir : un ordinateur portable et, si possible, une formation déjà réalisée à analyser."
+   ],
+   "title": "Évaluation et développement professionnel",
+   "domain": "Ingénierie de formation et de renforcement de capacités",
+   "price": 90000,
+   "hours": 15,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Pourquoi et quoi évaluer",
+     "details": [
+      "Les quatre niveaux de Kirkpatrick",
+      "Évaluation à chaud et à froid",
+      "Analyse de questionnaires existants"
+     ]
+    },
+    {
+     "module": "Module 2 : Construire ses outils",
+     "details": [
+      "Questionnaires, tests et grilles d'observation",
+      "Mesurer les acquis avant et après",
+      "Atelier de création d'outils"
+     ]
+    },
+    {
+     "module": "Module 3 : Mesurer le transfert sur le terrain",
+     "details": [
+      "Suivi après la formation et entretiens managers",
+      "Indicateurs de résultats",
+      "Lire et présenter les données"
+     ]
+    },
+    {
+     "module": "Module 4 : Faire grandir les personnes",
+     "details": [
+      "Bilan de compétences simplifié",
+      "Plan de développement individuel",
+      "Exercice sur votre propre parcours"
+     ]
+    },
+    {
+     "module": "Projet final : un dispositif d'évaluation",
+     "details": [
+      "Évaluation complète d'une formation",
+      "Rapport et recommandations",
+      "Présentation devant le groupe"
+     ]
+    }
    ]
   },
   "infrastructure et reseaux": {
@@ -1801,6 +2107,53 @@
     "Profil conseillé : bases en informatique ou forte motivation technique.",
     "Prérequis conseillé : utilisation courante d'un ordinateur et notions d'adressage réseau.",
     "À prévoir : un ordinateur portable capable d'exécuter des outils de simulation."
+   ],
+   "title": "Infrastructure et réseaux",
+   "domain": "Ingénierie informatique et systèmes de réseaux",
+   "price": 140000,
+   "hours": 36,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre comment circulent les données",
+     "details": [
+      "Modèles OSI et TCP/IP",
+      "Adressage IPv4, sous-réseaux et notions d'IPv6",
+      "Exercices d'adressage"
+     ]
+    },
+    {
+     "module": "Module 2 : Construire un réseau local",
+     "details": [
+      "Commutateurs, VLAN et Wi-Fi",
+      "Câblage et bonnes pratiques",
+      "Laboratoire sur simulateur"
+     ]
+    },
+    {
+     "module": "Module 3 : Relier les réseaux",
+     "details": [
+      "Routage, DHCP, DNS et NAT",
+      "Pare-feu et accès à distance",
+      "Laboratoire : interconnecter deux sites"
+     ]
+    },
+    {
+     "module": "Module 4 : Administrer des serveurs",
+     "details": [
+      "Bases de l'administration Linux et Windows Server",
+      "Virtualisation et introduction au cloud",
+      "Sauvegardes et plan de reprise"
+     ]
+    },
+    {
+     "module": "Projet final : le réseau complet d'une PME",
+     "details": [
+      "Conception de l'architecture",
+      "Configuration et tests",
+      "Dépannage de pannes simulées"
+     ]
+    }
    ]
   },
   "developpement logiciel et solutions applicatives": {
@@ -1829,6 +2182,53 @@
     "Profil conseillé : esprit logique et goût de la résolution de problèmes.",
     "Prérequis conseillé : notions de base en programmation.",
     "À prévoir : un ordinateur portable et une idée d'application à réaliser."
+   ],
+   "title": "Développement logiciel et solutions applicatives",
+   "domain": "Ingénierie informatique et systèmes de réseaux",
+   "price": 150000,
+   "hours": 40,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Penser comme un développeur",
+     "details": [
+      "Logique, algorithmes et structure d'un programme",
+      "Git et travail en version",
+      "Premiers exercices de code"
+     ]
+    },
+    {
+     "module": "Module 2 : Créer l'interface",
+     "details": [
+      "HTML, CSS et JavaScript",
+      "Interfaces adaptées au téléphone",
+      "Réaliser une page dynamique"
+     ]
+    },
+    {
+     "module": "Module 3 : Construire le serveur et les données",
+     "details": [
+      "Bases de données SQL",
+      "Conception d'une API REST",
+      "Authentification et sécurité de base"
+     ]
+    },
+    {
+     "module": "Module 4 : Livrer un produit fiable",
+     "details": [
+      "Tests et correction de bugs",
+      "Mise en ligne de l'application",
+      "Documentation et suivi des utilisateurs"
+     ]
+    },
+    {
+     "module": "Projet final : votre application en ligne",
+     "details": [
+      "Du besoin au prototype fonctionnel",
+      "Démonstration devant le groupe",
+      "Un projet à ajouter à votre portfolio"
+     ]
+    }
    ]
   },
   "cybersecurite et gouvernance it": {
@@ -1857,6 +2257,53 @@
     "Profil conseillé : débutant motivé pour les bases, ou profil informatique pour aller plus loin.",
     "Prérequis conseillé : aisance avec un ordinateur et Internet.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Cybersécurité et gouvernance IT",
+   "domain": "Ingénierie informatique et systèmes de réseaux",
+   "price": 150000,
+   "hours": 30,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Penser comme un attaquant",
+     "details": [
+      "Hameçonnage, rançongiciels et ingénierie sociale",
+      "Confidentialité, intégrité, disponibilité",
+      "Analyse d'attaques réelles"
+     ]
+    },
+    {
+     "module": "Module 2 : Protéger postes, comptes et réseaux",
+     "details": [
+      "Mots de passe, double authentification et sauvegardes",
+      "Pare-feu, mises à jour et segmentation",
+      "Laboratoire de sécurisation"
+     ]
+    },
+    {
+     "module": "Module 3 : Trouver les failles",
+     "details": [
+      "Principes d'un audit de vulnérabilités",
+      "Outils d'analyse en environnement d'exercice",
+      "Rédaction d'un rapport de vulnérabilités"
+     ]
+    },
+    {
+     "module": "Module 4 : Gouverner la sécurité",
+     "details": [
+      "Système de management ISO 27001 et cycle PDCA",
+      "Analyse de risques et mesures de l'annexe A",
+      "Protection des données personnelles"
+     ]
+    },
+    {
+     "module": "Projet final : un exercice de crise",
+     "details": [
+      "Scénario d'incident en temps réel",
+      "Plan de réponse et communication",
+      "Plan de sécurité personnel ou d'entreprise"
+     ]
+    }
    ]
   },
   "transformation numerique": {
@@ -1885,6 +2332,53 @@
     "Profil conseillé : toute personne utilisant déjà des outils numériques au travail.",
     "Prérequis conseillé : aisance avec la bureautique.",
     "À prévoir : un ordinateur portable et un exemple de tâche à simplifier."
+   ],
+   "title": "Transformation numérique",
+   "domain": "Ingénierie informatique et systèmes de réseaux",
+   "price": 110000,
+   "hours": 18,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Où en êtes-vous avec le numérique ?",
+     "details": [
+      "Enjeux et exemples africains inspirants",
+      "Autodiagnostic de maturité",
+      "Repérer ses gisements de temps"
+     ]
+    },
+    {
+     "module": "Module 2 : Travailler plus vite et mieux",
+     "details": [
+      "Outils collaboratifs et documents partagés",
+      "Formulaires et classement intelligent",
+      "Atelier de mise en place"
+     ]
+    },
+    {
+     "module": "Module 3 : Automatiser sans coder",
+     "details": [
+      "Automatisations simples et assistants d'IA",
+      "Utiliser l'IA avec prudence et esprit critique",
+      "Automatiser une tâche réelle"
+     ]
+    },
+    {
+     "module": "Module 4 : Décider avec les données",
+     "details": [
+      "Nettoyer et structurer ses données",
+      "Créer un tableau de bord",
+      "Présenter des chiffres clairement"
+     ]
+    },
+    {
+     "module": "Projet final : votre feuille de route numérique",
+     "details": [
+      "Choix des priorités",
+      "Plan d'action sur 90 jours",
+      "Présentation devant le groupe"
+     ]
+    }
    ]
   },
   "amenagement du territoire et urbanisme": {
@@ -1913,6 +2407,53 @@
     "Profil conseillé : formation ou expérience en urbanisme, géographie, génie civil ou administration.",
     "Prérequis conseillé : lecture de plans et de cartes.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Aménagement du territoire et urbanisme",
+   "domain": "Ingénierie de développement territorial",
+   "price": 120000,
+   "hours": 24,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Lire une ville et un territoire",
+     "details": [
+      "Dynamiques urbaines et rurales",
+      "Acteurs et cadre de l'urbanisme en Côte d'Ivoire",
+      "Lecture de plans et de cartes"
+     ]
+    },
+    {
+     "module": "Module 2 : Réaliser un diagnostic territorial",
+     "details": [
+      "Collecte de données et visite de terrain",
+      "Population, foncier, équipements et mobilité",
+      "Atelier : diagnostic d'un quartier"
+     ]
+    },
+    {
+     "module": "Module 3 : Dessiner l'avenir",
+     "details": [
+      "Schéma directeur et plan d'urbanisme de détail",
+      "Scénarios d'aménagement",
+      "Risques, inondations et résilience"
+     ]
+    },
+    {
+     "module": "Module 4 : Faire adhérer et programmer",
+     "details": [
+      "Techniques de concertation",
+      "Programmation et coût des équipements",
+      "Simulation de réunion publique"
+     ]
+    },
+    {
+     "module": "Projet final : un projet de quartier",
+     "details": [
+      "Diagnostic et orientations",
+      "Carte des actions prioritaires",
+      "Présentation devant un jury simulé"
+     ]
+    }
    ]
   },
   "decentralisation et gouvernance locale": {
@@ -1941,6 +2482,53 @@
     "Profil conseillé : engagement ou intérêt pour la vie publique locale.",
     "Prérequis : pas de diplôme particulier, seulement une expérience ou un projet d'engagement local.",
     "À prévoir : si possible, un document de votre commune à étudier."
+   ],
+   "title": "Décentralisation et gouvernance locale",
+   "domain": "Ingénierie de développement territorial",
+   "price": 90000,
+   "hours": 18,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre la collectivité",
+     "details": [
+      "Communes, régions et districts autonomes",
+      "Rôles des élus et de l'administration",
+      "Cartographie des compétences locales"
+     ]
+    },
+    {
+     "module": "Module 2 : Planifier avec les citoyens",
+     "details": [
+      "Diagnostic participatif",
+      "Plan de développement local",
+      "Animer une assemblée de quartier"
+     ]
+    },
+    {
+     "module": "Module 3 : Maîtriser les finances locales",
+     "details": [
+      "Budget, exécution et compte administratif",
+      "Recensement et mobilisation des recettes propres",
+      "Cas pratique à partir de données publiques"
+     ]
+    },
+    {
+     "module": "Module 4 : Rendre des comptes et innover",
+     "details": [
+      "Redevabilité et budget participatif",
+      "Coopération décentralisée et partenaires",
+      "Services publics locaux et numérique"
+     ]
+    },
+    {
+     "module": "Projet final : un plan d'action pour votre commune",
+     "details": [
+      "Identifier une priorité locale",
+      "Chiffrer et planifier",
+      "Plaidoyer devant le groupe"
+     ]
+    }
    ]
   },
   "developpement rural et filieres agricoles": {
@@ -1969,6 +2557,53 @@
     "Profil conseillé : toute personne impliquée ou qui souhaite investir dans l'agriculture.",
     "Prérequis : pas de diplôme exigé, l'expérience de terrain est valorisée.",
     "À prévoir : les informations disponibles sur votre exploitation ou votre filière."
+   ],
+   "title": "Développement rural et filières agricoles",
+   "domain": "Ingénierie de développement territorial",
+   "price": 90000,
+   "hours": 21,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre une chaîne de valeur",
+     "details": [
+      "Du producteur au consommateur : cacao, anacarde, vivrier",
+      "Acteurs, marges et points de blocage",
+      "Cartographier sa propre filière"
+     ]
+    },
+    {
+     "module": "Module 2 : Produire et gagner davantage",
+     "details": [
+      "Compte d'exploitation d'une parcelle",
+      "Bonnes pratiques et réduction des pertes",
+      "Agriculture durable et résilience climatique"
+     ]
+    },
+    {
+     "module": "Module 3 : S'organiser pour peser",
+     "details": [
+      "Coopératives : règles et gouvernance",
+      "Achats groupés et accès au crédit",
+      "Exercice : le bilan de santé d'une coopérative"
+     ]
+    },
+    {
+     "module": "Module 4 : Vendre et transformer",
+     "details": [
+      "Marchés, prix et contrats",
+      "Transformation locale et valeur ajoutée",
+      "Qualité, certification et traçabilité"
+     ]
+    },
+    {
+     "module": "Projet final : votre projet agricole",
+     "details": [
+      "Étude de la filière choisie",
+      "Plan d'affaires simplifié",
+      "Présentation à un financeur simulé"
+     ]
+    }
    ]
   },
   "sig et observation territoriale": {
@@ -1997,6 +2632,53 @@
     "Profil conseillé : débutant motivé ou professionnel utilisant des données de terrain.",
     "Prérequis conseillé : aisance avec un ordinateur et un tableur.",
     "À prévoir : un ordinateur portable pouvant accueillir QGIS."
+   ],
+   "title": "SIG, télédétection et observation territoriale",
+   "domain": "Ingénierie de développement territorial",
+   "price": 130000,
+   "hours": 30,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Entrer dans le monde des cartes numériques",
+     "details": [
+      "Principes des SIG et systèmes de coordonnées",
+      "Prise en main de QGIS",
+      "Votre première carte en une séance"
+     ]
+    },
+    {
+     "module": "Module 2 : Collecter et organiser les données",
+     "details": [
+      "GPS, smartphone et collecte de terrain",
+      "Données ouvertes et bases géographiques",
+      "Numériser des parcelles et des plans"
+     ]
+    },
+    {
+     "module": "Module 3 : Lire la Terre depuis l'espace",
+     "details": [
+      "Principes de la télédétection et images Sentinel",
+      "Indices de végétation et occupation du sol",
+      "Détecter un changement entre deux dates"
+     ]
+    },
+    {
+     "module": "Module 4 : Cartographier par drone et analyser",
+     "details": [
+      "Préparer une mission de vol et respecter les règles",
+      "Orthophotos et modèles de terrain",
+      "Analyse spatiale et requêtes"
+     ]
+    },
+    {
+     "module": "Projet final : votre atlas thématique",
+     "details": [
+      "Répondre à une question de terrain",
+      "Mise en page professionnelle des cartes",
+      "Présentation des résultats"
+     ]
+    }
    ]
   },
   "conception et planification de projets": {
@@ -2025,6 +2707,53 @@
     "Profil conseillé : toute personne amenée à concevoir ou à rédiger un projet.",
     "Prérequis conseillé : aisance à l'écrit et bases d'Excel.",
     "À prévoir : un ordinateur portable et une idée de projet."
+   ],
+   "title": "Conception et planification de projets",
+   "domain": "Gestion, suivi et évaluation des projets et programmes",
+   "price": 110000,
+   "hours": 21,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Trouver le vrai problème",
+     "details": [
+      "Analyse des parties prenantes",
+      "Arbre à problèmes et arbre à objectifs",
+      "Atelier sur un sujet de votre choix"
+     ]
+    },
+    {
+     "module": "Module 2 : Tracer le chemin du changement",
+     "details": [
+      "Théorie du changement",
+      "Cadre logique et indicateurs SMART",
+      "Exercice : relire un cadre logique"
+     ]
+    },
+    {
+     "module": "Module 3 : Planifier le temps et l'argent",
+     "details": [
+      "Découpage des activités et chronogramme",
+      "Budget par activité et par résultat",
+      "Gantt sur tableur"
+     ]
+    },
+    {
+     "module": "Module 4 : Convaincre un bailleur",
+     "details": [
+      "Comprendre un appel à propositions",
+      "Rédiger une note conceptuelle percutante",
+      "Risques et plan de réponse"
+     ]
+    },
+    {
+     "module": "Projet final : votre document de projet",
+     "details": [
+      "Rédaction complète",
+      "Grille d'évaluation du bailleur",
+      "Soutenance devant le groupe"
+     ]
+    }
    ]
   },
   "suivi operationnel et financier": {
@@ -2053,6 +2782,53 @@
     "Profil conseillé : première expérience de projet ou de gestion.",
     "Prérequis conseillé : pratique d'Excel.",
     "À prévoir : un ordinateur portable équipé d'Excel."
+   ],
+   "title": "Suivi opérationnel et financier",
+   "domain": "Gestion, suivi et évaluation des projets et programmes",
+   "price": 120000,
+   "hours": 21,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Installer les réflexes du pilote",
+     "details": [
+      "Résultats, activités et indicateurs",
+      "Plan de suivi et responsabilités",
+      "Diagnostic d'un projet en difficulté"
+     ]
+    },
+    {
+     "module": "Module 2 : Suivre les délais et les coûts",
+     "details": [
+      "Mise à jour du chronogramme",
+      "Suivi budgétaire et engagements",
+      "Méthode de la valeur acquise"
+     ]
+    },
+    {
+     "module": "Module 3 : Construire son tableau de bord",
+     "details": [
+      "Tableaux de suivi sous Excel",
+      "Indicateurs visuels et alertes",
+      "Atelier sur des données de projet"
+     ]
+    },
+    {
+     "module": "Module 4 : Rapporter et corriger",
+     "details": [
+      "Rapports d'avancement et rapports financiers",
+      "Réunions de suivi efficaces",
+      "Décider des mesures correctives"
+     ]
+    },
+    {
+     "module": "Projet final : un tableau de bord opérationnel",
+     "details": [
+      "Pilotage d'un projet simulé",
+      "Rapport d'avancement complet",
+      "Présentation au comité de pilotage simulé"
+     ]
+    }
    ]
   },
   "evaluation d impact": {
@@ -2081,6 +2857,53 @@
     "Profil conseillé : expérience de projet, de recherche ou de suivi-évaluation.",
     "Prérequis conseillé : notions de statistiques et bonne capacité de rédaction.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Évaluation d'impact",
+   "domain": "Gestion, suivi et évaluation des projets et programmes",
+   "price": 130000,
+   "hours": 24,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre ce qu'évaluer veut dire",
+     "details": [
+      "Suivi, évaluation et audit",
+      "Critères du CAD de l'OCDE",
+      "Lecture critique d'un rapport"
+     ]
+    },
+    {
+     "module": "Module 2 : Concevoir l'évaluation",
+     "details": [
+      "Termes de référence et questions évaluatives",
+      "Matrice d'évaluation",
+      "Atelier sur un programme réel"
+     ]
+    },
+    {
+     "module": "Module 3 : Prouver le changement",
+     "details": [
+      "Situation de référence et groupe de comparaison",
+      "Principes de l'évaluation contrefactuelle",
+      "Méthodes qualitatives et triangulation"
+     ]
+    },
+    {
+     "module": "Module 4 : Analyser et faire utiliser les résultats",
+     "details": [
+      "Traitement des données",
+      "Conclusions et recommandations",
+      "Communiquer des résultats sensibles"
+     ]
+    },
+    {
+     "module": "Projet final : votre rapport d'évaluation",
+     "details": [
+      "Évaluation d'un cas fictif",
+      "Résumé pour les décideurs",
+      "Présentation orale"
+     ]
+    }
    ]
   },
   "systemes d information pour le suivi evaluation sise": {
@@ -2109,6 +2932,53 @@
     "Profil conseillé : toute personne qui collecte ou utilise des données de terrain.",
     "Prérequis conseillé : bonne pratique d'Excel.",
     "À prévoir : un ordinateur portable et un smartphone Android."
+   ],
+   "title": "Systèmes d'information pour le suivi-évaluation (SISE)",
+   "domain": "Gestion, suivi et évaluation des projets et programmes",
+   "price": 140000,
+   "hours": 24,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Penser le système avant les outils",
+     "details": [
+      "Du cadre logique au plan de données",
+      "Qui collecte quoi, et à quel rythme ?",
+      "Schéma de circulation des données"
+     ]
+    },
+    {
+     "module": "Module 2 : Collecter sans papier",
+     "details": [
+      "Créer un formulaire avec KoboToolbox",
+      "Sauts, validations et collecte hors ligne",
+      "Test sur smartphone avec KoboCollect"
+     ]
+    },
+    {
+     "module": "Module 3 : Fiabiliser les données",
+     "details": [
+      "Nettoyage et contrôle de qualité",
+      "Power Query et structuration",
+      "Confidentialité des données"
+     ]
+    },
+    {
+     "module": "Module 4 : Faire parler les données",
+     "details": [
+      "Modélisation et mesures dans Power BI",
+      "Tableaux de bord et cartes",
+      "Partage et actualisation"
+     ]
+    },
+    {
+     "module": "Projet final : une chaîne complète",
+     "details": [
+      "Du formulaire au tableau de bord",
+      "Rapport automatique",
+      "Démonstration devant le groupe"
+     ]
+    }
    ]
   },
   "enquetes statistiques et sondages": {
@@ -2137,6 +3007,53 @@
     "Profil conseillé : intérêt pour les études, les statistiques ou le terrain.",
     "Prérequis conseillé : notions de base en statistiques et en tableur.",
     "À prévoir : un ordinateur portable et un smartphone."
+   ],
+   "title": "Enquêtes statistiques et sondages",
+   "domain": "Études, enquêtes et recherches socio-économiques",
+   "price": 110000,
+   "hours": 21,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Poser les bonnes bases",
+     "details": [
+      "Objectifs et population cible",
+      "Types d'enquêtes et de biais",
+      "Lecture critique d'un sondage"
+     ]
+    },
+    {
+     "module": "Module 2 : Choisir son échantillon",
+     "details": [
+      "Échantillonnage aléatoire et par grappes",
+      "Calcul de la taille d'échantillon",
+      "Exercices sur tableur"
+     ]
+    },
+    {
+     "module": "Module 3 : Rédiger un questionnaire qui marche",
+     "details": [
+      "Formulation des questions et pièges à éviter",
+      "Programmation sur tablette",
+      "Test en conditions réelles"
+     ]
+    },
+    {
+     "module": "Module 4 : Conduire le terrain",
+     "details": [
+      "Former et superviser les enquêteurs",
+      "Contrôle de qualité en temps réel",
+      "Éthique et consentement"
+     ]
+    },
+    {
+     "module": "Projet final : votre mini-enquête",
+     "details": [
+      "Collecte réelle à petite échelle",
+      "Apurement et analyse",
+      "Rapport et présentation des résultats"
+     ]
+    }
    ]
   },
   "etudes socio economiques": {
@@ -2165,6 +3082,53 @@
     "Profil conseillé : formation en sciences sociales, économie ou gestion, ou expérience de terrain.",
     "Prérequis conseillé : bonne capacité de rédaction.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Études socio-économiques",
+   "domain": "Études, enquêtes et recherches socio-économiques",
+   "price": 100000,
+   "hours": 18,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre une réalité sociale",
+     "details": [
+      "Ménages, revenus et vulnérabilités",
+      "Indicateurs de pauvreté",
+      "Exploiter les données publiques"
+     ]
+    },
+    {
+     "module": "Module 2 : Écouter le terrain",
+     "details": [
+      "Entretiens individuels",
+      "Groupes de discussion",
+      "Exercice d'animation en binôme"
+     ]
+    },
+    {
+     "module": "Module 3 : Étudier un marché",
+     "details": [
+      "Offre, demande et concurrence",
+      "Estimer la taille d'un marché",
+      "Cas : lancer un produit à Abidjan"
+     ]
+    },
+    {
+     "module": "Module 4 : Analyser et conclure",
+     "details": [
+      "Situation de référence",
+      "Croiser le qualitatif et le quantitatif",
+      "Rédiger des recommandations utiles"
+     ]
+    },
+    {
+     "module": "Projet final : votre rapport d'étude",
+     "details": [
+      "Étude sur un sujet de votre choix",
+      "Résumé exécutif",
+      "Présentation devant le groupe"
+     ]
+    }
    ]
   },
   "econometrie et analyse de donnees": {
@@ -2193,6 +3157,53 @@
     "Profil conseillé : formation en économie, statistique, mathématiques ou domaine voisin.",
     "Prérequis conseillé : bases de statistiques.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Économétrie et analyse de données",
+   "domain": "Études, enquêtes et recherches socio-économiques",
+   "price": 150000,
+   "hours": 30,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Préparer ses données",
+     "details": [
+      "Stata, R ou Python : bien démarrer",
+      "Importation et nettoyage",
+      "Statistiques descriptives et graphiques"
+     ]
+    },
+    {
+     "module": "Module 2 : Expliquer un phénomène",
+     "details": [
+      "Régression linéaire multiple",
+      "Interprétation des coefficients",
+      "Tests d'hypothèses"
+     ]
+    },
+    {
+     "module": "Module 3 : Aller plus loin",
+     "details": [
+      "Modèles logit et probit",
+      "Données de panel",
+      "Introduction aux séries temporelles"
+     ]
+    },
+    {
+     "module": "Module 4 : Vérifier et prévoir",
+     "details": [
+      "Tests de robustesse et limites",
+      "Prévisions",
+      "Causalité et corrélation : ne pas se tromper"
+     ]
+    },
+    {
+     "module": "Projet final : votre étude empirique",
+     "details": [
+      "Analyse complète sur données réelles",
+      "Script reproductible",
+      "Note de synthèse pour décideurs"
+     ]
+    }
    ]
   },
   "etudes sectorielles specialisees": {
@@ -2221,6 +3232,53 @@
     "Profil conseillé : expérience ou fort intérêt pour le secteur étudié.",
     "Prérequis conseillé : capacité d'analyse et de rédaction.",
     "À prévoir : un ordinateur portable et le secteur que vous souhaitez approfondir."
+   ],
+   "title": "Études sectorielles spécialisées",
+   "domain": "Études, enquêtes et recherches socio-économiques",
+   "price": 100000,
+   "hours": 15,
+   "modality": "En ligne",
+   "programme": [
+    {
+     "module": "Module 1 : Cartographier un secteur",
+     "details": [
+      "Définir le périmètre",
+      "Acteurs, chaînes de valeur et rapports de force",
+      "Atelier sur votre secteur"
+     ]
+    },
+    {
+     "module": "Module 2 : Trouver l'information qui compte",
+     "details": [
+      "Sources officielles et données ouvertes",
+      "Entretiens avec des experts",
+      "Vérifier et croiser les sources"
+     ]
+    },
+    {
+     "module": "Module 3 : Analyser",
+     "details": [
+      "Cadre réglementaire et politiques publiques",
+      "Modèle des cinq forces et PESTEL",
+      "Tendances, risques et opportunités"
+     ]
+    },
+    {
+     "module": "Module 4 : Recommander",
+     "details": [
+      "Scénarios d'évolution",
+      "Pistes d'investissement ou de réforme",
+      "Écrire pour convaincre un décideur"
+     ]
+    },
+    {
+     "module": "Projet final : votre note sectorielle",
+     "details": [
+      "Énergie, éducation ou secteur de votre choix",
+      "Note de quelques pages",
+      "Présentation orale"
+     ]
+    }
    ]
   },
   "strategie d entreprise et vision": {
@@ -2249,6 +3307,53 @@
     "Profil conseillé : responsabilités d'encadrement ou projet d'entreprise.",
     "Prérequis conseillé : une première expérience professionnelle.",
     "À prévoir : les informations disponibles sur votre activité ou votre organisation."
+   ],
+   "title": "Stratégie d'entreprise et vision",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 130000,
+   "hours": 18,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Penser en stratège",
+     "details": [
+      "Mission, vision et valeurs",
+      "Études de réussites et d'échecs",
+      "Atelier : votre cap à cinq ans"
+     ]
+    },
+    {
+     "module": "Module 2 : Faire le diagnostic",
+     "details": [
+      "PESTEL, cinq forces et SWOT",
+      "Analyser concurrents et clients",
+      "Application à votre organisation"
+     ]
+    },
+    {
+     "module": "Module 3 : Faire des choix",
+     "details": [
+      "Options stratégiques",
+      "Dire non et prioriser",
+      "Outil de décision et arbitrages"
+     ]
+    },
+    {
+     "module": "Module 4 : Passer à l'action",
+     "details": [
+      "Objectifs et indicateurs",
+      "Plan d'action et responsabilités",
+      "Mobiliser ses équipes"
+     ]
+    },
+    {
+     "module": "Projet final : votre plan stratégique",
+     "details": [
+      "Formalisation sur une page",
+      "Plan d'action sur 12 mois",
+      "Présentation devant un conseil simulé"
+     ]
+    }
    ]
   },
   "organisation et processus": {
@@ -2277,6 +3382,53 @@
     "Profil conseillé : toute personne impliquée dans le fonctionnement d'un service.",
     "Prérequis conseillé : aisance avec la bureautique.",
     "À prévoir : un ordinateur portable et un processus de votre quotidien à améliorer."
+   ],
+   "title": "Organisation et processus",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 100000,
+   "hours": 18,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Voir l'organisation autrement",
+     "details": [
+      "Structure, rôles et processus",
+      "Signes d'une organisation qui s'essouffle",
+      "Autodiagnostic"
+     ]
+    },
+    {
+     "module": "Module 2 : Cartographier",
+     "details": [
+      "Identifier et représenter les processus",
+      "Notation simple et logigrammes",
+      "Atelier sur un processus réel"
+     ]
+    },
+    {
+     "module": "Module 3 : Simplifier",
+     "details": [
+      "Repérer les gaspillages et les doublons",
+      "Méthodes d'amélioration continue",
+      "Mesurer le gain de temps"
+     ]
+    },
+    {
+     "module": "Module 4 : Clarifier et écrire",
+     "details": [
+      "Organigramme et matrice des responsabilités",
+      "Fiches de postes",
+      "Rédiger une procédure qui sera lue"
+     ]
+    },
+    {
+     "module": "Projet final : un processus transformé",
+     "details": [
+      "Avant et après",
+      "Procédure rédigée",
+      "Présentation du gain obtenu"
+     ]
+    }
    ]
   },
   "gestion des ressources humaines et gpec": {
@@ -2305,6 +3457,53 @@
     "Profil conseillé : expérience ou projet professionnel dans les ressources humaines.",
     "Prérequis conseillé : aisance avec la bureautique.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Gestion des ressources humaines et GPEC",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 120000,
+   "hours": 24,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : Le rôle stratégique des RH",
+     "details": [
+      "Du personnel aux talents",
+      "Cadre du droit du travail ivoirien",
+      "Diagnostic RH rapide"
+     ]
+    },
+    {
+     "module": "Module 2 : Recruter et intégrer",
+     "details": [
+      "Fiche de poste et sélection",
+      "Entretien structuré",
+      "Jeu de rôle d'entretien"
+     ]
+    },
+    {
+     "module": "Module 3 : Anticiper avec la GPEC",
+     "details": [
+      "Référentiels de métiers et de compétences",
+      "Analyse des écarts",
+      "Plan de carrière et succession"
+     ]
+    },
+    {
+     "module": "Module 4 : Évaluer et rémunérer",
+     "details": [
+      "Entretiens annuels",
+      "Grille salariale et équité",
+      "Fidéliser et motiver"
+     ]
+    },
+    {
+     "module": "Projet final : votre boîte à outils RH",
+     "details": [
+      "Référentiel d'un métier",
+      "Grille d'évaluation",
+      "Plan d'action présenté devant le groupe"
+     ]
+    }
    ]
   },
   "conduite du changement et culture": {
@@ -2333,6 +3532,53 @@
     "Profil conseillé : toute personne qui encadre, ou qui porte un projet de changement.",
     "Prérequis conseillé : une première expérience d'équipe.",
     "À prévoir : un exemple de changement vécu ou à venir."
+   ],
+   "title": "Conduite du changement et culture",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 110000,
+   "hours": 15,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Comprendre le changement",
+     "details": [
+      "La courbe du changement et les réactions humaines",
+      "Pourquoi tant de projets échouent",
+      "Analyse d'un changement vécu"
+     ]
+    },
+    {
+     "module": "Module 2 : Préparer le terrain",
+     "details": [
+      "Évaluer les impacts",
+      "Carte des alliés et des opposants",
+      "Modèles de référence comme ADKAR et Kotter"
+     ]
+    },
+    {
+     "module": "Module 3 : Communiquer et embarquer",
+     "details": [
+      "Construire un message clair",
+      "Écoute active et conversations difficiles",
+      "Jeux de rôle"
+     ]
+    },
+    {
+     "module": "Module 4 : Installer durablement",
+     "details": [
+      "Culture d'entreprise et rituels",
+      "Petites victoires et reconnaissance",
+      "Mesurer l'adoption"
+     ]
+    },
+    {
+     "module": "Projet final : votre plan de changement",
+     "details": [
+      "Sur un cas réel",
+      "Plan de communication",
+      "Présentation et retours"
+     ]
+    }
    ]
   },
   "audit organisationnel": {
@@ -2361,6 +3607,53 @@
     "Profil conseillé : expérience en gestion, audit, contrôle ou management.",
     "Prérequis conseillé : capacité d'analyse et de rédaction.",
     "À prévoir : un ordinateur portable."
+   ],
+   "title": "Audit organisationnel",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 120000,
+   "hours": 21,
+   "modality": "Hybride",
+   "programme": [
+    {
+     "module": "Module 1 : La posture de l'auditeur",
+     "details": [
+      "Objectifs et éthique de l'audit",
+      "Indépendance et écoute",
+      "Étude d'un cas d'échec"
+     ]
+    },
+    {
+     "module": "Module 2 : Préparer la mission",
+     "details": [
+      "Lettre de mission et périmètre",
+      "Revue documentaire",
+      "Grilles d'analyse"
+     ]
+    },
+    {
+     "module": "Module 3 : Enquêter sur le terrain",
+     "details": [
+      "Conduire des entretiens",
+      "Observer les pratiques",
+      "Analyser structure, processus et management"
+     ]
+    },
+    {
+     "module": "Module 4 : Conclure et convaincre",
+     "details": [
+      "Hiérarchiser les constats",
+      "Recommandations réalistes",
+      "Annoncer des vérités difficiles"
+     ]
+    },
+    {
+     "module": "Projet final : un audit simulé",
+     "details": [
+      "Mission complète sur un cas",
+      "Rapport d'audit",
+      "Restitution devant une direction simulée"
+     ]
+    }
    ]
   },
   "gouvernance et ethique": {
@@ -2389,6 +3682,2050 @@
     "Profil conseillé : exercice ou projet de responsabilités de gouvernance.",
     "Prérequis conseillé : une première expérience de direction ou de la vie associative.",
     "À prévoir : si possible, les statuts ou règles de votre organisation."
+   ],
+   "title": "Gouvernance et éthique",
+   "domain": "Conseil stratégique et organisationnel",
+   "price": 130000,
+   "hours": 15,
+   "modality": "Présentiel",
+   "programme": [
+    {
+     "module": "Module 1 : Les fondamentaux de la gouvernance",
+     "details": [
+      "Rôles du conseil, de la direction et des contrôleurs",
+      "Principes et cadre OHADA",
+      "Analyse de crises de gouvernance"
+     ]
+    },
+    {
+     "module": "Module 2 : Faire fonctionner un conseil",
+     "details": [
+      "Composition et comités",
+      "Préparer et conduire une séance",
+      "Simulation de conseil d'administration"
+     ]
+    },
+    {
+     "module": "Module 3 : Prévenir les risques",
+     "details": [
+      "Conflits d'intérêts et corruption",
+      "Cartographie des risques de conformité",
+      "Dispositifs d'alerte"
+     ]
+    },
+    {
+     "module": "Module 4 : Faire vivre l'éthique",
+     "details": [
+      "Charte et code de conduite",
+      "Dilemmes éthiques au quotidien",
+      "Former et sensibiliser"
+     ]
+    },
+    {
+     "module": "Projet final : votre charte de gouvernance",
+     "details": [
+      "Rédaction adaptée à une organisation",
+      "Plan de mise en œuvre",
+      "Présentation devant le groupe"
+     ]
+    }
+   ]
+  }
+ },
+ "fichesAccompagnements": {
+  "structuration et financement des projets": {
+   "description": "Votre projet est prêt à grandir, mais le financement n'est pas encore acquis ? Nos experts construisent avec vous le montage financier, l'étude de faisabilité et le dossier destiné aux banques, aux investisseurs et aux bailleurs. Nous vous aidons aussi à préparer les échanges et à répondre aux questions des financeurs. Vous gagnez un dossier solide et un interlocuteur à vos côtés jusqu'à la présentation.",
+   "objectives": [
+    "Sécuriser la viabilité de votre projet avant de solliciter des fonds.",
+    "Définir le montage financier le plus adapté à votre situation.",
+    "Produire un dossier complet, conforme aux attentes des financeurs.",
+    "Vous préparer aux discussions avec vos partenaires financiers."
+   ],
+   "resultatsAttendus": [
+    "Une étude de faisabilité et un plan d'affaires remis et commentés.",
+    "Un plan de financement validé avec vos responsables.",
+    "Un dossier prêt à être déposé.",
+    "Une liste ciblée de financeurs à approcher."
+   ],
+   "publicOrganisations": [
+    "Entreprises, PME et directions du développement.",
+    "Collectivités, institutions et ONG porteuses d'investissements."
+   ],
+   "publicParticuliers": [
+    "Promoteurs et entrepreneurs individuels."
+   ],
+   "admission": [
+    "La présentation de votre projet, même provisoire.",
+    "Vos premières estimations de coûts et de ressources.",
+    "Vos états financiers récents, si vous en disposez."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage et analyse du projet",
+     "details": [
+      "Entretien avec les porteurs et revue des documents",
+      "Identification des besoins de financement"
+     ]
+    },
+    {
+     "module": "Phase 2 : Étude de faisabilité",
+     "details": [
+      "Analyse du marché, des coûts et des risques",
+      "Construction des prévisions financières"
+     ]
+    },
+    {
+     "module": "Phase 3 : Montage financier",
+     "details": [
+      "Comparaison des options de financement",
+      "Élaboration du plan de financement"
+     ]
+    },
+    {
+     "module": "Phase 4 : Dossier et mise en relation",
+     "details": [
+      "Rédaction du dossier et du résumé exécutif",
+      "Préparation des rendez-vous avec les financeurs"
+     ]
+    }
+   ]
+  },
+  "analyse financiere et modelisation": {
+   "description": "Avant un investissement, une cession ou une levée de fonds, vous avez besoin de chiffres sûrs. Nous réalisons le diagnostic financier de votre structure et construisons un modèle prévisionnel sur mesure, avec des scénarios adaptés à vos décisions. Vos équipes reçoivent un outil documenté, qu'elles savent ensuite utiliser sans nous.",
+   "objectives": [
+    "Établir un diagnostic objectif de votre situation financière.",
+    "Mettre à votre disposition un modèle fiable et adapté à votre activité.",
+    "Comparer vos options à l'aide de scénarios chiffrés.",
+    "Rendre vos équipes autonomes dans l'utilisation du modèle."
+   ],
+   "resultatsAttendus": [
+    "Un rapport de diagnostic avec des recommandations.",
+    "Un modèle financier personnalisé et documenté.",
+    "Une note d'aide à la décision pour votre direction.",
+    "Une session de prise en main avec vos équipes."
+   ],
+   "publicOrganisations": [
+    "Directions générales et financières.",
+    "Banques, institutions financières et fonds d'investissement."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs et investisseurs individuels."
+   ],
+   "admission": [
+    "Vos états financiers des trois dernières années, si disponibles.",
+    "Vos hypothèses d'activité et vos projets d'investissement.",
+    "Le nom d'un référent pour le suivi."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Collecte et compréhension",
+     "details": [
+      "Revue des comptes et des hypothèses",
+      "Échange sur les décisions à éclairer"
+     ]
+    },
+    {
+     "module": "Phase 2 : Diagnostic financier",
+     "details": [
+      "Analyse de la rentabilité, de la structure et de la trésorerie",
+      "Restitution des constats"
+     ]
+    },
+    {
+     "module": "Phase 3 : Construction du modèle",
+     "details": [
+      "Modélisation sur mesure",
+      "Tests de cohérence et scénarios"
+     ]
+    },
+    {
+     "module": "Phase 4 : Remise et transfert",
+     "details": [
+      "Note de recommandations",
+      "Prise en main du modèle par vos équipes"
+     ]
+    }
+   ]
+  },
+  "gestion comptable fiscale et audit": {
+   "description": "Retards comptables, risques de redressement, contrôle interne insuffisant : ces fragilités finissent par coûter cher. Nous remettons votre fonction comptable en ordre selon le SYSCOHADA, sécurisons vos obligations fiscales et réalisons des audits assortis de recommandations. Vous retrouvez des comptes fiables et la tranquillité face aux contrôles.",
+   "objectives": [
+    "Mettre à niveau votre organisation comptable.",
+    "Identifier et réduire vos risques fiscaux et sociaux.",
+    "Renforcer vos procédures de contrôle interne.",
+    "Vérifier la fiabilité de vos comptes par un audit."
+   ],
+   "resultatsAttendus": [
+    "Une comptabilité à jour et mieux organisée.",
+    "Une cartographie de vos risques fiscaux.",
+    "Un manuel de procédures adapté.",
+    "Un rapport d'audit et un plan d'actions correctives."
+   ],
+   "publicOrganisations": [
+    "Directions administratives et financières, PME.",
+    "ONG et projets soumis à l'exigence des bailleurs."
+   ],
+   "publicParticuliers": [
+    "Commerçants, professions libérales et entrepreneurs individuels."
+   ],
+   "admission": [
+    "Vos pièces et états comptables récents.",
+    "Vos dernières déclarations fiscales et sociales.",
+    "Vos procédures existantes, même informelles."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : État des lieux",
+     "details": [
+      "Revue de l'organisation et des comptes",
+      "Identification des zones de risque"
+     ]
+    },
+    {
+     "module": "Phase 2 : Remise à niveau",
+     "details": [
+      "Régularisations et réorganisation comptable",
+      "Mise en place du calendrier fiscal"
+     ]
+    },
+    {
+     "module": "Phase 3 : Contrôle interne",
+     "details": [
+      "Rédaction et mise en place des procédures",
+      "Sensibilisation des équipes"
+     ]
+    },
+    {
+     "module": "Phase 4 : Audit et recommandations",
+     "details": [
+      "Vérification des comptes",
+      "Rapport et plan d'actions"
+     ]
+    }
+   ]
+  },
+  "entrepreneuriat et developpement de pme": {
+   "description": "Votre entreprise a du potentiel, mais le quotidien absorbe toute votre énergie ? Nous vous accompagnons comme un partenaire : diagnostic de l'activité, plan de développement, outils de gestion, recherche de marchés et de financements. Nous suivons la mise en œuvre avec vous, pour que le plan devienne des résultats.",
+   "objectives": [
+    "Identifier ce qui freine votre croissance.",
+    "Définir un plan de développement réaliste.",
+    "Installer des outils de gestion adaptés à votre taille.",
+    "Préparer votre entreprise aux marchés et aux financements."
+   ],
+   "resultatsAttendus": [
+    "Un diagnostic clair de votre entreprise.",
+    "Un plan de développement priorisé.",
+    "Des outils de gestion en place.",
+    "Un suivi régulier des actions engagées."
+   ],
+   "publicOrganisations": [
+    "PME, coopératives et groupements.",
+    "Incubateurs et programmes d'appui aux entreprises."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs, artisans et commerçants."
+   ],
+   "admission": [
+    "La présentation de votre activité.",
+    "Vos chiffres disponibles : ventes, charges, dettes.",
+    "Vos priorités pour les prochains mois."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic d'entreprise",
+     "details": [
+      "Visite et entretien avec le dirigeant",
+      "Analyse commerciale et financière"
+     ]
+    },
+    {
+     "module": "Phase 2 : Plan de développement",
+     "details": [
+      "Choix des priorités",
+      "Plan d'actions chiffré"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mise en place",
+     "details": [
+      "Outils de gestion et de vente",
+      "Préparation du dossier de financement"
+     ]
+    },
+    {
+     "module": "Phase 4 : Suivi",
+     "details": [
+      "Points réguliers avec le dirigeant",
+      "Ajustements selon les résultats"
+     ]
+    }
+   ]
+  },
+  "systemes de management integre smi": {
+   "description": "Vous visez la certification ISO 9001, ISO 14001 ou ISO 45001, ou vous voulez un système qui fonctionne vraiment ? Nous évaluons vos écarts, construisons avec vos équipes un système simple et unique, réalisons un audit à blanc et vous accompagnons jusqu'à l'audit de certification. Le résultat : moins de paperasse et plus de maîtrise.",
+   "objectives": [
+    "Mesurer votre écart par rapport aux normes visées.",
+    "Construire un système intégré adapté à votre réalité.",
+    "Impliquer vos équipes et vos pilotes de processus.",
+    "Sécuriser votre passage devant l'organisme certificateur."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'écarts et une feuille de route.",
+    "Une documentation unique, simple et utilisée.",
+    "Des auditeurs internes opérationnels.",
+    "Un audit à blanc réalisé et ses écarts traités."
+   ],
+   "publicOrganisations": [
+    "Industries, entreprises de services et de BTP.",
+    "Directions générales et responsables QHSE."
+   ],
+   "publicParticuliers": [
+    "Responsables et consultants QHSE ayant besoin d'un appui expert."
+   ],
+   "admission": [
+    "Le périmètre et la norme visés.",
+    "Vos procédures et certificats existants.",
+    "Un responsable désigné pour la démarche."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic d'écarts",
+     "details": [
+      "Visite des sites et entretiens",
+      "Rapport d'écarts"
+     ]
+    },
+    {
+     "module": "Phase 2 : Conception du système",
+     "details": [
+      "Cartographie des processus",
+      "Documentation et indicateurs"
+     ]
+    },
+    {
+     "module": "Phase 3 : Déploiement",
+     "details": [
+      "Appui aux pilotes de processus",
+      "Formation des auditeurs internes"
+     ]
+    },
+    {
+     "module": "Phase 4 : Préparation à la certification",
+     "details": [
+      "Audit à blanc",
+      "Traitement des écarts et revue de direction"
+     ]
+    }
+   ]
+  },
+  "hygiene et securite au travail sst": {
+   "description": "Vos collaborateurs travaillent-ils en sécurité ? Nos experts se rendent sur vos sites pour évaluer les risques poste par poste, rédiger votre Document Unique et établir un plan de prévention réaliste. Nous aidons ensuite vos responsables à le faire appliquer. Vous protégez vos équipes et vous réduisez vos risques humains, juridiques et financiers.",
+   "objectives": [
+    "Évaluer les risques réels sur vos postes et vos sites.",
+    "Mettre votre organisation en conformité.",
+    "Prioriser vos actions de prévention.",
+    "Renforcer la culture de sécurité de vos équipes."
+   ],
+   "resultatsAttendus": [
+    "Un Document Unique établi pour vos activités.",
+    "Un plan de prévention chiffré et priorisé.",
+    "Des consignes et une organisation d'urgence clarifiées.",
+    "Des responsables sensibilisés et mobilisés."
+   ],
+   "publicOrganisations": [
+    "Entreprises du BTP, de l'industrie, des mines et de la logistique.",
+    "Responsables HSE et comités de santé et sécurité au travail."
+   ],
+   "publicParticuliers": [
+    "Artisans, chefs de chantier et petits exploitants."
+   ],
+   "admission": [
+    "La liste de vos sites, postes et effectifs.",
+    "L'historique de vos accidents et incidents.",
+    "L'accès à vos sites pour les visites."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Visites de terrain",
+     "details": [
+      "Observation des postes",
+      "Entretiens avec les travailleurs"
+     ]
+    },
+    {
+     "module": "Phase 2 : Évaluation des risques",
+     "details": [
+      "Cotation et hiérarchisation",
+      "Rédaction du Document Unique"
+     ]
+    },
+    {
+     "module": "Phase 3 : Plan de prévention",
+     "details": [
+      "Mesures techniques et organisationnelles",
+      "Budget et responsables"
+     ]
+    },
+    {
+     "module": "Phase 4 : Mise en œuvre",
+     "details": [
+      "Sensibilisation sur site",
+      "Suivi et indicateurs"
+     ]
+    }
+   ]
+  },
+  "environnement et developpement durable": {
+   "description": "Autorités, financeurs et clients attendent de vous des preuves. Nous réalisons vos études d'impact environnemental et social, votre bilan carbone et vos plans de gestion, et structurons votre démarche RSE. Vous obtenez des documents solides pour avancer dans vos autorisations et vos financements, et des actions réellement applicables.",
+   "objectives": [
+    "Évaluer les impacts de vos activités ou de vos projets.",
+    "Répondre aux exigences réglementaires et à celles des bailleurs.",
+    "Mesurer et réduire vos émissions.",
+    "Bâtir une démarche RSE crédible."
+   ],
+   "resultatsAttendus": [
+    "Une étude d'impact ou un diagnostic environnemental.",
+    "Un plan de gestion environnementale et sociale.",
+    "Un bilan carbone et un plan de réduction.",
+    "Une stratégie RSE prête à être présentée."
+   ],
+   "publicOrganisations": [
+    "Entreprises industrielles, énergétiques et minières.",
+    "Promoteurs de projets, institutions et collectivités."
+   ],
+   "publicParticuliers": [
+    "Promoteurs immobiliers et entrepreneurs individuels."
+   ],
+   "admission": [
+    "La description de votre projet ou de votre activité.",
+    "Vos plans, autorisations et études disponibles.",
+    "La localisation des sites concernés."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Analyse du projet et de la réglementation",
+      "Définition du périmètre"
+     ]
+    },
+    {
+     "module": "Phase 2 : Études de terrain",
+     "details": [
+      "Collecte de données et consultations",
+      "Évaluation des impacts"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mesures et plans",
+     "details": [
+      "Mesures d'atténuation",
+      "Plan de gestion et bilan carbone"
+     ]
+    },
+    {
+     "module": "Phase 4 : Validation",
+     "details": [
+      "Rapport final",
+      "Appui lors des échanges avec les autorités"
+     ]
+    }
+   ]
+  },
+  "securite sanitaire et agroalimentaire": {
+   "description": "Un seul incident sanitaire peut ruiner une réputation. Nous auditons vos pratiques, mettons en place votre plan HACCP et votre traçabilité, et vous préparons aux inspections comme aux exigences de vos clients et des marchés à l'export. Vos équipes appliquent des règles simples, et vous gagnez la confiance de vos acheteurs.",
+   "objectives": [
+    "Évaluer vos pratiques d'hygiène et de fabrication.",
+    "Mettre en place un plan HACCP adapté à vos produits.",
+    "Organiser une traçabilité fiable.",
+    "Vous préparer aux inspections et aux audits clients."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'audit d'hygiène.",
+    "Un plan HACCP documenté pour vos produits.",
+    "Un système de traçabilité en place.",
+    "Un personnel sensibilisé sur site."
+   ],
+   "publicOrganisations": [
+    "Industries agroalimentaires, hôtels et restaurants.",
+    "Coopératives et exportateurs."
+   ],
+   "publicParticuliers": [
+    "Restaurateurs, traiteurs et petits transformateurs."
+   ],
+   "admission": [
+    "La liste de vos produits et procédés.",
+    "Le plan de vos locaux.",
+    "Vos fiches et contrôles existants."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Audit d'hygiène",
+     "details": [
+      "Visite des locaux",
+      "Revue des pratiques"
+     ]
+    },
+    {
+     "module": "Phase 2 : Analyse des dangers",
+     "details": [
+      "Diagramme de fabrication",
+      "Points critiques de maîtrise"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mise en place",
+     "details": [
+      "Procédures et enregistrements",
+      "Traçabilité et sensibilisation"
+     ]
+    },
+    {
+     "module": "Phase 4 : Vérification",
+     "details": [
+      "Audit interne",
+      "Préparation aux inspections"
+     ]
+    }
+   ]
+  },
+  "sauvegarde environnementale et sociale ses": {
+   "description": "Votre projet est soumis aux exigences des bailleurs ? Nous élaborons et appliquons avec vous les instruments de sauvegarde, organisons la consultation des communautés et mettons en place le suivi. Vous réduisez les risques de blocage et vous démontrez la conformité de votre projet à chaque mission de supervision.",
+   "objectives": [
+    "Analyser les risques de votre projet et ses obligations.",
+    "Produire les instruments de sauvegarde requis.",
+    "Organiser la consultation et la gestion des plaintes.",
+    "Assurer le suivi de la conformité."
+   ],
+   "resultatsAttendus": [
+    "Des instruments de sauvegarde élaborés.",
+    "Un plan de mobilisation des parties prenantes.",
+    "Un mécanisme de gestion des plaintes opérationnel.",
+    "Des rapports de suivi réguliers."
+   ],
+   "publicOrganisations": [
+    "Unités de gestion de projets, ministères et agences d'exécution.",
+    "Entreprises et bureaux d'études sur des projets financés."
+   ],
+   "publicParticuliers": [
+    "Spécialistes et consultants en sauvegarde qui recherchent un appui."
+   ],
+   "admission": [
+    "Le document de projet et l'accord de financement.",
+    "Les études déjà réalisées.",
+    "Les sites et les communautés concernés."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Revue du projet",
+     "details": [
+      "Analyse des exigences applicables",
+      "Catégorisation des risques"
+     ]
+    },
+    {
+     "module": "Phase 2 : Élaboration des instruments",
+     "details": [
+      "Études et consultations",
+      "Rédaction et validation"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mise en œuvre",
+     "details": [
+      "Appui aux équipes et aux entreprises",
+      "Gestion des plaintes"
+     ]
+    },
+    {
+     "module": "Phase 4 : Suivi",
+     "details": [
+      "Visites de terrain",
+      "Rapports de conformité"
+     ]
+    }
+   ]
+  },
+  "analyse et planification des dispositifs de formation": {
+   "description": "Vous formez beaucoup, mais formez-vous juste ? Nos experts analysent vos métiers, identifient les écarts de compétences et élaborent avec vous un plan de formation pluriannuel, chiffré et priorisé. Votre budget de formation est ainsi orienté vers ce qui compte vraiment pour votre performance.",
+   "objectives": [
+    "Identifier les besoins réels par service et par métier.",
+    "Mettre en place un référentiel de compétences.",
+    "Orienter le budget vers vos priorités.",
+    "Doter vos RH d'un plan facile à piloter."
+   ],
+   "resultatsAttendus": [
+    "Un rapport de diagnostic des besoins.",
+    "Un référentiel de compétences.",
+    "Un plan de formation pluriannuel chiffré.",
+    "Des tableaux de suivi remis à vos équipes."
+   ],
+   "publicOrganisations": [
+    "Directions des ressources humaines.",
+    "Ministères, collectivités, entreprises et ONG."
+   ],
+   "publicParticuliers": [
+    "Formateurs et consultants qui structurent leur offre."
+   ],
+   "admission": [
+    "Votre organigramme et vos fiches de postes.",
+    "Vos plans et bilans de formation précédents.",
+    "Vos orientations stratégiques."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Échange avec la direction",
+      "Choix de l'échantillon et des outils"
+     ]
+    },
+    {
+     "module": "Phase 2 : Recueil des besoins",
+     "details": [
+      "Entretiens et questionnaires",
+      "Analyse des écarts"
+     ]
+    },
+    {
+     "module": "Phase 3 : Plan de formation",
+     "details": [
+      "Priorisation et chiffrage",
+      "Calendrier"
+     ]
+    },
+    {
+     "module": "Phase 4 : Validation et remise",
+     "details": [
+      "Restitution à la direction",
+      "Prise en main par les RH"
+     ]
+    }
+   ]
+  },
+  "conception pedagogique et innovation educative": {
+   "description": "Vous avez un savoir à transmettre à grande échelle ? Nous concevons pour vous des programmes, des supports et des modules e-learning sur mesure, à partir de vos contenus et de vos experts. Vous obtenez un dispositif attractif, prêt à déployer, et qui reste votre propriété à l'issue de la mission.",
+   "objectives": [
+    "Transformer vos contenus en parcours d'apprentissage.",
+    "Créer des supports attractifs à votre image.",
+    "Numériser vos formations clés.",
+    "Rendre vos équipes capables de mettre à jour les contenus."
+   ],
+   "resultatsAttendus": [
+    "Un curriculum détaillé par compétences.",
+    "Des supports formateur et apprenant.",
+    "Des modules en ligne livrés.",
+    "Un guide de mise à jour."
+   ],
+   "publicOrganisations": [
+    "Centres de formation, écoles et universités.",
+    "Entreprises, académies internes et projets de développement."
+   ],
+   "publicParticuliers": [
+    "Experts et formateurs qui veulent créer leur propre formation."
+   ],
+   "admission": [
+    "Vos contenus existants.",
+    "Le profil des apprenants visés.",
+    "Un expert métier disponible pour valider."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Analyse",
+     "details": [
+      "Publics, objectifs et contraintes",
+      "Choix des modalités"
+     ]
+    },
+    {
+     "module": "Phase 2 : Scénarisation",
+     "details": [
+      "Curriculum et storyboards",
+      "Validation par vos experts"
+     ]
+    },
+    {
+     "module": "Phase 3 : Production",
+     "details": [
+      "Supports et modules numériques",
+      "Tests auprès d'un groupe pilote"
+     ]
+    },
+    {
+     "module": "Phase 4 : Livraison",
+     "details": [
+      "Mise en ligne",
+      "Transfert à vos équipes"
+     ]
+    }
+   ]
+  },
+  "mise en oeuvre des formations": {
+   "description": "Une session de formation mobilise du temps, des personnes et de la logistique : confiez-nous-en la gestion. Nous organisons et animons vos formations, coordonnons les intervenants et assurons le suivi complet, à Abidjan, à l'intérieur du pays ou à distance. Vous gardez la décision, nous nous occupons de l'exécution.",
+   "objectives": [
+    "Décharger vos équipes de l'organisation des sessions.",
+    "Mobiliser des intervenants adaptés à vos thèmes.",
+    "Assurer la qualité de chaque session.",
+    "Tracer chaque action pour vos rapports."
+   ],
+   "resultatsAttendus": [
+    "Des sessions réalisées selon le calendrier convenu.",
+    "Des listes de présence et des évaluations complètes.",
+    "Un rapport de chaque session.",
+    "Un bilan global avec des pistes d'amélioration."
+   ],
+   "publicOrganisations": [
+    "Responsables de formation et chefs de projet.",
+    "Projets de développement ayant un volet de renforcement de capacités."
+   ],
+   "publicParticuliers": [
+    "Associations et groupes professionnels qui souhaitent organiser une session."
+   ],
+   "admission": [
+    "Vos thèmes, vos effectifs et vos dates.",
+    "Les lieux envisagés.",
+    "Votre budget disponible."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Planification",
+     "details": [
+      "Calendrier et logistique",
+      "Choix des intervenants"
+     ]
+    },
+    {
+     "module": "Phase 2 : Préparation",
+     "details": [
+      "Adaptation des contenus",
+      "Convocations et supports"
+     ]
+    },
+    {
+     "module": "Phase 3 : Déroulement",
+     "details": [
+      "Animation et coordination",
+      "Évaluation de chaque session"
+     ]
+    },
+    {
+     "module": "Phase 4 : Clôture",
+     "details": [
+      "Rapports",
+      "Bilan avec vos responsables"
+     ]
+    }
+   ]
+  },
+  "evaluation et developpement professionnel": {
+   "description": "Vos formations ont-elles changé les pratiques ? Nous évaluons objectivement l'effet de vos actions et de vos programmes, puis nous en tirons des recommandations claires et un dispositif d'évaluation réutilisable. Vous disposez enfin de preuves à présenter à votre direction ou à vos bailleurs.",
+   "objectives": [
+    "Mesurer l'effet réel de vos formations.",
+    "Identifier ce qui fonctionne et ce qui doit changer.",
+    "Doter votre organisation d'outils d'évaluation durables.",
+    "Mieux accompagner le développement de vos collaborateurs."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'évaluation indépendant.",
+    "Des recommandations priorisées.",
+    "Une boîte à outils d'évaluation.",
+    "Des parcours de développement proposés."
+   ],
+   "publicOrganisations": [
+    "Directions RH et responsables de programmes.",
+    "Bailleurs et organismes de formation."
+   ],
+   "publicParticuliers": [
+    "Professionnels qui souhaitent un bilan et un plan de carrière."
+   ],
+   "admission": [
+    "La liste des formations à évaluer.",
+    "Les contacts des participants et de leurs responsables.",
+    "Les rapports disponibles."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Questions d'évaluation",
+      "Outils et échantillon"
+     ]
+    },
+    {
+     "module": "Phase 2 : Collecte",
+     "details": [
+      "Questionnaires et entretiens",
+      "Observation sur le terrain"
+     ]
+    },
+    {
+     "module": "Phase 3 : Analyse",
+     "details": [
+      "Résultats par niveau d'évaluation",
+      "Constats et recommandations"
+     ]
+    },
+    {
+     "module": "Phase 4 : Restitution",
+     "details": [
+      "Présentation à la direction",
+      "Remise des outils"
+     ]
+    }
+   ]
+  },
+  "infrastructure et reseaux": {
+   "description": "Pannes à répétition, réseau lent, sauvegardes incertaines ? Nous auditons votre infrastructure, concevons l'architecture adaptée à vos sites et à vos contraintes, supervisons le déploiement et documentons l'ensemble. Vous gagnez en disponibilité, et vos équipes reprennent la main sur leur système.",
+   "objectives": [
+    "Évaluer l'état réel de votre infrastructure.",
+    "Concevoir une architecture adaptée à vos besoins.",
+    "Assurer la continuité de vos services.",
+    "Rendre vos équipes autonomes pour l'exploitation."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'audit technique.",
+    "Un schéma d'architecture et un budget.",
+    "Un plan de sauvegarde et de reprise.",
+    "Une documentation d'exploitation."
+   ],
+   "publicOrganisations": [
+    "Directions des systèmes d'information.",
+    "Entreprises multisites, administrations, écoles et hôpitaux."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs et professions libérales qui équipent leur structure."
+   ],
+   "admission": [
+    "La liste de vos sites et de vos équipements.",
+    "Vos schémas et vos contrats existants.",
+    "Vos incidents récents."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Audit technique",
+     "details": [
+      "Inventaire et tests",
+      "Identification des points faibles"
+     ]
+    },
+    {
+     "module": "Phase 2 : Conception",
+     "details": [
+      "Architecture cible",
+      "Budget et plan de migration"
+     ]
+    },
+    {
+     "module": "Phase 3 : Déploiement",
+     "details": [
+      "Installation et supervision",
+      "Tests de bascule"
+     ]
+    },
+    {
+     "module": "Phase 4 : Transfert",
+     "details": [
+      "Documentation",
+      "Formation de vos administrateurs"
+     ]
+    }
+   ]
+  },
+  "developpement logiciel et solutions applicatives": {
+   "description": "Vous avez besoin d'un outil qui n'existe pas encore ou qui ne convient plus ? Nous recueillons vos besoins, concevons et développons votre application web ou métier, puis assurons sa mise en service et la formation de vos utilisateurs. Vous disposez d'une solution adaptée à vos processus, pas d'un compromis.",
+   "objectives": [
+    "Traduire vos besoins en cahier des charges clair.",
+    "Développer une application adaptée et sécurisée.",
+    "Connecter la solution à vos outils existants.",
+    "Garantir une bonne adoption par les utilisateurs."
+   ],
+   "resultatsAttendus": [
+    "Un cahier des charges validé.",
+    "Une application livrée et testée.",
+    "Une documentation technique et un guide utilisateur.",
+    "Des utilisateurs formés à la mise en service."
+   ],
+   "publicOrganisations": [
+    "Directions métiers et informatiques.",
+    "PME, institutions publiques et ONG."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs qui veulent lancer une plateforme ou une application."
+   ],
+   "admission": [
+    "La description de votre besoin.",
+    "Des exemples de vos documents et processus actuels.",
+    "Un référent disponible pour les validations."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Expression des besoins",
+     "details": [
+      "Ateliers avec les utilisateurs",
+      "Cahier des charges"
+     ]
+    },
+    {
+     "module": "Phase 2 : Conception",
+     "details": [
+      "Maquettes et validation",
+      "Architecture technique"
+     ]
+    },
+    {
+     "module": "Phase 3 : Développement",
+     "details": [
+      "Livraisons par étapes",
+      "Tests avec les utilisateurs"
+     ]
+    },
+    {
+     "module": "Phase 4 : Mise en service",
+     "details": [
+      "Déploiement",
+      "Formation et assistance au démarrage"
+     ]
+    }
+   ]
+  },
+  "cybersecurite et gouvernance it": {
+   "description": "Savez-vous où vous êtes vulnérable avant qu'un attaquant ne le découvre ? Nous réalisons vos audits de sécurité et, avec votre autorisation écrite, vos tests d'intrusion. Nous établissons un plan de correction, formalisons votre politique de sécurité et vous accompagnons vers la conformité à l'ISO 27001.",
+   "objectives": [
+    "Identifier vos vulnérabilités techniques et humaines.",
+    "Prioriser les corrections selon les risques.",
+    "Formaliser votre gouvernance de la sécurité.",
+    "Préparer votre organisation à gérer un incident."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'audit confidentiel.",
+    "Un plan de correction priorisé.",
+    "Une politique de sécurité adoptée.",
+    "Un plan de réponse aux incidents."
+   ],
+   "publicOrganisations": [
+    "Banques, assurances, télécoms et santé.",
+    "Administrations et PME dépendantes du numérique."
+   ],
+   "publicParticuliers": [
+    "Dirigeants et professions libérales qui protègent leurs données."
+   ],
+   "admission": [
+    "Le périmètre à évaluer.",
+    "Une autorisation écrite pour les tests techniques.",
+    "Vos politiques et incidents connus."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage et autorisation",
+     "details": [
+      "Définition du périmètre",
+      "Accord de confidentialité"
+     ]
+    },
+    {
+     "module": "Phase 2 : Audit",
+     "details": [
+      "Tests techniques autorisés",
+      "Revue de l'organisation"
+     ]
+    },
+    {
+     "module": "Phase 3 : Plan de sécurité",
+     "details": [
+      "Priorisation des corrections",
+      "Rédaction des politiques"
+     ]
+    },
+    {
+     "module": "Phase 4 : Accompagnement",
+     "details": [
+      "Sensibilisation du personnel",
+      "Préparation à l'ISO 27001"
+     ]
+    }
+   ]
+  },
+  "transformation numerique": {
+   "description": "Numériser sans méthode coûte cher et déçoit. Nous mesurons votre maturité numérique, identifions les chantiers les plus rentables, construisons votre feuille de route et accompagnons leur mise en œuvre, en veillant à l'adhésion de vos équipes. Chaque investissement numérique répond ainsi à un besoin réel.",
+   "objectives": [
+    "Mesurer votre maturité numérique.",
+    "Identifier les chantiers à plus forte valeur.",
+    "Choisir les bons outils et les bons partenaires.",
+    "Accompagner vos équipes dans le changement."
+   ],
+   "resultatsAttendus": [
+    "Un diagnostic de maturité.",
+    "Une feuille de route chiffrée.",
+    "Des processus prioritaires dématérialisés.",
+    "Des tableaux de bord pour la direction."
+   ],
+   "publicOrganisations": [
+    "Directions générales et administrations.",
+    "Entreprises de tous secteurs."
+   ],
+   "publicParticuliers": [
+    "Dirigeants de petites structures et indépendants."
+   ],
+   "admission": [
+    "La liste de vos outils actuels.",
+    "Vos processus les plus lourds.",
+    "Vos objectifs et votre budget."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic",
+     "details": [
+      "Entretiens et analyse des outils",
+      "Mesure de la maturité"
+     ]
+    },
+    {
+     "module": "Phase 2 : Feuille de route",
+     "details": [
+      "Priorisation des chantiers",
+      "Budget et calendrier"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mise en œuvre",
+     "details": [
+      "Pilotage des projets",
+      "Sélection des solutions"
+     ]
+    },
+    {
+     "module": "Phase 4 : Adoption",
+     "details": [
+      "Accompagnement des utilisateurs",
+      "Mesure des gains"
+     ]
+    }
+   ]
+  },
+  "amenagement du territoire et urbanisme": {
+   "description": "Votre territoire grandit vite : il faut anticiper plutôt que subir. Nos experts réalisent le diagnostic, élaborent avec vous les schémas directeurs et les plans d'urbanisme, organisent la concertation et programment les investissements. Vous disposez de documents solides pour décider et pour mobiliser vos partenaires.",
+   "objectives": [
+    "Disposer d'un diagnostic fiable de votre territoire.",
+    "Élaborer des documents de planification concertés.",
+    "Associer les populations et les acteurs.",
+    "Programmer les investissements prioritaires."
+   ],
+   "resultatsAttendus": [
+    "Un rapport de diagnostic et des cartes.",
+    "Un schéma ou un plan d'urbanisme.",
+    "Des comptes rendus de concertation.",
+    "Un programme d'investissements chiffré."
+   ],
+   "publicOrganisations": [
+    "Ministères, districts, régions et communes.",
+    "Agences d'aménagement et bailleurs."
+   ],
+   "publicParticuliers": [
+    "Promoteurs et propriétaires fonciers porteurs de projets."
+   ],
+   "admission": [
+    "Les limites de la zone concernée.",
+    "Les plans et les études existants.",
+    "Un référent au sein des services techniques."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic",
+     "details": [
+      "Collecte de données et visites",
+      "Cartographie de l'existant"
+     ]
+    },
+    {
+     "module": "Phase 2 : Concertation",
+     "details": [
+      "Ateliers avec les acteurs",
+      "Partage des enjeux"
+     ]
+    },
+    {
+     "module": "Phase 3 : Planification",
+     "details": [
+      "Scénarios d'aménagement",
+      "Élaboration du document"
+     ]
+    },
+    {
+     "module": "Phase 4 : Programmation",
+     "details": [
+      "Investissements prioritaires",
+      "Restitution et validation"
+     ]
+    }
+   ]
+  },
+  "decentralisation et gouvernance locale": {
+   "description": "Votre collectivité doit faire mieux avec des ressources limitées ? Nous appuyons vos élus et vos services : organisation, plan de développement local, recensement et mobilisation des recettes propres, transparence budgétaire. Nos solutions tiennent compte des réalités de votre commune ou de votre région, et produisent des résultats visibles pour les habitants.",
+   "objectives": [
+    "Renforcer l'organisation de vos services.",
+    "Élaborer un plan de développement partagé.",
+    "Accroître et sécuriser vos recettes propres.",
+    "Améliorer la transparence envers les citoyens."
+   ],
+   "resultatsAttendus": [
+    "Un diagnostic institutionnel.",
+    "Un plan de développement local adopté.",
+    "Un fichier des contribuables et un plan de recouvrement.",
+    "Des outils de suivi budgétaire."
+   ],
+   "publicOrganisations": [
+    "Mairies, conseils régionaux et districts.",
+    "Ministères et programmes d'appui à la décentralisation."
+   ],
+   "publicParticuliers": [
+    "Élus et candidats qui souhaitent un appui personnalisé."
+   ],
+   "admission": [
+    "Vos budgets et comptes administratifs récents.",
+    "Votre organigramme.",
+    "Vos plans existants."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic institutionnel",
+     "details": [
+      "Entretiens avec les élus et les services",
+      "Analyse des finances locales"
+     ]
+    },
+    {
+     "module": "Phase 2 : Planification participative",
+     "details": [
+      "Assemblées avec les habitants",
+      "Plan de développement"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mobilisation des recettes",
+     "details": [
+      "Recensement",
+      "Plan de recouvrement"
+     ]
+    },
+    {
+     "module": "Phase 4 : Suivi",
+     "details": [
+      "Appui aux services",
+      "Outils de redevabilité"
+     ]
+    }
+   ]
+  },
+  "developpement rural et filieres agricoles": {
+   "description": "Une filière mieux organisée rapporte davantage à chacun de ses acteurs. Nous analysons votre chaîne de valeur, structurons vos coopératives, préparons vos projets d'infrastructures rurales et d'agro-pôles, et mettons en relation producteurs et acheteurs. Les résultats se voient au niveau des revenus, de la qualité et de l'accès aux marchés.",
+   "objectives": [
+    "Comprendre les blocages de votre filière.",
+    "Renforcer la gouvernance de vos coopératives.",
+    "Améliorer l'accès aux marchés et au crédit.",
+    "Préparer des projets ruraux finançables."
+   ],
+   "resultatsAttendus": [
+    "Une étude de chaîne de valeur.",
+    "Un plan de structuration de la coopérative.",
+    "Des relations commerciales formalisées.",
+    "Des projets documentés pour les financeurs."
+   ],
+   "publicOrganisations": [
+    "Coopératives, faîtières et agro-industriels.",
+    "Ministères, projets ruraux et bailleurs."
+   ],
+   "publicParticuliers": [
+    "Exploitants et jeunes agripreneurs porteurs de projets."
+   ],
+   "admission": [
+    "La filière et la zone concernées.",
+    "Vos données de production et de vente.",
+    "Les statuts de votre organisation, s'il y a lieu."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Analyse de la filière",
+     "details": [
+      "Enquêtes auprès des acteurs",
+      "Cartographie de la chaîne de valeur"
+     ]
+    },
+    {
+     "module": "Phase 2 : Structuration",
+     "details": [
+      "Gouvernance des coopératives",
+      "Outils de gestion"
+     ]
+    },
+    {
+     "module": "Phase 3 : Marchés et financement",
+     "details": [
+      "Mise en relation commerciale",
+      "Dossiers de crédit et de projet"
+     ]
+    },
+    {
+     "module": "Phase 4 : Suivi",
+     "details": [
+      "Appui sur le terrain",
+      "Mesure des résultats"
+     ]
+    }
+   ]
+  },
+  "sig et observation territoriale": {
+   "description": "Vos décisions reposent-elles sur des cartes à jour ? Nous mettons en place votre système d'information géographique, numérisons votre cadastre, réalisons des levés par drone et exploitons des images satellites pour suivre l'évolution de votre territoire. Vous voyez clairement ce qui se passe, et vous décidez plus vite.",
+   "objectives": [
+    "Centraliser vos données géographiques.",
+    "Numériser vos plans et votre cadastre.",
+    "Produire des cartes et des images à jour.",
+    "Rendre vos équipes autonomes."
+   ],
+   "resultatsAttendus": [
+    "Une base de données géographiques.",
+    "Un cadastre ou un plan numérisé.",
+    "Des cartes et des orthophotos livrées.",
+    "Un portail ou des outils de consultation."
+   ],
+   "publicOrganisations": [
+    "Services fonciers, cadastraux et techniques.",
+    "Projets d'infrastructure, d'agriculture et d'environnement."
+   ],
+   "publicParticuliers": [
+    "Propriétaires, exploitants et promoteurs qui ont besoin de cartes."
+   ],
+   "admission": [
+    "Les limites de la zone à couvrir.",
+    "Vos plans et données existants.",
+    "Les autorisations de survol nécessaires, que nous vous aidons à identifier."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Besoins et sources de données",
+      "Définition de la base"
+     ]
+    },
+    {
+     "module": "Phase 2 : Acquisition",
+     "details": [
+      "Collecte de terrain et levés par drone",
+      "Images satellites"
+     ]
+    },
+    {
+     "module": "Phase 3 : Traitement",
+     "details": [
+      "Numérisation et contrôle",
+      "Production cartographique"
+     ]
+    },
+    {
+     "module": "Phase 4 : Déploiement",
+     "details": [
+      "Mise à disposition",
+      "Formation des utilisateurs"
+     ]
+    }
+   ]
+  },
+  "conception et planification de projets": {
+   "description": "Un appel à propositions à préparer, un programme à lancer ? Nous animons vos ateliers de conception, construisons avec vous la théorie du changement et le cadre logique, chiffrons le budget et rédigeons le document de projet. Vous présentez un projet cohérent, solide et aligné sur les attentes de vos bailleurs.",
+   "objectives": [
+    "Clarifier le problème et les résultats visés.",
+    "Aligner votre projet sur les exigences du bailleur.",
+    "Chiffrer un budget réaliste.",
+    "Associer vos équipes et vos partenaires."
+   ],
+   "resultatsAttendus": [
+    "Une théorie du changement et un cadre logique.",
+    "Un budget et un chronogramme.",
+    "Un document de projet ou une proposition complète.",
+    "Une équipe alignée sur le projet."
+   ],
+   "publicOrganisations": [
+    "ONG et organisations internationales.",
+    "Ministères, collectivités et entreprises."
+   ],
+   "publicParticuliers": [
+    "Porteurs d'initiatives et consultants qui répondent à un appel."
+   ],
+   "admission": [
+    "L'appel à propositions ou le besoin à couvrir.",
+    "Vos études et données disponibles.",
+    "Vos contraintes de calendrier."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Analyse",
+     "details": [
+      "Lecture de l'appel et du contexte",
+      "Parties prenantes"
+     ]
+    },
+    {
+     "module": "Phase 2 : Ateliers de conception",
+     "details": [
+      "Théorie du changement",
+      "Cadre logique"
+     ]
+    },
+    {
+     "module": "Phase 3 : Rédaction",
+     "details": [
+      "Budget et chronogramme",
+      "Document de projet"
+     ]
+    },
+    {
+     "module": "Phase 4 : Finalisation",
+     "details": [
+      "Relecture critique",
+      "Préparation au dépôt"
+     ]
+    }
+   ]
+  },
+  "suivi operationnel et financier": {
+   "description": "Vous manquez de visibilité sur l'avancement réel de vos projets ? Nous installons un dispositif de pilotage simple : indicateurs, tableaux de bord, suivi budgétaire et rapports. Nous pouvons aussi renforcer temporairement votre équipe. Vos responsables voient les écarts à temps, et vos rapports aux bailleurs deviennent plus fiables.",
+   "objectives": [
+    "Rendre visible l'avancement physique et financier.",
+    "Détecter tôt les retards et les dépassements.",
+    "Fiabiliser vos rapports.",
+    "Renforcer les routines de votre équipe."
+   ],
+   "resultatsAttendus": [
+    "Un plan de suivi opérationnel.",
+    "Des tableaux de bord en service.",
+    "Des modèles de rapports.",
+    "Une meilleure consommation des budgets."
+   ],
+   "publicOrganisations": [
+    "Unités de gestion de projets et coordinations.",
+    "ONG, ministères et entreprises."
+   ],
+   "publicParticuliers": [
+    "Chefs de projet et consultants qui ont besoin d'un appui."
+   ],
+   "admission": [
+    "Votre document de projet et votre budget.",
+    "Vos rapports récents.",
+    "Vos outils de suivi actuels."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic du pilotage",
+     "details": [
+      "Revue des outils",
+      "Identification des écarts"
+     ]
+    },
+    {
+     "module": "Phase 2 : Conception",
+     "details": [
+      "Indicateurs et circuits d'information",
+      "Tableaux de bord"
+     ]
+    },
+    {
+     "module": "Phase 3 : Mise en service",
+     "details": [
+      "Saisie des données",
+      "Accompagnement de l'équipe"
+     ]
+    },
+    {
+     "module": "Phase 4 : Stabilisation",
+     "details": [
+      "Comités de suivi",
+      "Ajustements"
+     ]
+    }
+   ]
+  },
+  "evaluation d impact": {
+   "description": "Vous devez démontrer les résultats de votre programme à vos bailleurs ou à vos autorités ? Nous réalisons des évaluations indépendantes à mi-parcours ou finales, selon les critères du CAD de l'OCDE, avec une méthode adaptée à vos données et à votre budget. Vous obtenez des constats crédibles et des recommandations exploitables.",
+   "objectives": [
+    "Mesurer objectivement les résultats de votre programme.",
+    "Apprécier sa pertinence, son efficacité et sa durabilité.",
+    "Tirer des leçons pour la suite.",
+    "Répondre aux exigences de vos partenaires."
+   ],
+   "resultatsAttendus": [
+    "Un rapport initial et une matrice d'évaluation.",
+    "Des données collectées et analysées.",
+    "Un rapport d'évaluation final.",
+    "Un atelier de restitution."
+   ],
+   "publicOrganisations": [
+    "Bailleurs, organisations internationales et ONG.",
+    "Ministères et agences d'exécution."
+   ],
+   "publicParticuliers": [
+    "Chercheurs et consultants qui recherchent un appui méthodologique."
+   ],
+   "admission": [
+    "Les termes de référence ou le besoin d'évaluation.",
+    "Le document de programme et le cadre de résultats.",
+    "Les données de suivi disponibles."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Questions d'évaluation",
+      "Rapport initial"
+     ]
+    },
+    {
+     "module": "Phase 2 : Collecte",
+     "details": [
+      "Enquêtes et entretiens",
+      "Visites de terrain"
+     ]
+    },
+    {
+     "module": "Phase 3 : Analyse",
+     "details": [
+      "Triangulation des données",
+      "Constats et conclusions"
+     ]
+    },
+    {
+     "module": "Phase 4 : Restitution",
+     "details": [
+      "Rapport final",
+      "Atelier avec les parties prenantes"
+     ]
+    }
+   ]
+  },
+  "systemes d information pour le suivi evaluation sise": {
+   "description": "Vos données de terrain arrivent tard, incomplètes ou dispersées ? Nous concevons et déployons votre système complet : formulaires KoboToolbox, base centralisée, contrôles de qualité et tableaux de bord Power BI. Vos décideurs consultent des chiffres à jour, et vos équipes passent moins de temps à compiler et plus de temps à agir.",
+   "objectives": [
+    "Digitaliser votre collecte de terrain.",
+    "Centraliser et fiabiliser vos données.",
+    "Automatiser vos tableaux de bord.",
+    "Rendre vos équipes autonomes."
+   ],
+   "resultatsAttendus": [
+    "Des formulaires numériques déployés.",
+    "Une base de données centralisée.",
+    "Des tableaux de bord en service.",
+    "Une documentation et une équipe formée."
+   ],
+   "publicOrganisations": [
+    "Unités de gestion de projets et programmes.",
+    "ONG, organisations internationales et directions statistiques."
+   ],
+   "publicParticuliers": [
+    "Chargés de suivi-évaluation qui veulent un appui technique."
+   ],
+   "admission": [
+    "Votre cadre de résultats et vos indicateurs.",
+    "Vos formulaires actuels.",
+    "La liste des zones et des collecteurs."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Conception",
+     "details": [
+      "Cartographie des indicateurs",
+      "Architecture du système"
+     ]
+    },
+    {
+     "module": "Phase 2 : Développement",
+     "details": [
+      "Formulaires et base de données",
+      "Tableaux de bord"
+     ]
+    },
+    {
+     "module": "Phase 3 : Déploiement",
+     "details": [
+      "Tests sur le terrain",
+      "Formation des collecteurs"
+     ]
+    },
+    {
+     "module": "Phase 4 : Transfert",
+     "details": [
+      "Documentation",
+      "Assistance au démarrage"
+     ]
+    }
+   ]
+  },
+  "enquetes statistiques et sondages": {
+   "description": "Confiez-nous votre enquête de bout en bout. Nous définissons la méthode et l'échantillon, recrutons et formons les enquêteurs, assurons la collecte mobile et le contrôle de qualité, puis livrons la base de données et le rapport d'analyse. Vous recevez des résultats fiables, et vous gardez du temps pour décider.",
+   "objectives": [
+    "Obtenir des données représentatives et de qualité.",
+    "Vous décharger de la logistique du terrain.",
+    "Contrôler la qualité en temps réel.",
+    "Livrer des résultats directement utilisables."
+   ],
+   "resultatsAttendus": [
+    "Un protocole et des questionnaires validés.",
+    "Une collecte supervisée.",
+    "Une base de données apurée.",
+    "Un rapport et une présentation des résultats."
+   ],
+   "publicOrganisations": [
+    "Institutions, ministères et bailleurs.",
+    "Entreprises et ONG."
+   ],
+   "publicParticuliers": [
+    "Chercheurs et étudiants qui ont besoin d'un appui de terrain."
+   ],
+   "admission": [
+    "Vos objectifs et vos questions clés.",
+    "La population et la zone visées.",
+    "Votre calendrier et votre budget."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Conception",
+     "details": [
+      "Méthodologie et échantillon",
+      "Questionnaires"
+     ]
+    },
+    {
+     "module": "Phase 2 : Préparation du terrain",
+     "details": [
+      "Formation des enquêteurs",
+      "Enquête pilote"
+     ]
+    },
+    {
+     "module": "Phase 3 : Collecte",
+     "details": [
+      "Supervision",
+      "Contrôle de qualité"
+     ]
+    },
+    {
+     "module": "Phase 4 : Analyse",
+     "details": [
+      "Apurement et traitement",
+      "Rapport et restitution"
+     ]
+    }
+   ]
+  },
+  "etudes socio economiques": {
+   "description": "Avant de lancer un programme, un produit ou un investissement, il faut comprendre les réalités du terrain. Nous réalisons vos études de référence, analyses de vulnérabilité et études de marché, en combinant données statistiques et enquêtes qualitatives. Vous disposez d'une vision claire pour cibler vos actions et limiter vos risques.",
+   "objectives": [
+    "Comprendre vos publics cibles et leurs besoins.",
+    "Établir une situation de référence.",
+    "Évaluer le potentiel de votre marché.",
+    "Orienter vos décisions avec des recommandations."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'étude complet.",
+    "Une base de données et des annexes.",
+    "Des profils des groupes cibles.",
+    "Un atelier de présentation."
+   ],
+   "publicOrganisations": [
+    "Agences de développement, ONG et ministères sociaux.",
+    "Entreprises et collectivités."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs qui ont besoin d'une étude de marché."
+   ],
+   "admission": [
+    "La question à laquelle répondre.",
+    "La zone et les publics concernés.",
+    "Les données déjà disponibles."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Questions de recherche",
+      "Revue documentaire"
+     ]
+    },
+    {
+     "module": "Phase 2 : Terrain",
+     "details": [
+      "Enquêtes",
+      "Entretiens et groupes de discussion"
+     ]
+    },
+    {
+     "module": "Phase 3 : Analyse",
+     "details": [
+      "Croisement des données",
+      "Constats"
+     ]
+    },
+    {
+     "module": "Phase 4 : Livraison",
+     "details": [
+      "Rapport",
+      "Présentation et recommandations"
+     ]
+    }
+   ]
+  },
+  "econometrie et analyse de donnees": {
+   "description": "Vous disposez de données, mais pas encore de réponses ? Nos analystes construisent pour vous les modèles économétriques et statistiques adaptés à votre question : facteurs explicatifs, prévisions, risque, effets d'une politique. Nous livrons des résultats clairs et reproductibles, sous Stata, R ou Python.",
+   "objectives": [
+    "Exploiter pleinement vos données.",
+    "Identifier les facteurs qui expliquent vos résultats.",
+    "Produire des prévisions argumentées.",
+    "Rendre les conclusions compréhensibles pour vos décideurs."
+   ],
+   "resultatsAttendus": [
+    "Une base de données préparée.",
+    "Des modèles documentés et testés.",
+    "Un rapport d'analyse clair.",
+    "Des scripts reproductibles remis."
+   ],
+   "publicOrganisations": [
+    "Banques et institutions financières.",
+    "Ministères, instituts de recherche et grandes entreprises."
+   ],
+   "publicParticuliers": [
+    "Doctorants et chercheurs qui ont besoin d'un appui statistique."
+   ],
+   "admission": [
+    "Vos données, anonymisées si nécessaire.",
+    "La question à traiter.",
+    "Les délais attendus."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Question et hypothèses",
+      "Revue des données"
+     ]
+    },
+    {
+     "module": "Phase 2 : Préparation",
+     "details": [
+      "Nettoyage",
+      "Analyses descriptives"
+     ]
+    },
+    {
+     "module": "Phase 3 : Modélisation",
+     "details": [
+      "Estimation",
+      "Tests de robustesse"
+     ]
+    },
+    {
+     "module": "Phase 4 : Restitution",
+     "details": [
+      "Rapport",
+      "Présentation aux décideurs"
+     ]
+    }
+   ]
+  },
+  "etudes sectorielles specialisees": {
+   "description": "Entrer sur un marché, réformer un secteur, investir : ces décisions exigent une connaissance fine du terrain. Nous réalisons vos diagnostics sectoriels, notamment dans l'énergie et l'éducation : acteurs, réglementation, tendances, opportunités et risques. Vous recevez une analyse claire, assortie de recommandations prêtes à être discutées.",
+   "objectives": [
+    "Comprendre le fonctionnement du secteur visé.",
+    "Identifier les opportunités et les risques.",
+    "Analyser le cadre réglementaire.",
+    "Éclairer votre décision stratégique."
+   ],
+   "resultatsAttendus": [
+    "Un diagnostic sectoriel complet.",
+    "Une cartographie des acteurs.",
+    "Des scénarios d'évolution.",
+    "Des recommandations stratégiques."
+   ],
+   "publicOrganisations": [
+    "Ministères et autorités de régulation.",
+    "Investisseurs, entreprises et bailleurs."
+   ],
+   "publicParticuliers": [
+    "Investisseurs et entrepreneurs individuels."
+   ],
+   "admission": [
+    "Le secteur et la zone concernés.",
+    "La décision à éclairer.",
+    "Les documents déjà disponibles."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Périmètre et questions",
+      "Revue documentaire"
+     ]
+    },
+    {
+     "module": "Phase 2 : Enquête",
+     "details": [
+      "Entretiens avec les acteurs",
+      "Collecte de données"
+     ]
+    },
+    {
+     "module": "Phase 3 : Analyse",
+     "details": [
+      "Réglementation et marché",
+      "Scénarios"
+     ]
+    },
+    {
+     "module": "Phase 4 : Restitution",
+     "details": [
+      "Rapport",
+      "Atelier de présentation"
+     ]
+    }
+   ]
+  },
+  "strategie d entreprise et vision": {
+   "description": "Votre organisation a besoin d'un cap clair ? Nous animons votre réflexion stratégique : diagnostic, vision, priorités, puis plan pluriannuel traduit en actions et en indicateurs. Notre regard extérieur facilite les arbitrages et l'adhésion de vos équipes. Vous repartez avec une stratégie partagée et prête à être exécutée.",
+   "objectives": [
+    "Poser un diagnostic lucide de votre situation.",
+    "Définir une vision et des priorités partagées.",
+    "Faciliter les arbitrages au sein de la direction.",
+    "Traduire la stratégie en actions suivies."
+   ],
+   "resultatsAttendus": [
+    "Un rapport de diagnostic stratégique.",
+    "Un plan stratégique pluriannuel.",
+    "Un plan d'actions avec responsables.",
+    "Un tableau de bord de suivi."
+   ],
+   "publicOrganisations": [
+    "Conseils d'administration et comités de direction.",
+    "Entreprises, institutions et ONG."
+   ],
+   "publicParticuliers": [
+    "Dirigeants et entrepreneurs qui veulent un conseil personnalisé."
+   ],
+   "admission": [
+    "Vos documents stratégiques existants.",
+    "Vos résultats récents.",
+    "La disponibilité de vos dirigeants pour les ateliers."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic",
+     "details": [
+      "Entretiens avec les dirigeants",
+      "Analyses SWOT et PESTEL"
+     ]
+    },
+    {
+     "module": "Phase 2 : Ateliers stratégiques",
+     "details": [
+      "Vision et mission",
+      "Choix des priorités"
+     ]
+    },
+    {
+     "module": "Phase 3 : Formalisation",
+     "details": [
+      "Plan stratégique",
+      "Plan d'actions et budget"
+     ]
+    },
+    {
+     "module": "Phase 4 : Déploiement",
+     "details": [
+      "Communication interne",
+      "Suivi de la mise en œuvre"
+     ]
+    }
+   ]
+  },
+  "organisation et processus": {
+   "description": "Doublons, lenteurs, responsabilités floues : ces dysfonctionnements coûtent cher au quotidien. Nous analysons votre organisation, cartographions vos processus, révisons vos organigrammes et rédigeons vos fiches de postes et manuels de procédures. Vos équipes savent qui fait quoi, et votre structure gagne en efficacité.",
+   "objectives": [
+    "Identifier les dysfonctionnements de votre organisation.",
+    "Simplifier vos processus clés.",
+    "Clarifier les rôles et les responsabilités.",
+    "Formaliser des procédures réellement appliquées."
+   ],
+   "resultatsAttendus": [
+    "Une cartographie des processus.",
+    "Un organigramme révisé.",
+    "Des fiches de postes à jour.",
+    "Un manuel de procédures validé."
+   ],
+   "publicOrganisations": [
+    "Directions générales et RH.",
+    "Entreprises, institutions publiques, projets et ONG."
+   ],
+   "publicParticuliers": [
+    "Entrepreneurs qui structurent leur première équipe."
+   ],
+   "admission": [
+    "Votre organigramme actuel.",
+    "Vos procédures existantes.",
+    "Un référent interne."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Diagnostic",
+     "details": [
+      "Entretiens et observation",
+      "Analyse de l'existant"
+     ]
+    },
+    {
+     "module": "Phase 2 : Cartographie",
+     "details": [
+      "Processus actuels",
+      "Points de blocage"
+     ]
+    },
+    {
+     "module": "Phase 3 : Refonte",
+     "details": [
+      "Processus cibles",
+      "Organigramme et fiches de postes"
+     ]
+    },
+    {
+     "module": "Phase 4 : Déploiement",
+     "details": [
+      "Manuel de procédures",
+      "Accompagnement des équipes"
+     ]
+    }
+   ]
+  },
+  "gestion des ressources humaines et gpec": {
+   "description": "Attirer, évaluer, rémunérer et garder les bons profils demande des outils clairs. Nous structurons votre fonction RH : référentiels de métiers, grilles salariales, évaluation, plans de carrière et de succession. Vos décisions deviennent plus justes et plus lisibles, et vos collaborateurs voient mieux leur avenir chez vous.",
+   "objectives": [
+    "Structurer votre fonction ressources humaines.",
+    "Anticiper vos besoins en emplois et en compétences.",
+    "Rendre la rémunération plus équitable.",
+    "Sécuriser vos postes clés."
+   ],
+   "resultatsAttendus": [
+    "Un référentiel de métiers et de compétences.",
+    "Une grille salariale.",
+    "Un dispositif d'évaluation.",
+    "Un plan de succession."
+   ],
+   "publicOrganisations": [
+    "Directions des ressources humaines et directions générales.",
+    "Entreprises, établissements publics et ONG."
+   ],
+   "publicParticuliers": [
+    "Dirigeants de petites structures et professionnels en transition de carrière."
+   ],
+   "admission": [
+    "Vos effectifs et votre organigramme.",
+    "Vos grilles et documents RH actuels.",
+    "Vos projets d'évolution."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Audit RH",
+     "details": [
+      "Revue des pratiques",
+      "Entretiens"
+     ]
+    },
+    {
+     "module": "Phase 2 : Référentiels",
+     "details": [
+      "Métiers et compétences",
+      "Analyse des écarts"
+     ]
+    },
+    {
+     "module": "Phase 3 : Outils",
+     "details": [
+      "Grille salariale",
+      "Évaluation et carrières"
+     ]
+    },
+    {
+     "module": "Phase 4 : Mise en œuvre",
+     "details": [
+      "Plan de succession",
+      "Accompagnement des managers"
+     ]
+    }
+   ]
+  },
+  "conduite du changement et culture": {
+   "description": "Fusion, réorganisation, nouveau logiciel : la réussite dépend d'abord des personnes. Nous analysons les impacts humains, préparons vos managers, construisons la communication et suivons l'adoption sur le terrain. Votre transformation avance avec vos équipes, et non contre elles.",
+   "objectives": [
+    "Anticiper l'impact humain du changement.",
+    "Préparer et mobiliser vos managers.",
+    "Communiquer clairement à chaque étape.",
+    "Mesurer et renforcer l'adoption."
+   ],
+   "resultatsAttendus": [
+    "Une analyse d'impact.",
+    "Un plan de changement et de communication.",
+    "Des managers préparés.",
+    "Un suivi de l'adoption."
+   ],
+   "publicOrganisations": [
+    "Dirigeants et équipes de transformation.",
+    "Organisations en fusion, restructuration ou digitalisation."
+   ],
+   "publicParticuliers": [
+    "Dirigeants et managers qui souhaitent un accompagnement individuel."
+   ],
+   "admission": [
+    "La description de la transformation prévue.",
+    "Votre calendrier.",
+    "La liste des équipes concernées."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Analyse",
+     "details": [
+      "Impacts et parties prenantes",
+      "Écoute des équipes"
+     ]
+    },
+    {
+     "module": "Phase 2 : Plan de changement",
+     "details": [
+      "Communication",
+      "Réseau de relais"
+     ]
+    },
+    {
+     "module": "Phase 3 : Accompagnement",
+     "details": [
+      "Appui aux managers",
+      "Ateliers d'équipe"
+     ]
+    },
+    {
+     "module": "Phase 4 : Ancrage",
+     "details": [
+      "Mesure de l'adoption",
+      "Actions correctives"
+     ]
+    }
+   ]
+  },
+  "audit organisationnel": {
+   "description": "Vous sentez que quelque chose freine votre organisation, sans en identifier la cause ? Nous réalisons un audit indépendant de votre stratégie, de vos structures, de vos processus et de votre management. Vous recevez des constats francs, confidentiels, et un plan de redressement ou d'amélioration priorisé.",
+   "objectives": [
+    "Porter un regard indépendant sur votre organisation.",
+    "Identifier les causes réelles des difficultés.",
+    "Évaluer la cohérence entre stratégie et moyens.",
+    "Vous proposer un plan d'action réaliste."
+   ],
+   "resultatsAttendus": [
+    "Un rapport d'audit confidentiel.",
+    "Des constats hiérarchisés.",
+    "Un plan d'action priorisé.",
+    "Une restitution à la direction."
+   ],
+   "publicOrganisations": [
+    "Conseils d'administration et directions générales.",
+    "Établissements publics, entreprises et ONG."
+   ],
+   "publicParticuliers": [
+    "Dirigeants et associés qui souhaitent un avis indépendant."
+   ],
+   "admission": [
+    "Vos statuts et votre organigramme.",
+    "Vos rapports d'activité et vos comptes.",
+    "L'accord de la direction pour les entretiens."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Cadrage",
+     "details": [
+      "Lettre de mission",
+      "Revue documentaire"
+     ]
+    },
+    {
+     "module": "Phase 2 : Investigation",
+     "details": [
+      "Entretiens",
+      "Analyse des processus"
+     ]
+    },
+    {
+     "module": "Phase 3 : Analyse",
+     "details": [
+      "Constats et causes",
+      "Options d'amélioration"
+     ]
+    },
+    {
+     "module": "Phase 4 : Restitution",
+     "details": [
+      "Rapport confidentiel",
+      "Plan d'action"
+     ]
+    }
+   ]
+  },
+  "gouvernance et ethique": {
+   "description": "Bailleurs, partenaires et clients attendent une gouvernance irréprochable. Nous évaluons votre conseil et vos pratiques, rédigeons vos chartes et vos règlements, et mettons en place des dispositifs de conformité et de lutte contre la corruption. Votre organisation gagne en transparence, et vous en retirez une confiance durable.",
+   "objectives": [
+    "Évaluer vos pratiques de gouvernance.",
+    "Clarifier les rôles et les décisions.",
+    "Formaliser vos règles éthiques.",
+    "Prévenir les risques de non-conformité."
+   ],
+   "resultatsAttendus": [
+    "Une évaluation de la gouvernance.",
+    "Une charte et un règlement intérieur du conseil.",
+    "Un dispositif de conformité et d'alerte.",
+    "Des administrateurs sensibilisés."
+   ],
+   "publicOrganisations": [
+    "Conseils d'administration et directions générales.",
+    "Entreprises, sociétés d'État, ONG et organisations faîtières."
+   ],
+   "publicParticuliers": [
+    "Administrateurs et dirigeants qui souhaitent un conseil personnel."
+   ],
+   "admission": [
+    "Vos statuts et règlements.",
+    "Vos procès-verbaux récents.",
+    "La composition de votre conseil."
+   ],
+   "programme": [
+    {
+     "module": "Phase 1 : Évaluation",
+     "details": [
+      "Revue documentaire",
+      "Entretiens avec les administrateurs"
+     ]
+    },
+    {
+     "module": "Phase 2 : Recommandations",
+     "details": [
+      "Écarts par rapport aux bonnes pratiques",
+      "Options"
+     ]
+    },
+    {
+     "module": "Phase 3 : Formalisation",
+     "details": [
+      "Charte et règlements",
+      "Dispositif de conformité"
+     ]
+    },
+    {
+     "module": "Phase 4 : Mise en œuvre",
+     "details": [
+      "Sensibilisation",
+      "Suivi"
+     ]
+    }
    ]
   }
  },
