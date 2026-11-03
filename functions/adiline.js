@@ -113,7 +113,7 @@ ${JSON.stringify(STATIC.cabinet)}
 === FORMATIONS PAR AXE : tarif par participant en FCFA, heures, modalité, présentation, objectifs, résultats, publics, admission (conseils à présenter comme tels), programme ===
 ${JSON.stringify(STATIC.fichesFormations)}
 
-=== ACCOMPAGNEMENTS PAR AXE : missions du cabinet sur devis, différentes des formations ; présentation, objectifs, résultats, publics, éléments à préparer, étapes ===
+=== ACCOMPAGNEMENTS PAR AXE (modalité : ${STATIC.modaliteAccompagnements}) : missions du cabinet sur devis, différentes des formations ; présentation, objectifs, résultats, publics, éléments à préparer, étapes ===
 ${JSON.stringify(STATIC.fichesAccompagnements)}
 
 === PRÉSENTATION DES DOMAINES : côté formation (identifiant du pôle) ===

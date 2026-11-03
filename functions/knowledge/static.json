@@ -1,5 +1,5 @@
 {
- "exportedAt": "2026-11-03T00:13:33.647Z",
+ "exportedAt": "2026-11-03T11:50:58.966Z",
  "cabinet": {
   "nom": "Cabinet International de Consultance, d'Expertise et de Formation",
   "sigle": "CICEXF",
@@ -1137,7 +1137,7 @@
    "domain": "Ingénierie financière et de l'investissement",
    "price": 140000,
    "hours": 24,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Passer de l'idée au projet finançable",
@@ -1212,7 +1212,7 @@
    "domain": "Ingénierie financière et de l'investissement",
    "price": 150000,
    "hours": 30,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Lire la santé d'une activité en quelques minutes",
@@ -1287,7 +1287,7 @@
    "domain": "Ingénierie financière et de l'investissement",
    "price": 130000,
    "hours": 30,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Les bases solides du SYSCOHADA révisé",
@@ -1362,7 +1362,7 @@
    "domain": "Ingénierie financière et de l'investissement",
    "price": 90000,
    "hours": 18,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Trouver l'idée qui répond à un vrai besoin",
@@ -1437,7 +1437,7 @@
    "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
    "price": 150000,
    "hours": 30,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre la logique commune des normes",
@@ -1512,7 +1512,7 @@
    "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
    "price": 120000,
    "hours": 21,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Voir les dangers que les autres ne voient plus",
@@ -1587,7 +1587,7 @@
    "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
    "price": 110000,
    "hours": 24,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Les grands enjeux, de la planète à votre activité",
@@ -1662,7 +1662,7 @@
    "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
    "price": 120000,
    "hours": 21,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre ce qui rend un aliment dangereux",
@@ -1737,7 +1737,7 @@
    "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
    "price": 120000,
    "hours": 18,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Pourquoi les sauvegardes décident du financement",
@@ -1812,7 +1812,7 @@
    "domain": "Ingénierie de formation et de renforcement de capacités",
    "price": 100000,
    "hours": 18,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Poser le bon diagnostic",
@@ -1887,7 +1887,7 @@
    "domain": "Ingénierie de formation et de renforcement de capacités",
    "price": 110000,
    "hours": 24,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comment les adultes apprennent vraiment",
@@ -1962,7 +1962,7 @@
    "domain": "Ingénierie de formation et de renforcement de capacités",
    "price": 100000,
    "hours": 18,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Préparer pour réussir",
@@ -2037,7 +2037,7 @@
    "domain": "Ingénierie de formation et de renforcement de capacités",
    "price": 90000,
    "hours": 15,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Pourquoi et quoi évaluer",
@@ -2112,7 +2112,7 @@
    "domain": "Ingénierie informatique et systèmes de réseaux",
    "price": 140000,
    "hours": 36,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre comment circulent les données",
@@ -2187,7 +2187,7 @@
    "domain": "Ingénierie informatique et systèmes de réseaux",
    "price": 150000,
    "hours": 40,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Penser comme un développeur",
@@ -2262,7 +2262,7 @@
    "domain": "Ingénierie informatique et systèmes de réseaux",
    "price": 150000,
    "hours": 30,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Penser comme un attaquant",
@@ -2337,7 +2337,7 @@
    "domain": "Ingénierie informatique et systèmes de réseaux",
    "price": 110000,
    "hours": 18,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Où en êtes-vous avec le numérique ?",
@@ -2412,7 +2412,7 @@
    "domain": "Ingénierie de développement territorial",
    "price": 120000,
    "hours": 24,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Lire une ville et un territoire",
@@ -2487,7 +2487,7 @@
    "domain": "Ingénierie de développement territorial",
    "price": 90000,
    "hours": 18,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre la collectivité",
@@ -2562,7 +2562,7 @@
    "domain": "Ingénierie de développement territorial",
    "price": 90000,
    "hours": 21,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre une chaîne de valeur",
@@ -2637,7 +2637,7 @@
    "domain": "Ingénierie de développement territorial",
    "price": 130000,
    "hours": 30,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Entrer dans le monde des cartes numériques",
@@ -2712,7 +2712,7 @@
    "domain": "Gestion, suivi et évaluation des projets et programmes",
    "price": 110000,
    "hours": 21,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Trouver le vrai problème",
@@ -2787,7 +2787,7 @@
    "domain": "Gestion, suivi et évaluation des projets et programmes",
    "price": 120000,
    "hours": 21,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Installer les réflexes du pilote",
@@ -2862,7 +2862,7 @@
    "domain": "Gestion, suivi et évaluation des projets et programmes",
    "price": 130000,
    "hours": 24,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre ce qu'évaluer veut dire",
@@ -2937,7 +2937,7 @@
    "domain": "Gestion, suivi et évaluation des projets et programmes",
    "price": 140000,
    "hours": 24,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Penser le système avant les outils",
@@ -3012,7 +3012,7 @@
    "domain": "Études, enquêtes et recherches socio-économiques",
    "price": 110000,
    "hours": 21,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Poser les bonnes bases",
@@ -3087,7 +3087,7 @@
    "domain": "Études, enquêtes et recherches socio-économiques",
    "price": 100000,
    "hours": 18,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre une réalité sociale",
@@ -3162,7 +3162,7 @@
    "domain": "Études, enquêtes et recherches socio-économiques",
    "price": 150000,
    "hours": 30,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Préparer ses données",
@@ -3237,7 +3237,7 @@
    "domain": "Études, enquêtes et recherches socio-économiques",
    "price": 100000,
    "hours": 15,
-   "modality": "En ligne",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Cartographier un secteur",
@@ -3312,7 +3312,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 130000,
    "hours": 18,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Penser en stratège",
@@ -3387,7 +3387,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 100000,
    "hours": 18,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Voir l'organisation autrement",
@@ -3462,7 +3462,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 120000,
    "hours": 24,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Le rôle stratégique des RH",
@@ -3537,7 +3537,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 110000,
    "hours": 15,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Comprendre le changement",
@@ -3612,7 +3612,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 120000,
    "hours": 21,
-   "modality": "Hybride",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : La posture de l'auditeur",
@@ -3687,7 +3687,7 @@
    "domain": "Conseil stratégique et organisationnel",
    "price": 130000,
    "hours": 15,
-   "modality": "Présentiel",
+   "modality": "Hybride (Présentiel et en ligne)",
    "programme": [
     {
      "module": "Module 1 : Les fondamentaux de la gouvernance",
@@ -3732,6 +3732,7 @@
    ]
   }
  },
+ "modaliteAccompagnements": "Hybride (Présentiel et en ligne)",
  "fichesAccompagnements": {
   "structuration et financement des projets": {
    "description": "Votre projet est prêt à grandir, mais le financement n'est pas encore acquis ? Nos experts construisent avec vous le montage financier, l'étude de faisabilité et le dossier destiné aux banques, aux investisseurs et aux bailleurs. Nous vous aidons aussi à préparer les échanges et à répondre aux questions des financeurs. Vous gagnez un dossier solide et un interlocuteur à vos côtés jusqu'à la présentation.",

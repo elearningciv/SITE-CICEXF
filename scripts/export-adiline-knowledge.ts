@@ -17,7 +17,7 @@ import {
 } from '../src/knowledgeBase';
 import { AXIS_SHEETS, DomainSheet, DOMAIN_SHEETS } from '../src/data/domainContent';
 import { ACCOMPANIMENT_DOMAINS, ACCOMPANIMENT_SHEETS } from '../src/data/accompanimentSheets';
-import { FORMATION_OFFERS } from '../src/data/formationOffers';
+import { FORMATION_OFFERS, MODALITY_LABEL } from '../src/data/formationOffers';
 import { FORMATION_PROGRAMS } from '../src/data/formationPrograms';
 
 const withoutImages = (sheets: Record<string, DomainSheet>) =>
@@ -44,7 +44,8 @@ const knowledge = strip({
   accompagnements: DOMAINS_INTERVENTION,
   domainesFormation: withoutImages(DOMAIN_SHEETS),
   domainesAccompagnement: ACCOMPANIMENT_DOMAINS,
-  fichesFormations: Object.fromEntries(Object.entries(withoutImages(AXIS_SHEETS)).map(([key, sheet]) => [key, { ...sheet, ...FORMATION_OFFERS[key], programme: FORMATION_PROGRAMS[key] }])),
+  fichesFormations: Object.fromEntries(Object.entries(withoutImages(AXIS_SHEETS)).map(([key, sheet]) => [key, { ...sheet, ...FORMATION_OFFERS[key], modality: MODALITY_LABEL, programme: FORMATION_PROGRAMS[key] }])),
+  modaliteAccompagnements: MODALITY_LABEL,
   fichesAccompagnements: ACCOMPANIMENT_SHEETS,
   equipe: TEAM_MEMBERS,
   realisations: PROJECTS,

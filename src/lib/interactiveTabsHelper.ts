@@ -1,6 +1,6 @@
 import React from 'react';
 import type { AxisAudience } from '../data/domainContent';
-import { formatOfferPrice } from '../data/formationOffers';
+import { formatOfferPrice, MODALITY_LABEL } from '../data/formationOffers';
 import { Formation, DomainIntervention, SubDomain, SoftwareTool } from '../types';
 import { TabSectionItem, ProgramModule } from '../components/InteractiveSectionTabs';
 import { PRESET_SOFTWARE_TOOLS } from '../data/softwarePresets';
@@ -344,7 +344,7 @@ export function buildAccompanimentTabSections(
   const applyLine = isFormation
     ? "Inscription individuelle en ligne ou avec ADILINE ; une organisation peut aussi inscrire un groupe ou demander une session sur mesure."
     : "Pour une organisation : un échange permet de cadrer vos besoins et votre calendrier ; un particulier peut aussi être accompagné selon son projet.";
-  const accessList = sub.admission && sub.admission.length > 0 ? [...sub.admission, applyLine] : [
+  const accessList = sub.admission && sub.admission.length > 0 ? [...sub.admission, `Modalité : ${MODALITY_LABEL}.`, applyLine] : [
     "Intervention sur site dans vos locaux à Abidjan, sur l'ensemble du territoire ivoirien et dans la sous-région ouest-africaine.",
     "Modalités agiles : Formules en immersion continue, missions modulaires ou assistance technique per diem.",
     "Équipe dédiée d'experts pluridisciplinaires chevronnés encadrée par un chef de mission sénior dédié.",
@@ -363,13 +363,8 @@ export function buildAccompanimentTabSections(
     "Indicateurs de performance avant/après et mesure des gains d'efficacité à J+60."
   ];
 
-  const modalityLine: Record<string, string> = {
-    'Hybride': "Format hybride : des séances en salle pour pratiquer ensemble, et des séances à distance pour avancer à votre rythme.",
-    'En ligne': "Format 100 % en ligne : suivez la formation depuis Abidjan, l'intérieur du pays ou l'étranger.",
-    'Présentiel': "Format présentiel : un apprentissage en groupe, avec des mises en situation et des échanges directs."
-  };
   const formationPedagogy = [
-    ...(sub.offer ? [modalityLine[sub.offer.modality]] : []),
+    `Modalité ${MODALITY_LABEL.toLowerCase()} : des séances en salle pour pratiquer ensemble, et des séances à distance pour avancer à votre rythme.`,
     "Apprentissage par la pratique : cas concrets, exercices guidés et retours sur votre travail.",
     "Vous repartez avec une réalisation personnelle, élaborée pendant le projet final.",
     "Vos acquis sont évalués au fil du parcours, pour mesurer vos progrès."

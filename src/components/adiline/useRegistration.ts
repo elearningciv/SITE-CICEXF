@@ -98,7 +98,7 @@ export function useRegistration(
         return say('Quelle session souhaitez-vous ?', SESSIONS);
       case 'modality': {
         const preferred = MODALITIES.find(m => norm(a.formation?.modality || '').includes(norm(m)));
-        return say('Quelle modalité préférez-vous ?', preferred ? [preferred, ...MODALITIES.filter(m => m !== preferred)] : MODALITIES);
+        return say('Quelle modalité préférez-vous ?', preferred === 'Hybride' ? ['Hybride'] : preferred ? [preferred, ...MODALITIES.filter(m => m !== preferred)] : MODALITIES);
       }
       case 'confirm': {
         const unit = parsePrice(a.formation!.price);
