@@ -1,4 +1,4 @@
-// Proforma invoice (PDF) produced at the end of a registration with ADILINE.
+// Proforma invoice (PDF) produced at the end of a registration with ADI.
 // jsPDF is heavy, so it is downloaded only when a proforma is generated.
 
 export interface ProformaData {
@@ -15,7 +15,7 @@ export interface ProformaData {
   cancelled?: boolean;
 }
 
-/** Same rules as ADILINE's quote tool: -10 % from 3 participants, -15 % from 5 */
+/** Same rules as ADI's quote tool: -10 % from 3 participants, -15 % from 5 */
 export function discountRate(participants: number) {
   return participants >= 5 ? 0.15 : participants >= 3 ? 0.1 : 0;
 }
@@ -168,7 +168,7 @@ export async function buildProformaPdf(p: ProformaData): Promise<Blob> {
     '- Paiement en 2 ou 3 tranches ; la place est confirmée à la réception du premier versement.',
     '- Modes de règlement : virement bancaire, chèque, Orange Money, Wave, MTN MoMo.',
     `- Proforma valable 30 jours, jusqu'au ${valid}.`,
-    "- Document établi automatiquement par ADILINE, l'assistante virtuelle du CICEXF ; un conseiller vous contacte pour finaliser l'inscription."
+    "- Document établi automatiquement par ADI, l'assistante virtuelle du CICEXF ; un conseiller vous contacte pour finaliser l'inscription."
   ];
   doc.text(doc.splitTextToSize(terms.join('\n'), W - 2 * M), M, y + 6);
 

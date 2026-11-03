@@ -1,7 +1,7 @@
 import { fcfa } from './proforma';
 
 /**
- * Files downloaded from the admin: every ADILINE conversation (one section per person, so two
+ * Files downloaded from the admin: every ADI conversation (one section per person, so two
  * simultaneous conversations never mix) and every invoice (by domain, then thematic).
  * Messages come from visitors: everything is escaped before going into the HTML.
  */
@@ -38,7 +38,7 @@ const esc = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string
 ));
 
-/** Escaped text, keeping the **bold** of ADILINE's answers */
+/** Escaped text, keeping the **bold** of ADI's answers */
 const messageHtml = (text: string) => esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
 
 const day = (d: Date | null) => d ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '—';
@@ -87,7 +87,7 @@ export function buildConversationsHtml(conversations: ReportConversation[]): str
       const d = day(m.at);
       const separator = d !== currentDay ? `<p class="day">${esc(d)}</p>` : '';
       currentDay = d;
-      const who = m.role === 'user' ? c.label : 'ADILINE';
+      const who = m.role === 'user' ? c.label : 'ADI';
       const attachment = m.attachmentName ? `<div class="file">Pièce jointe : ${esc(m.attachmentName)}</div>` : '';
       return `${separator}<div class="msg ${m.role}"><div class="who">${esc(who)} <span>${esc(time(m.at))}</span></div>${attachment}<div class="text">${messageHtml(m.text)}</div></div>`;
     }).join('');
@@ -97,11 +97,11 @@ export function buildConversationsHtml(conversations: ReportConversation[]): str
       `Du ${esc(day(c.startedAt))} au ${esc(day(c.lastMessageAt))}`,
       `${c.messages.length} message(s)`
     ].filter(Boolean).join(' · ');
-    return `<section class="card" id="p${i + 1}"><h2>${i + 1}. ADILINE et ${esc(c.label)}</h2><p class="meta">${details}</p>${rows}</section>`;
+    return `<section class="card" id="p${i + 1}"><h2>${i + 1}. ADI et ${esc(c.label)}</h2><p class="meta">${details}</p>${rows}</section>`;
   }).join('\n');
 
   return page(
-    'Discussions avec ADILINE',
+    'Discussions avec ADI',
     `${conversations.length} interlocuteur(s), ${total} message(s). Fichier généré le ${day(new Date())} à ${time(new Date())}.`,
     `h2 { margin: 0; font-size: 18px; color: #8A1A24; }
   .meta { margin: 4px 0 12px; padding-bottom: 12px; border-bottom: 2px solid #8A1A24; color: #475569; font-size: 13px; }
@@ -165,7 +165,7 @@ export function buildInvoicesHtml(
   }).join('\n');
 
   return page(
-    'Factures établies par ADILINE',
+    'Factures établies par ADI',
     `${invoices.length} facture(s), classées par domaine et par thématique. Montant total hors factures annulées : ${fcfa(sumOf(invoices))}. Fichier généré le ${day(new Date())} à ${time(new Date())}.`,
     `h2 { margin: 0; font-size: 19px; color: #8A1A24; }
   h3 { margin: 18px 0 6px; font-size: 15px; }

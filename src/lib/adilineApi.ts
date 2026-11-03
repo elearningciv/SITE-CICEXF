@@ -1,8 +1,8 @@
-// ADILINE's server (Firebase Cloud Function, Gemini + the site's content)
+// ADI's server (Firebase Cloud Function, Gemini + the site's content)
 export const ADILINE_API_URL = import.meta.env.VITE_ADILINE_API_URL
   || 'https://europe-west1-project-a93f5a0f-743d-4552-852.cloudfunctions.net/adilineChat';
 
-/** Sends one request to ADILINE and returns her whole answer as text (used by the admin tools) */
+/** Sends one request to ADI and returns her whole answer as text (used by the admin tools) */
 export async function askAdiline(message: string): Promise<string> {
   const res = await fetch(ADILINE_API_URL, {
     method: 'POST',
@@ -20,6 +20,6 @@ export async function askAdiline(message: string): Promise<string> {
     if (event?.type === 'chunk' && event.text) text += event.text;
     if (event?.type === 'error') failed = true;
   }
-  if (failed || !text.trim()) throw new Error('ADILINE indisponible');
+  if (failed || !text.trim()) throw new Error('ADI indisponible');
   return text.trim();
 }

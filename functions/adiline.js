@@ -1,4 +1,4 @@
-// ADILINE : assistante virtuelle du CICEXF, servie par Gemini (Vertex AI).
+// ADI : assistante virtuelle du CICEXF, servie par Gemini (Vertex AI).
 // Chaque réponse s'appuie sur :
 //  - la base de connaissances du site (knowledge/static.json, exportée depuis src/),
 //  - les textes des pages (knowledge/pages.md),
@@ -85,7 +85,7 @@ RELATION AVEC LE VISITEUR ET NUMÉRO WHATSAPP
 
 function buildSystemInstruction(live) {
   const today = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Abidjan' });
-  return `Tu es ADILINE, l'assistante virtuelle officielle du CICEXF (Cabinet International de Consultance, d'Expertise et de Formation), basé à Abidjan.
+  return `Tu es ADI, l'assistante virtuelle officielle du CICEXF (Cabinet International de Consultance, d'Expertise et de Formation), basé à Abidjan.
 Nous sommes le ${today}.
 
 TON RÔLE
@@ -302,7 +302,7 @@ async function logMessages(conversationId, rawMessages) {
   });
 }
 
-// Réponse complète d'ADILINE (contenu du site + outil de devis), réutilisée par le site et par les messageries.
+// Réponse complète d'ADI (contenu du site + outil de devis), réutilisée par le site et par les messageries.
 // conversationId : visiteur du site, dont la fiche est enregistrée (absent pour les outils d'administration et les messageries)
 async function answer(contents, conversationId) {
   const live = await getLiveContent();
@@ -413,7 +413,7 @@ exports.adilineChat = onRequest(
       send({ type: 'chunk', text: reply || "Je n'ai pas pu formuler de réponse. Notre secrétariat reste joignable au **+225 07 01 97 00 65**." });
       send({ type: 'done', sources: ['Site officiel CICEXF'], cards });
     } catch (err) {
-      logger.error('ADILINE : échec de la génération', { error: err.message });
+      logger.error('ADI : échec de la génération', { error: err.message });
       send({ type: 'error', message: 'unavailable' });
     }
     res.end();

@@ -1,7 +1,7 @@
 // Facebook & Instagram (Meta) : un seul point d'entrée « webhook » pour
 //  1. les prospects des publicités à formulaire (Lead Ads) -> collection `prospects` ;
 //  2. les messages reçus par la page Facebook (Messenger) et le compte Instagram professionnel
-//     -> réponse automatique d'ADILINE + première prise de contact enregistrée dans `prospects`.
+//     -> réponse automatique d'ADI + première prise de contact enregistrée dans `prospects`.
 // Uniquement des personnes qui ont elles-mêmes écrit à la page ou rempli un formulaire (pas de démarchage).
 //
 // Codes d'accès (Secret Manager, saisis par le cabinet dans son terminal, jamais dans le code) :
@@ -79,7 +79,7 @@ async function saveLead(leadgenId, token) {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Messages Messenger / Instagram -> réponse d'ADILINE
+// 2. Messages Messenger / Instagram -> réponse d'ADI
 // ---------------------------------------------------------------------------
 async function handleMessage(platform, event, token) {
   const senderId = event.sender && event.sender.id;
@@ -109,7 +109,7 @@ async function handleMessage(platform, event, token) {
   try {
     reply = (await answerVisitor(text, history)) || FALLBACK_REPLY;
   } catch (err) {
-    logger.error('ADILINE (messagerie) : échec de la réponse', { error: err.message });
+    logger.error('ADI (messagerie) : échec de la réponse', { error: err.message });
   }
 
   await graph('me/messages', token, {

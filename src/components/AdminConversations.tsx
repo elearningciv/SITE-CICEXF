@@ -4,7 +4,7 @@ import { Conversation, deleteConversation, loadMessages, useConversations } from
 import { useInvoices } from '../lib/invoices';
 import { buildConversationsHtml, downloadHtml, ReportMessage, reportDate } from '../lib/adminReports';
 
-/** Admin tab "Discussions": every conversation with ADILINE, one entry per person, and the file with all of them */
+/** Admin tab "Discussions": every conversation with ADI, one entry per person, and the file with all of them */
 export default function AdminConversations() {
   const { conversations, loading, error } = useConversations();
   const { invoices } = useInvoices();
@@ -14,7 +14,7 @@ export default function AdminConversations() {
   const [exporting, setExporting] = useState(false);
   const [actionError, setActionError] = useState('');
 
-  // Who is who: what the person told ADILINE, completed by their invoice; otherwise "Visiteur n", numbered by arrival
+  // Who is who: what the person told ADI, completed by their invoice; otherwise "Visiteur n", numbered by arrival
   const people = useMemo(() => {
     const byArrival = [...conversations].sort((a, b) => (a.startedAt?.toMillis() ?? 0) - (b.startedAt?.toMillis() ?? 0));
     const rank = new Map(byArrival.map((c, i) => [c.id, i + 1]));
@@ -60,7 +60,7 @@ export default function AdminConversations() {
           messages: await loadMessages(c.id)
         });
       }
-      downloadHtml(buildConversationsHtml(items), `Discussions-ADILINE-${reportDate()}.html`);
+      downloadHtml(buildConversationsHtml(items), `Discussions-ADI-${reportDate()}.html`);
     } catch (err) {
       console.error('Conversations file error:', err);
       setActionError('Le fichier n\'a pas pu être généré. Réessayez.');
@@ -80,7 +80,7 @@ export default function AdminConversations() {
     <div className="p-4 sm:p-5 space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Toutes les discussions d'ADILINE, regroupées par interlocuteur : les messages de deux personnes ne se mélangent jamais.
+          Toutes les discussions d'ADI, regroupées par interlocuteur : les messages de deux personnes ne se mélangent jamais.
         </p>
         <label className="relative w-full sm:w-72 shrink-0">
           <span className="sr-only">Rechercher une discussion</span>
@@ -114,7 +114,7 @@ export default function AdminConversations() {
         <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
       ) : filtered.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-          {conversations.length ? 'Aucune discussion ne correspond à la recherche.' : 'Aucune discussion pour le moment : elles apparaîtront ici dès le prochain échange avec ADILINE.'}
+          {conversations.length ? 'Aucune discussion ne correspond à la recherche.' : 'Aucune discussion pour le moment : elles apparaîtront ici dès le prochain échange avec ADI.'}
         </p>
       ) : (
         <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200 dark:divide-slate-800 dark:border-slate-800">
@@ -142,7 +142,7 @@ export default function AdminConversations() {
                     {openMessages === null && !actionError && <Loader2 className="w-4 h-4 animate-spin text-slate-400" />}
                     {openMessages?.map((m, i) => (
                       <div key={i} className={`rounded-xl p-2.5 text-sm ${m.role === 'user' ? 'ml-6 sm:ml-16 bg-emerald-50 dark:bg-emerald-950/30' : 'mr-6 sm:mr-16 bg-white dark:bg-slate-900'}`}>
-                        <p className="text-xs font-bold text-slate-500">{m.role === 'user' ? p?.label : 'ADILINE'} · {m.at ? m.at.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : ''}</p>
+                        <p className="text-xs font-bold text-slate-500">{m.role === 'user' ? p?.label : 'ADI'} · {m.at ? m.at.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : ''}</p>
                         <p className="mt-0.5 whitespace-pre-wrap break-words text-slate-800 dark:text-slate-200">{m.text}</p>
                       </div>
                     ))}

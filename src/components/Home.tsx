@@ -433,7 +433,7 @@ export default function Home({
           {onOpenAssistant && (
             <p className="mt-6 text-sm text-slate-600 dark:text-slate-400">
               Une question ?{' '}
-              <button onClick={onOpenAssistant} className="font-bold text-brand-emerald underline dark:text-orange-300 cursor-pointer">Demandez à ADILINE</button>
+              <button onClick={onOpenAssistant} className="font-bold text-brand-emerald underline dark:text-orange-300 cursor-pointer">Demandez à ADI</button>
             </p>
           )}
         </div>

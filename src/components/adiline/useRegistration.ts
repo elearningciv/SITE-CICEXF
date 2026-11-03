@@ -4,7 +4,7 @@ import { buildProformaPdf, computeTotals, fcfa, parsePrice, ProformaData } from 
 import { createInvoice } from '../../lib/invoices';
 
 /**
- * Guided registration inside the ADILINE conversation: one question at a time (with answer
+ * Guided registration inside the ADI conversation: one question at a time (with answer
  * buttons), checks each answer, shows a summary, then saves the request and hands over a
  * proforma invoice as a PDF. Runs in the browser: no AI involved, so answers are exact.
  */
@@ -174,7 +174,7 @@ export function useRegistration(
       modality: a.modality,
       company: a.isCompany ? a.company : '',
       participants: String(a.participants),
-      notes: `Inscription via ADILINE · Proforma ${number} · ${totals ? `Total ${fcfa(totals.total)}` : 'Montant à confirmer'}`,
+      notes: `Inscription via ADI · Proforma ${number} · ${totals ? `Total ${fcfa(totals.total)}` : 'Montant à confirmer'}`,
       channel: 'En ligne'
     });
     if (!id) console.warn('Prospect not saved; the invoice', number, 'is stored in the Factures folder');

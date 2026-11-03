@@ -23,6 +23,12 @@
 # The page must always be revalidated so visitors get the latest version after
 # each deployment; hashed build files can be cached for a long time.
 <IfModule mod_headers.c>
+  # Security headers
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set Permissions-Policy "camera=(), geolocation=(), microphone=(self)"
   <FilesMatch "\.html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>

@@ -19,7 +19,7 @@ const CATALOGUE_RE = /catalogu|brochure|plaquette|liste (compl[eè]te )?des form
 // ...and only wants the document (short request, or explicit "send / download / see" verbs)
 const CATALOGUE_ONLY_RE = /(lien|envoi|envoy|t[ée]l[ée]charg|donne|avoir|obtenir|recevoir|voir|consulter|partag|pdf|o[uù] (est|trouver))/i;
 
-// Service IA d'ADILINE (fonction Firebase `adilineChat`, Gemini + contenu du site)
+// Service IA d'ADI (fonction Firebase `adilineChat`, Gemini + contenu du site)
 import { ADILINE_API_URL } from '../lib/adilineApi';
 import { getVisitorId } from '../lib/tracker';
 import { FORMATION_OFFERS, formatOfferPrice } from '../data/formationOffers';
@@ -68,7 +68,7 @@ function formatDuration(totalSeconds: number): string {
 }
 
 // Renders text with bold parsing (**mot**) and bullet points cleanly
-// Contacts in ADILINE's answers are clickable: the cabinet's WhatsApp number opens WhatsApp,
+// Contacts in ADI's answers are clickable: the cabinet's WhatsApp number opens WhatsApp,
 // other Ivorian numbers start a call, e-mail addresses open the mail app, web addresses open the page.
 const WHATSAPP_DIGITS = '2250701970065';
 const CONTACT_RE = /([\w.+-]+@[\w-]+(?:\.[\w-]+)+)|((?:\+?225[\s.-]?)?(?:0[1579]|2[1-7])(?:[\s.-]?\d{2}){4})|((?:https?:\/\/|www\.)[^\s<)]+[^\s<).,;:!?])/g;
@@ -161,7 +161,7 @@ export default function AdilineChatbot({ isOpen, onClose, onNavigateTab, formati
     {
       id: 'welcome',
       role: 'assistant',
-      text: `Bonjour ! Je suis **ADILINE**, votre assistante virtuelle au sein du **CICEXF** (Cabinet International de Consultance, d'Expertise et de Formation).
+      text: `Bonjour ! Je suis **ADI**, votre assistante virtuelle au sein du **CICEXF** (Cabinet International de Consultance, d'Expertise et de Formation).
 
 Je suis à votre entière disposition pour vous renseigner avec précision sur :
 • Nos formations certifiantes : Data Analyst, Auditeur QHSE ISO, Modélisation Financière Excel, SIG QGIS, PMP, Gestion des équipes
@@ -541,7 +541,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
     e.target.value = '';
   };
 
-  // Process SSE or JSON stream response from ADILINE server
+  // Process SSE or JSON stream response from ADI server
   const processServerStream = async (response: Response, assistantMsgId: string, query: string) => {
     const contentType = response.headers.get('content-type') || '';
     if (contentType.includes('text/event-stream')) {
@@ -571,7 +571,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
                 continue; // non-json line
               }
               if (data.type === 'error') {
-                throw new Error('ADILINE service unavailable');
+                throw new Error('ADI service unavailable');
               }
               {
                 if (data.type === 'chunk' && data.text) {
@@ -698,9 +698,9 @@ Comment puis-je vous accompagner aujourd'hui ?`,
     }
   };
 
-  // Send message to ADILINE API with streaming
+  // Send message to ADI API with streaming
   /**
-   * Catalogue requests (typed or spoken): the PDF is attached to ADILINE's answer.
+   * Catalogue requests (typed or spoken): the PDF is attached to ADI's answer.
    * Returns true when the request is fully answered here (no call to the AI needed).
    */
   const attachCatalogue = async (query: string, assistantMsgId: string): Promise<boolean> => {
@@ -842,7 +842,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
     ) {
       return `Bonjour et bienvenue au cabinet **CICEXF** (Cabinet International de Consultance, d'Expertise et de Formation) !
 
-Je m'appelle **ADILINE**, je suis l'assistante d'accueil officielle et conseillère d'orientation virtuelle du cabinet.
+Je m'appelle **ADI**, je suis l'assistante d'accueil officielle et conseillère d'orientation virtuelle du cabinet.
 
 ### 🌟 Ma raison d'être et mon rôle auprès de vous :
 • **Accueil et orientation sur-mesure** : Vous guider vers la formation certifiante la plus adaptée à vos aspirations professionnelles (**Data Analyst**, **Auditeur Interne QHSE ISO**, **Modélisation Financière Excel**, **SIG QGIS**, **Management de Projets PMP**, **Gestion des équipes**).
@@ -873,7 +873,7 @@ Remises de groupe : -10% dès 3 inscrits, -15% dès 5 inscrits.`;
 • Siège : Abidjan Cocody Angré 8e Tranche, Carrefour Duncan, Immeuble Prestige
 • Horaires : du Lundi au Vendredi de 08h à 18h en continu, Samedi de 09h à 13h.`;
     }
-    return `Bonjour, je suis ADILINE, votre assistante virtuelle au cabinet CICEXF. Pour vous répondre au mieux, pouvez-vous me préciser si votre demande concerne l'une de nos formations certifiantes (Data Analyst, PMP, QHSE, Finance, SIG, Gestion d'équipe) ou l'un de nos 8 pôles d'ingénierie et d'accompagnement ? Vous pouvez également contacter nos conseillers directement sur WhatsApp au **+225 07 01 97 00 65**.`;
+    return `Bonjour, je suis ADI, votre assistante virtuelle au cabinet CICEXF. Pour vous répondre au mieux, pouvez-vous me préciser si votre demande concerne l'une de nos formations certifiantes (Data Analyst, PMP, QHSE, Finance, SIG, Gestion d'équipe) ou l'un de nos 8 pôles d'ingénierie et d'accompagnement ? Vous pouvez également contacter nos conseillers directement sur WhatsApp au **+225 07 01 97 00 65**.`;
   };
 
 
@@ -888,8 +888,8 @@ Remises de groupe : -10% dès 3 inscrits, -15% dès 5 inscrits.`;
 
   // Open WhatsApp with conversation summary
   const handleTalkToAdvisorWhatsApp = () => {
-    const lastExchange = messages.slice(-3).map(m => `${m.role === 'user' ? 'Client' : 'ADILINE'}: ${m.text.slice(0, 120)}...`).join('\n');
-    const text = encodeURIComponent(`Bonjour CICEXF, j'ai échangé avec votre assistante virtuelle ADILINE sur le site et souhaite poursuivre avec un conseiller humain.\n\nRésumé :\n${lastExchange}`);
+    const lastExchange = messages.slice(-3).map(m => `${m.role === 'user' ? 'Client' : 'ADI'}: ${m.text.slice(0, 120)}...`).join('\n');
+    const text = encodeURIComponent(`Bonjour CICEXF, j'ai échangé avec votre assistante virtuelle ADI sur le site et souhaite poursuivre avec un conseiller humain.\n\nRésumé :\n${lastExchange}`);
     window.open(`https://wa.me/2250701970065?text=${text}`, '_blank');
   };
 
@@ -924,7 +924,7 @@ Remises de groupe : -10% dès 3 inscrits, -15% dès 5 inscrits.`;
       phone: leadPhone,
       type: (parseInt(leadParticipants, 10) > 1 ? 'Demande Entreprise' : 'Inscription Individuelle'),
       target: `${leadFormation} (${leadParticipants} pers.) - ${leadCompany || 'Particulier'}`,
-      notes: `Capture automatisée par l'assistante virtuelle ADILINE`,
+      notes: `Capture automatisée par l'assistante virtuelle ADI`,
       channel: 'En ligne'
     });
 
@@ -948,7 +948,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
   // Guided course advisor submit
   const handleLaunchAdvisor = (profile: string, goal: string) => {
     setShowAdvisorModal(false);
-    const advisorPrompt = `Je suis actuellement : ${profile}. Mon objectif professionnel prioritaire est : ${goal}. En tant qu'ADILINE, quel parcours de formations et quel plan de montée en compétences me conseillez-vous au CICEXF avec le budget total estimé ?`;
+    const advisorPrompt = `Je suis actuellement : ${profile}. Mon objectif professionnel prioritaire est : ${goal}. En tant qu'ADI, quel parcours de formations et quel plan de montée en compétences me conseillez-vous au CICEXF avec le budget total estimé ?`;
     handleSendMessage(advisorPrompt);
   };
 
@@ -984,14 +984,14 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
               <div className="relative shrink-0">
                 <img
                   src={adilineAvatar}
-                  alt="Avatar ADILINE"
+                  alt="Avatar ADI"
                   className="w-9 h-9 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-white/90 shadow-md"
                 />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-brand-blue rounded-full"></span>
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <h3 className="font-display font-extrabold text-sm sm:text-base tracking-wide text-white">ADILINE</h3>
+                  <h3 className="font-display font-extrabold text-sm sm:text-base tracking-wide text-white">ADI</h3>
                   <span className="hidden sm:inline text-xs bg-white/20 text-white font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">IA Certifiée</span>
                 </div>
                 <p className="truncate text-[11px] text-blue-100/90 font-medium">Assistante virtuelle · CICEXF</p>
@@ -1027,7 +1027,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
               </button>
               <button
                 onClick={() => {
-                  if (window.confirm("Voulez-vous réinitialiser la conversation avec ADILINE ?")) {
+                  if (window.confirm("Voulez-vous réinitialiser la conversation avec ADI ?")) {
                     setMessages([messages[0]]);
                   }
                 }}
@@ -1061,7 +1061,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 {msg.role === 'assistant' && (
                   <img 
                     src={adilineAvatar} 
-                    alt="ADILINE" 
+                    alt="ADI" 
                     className="w-7 h-7 rounded-full object-cover shrink-0 mb-1 border border-brand-blue/30 shadow-xs"
                   />
                 )}
@@ -1215,7 +1215,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
 
                             {card.type === 'expert' && (
                               <a
-                                href={`mailto:${card.contact || 'elearningciv@gmail.com'}?subject=Demande de consultance via ADILINE`}
+                                href={`mailto:${card.contact || 'elearningciv@gmail.com'}?subject=Demande de consultance via ADI`}
                                 className="flex-1 py-1 px-2 rounded-lg bg-brand-blue text-white font-bold text-xs text-center"
                               >
                                 Contacter l'expert
@@ -1289,7 +1289,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             <div className="flex items-end space-x-2 pl-1">
               <img 
                 src={adilineAvatar} 
-                alt="ADILINE" 
+                alt="ADI" 
                 className="w-7 h-7 rounded-full object-cover shrink-0 border border-brand-blue/30"
               />
               <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 rounded-2xl rounded-bl-none shadow-sm flex items-center space-x-2 text-xs text-slate-500 dark:text-slate-400">
@@ -1297,7 +1297,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 <div className="w-2 h-2 rounded-full bg-brand-emerald animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                 <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 ml-1">
-                  ADILINE écrit…
+                  ADI écrit…
                 </span>
               </div>
             </div>
@@ -1438,7 +1438,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
                 type="button"
                 onClick={() => stopRecordingVoice(true)}
                 className="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5 cursor-pointer"
-                title="Terminer et envoyer la note vocale à ADILINE"
+                title="Terminer et envoyer la note vocale à ADI"
                 aria-label="Envoyer la note vocale"
               >
                 <Send className="w-3.5 h-3.5" />
@@ -1514,7 +1514,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
           )}
 
           <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 px-1">
-            <span>Données officielles CICEXF · Vos échanges avec ADILINE sont enregistrés par le cabinet pour mieux vous répondre (<a href="/confidentialite" target="_blank" rel="noreferrer" className="underline">confidentialité</a>).</span>
+            <span>Données officielles CICEXF · Vos échanges avec ADI sont enregistrés par le cabinet pour mieux vous répondre (<a href="/confidentialite" target="_blank" rel="noreferrer" className="underline">confidentialité</a>).</span>
           </div>
         </div>
 
@@ -1534,7 +1534,7 @@ Vous recevrez votre devis proforma et la fiche d'inscription officielle par cour
             </div>
 
             <p className="text-xs text-slate-600 dark:text-slate-300">
-              Répondez à deux questions rapides afin qu'ADILINE assemble un parcours certifiant adapté à votre carrière avec le budget optimisé :
+              Répondez à deux questions rapides afin qu'ADI assemble un parcours certifiant adapté à votre carrière avec le budget optimisé :
             </p>
 
             <div className="space-y-3 text-xs">

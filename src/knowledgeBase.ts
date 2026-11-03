@@ -745,7 +745,7 @@ export const GLOBAL_FAQ = [
 ];
 
 // ============================================================================
-// GÉNÉRATEUR AUTOMATIQUE DE LA BASE DE CONNAISSANCES TEXTUELLE POUR ADILINE
+// GÉNÉRATEUR AUTOMATIQUE DE LA BASE DE CONNAISSANCES TEXTUELLE POUR ADI
 // ============================================================================
 export function generateAdilineKnowledgeText(): string {
   const c = CABINET_INFO;

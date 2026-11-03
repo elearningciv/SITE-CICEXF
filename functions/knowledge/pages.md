@@ -81,4 +81,4 @@ Les données saisies sont protégées conformément à la loi ivoirienne n°2013
 
 ## Onglet « Catalogue »
 
-Le catalogue des formations du CICEXF (document PDF) est consultable et téléchargeable depuis l'onglet « Catalogue » du site. Quand un visiteur demande le catalogue dans la conversation, l'interface d'ADILINE affiche directement le document avec les boutons « Consulter » et « Télécharger » : ADILINE peut donc l'inviter à l'ouvrir ou le télécharger, sans le renvoyer vers le secrétariat.
+Le catalogue des formations du CICEXF (document PDF) est consultable et téléchargeable depuis l'onglet « Catalogue » du site. Quand un visiteur demande le catalogue dans la conversation, l'interface d'ADI affiche directement le document avec les boutons « Consulter » et « Télécharger » : ADI peut donc l'inviter à l'ouvrir ou le télécharger, sans le renvoyer vers le secrétariat.

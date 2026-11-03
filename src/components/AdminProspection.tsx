@@ -9,7 +9,7 @@ import { SITE_URL } from '../seo';
  * without breaking their rules (no scraping, no automated messages):
  *  1. ready-to-post texts per network, with a tracked link (the source shows in each request);
  *  2. a LinkedIn targeting kit (profiles to look for, search links, message templates) used by hand;
- *  3. the setup guide for ADILINE on the Facebook page and Instagram account (official Meta webhook).
+ *  3. the setup guide for ADI on the Facebook page and Instagram account (official Meta webhook).
  */
 
 type Network = 'linkedin' | 'facebook' | 'instagram' | 'tiktok';
@@ -125,7 +125,7 @@ export default function AdminProspection({ formations }: { formations: Formation
       );
       setAiText(prev => ({ ...prev, [key]: text.replace(/\*\*/g, '') }));
     } catch {
-      setError("ADILINE n'a pas pu rédiger pour le moment : le modèle ci-dessous reste utilisable.");
+      setError("ADI n'a pas pu rédiger pour le moment : le modèle ci-dessous reste utilisable.");
     } finally {
       setBusy(false);
     }
@@ -159,7 +159,7 @@ export default function AdminProspection({ formations }: { formations: Formation
       <div className="flex flex-wrap gap-2">
         {tab('posts', 'Publications', Megaphone)}
         {tab('linkedin', 'Ciblage LinkedIn', Linkedin)}
-        {tab('meta', 'ADILINE sur Facebook & Instagram', Facebook)}
+        {tab('meta', 'ADI sur Facebook & Instagram', Facebook)}
       </div>
 
       {section !== 'meta' && (
@@ -201,7 +201,7 @@ export default function AdminProspection({ formations }: { formations: Formation
                 className="inline-flex items-center gap-1.5 rounded-lg bg-brand-blue px-3 py-1.5 text-xs font-bold text-white disabled:opacity-60 cursor-pointer"
               >
                 {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {aiText[key] ? 'Proposer une autre version' : 'Rédiger avec ADILINE'}
+                {aiText[key] ? 'Proposer une autre version' : 'Rédiger avec ADI'}
               </button>
               <CopyButton text={draft} label="Copier le texte" />
               <a href={shareUrl[network]} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
@@ -280,11 +280,11 @@ export default function AdminProspection({ formations }: { formations: Formation
         </div>
       )}
 
-      {/* 3. ADILINE on the Facebook page and Instagram account */}
+      {/* 3. ADI on the Facebook page and Instagram account */}
       {section === 'meta' && (
         <div className="space-y-4 text-sm text-slate-700 dark:text-slate-300">
           <p>
-            Une fois activé, ADILINE répond automatiquement aux personnes qui écrivent à votre page Facebook ou à votre compte Instagram
+            Une fois activé, ADI répond automatiquement aux personnes qui écrivent à votre page Facebook ou à votre compte Instagram
             professionnel, et chaque nouvelle conversation ainsi que chaque formulaire de publicité Facebook/Instagram arrive dans
             <strong> Devis &amp; Inscriptions</strong> (canal « Facebook » ou « Instagram »).
           </p>
@@ -307,7 +307,7 @@ firebase.cmd deploy --only functions:cicexf:metaWebhook --project project-a93f5a
               <span className="text-xs">META_VERIFY_TOKEN : une phrase de votre choix · META_APP_SECRET : « Clé secrète » de l'application · META_PAGE_TOKEN : jeton de la page.</span>
             </li>
             <li>
-              <strong>Relier Meta à ADILINE</strong> : dans l'application, rubrique Webhooks, indiquez l'adresse ci-dessous et la même phrase que META_VERIFY_TOKEN,
+              <strong>Relier Meta à ADI</strong> : dans l'application, rubrique Webhooks, indiquez l'adresse ci-dessous et la même phrase que META_VERIFY_TOKEN,
               puis abonnez la page aux champs <em>messages</em> et <em>leadgen</em> (et le compte Instagram au champ <em>messages</em>).
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <code className="break-all rounded-lg bg-slate-100 px-2 py-1 text-xs dark:bg-slate-800">{WEBHOOK_URL}</code>

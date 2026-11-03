@@ -1,14 +1,14 @@
 // Envoie un e-mail au cabinet à chaque nouvelle demande enregistrée dans `prospects`
-// (inscriptions, demandes de devis, formulaires de contact, ADILINE).
+// (inscriptions, demandes de devis, formulaires de contact, ADI).
 const { onDocumentCreated } = require('firebase-functions/v2/firestore');
 const { defineSecret } = require('firebase-functions/params');
 const { logger } = require('firebase-functions');
 const nodemailer = require('nodemailer');
 
-// Assistante virtuelle ADILINE (Gemini + contenu du site)
+// Assistante virtuelle ADI (Gemini + contenu du site)
 exports.adilineChat = require('./adiline').adilineChat;
 
-// Facebook & Instagram : prospects des publicités à formulaire et réponses d'ADILINE aux messages
+// Facebook & Instagram : prospects des publicités à formulaire et réponses d'ADI aux messages
 // (à déployer seulement après avoir enregistré les codes META_* : voir le guide dans l'administration)
 exports.metaWebhook = require('./meta').metaWebhook;
 

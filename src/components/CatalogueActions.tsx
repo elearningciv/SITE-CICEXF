@@ -3,7 +3,7 @@ import { BookOpen, Check, Copy, Download, Eye, Link2, Loader2 } from 'lucide-rea
 import { CatalogueMeta, catalogueLink, downloadCatalogue, openCatalogue, useCatalogueMeta } from '../lib/catalogue';
 
 /**
- * "Consulter" + "Télécharger" buttons for the training catalogue (page, articles, ADILINE).
+ * "Consulter" + "Télécharger" buttons for the training catalogue (page, articles, ADI).
  * With withLinks, it also shows the direct links a visitor can click later or share.
  */
 export default function CatalogueActions({ meta, compact = false, withLinks = false }: { meta: CatalogueMeta; compact?: boolean; withLinks?: boolean }) {

@@ -4,7 +4,7 @@ import { db } from '../firebase';
 import { ReportMessage } from './adminReports';
 
 /**
- * ADILINE conversations, written by the server (functions/adiline.js): one document per visitor
+ * ADI conversations, written by the server (functions/adiline.js): one document per visitor
  * in `adiline_conversations`, with that visitor's messages in its `messages` subcollection.
  */
 

@@ -16,7 +16,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
           <li>votre identité : nom et prénom ;</li>
           <li>vos coordonnées : téléphone, WhatsApp et adresse e-mail ;</li>
           <li>votre situation professionnelle : entreprise ou organisation, fonction ;</li>
-          <li>la formation ou le service qui vous intéresse, et vos messages, y compris vos échanges avec notre assistante virtuelle ADILINE.</li>
+          <li>la formation ou le service qui vous intéresse, et vos messages, y compris vos échanges avec notre assistante virtuelle ADI.</li>
         </ul>
         <p>Le site enregistre aussi quelques données techniques de visite (pages consultées, type de navigateur) pour améliorer son fonctionnement.</p>
       </>
@@ -32,7 +32,7 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
           présenter nos offres de formation et d'accompagnement.
         </p>
         <p>
-          Vos échanges avec ADILINE sont enregistrés et relus par le cabinet pour assurer le suivi de votre demande. ADILINE peut vous
+          Vos échanges avec ADI sont enregistrés et relus par le cabinet pour assurer le suivi de votre demande. ADI peut vous
           proposer de laisser votre numéro WhatsApp afin qu'un conseiller vous recontacte : c'est toujours facultatif.
         </p>
         <p>

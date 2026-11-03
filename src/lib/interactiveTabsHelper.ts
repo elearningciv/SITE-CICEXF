@@ -342,7 +342,7 @@ export function buildAccompanimentTabSections(
 
   // 5. Accessibility / Intervention modalities
   const applyLine = isFormation
-    ? "Inscription individuelle en ligne ou avec ADILINE ; une organisation peut aussi inscrire un groupe ou demander une session sur mesure."
+    ? "Inscription individuelle en ligne ou avec ADI ; une organisation peut aussi inscrire un groupe ou demander une session sur mesure."
     : "Pour une organisation : un échange permet de cadrer vos besoins et votre calendrier ; un particulier peut aussi être accompagné selon son projet.";
   const accessList = sub.admission && sub.admission.length > 0 ? [...sub.admission, `Modalité : ${MODALITY_LABEL}.`, applyLine] : [
     "Intervention sur site dans vos locaux à Abidjan, sur l'ensemble du territoire ivoirien et dans la sous-région ouest-africaine.",

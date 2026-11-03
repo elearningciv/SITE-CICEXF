@@ -6,7 +6,7 @@ import { buildInvoicesHtml, downloadHtml, reportDate } from '../lib/adminReports
 import { Formation } from '../types';
 import { FORMATION_OFFERS } from '../data/formationOffers';
 
-/** Admin tab "Factures": every proforma issued by ADILINE, with its PDF */
+/** Admin tab "Factures": every proforma issued by ADI, with its PDF */
 export default function AdminInvoices({ formations }: { formations: Formation[] }) {
   const { invoices, loading, error } = useInvoices();
   const [search, setSearch] = useState('');
@@ -54,7 +54,7 @@ export default function AdminInvoices({ formations }: { formations: Formation[] 
       ...formations,
       ...Object.values(FORMATION_OFFERS).map(o => ({ title: o.title, domain: o.domain, thematic: o.title }))
     ]),
-    `Factures-ADILINE-par-domaine-${reportDate()}.html`
+    `Factures-ADI-par-domaine-${reportDate()}.html`
   );
 
   const dateOf = (inv: Invoice) => inv.createdAt ? inv.createdAt.toDate().toLocaleDateString('fr-FR') : '—';
@@ -63,7 +63,7 @@ export default function AdminInvoices({ formations }: { formations: Formation[] 
     <div className="p-4 sm:p-5 space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-slate-600 dark:text-slate-400">
-          Toutes les factures proforma établies par ADILINE, numérotées dans l'ordre (PF + année + numéro). Une facture n'est jamais
+          Toutes les factures proforma établies par ADI, numérotées dans l'ordre (PF + année + numéro). Une facture n'est jamais
           supprimée : elle peut être annulée, et son numéro reste réservé.
         </p>
         <label className="relative w-full sm:w-72 shrink-0">
@@ -98,7 +98,7 @@ export default function AdminInvoices({ formations }: { formations: Formation[] 
         <div className="h-24 animate-pulse rounded-2xl bg-slate-100 dark:bg-slate-800" />
       ) : filtered.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-          {invoices.length ? 'Aucune facture ne correspond à la recherche.' : 'Aucune facture pour le moment : elles apparaîtront ici dès la première inscription confirmée avec ADILINE.'}
+          {invoices.length ? 'Aucune facture ne correspond à la recherche.' : 'Aucune facture pour le moment : elles apparaîtront ici dès la première inscription confirmée avec ADI.'}
         </p>
       ) : (
         <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">

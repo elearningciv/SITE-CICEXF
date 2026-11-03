@@ -3,6 +3,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import { isAuthorizedAdminEmail } from './lib/adminAuth';
+import { grantAdminAccess, hasAccessKeyInUrl, hasAdminAccess, unlockAdminFromUrl } from './lib/adminGate';
+import AdminBlocked from './components/AdminBlocked';
 import adilineAvatar from './assets/images/adiline_avatar_1792359280949.webp';
 import { trackVisit } from './lib/tracker';
 import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
@@ -92,7 +94,7 @@ export default function App() {
     if (isAiModalOpen) setHasOpenedAssistant(true);
   }, [isAiModalOpen]);
 
-  // Any part of the site can open the conversation with ADILINE
+  // Any part of the site can open the conversation with ADI
   useEffect(() => {
     const open = () => setIsAiModalOpen(true);
     window.addEventListener('cicexf:open-adiline', open);
@@ -285,14 +287,24 @@ export default function App() {
     };
   }, []);
 
+  // /admin stays closed to visitors: open only with the private link or on a device already used by an admin
+  const [adminUnlocked, setAdminUnlocked] = useState<boolean>(hasAdminAccess);
+  const [checkingAdminKey, setCheckingAdminKey] = useState<boolean>(hasAccessKeyInUrl);
+  useEffect(() => {
+    if (!checkingAdminKey) return;
+    unlockAdminFromUrl()
+      .then((ok) => { if (ok) setAdminUnlocked(true); })
+      .finally(() => setCheckingAdminKey(false));
+  }, [checkingAdminKey]);
+
   // Admin status is derived only from the verified Firebase Auth user.
   // Visitors never download Firebase Auth: it is loaded on the /admin page or on a device an admin used.
   const [needsAuth, setNeedsAuth] = useState<boolean>(() => {
     try { return !!localStorage.getItem(ADMIN_DEVICE_KEY); } catch { return false; }
   });
   useEffect(() => {
-    if (activeTab === 'admin' || isAdminLoginModalOpen) setNeedsAuth(true);
-  }, [activeTab, isAdminLoginModalOpen]);
+    if ((activeTab === 'admin' && adminUnlocked) || isAdminLoginModalOpen) setNeedsAuth(true);
+  }, [activeTab, adminUnlocked, isAdminLoginModalOpen]);
   useEffect(() => {
     if (!needsAuth) return;
     let unsubscribe = () => {};
@@ -305,6 +317,10 @@ export default function App() {
         try {
           if (isAdmin) localStorage.setItem(ADMIN_DEVICE_KEY, '1');
         } catch {}
+        if (isAdmin) {
+          grantAdminAccess();
+          setAdminUnlocked(true);
+        }
       });
     }).catch((err) => console.error('Firebase Auth loading error:', err));
     return () => { cancelled = true; unsubscribe(); };
@@ -524,6 +540,9 @@ export default function App() {
       case 'contact':
         return <Contact preselectedDomain={preselectedDomain} setPreselectedDomain={setPreselectedDomain} />;
       case 'admin':
+        if (!adminUnlocked && !isAdminLoggedIn) {
+          return checkingAdminKey ? null : <AdminBlocked onHome={() => handleTabChange('home')} />;
+        }
         return (
           <AdminPanel
             formations={formations}
@@ -687,7 +706,7 @@ export default function App() {
           <span className="sr-only">WhatsApp Direct</span>
         </a>
 
-        {/* Floating ADILINE Virtual Assistant - Point WhatsApp Style */}
+        {/* Floating ADI Virtual Assistant - Point WhatsApp Style */}
         <div className="flex items-center gap-2 group">
           {/* WhatsApp-style Speech Bubble callout */}
           <div 
@@ -695,7 +714,7 @@ export default function App() {
             className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 bg-white dark:bg-slate-900 text-slate-800 dark:text-white rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 text-xs font-semibold whitespace-nowrap cursor-pointer hover:border-emerald-500/50 hover:shadow-2xl transition-all"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Discuter avec ADILINE</span>
+            <span>Discuter avec ADI</span>
             <span className="text-emerald-500">💬</span>
           </div>
 
@@ -704,12 +723,12 @@ export default function App() {
             id="floating-adiline-btn"
             onClick={() => setIsAiModalOpen(true)}
             className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#25D366] p-0.5 shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all cursor-pointer ring-4 ring-emerald-500/20 hover:ring-emerald-500/40"
-            aria-label="Discuter avec ADILINE - Assistante virtuelle"
-            title="Discuter avec ADILINE, assistante d'accueil du cabinet"
+            aria-label="Discuter avec ADI - Assistante virtuelle"
+            title="Discuter avec ADI, assistante d'accueil du cabinet"
           >
             <img 
               src={adilineAvatar} 
-              alt="ADILINE" 
+              alt="ADI" 
               className="w-full h-full rounded-full object-cover border-2 border-white shadow-inner"
             />
             
@@ -725,7 +744,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* ADILINE Virtual Assistant Component (mounted on first opening, then kept to preserve the conversation) */}
+      {/* ADI Virtual Assistant Component (mounted on first opening, then kept to preserve the conversation) */}
       {hasOpenedAssistant && (
         <Suspense fallback={null}>
           <AdilineChatbot

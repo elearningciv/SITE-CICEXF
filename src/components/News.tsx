@@ -282,12 +282,12 @@ export default function News({ blogPosts = BLOG_POSTS, formations = [] }: NewsPr
 
                 <div className="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
                   <p className="font-display text-base font-bold text-slate-900 dark:text-white">Une question sur cette annonce ?</p>
-                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">ADILINE, notre assistante virtuelle, vous répond immédiatement.</p>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">ADI, notre assistante virtuelle, vous répond immédiatement.</p>
                   <button
                     onClick={() => window.dispatchEvent(new Event('cicexf:open-adiline'))}
                     className="mt-4 w-full rounded-xl bg-brand-emerald px-4 py-3 text-sm font-bold text-white hover:bg-brand-emerald-dark cursor-pointer"
                   >
-                    Discuter avec ADILINE
+                    Discuter avec ADI
                   </button>
                 </div>
               </aside>

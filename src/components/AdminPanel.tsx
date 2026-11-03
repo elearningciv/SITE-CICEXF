@@ -371,7 +371,7 @@ export default function AdminPanel({
   const handleForgotPassword = async () => {
     const cleanEmail = email.trim().toLowerCase();
     if (!isAuthorizedAdminEmail(cleanEmail)) {
-      setAuthError("Veuillez sélectionner une adresse administrateur autorisée (elearningciv@gmail.com ou cabinetcicexf@gmail.com).");
+      setAuthError("Cette adresse ne permet pas d'accéder à l'administration.");
       return;
     }
     setResetLoading(true);
@@ -396,7 +396,7 @@ export default function AdminPanel({
     const cleanEmail = email.trim().toLowerCase();
 
     if (!isAuthorizedAdminEmail(cleanEmail)) {
-      setAuthError("Accès refusé. Seules les adresses habilitées du Cabinet peuvent accéder à l'administration.");
+      setAuthError("Identifiants incorrects.");
       setLoading(false);
       return;
     }
@@ -1319,7 +1319,7 @@ export default function AdminPanel({
     );
   }
 
-  // Security gate: only elearningciv@gmail.com and cabinetcicexf@gmail.com can see the administrative rubriques
+  // Security gate: only the authorized addresses can see the administrative rubriques
   if (!currentUser || !isAuthorizedAdminEmail(currentUser.email)) {
     return (
       <div id="admin-login-view" className="min-h-screen bg-slate-50 dark:bg-[#020817] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 transition-colors">
@@ -1335,21 +1335,6 @@ export default function AdminPanel({
             <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
               Espace sécurisé de gestion et publication de contenu
             </p>
-          </div>
-
-          {/* Access Restriction Warning */}
-          <div className="bg-amber-50 dark:bg-amber-950/25 border border-amber-200 dark:border-amber-800/40 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 space-y-2">
-            <div className="flex items-center space-x-2 font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wide text-[11px]">
-              <Lock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
-              <span>Accès strictement réservé</span>
-            </div>
-            <p className="text-[11.5px] leading-relaxed">
-              Les rubriques d'administration sont strictement confidentielles et réservées aux adresses habilitées du Cabinet :
-            </p>
-            <ul className="text-[11px] font-mono font-bold text-amber-900 dark:text-amber-200 list-disc list-inside space-y-0.5">
-              <li>elearningciv@gmail.com</li>
-              <li>cabinetcicexf@gmail.com</li>
-            </ul>
           </div>
 
           {/* Connected but unauthorized notice */}
@@ -1400,7 +1385,7 @@ export default function AdminPanel({
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="elearningciv@gmail.com ou cabinetcicexf@gmail.com"
+                    placeholder="Votre adresse e-mail"
                     className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-750 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-brand-emerald focus:ring-1 focus:ring-brand-emerald transition-all font-mono"
                   />
                 </div>

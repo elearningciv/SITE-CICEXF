@@ -107,40 +107,6 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
             </div>
           )}
 
-          {/* Quick select buttons */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">
-              Choisir votre compte administrateur :
-            </label>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setEmail('cabinetcicexf@gmail.com')}
-                className={`p-2 rounded-xl text-left border text-[11px] font-bold transition-all cursor-pointer ${
-                  email === 'cabinetcicexf@gmail.com'
-                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-900 dark:text-amber-200 ring-1 ring-amber-500/30'
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                <span className="block truncate">cabinetcicexf@gmail.com</span>
-                <span className="text-[11px] text-slate-500 font-normal">Direction Générale</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setEmail('elearningciv@gmail.com')}
-                className={`p-2 rounded-xl text-left border text-[11px] font-bold transition-all cursor-pointer ${
-                  email === 'elearningciv@gmail.com'
-                    ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-500 text-amber-900 dark:text-amber-200 ring-1 ring-amber-500/30'
-                    : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
-                }`}
-              >
-                <span className="block truncate">elearningciv@gmail.com</span>
-                <span className="text-[11px] text-slate-500 font-normal">Pôle Pédagogique</span>
-              </button>
-            </div>
-          </div>
-
           <form onSubmit={handleLogin} className="space-y-3.5">
             <div>
               <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">
@@ -153,7 +119,7 @@ export default function AdminLoginModal({ isOpen, onClose, onSuccess }: AdminLog
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="cabinetcicexf@gmail.com"
+                  placeholder="Votre adresse e-mail"
                   className="w-full pl-9 pr-3 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 font-mono"
                 />
               </div>

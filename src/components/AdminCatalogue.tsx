@@ -17,7 +17,7 @@ export default function AdminCatalogue() {
     setError(''); setMessage(''); setProgress(0);
     try {
       await uploadCatalogue(file, setProgress);
-      setMessage('Catalogue publié : il est disponible dans l\'onglet Catalogue et via ADILINE.');
+      setMessage('Catalogue publié : il est disponible dans l\'onglet Catalogue et via ADI.');
     } catch (err: any) {
       console.error('Catalogue upload error:', err);
       setError(err?.message?.startsWith('Le ') ? err.message : "Envoi impossible. Vérifiez votre connexion administrateur, puis réessayez.");
@@ -42,7 +42,7 @@ export default function AdminCatalogue() {
     <div className="p-4 sm:p-5 space-y-4">
       <p className="text-sm text-slate-600 dark:text-slate-400">
         Ajoutez le PDF de votre catalogue de formation (15 Mo maximum). Les visiteurs le consultent ou le téléchargent depuis
-        l'onglet « Catalogue », et ADILINE le propose dans la conversation quand on le lui demande.
+        l'onglet « Catalogue », et ADI le propose dans la conversation quand on le lui demande.
       </p>
 
       {loading ? (
