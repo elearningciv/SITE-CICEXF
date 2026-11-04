@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { SEED } from './seed.ts';
-import type { Content, Conversation, InboxMessage } from '../src/types.ts';
+import { COLLECTIONS, type Content, type Conversation, type InboxMessage } from '../src/types.ts';
 
 // Small JSON-file store. Each file is rewritten atomically (temp file + rename),
 // so a crash mid-write never leaves a half-written file.
@@ -30,6 +30,8 @@ let content: Content = readJson<Content>('content.json', SEED);
 // New settings added to the seed later are filled in for existing sites
 content.settings = { ...SEED.settings, ...content.settings };
 content.translations ||= {};
+// Sections added after the site was first installed
+for (const name of COLLECTIONS) if (!Array.isArray((content as any)[name])) (content as any)[name] = structuredClone((SEED as any)[name]);
 // Earlier format: publications had a date and an axis; researchers had a category (doctoral students included)
 content.publications = content.publications.map((p: any) => ({
   ...p,

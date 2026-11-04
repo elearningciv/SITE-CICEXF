@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { Search } from 'lucide-react';
-import { Link, useLocation } from '../lib/router';
+import { useLocation } from '../lib/router';
 import { useSite } from '../lib/site';
 import { slug } from '../lib/nav';
 import type { Publication } from '../types';
@@ -13,44 +12,20 @@ import { PubCard, PubModal, ProtectedPhoto } from '../components/PubCard';
 export function Publications() {
   const { content, t } = useSite();
   const { hash } = useLocation();
-  const [q, setQ] = useState('');
   const [type, setType] = useState('');
-  const [year, setYear] = useState('');
   const [open, setOpen] = useState<Publication | null>(null);
   const types = useMemo(() => [...new Set((content?.publications || []).map(p => p.type))], [content]);
-  const years = useMemo(() => [...new Set((content?.publications || []).map(p => p.publicationYear).filter(Boolean))].sort().reverse(), [content]);
   useEffect(() => { const m = types.find(ty => slug(ty) === hash); if (m) setType(m); }, [hash, types]);
   if (!content) return null;
   const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
   const list = [...content.publications]
-    .filter(p => (!type || p.type === type) && (!year || p.publicationYear === year))
-    .filter(p => !q || norm(`${p.title} ${t(p.title)} ${p.authors} ${p.reference} ${p.description} ${p.summary}`).includes(norm(q)))
+    .filter(p => !type || p.type === type)
     .sort((a, b) => (b.publicationYear || '').localeCompare(a.publicationYear || ''));
   return (
     <>
       <PageHero eyebrow={t('Publications')} title={t('Bibliothèque numérique')} />
       <section className="section">
         <div className="container">
-          <div style={{ display: 'grid', gap: 16, marginBottom: 32 }}>
-            <div className="field" style={{ maxWidth: 560 }}>
-              <label htmlFor="pub-q">{t('Rechercher dans les publications')}</label>
-              <div style={{ position: 'relative' }}>
-                <Search size={18} style={{ position: 'absolute', left: 14, top: 14, color: 'var(--muted)' }} />
-                <input id="pub-q" value={q} onChange={e => setQ(e.target.value)} placeholder={t('Titre, auteur, référence…')} style={{ paddingLeft: 42 }} />
-              </div>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-              <button type="button" className={`chip${!type ? ' active' : ''}`} onClick={() => setType('')}>{t('Tous les types')}</button>
-              {types.map(ty => <button key={ty} type="button" className={`chip${type === ty ? ' active' : ''}`} onClick={() => setType(ty)}>{t(ty)}</button>)}
-              {years.length > 1 && (
-                <select aria-label={t('Année de publication')} value={year} onChange={e => setYear(e.target.value)} className="chip">
-                  <option value="">{t('Toutes les années')}</option>
-                  {years.map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
-              )}
-            </div>
-          </div>
-          <p className="muted" style={{ marginBottom: 16, fontWeight: 600 }} aria-live="polite">{list.length} {list.length > 1 ? t('publications') : t('publication')}</p>
           <motion.div className="pub-grid" layout>
             <AnimatePresence initial={false}>
               {list.map((p, i) => (
@@ -60,27 +35,11 @@ export function Publications() {
               ))}
             </AnimatePresence>
           </motion.div>
-          {!list.length && <p className="muted" style={{ paddingBlock: 24 }}>{t('Aucune publication ne correspond à votre recherche.')}</p>}
+          {!list.length && <p className="muted" style={{ paddingBlock: 24 }}>{t('Aucune publication pour le moment.')}</p>}
         </div>
       </section>
       <PubModal pub={open} onClose={() => setOpen(null)} />
     </>
-  );
-}
-
-/** Two sub-tabs shown under the page title; the active one is named in the address (#chercheurs, #opportunites) */
-function ViewTabs({ base, tabs, active }: { base: string; tabs: { id: string; label: string }[]; active: string }) {
-  return (
-    <div className="container view-bar">
-      <nav className="view-tabs" aria-label="Sous-onglets">
-        {tabs.map(tb => (
-          <Link key={tb.id} to={tb.id ? `${base}#${tb.id}` : base} aria-current={active === tb.id ? 'page' : undefined}>
-            {active === tb.id && <motion.span layoutId={`pill-${base}`} className="pill" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
-            {tb.label}
-          </Link>
-        ))}
-      </nav>
-    </div>
   );
 }
 
@@ -93,7 +52,6 @@ export function Expertise() {
   return (
     <>
       <PageHero eyebrow={t('Expertise')} title={view ? t('Nos chercheurs') : t('Études, évaluations et appui aux institutions')} />
-      <ViewTabs base="/expertise" active={view} tabs={[{ id: '', label: t('Expertise') }, { id: 'chercheurs', label: t('Chercheurs') }]} />
       {!view && <>
       <section className="section" id="services">
         <div className="container">
@@ -150,7 +108,6 @@ export function Actualites() {
   return (
     <>
       <PageHero eyebrow={t('Actualités')} title={view ? t('Appels, bourses et stages') : t("La vie de l'institut")} />
-      <ViewTabs base="/actualites" active={view} tabs={[{ id: '', label: t('Actualités') }, { id: 'opportunites', label: t('Opportunités') }]} />
       {!view && <>
       <section className="section" id="actualites">
         <div className="container">

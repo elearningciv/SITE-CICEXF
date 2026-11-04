@@ -8,7 +8,8 @@ import { navigate, useLocation } from './lib/router';
 import { NAV, ALIASES } from './lib/nav';
 import { api } from './lib/api';
 import Home from './pages/Home';
-import { Institut, Recherche, Formations, Contact, NotFound } from './pages/Sections';
+import { Institut, Formations, Contact, NotFound } from './pages/Sections';
+import Galerie from './pages/Galerie';
 import { Publications, Expertise, Actualites } from './pages/Merged';
 import Login from './pages/Login';
 import { EASE } from './components/Motion';
@@ -17,7 +18,7 @@ import { EASE } from './components/Motion';
 const Admin = lazy(() => import('./admin/Admin'));
 
 const PAGES: Record<string, React.ComponentType> = {
-  '/': Home, '/institut': Institut, '/recherche': Recherche, '/publications': Publications,
+  '/': Home, '/institut': Institut, '/galerie': Galerie, '/publications': Publications,
   '/accompagnement': Formations, '/expertise': Expertise, '/actualites': Actualites, '/contact': Contact,
   '/connexion': Login
 };

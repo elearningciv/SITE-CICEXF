@@ -81,3 +81,40 @@ export function ImageInput({ id, value, onChange }: { id: string; value: string;
     </div>
   );
 }
+
+/** Several photos for one item, stored one URL per line */
+export function ImagesInput({ id, value, onChange }: { id: string; value: string; onChange: (v: string) => void }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  const toast = useToast();
+  const list = value.split('\n').filter(Boolean);
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      {list.length > 0 && (
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          {list.map((url, i) => (
+            <div key={url + i} style={{ position: 'relative' }}>
+              <img src={url} alt="" style={{ width: 120, height: 84, objectFit: 'cover', borderRadius: 10, border: i === 0 ? '2px solid var(--accent)' : '1px solid var(--line)' }} />
+              <button type="button" className="icon-btn danger" aria-label="Retirer cette photo" style={{ position: 'absolute', top: 4, right: 4, width: 28, height: 28 }} onClick={() => onChange(list.filter((_, j) => j !== i).join('\n'))}><X size={14} /></button>
+              {i === 0 && <span className="tag accent" style={{ position: 'absolute', left: 4, bottom: 4, fontSize: 10 }}>Couverture</span>}
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="img-field">
+        <label className="btn btn-ghost btn-sm" htmlFor={id} style={{ cursor: 'pointer' }}><Upload /> {busy ? 'Envoi…' : 'Ajouter des photos'}</label>
+        <input id={id} type="file" accept="image/*" multiple className="hp" onChange={async e => {
+          const files = [...(e.target.files || [])]; if (!files.length) return;
+          setBusy(true); setErr('');
+          const added: string[] = [];
+          try {
+            for (const f of files) { const dataUrl = await compress(f); const r = await api.post<{ url: string }>('/api/admin/upload', { dataUrl }); added.push(r.url); }
+            toast(`${added.length} photo(s) ajoutée(s)`);
+          } catch (x) { setErr((x as Error).message); }
+          finally { if (added.length) onChange([...list, ...added].join('\n')); setBusy(false); e.target.value = ''; }
+        }} />
+        {err && <span className="notice err">{err}</span>}
+      </div>
+    </div>
+  );
+}

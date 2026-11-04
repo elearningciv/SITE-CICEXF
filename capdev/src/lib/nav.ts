@@ -7,7 +7,7 @@ export interface NavTab { id: string; label: string; path: string; subs?: NavSub
 
 export const NAV: NavTab[] = [
   { id: 'institut', label: t("L'Institut"), path: '/institut' },
-  { id: 'recherche', label: t('Recherche'), path: '/recherche' },
+  { id: 'galerie', label: t('Galerie'), path: '/galerie' },
   { id: 'publications', label: t('Publications'), path: '/publications' },
   { id: 'expertise', label: t('Expertise'), path: '/expertise', subs: [
     { label: t('Expertise'), to: '/expertise' },
@@ -25,6 +25,7 @@ export const NAV: NavTab[] = [
 export const ALIASES: Record<string, string> = {
   '/chercheurs': '/expertise#chercheurs',
   '/formations': '/accompagnement',
+  '/recherche': '/#axes',
   '/opportunites': '/actualites#opportunites'
 };
 

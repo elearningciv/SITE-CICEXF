@@ -5,7 +5,7 @@ import { useSite } from '../lib/site';
 import { api } from '../lib/api';
 import type { Content } from '../types';
 import { COLLECTION_DEFS, type CollectionDef } from './schema';
-import { ImageInput, Sheet, useToast } from './ui';
+import { ImageInput, ImagesInput, Sheet, useToast } from './ui';
 
 type Row = Record<string, string>;
 
@@ -141,6 +141,7 @@ function CollectionEditor({ def, content, onSaved }: { def: CollectionDef; conte
                         {content.axes.map(a => <option key={a.id} value={a.id}>{a.code} · {a.title}</option>)}
                       </select>
                     ) : f.type === 'image' ? <ImageInput id={id} value={v} onChange={set} />
+                    : f.type === 'images' ? <ImagesInput id={id} value={v} onChange={set} />
                     : f.type === 'year' ? <input id={id} type="number" inputMode="numeric" min="1950" max="2100" step="1" placeholder="2026" value={v} onChange={e => set(e.target.value.slice(0, 4))} />
                     : <input id={id} type={f.type === 'date' ? 'date' : f.type === 'url' ? 'url' : 'text'} value={v} onChange={e => set(e.target.value)} />}
                   {f.help && <span className="help">{f.help}</span>}

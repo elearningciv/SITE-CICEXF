@@ -10,6 +10,7 @@ export default defineConfig({
     outDir: demo ? 'dist-demo' : 'dist',
     chunkSizeWarningLimit: 900,
     cssCodeSplit: !demo,
+    assetsInlineLimit: demo ? 1_000_000 : 4096,
     rollupOptions: demo ? { output: { inlineDynamicImports: true } } : undefined
   }
 });

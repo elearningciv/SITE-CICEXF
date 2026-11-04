@@ -13,14 +13,15 @@ interface Doc { kind: string; title: string; text: string; page: string }
 
 function docs(c: Content): Doc[] {
   return [
-    ...c.axes.map(a => ({ kind: 'Axe de recherche', title: `${a.code} · ${a.title}`, text: `${a.summary} ${a.description}`, page: '/recherche' })),
-    ...c.projects.map(p => ({ kind: 'Projet', title: p.title, text: `${p.summary} ${p.status} ${axeTitle(c, p.axe)}`, page: '/recherche' })),
+    ...c.axes.map(a => ({ kind: 'Axe de recherche', title: `${a.code} · ${a.title}`, text: `${a.summary} ${a.description}`, page: '/' })),
+    ...c.projects.map(p => ({ kind: 'Projet', title: p.title, text: `${p.summary} ${p.status} ${axeTitle(c, p.axe)}`, page: '/' })),
     ...c.publications.map(p => ({ kind: p.type, title: p.title, text: `${p.description} ${p.summary} ${p.authors} ${p.reference} ${p.zone} publication ${p.publicationYear}`, page: '/publications' })),
     ...c.formations.map(f => ({ kind: 'Formation', title: f.title, text: `${f.summary} formation seminaire ${f.duration} ${f.mode} ${f.status} ${f.date ? fmtDate(f.date) : ''}`, page: '/accompagnement' })),
     ...c.services.map(x => ({ kind: 'Expertise', title: x.title, text: `${x.summary} etude evaluation expertise`, page: '/expertise' })),
     ...c.opportunities.map(o => ({ kind: o.kind, title: o.title, text: `${o.summary} opportunite ${o.kind} date limite ${fmtDate(o.deadline)}`, page: '/actualites' })),
     ...c.news.map(n => ({ kind: 'Actualité', title: n.title, text: `${n.summary} actualite ${n.category}`, page: '/actualites' })),
     ...c.events.map(e => ({ kind: e.kind, title: e.title, text: `${e.place} agenda evenement ${fmtDate(e.date)}`, page: '/actualites' })),
+    ...(c.gallery || []).map(g => ({ kind: g.category, title: g.title, text: `${g.summary} ${g.body} ${g.place} galerie activite realisee`, page: '/galerie' })),
     ...c.researchers.map(r => ({ kind: 'Docteur', title: `${r.name} (${r.grade})`, text: `${r.specialty} ${r.grade} docteur chercheur expert equipe`, page: '/expertise' }))
   ];
 }
@@ -60,7 +61,7 @@ export function offlineAnswer(c: Content, message: string, lang: string): string
     return `${en ? 'Upcoming events' : 'Agenda'} :\n${bullets(list.map(e => `**${fmtDate(e.date)}** · ${tr(e.title)}`))}\n\n(page /actualites)`;
   }
   if (/(axe|theme|programme|domaine)/.test(q) && !/(publication|article)/.test(q)) {
-    return `${en ? 'Our research areas' : 'Nos axes de recherche'} :\n${bullets(c.axes.map(a => `**${tr(a.title)}** — ${tr(a.summary)}`))}\n\n(page /recherche)`;
+    return `${en ? 'Our research areas' : 'Nos axes de recherche'} :\n${bullets(c.axes.map(a => `**${tr(a.title)}** — ${tr(a.summary)}`))}\n\n(page d'accueil)`;
   }
   if (/(publication|article|rapport|policy|brief|document de travail|working paper|report)/.test(q) && !searchIn('pub')) {
     const list = [...c.publications].sort((a, b) => b.publicationYear.localeCompare(a.publicationYear)).slice(0, 5);

@@ -5,7 +5,6 @@ import { Link } from '../lib/router';
 import { useSite, LANGUAGES } from '../lib/site';
 import { Counter, EASE, Item, Reveal, Stagger } from '../components/Motion';
 import { MessageForm, PageHero, SectionHead } from '../components/Common';
-import { AxeGlyph } from './shared';
 import { ProtectedPhoto } from '../components/PubCard';
 
 
@@ -45,64 +44,6 @@ export function Institut() {
           <Stagger className="stats" >
             {s.stats.map((st, i) => <Item key={i} className="stat"><Counter value={st.value} locale={LANGUAGES[lang]?.locale || 'fr-FR'} /><span>{t(st.label)}</span></Item>)}
           </Stagger>
-        </div>
-      </section>
-    </>
-  );
-}
-
-// ---------------- Recherche ----------------
-export function Recherche() {
-  const { content, t } = useSite();
-  if (!content) return null;
-  const running = content.projects.filter(p => p.status !== 'Terminé');
-  const done = content.projects.filter(p => p.status === 'Terminé');
-  const axe = (id: string) => content.axes.find(a => a.id === id);
-  const ProjectCard = ({ p }: { p: typeof content.projects[number] }) => (
-    <Item className="card hover">
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap' }}>
-        <span className={`tag${p.status === 'Terminé' ? '' : ' accent'}`}>{t(p.status)}</span><span className="mono muted">{p.period}</span>
-      </div>
-      <h3>{t(p.title)}</h3>
-      <p>{t(p.summary)}</p>
-      <div className="foot"><span>{axe(p.axe) ? t(axe(p.axe)!.title) : ''}</span><span>{t(p.partners)}</span></div>
-    </Item>
-  );
-  return (
-    <>
-      <PageHero eyebrow={t('Recherche')} title={t('Axes, programmes et projets')} />
-      <section className="section" id="axes">
-        <div className="container">
-          <SectionHead eyebrow={t('Programmes')} title={t('Les axes de recherche')} />
-          <div className="grid" style={{ gap: 14 }}>
-            {content.axes.map((a, i) => (
-              <Reveal key={a.id} delay={i * 0.04}>
-                <article id={a.id} className="card" style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0,1fr)', gap: 22, alignItems: 'start' }}>
-                  <AxeGlyph index={i} />
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <span className="axe-code">{t(a.code)}</span>
-                    <h3 style={{ fontSize: 22 }}>{t(a.title)}</h3>
-                    <p style={{ fontFamily: 'var(--f-body)', fontSize: 16.5 }}>{t(a.description || a.summary)}</p>
-                    <div className="foot" style={{ marginTop: 6 }}>
-                      <span>{content.projects.filter(p => p.axe === a.id).length} {t('projets')}</span>
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="section" id="projets" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
-        <div className="container">
-          <SectionHead eyebrow={t('Projets')} title={t('Projets en cours')} />
-          <Stagger className="grid g-2">{running.map(p => <ProjectCard key={p.id} p={p} />)}</Stagger>
-        </div>
-      </section>
-      <section className="section" id="termines">
-        <div className="container">
-          <SectionHead eyebrow={t('Archives')} title={t('Projets terminés')} />
-          {done.length ? <Stagger className="grid g-2">{done.map(p => <ProjectCard key={p.id} p={p} />)}</Stagger> : <p className="muted">{t('Aucun projet terminé publié pour le moment.')}</p>}
         </div>
       </section>
     </>

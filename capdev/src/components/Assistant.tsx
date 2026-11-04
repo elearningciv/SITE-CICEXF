@@ -11,7 +11,7 @@ interface Msg { role: 'user' | 'assistant'; text: string }
 function Rich({ text, onNav }: { text: string; onNav: (to: string) => void }) {
   const blocks = text.split(/\n{2,}/);
   const inline = (s: string, key: string) => {
-    const parts = s.split(/(\*\*[^*]+\*\*|\/(?:institut|recherche|publications|chercheurs|formations|accompagnement|expertise|actualites|opportunites|contact)\b)/g);
+    const parts = s.split(/(\*\*[^*]+\*\*|\/(?:institut|recherche|publications|chercheurs|formations|accompagnement|galerie|expertise|actualites|opportunites|contact)\b)/g);
     return parts.map((p, i) => {
       if (p.startsWith('**') && p.endsWith('**')) return <strong key={key + i}>{p.slice(2, -2)}</strong>;
       if (/^\/[a-z]+$/.test(p)) return <a key={key + i} href={p} onClick={e => { e.preventDefault(); onNav(p); }}>{p}</a>;

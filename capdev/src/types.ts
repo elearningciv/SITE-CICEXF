@@ -12,6 +12,9 @@ export interface Settings {
   heroTitle: string;
   heroHighlight: string;
   heroLead: string;
+  /** Home photo (empty = default photo) and button text */
+  heroImage: string;
+  heroCta: string;
   assistantName: string;
   assistantGreeting: string;
   palette: PaletteId;
@@ -43,6 +46,8 @@ export interface Service { id: string; title: string; summary: string }
 export interface NewsItem { id: string; date: string; category: string; title: string; summary: string; body: string; image?: string }
 export interface EventItem { id: string; date: string; title: string; place: string; kind: string }
 export interface Opportunity { id: string; kind: string; title: string; deadline: string; summary: string }
+/** A completed activity shown in the Galerie tab; images = one URL per line */
+export interface GalleryItem { id: string; title: string; category: string; date: string; place: string; summary: string; body: string; images: string }
 export interface Partner { id: string; name: string; kind: string; url: string; logo?: string }
 
 export interface Content {
@@ -57,6 +62,7 @@ export interface Content {
   events: EventItem[];
   opportunities: Opportunity[];
   partners: Partner[];
+  gallery: GalleryItem[];
   /** translations[lang][french source text] = translated text */
   translations: Record<string, Record<string, string>>;
   updatedAt: string;
@@ -64,11 +70,11 @@ export interface Content {
 
 export type CollectionName =
   'axes' | 'projects' | 'publications' | 'researchers' | 'formations' |
-  'services' | 'news' | 'events' | 'opportunities' | 'partners';
+  'services' | 'news' | 'events' | 'opportunities' | 'partners' | 'gallery';
 
 export const COLLECTIONS: CollectionName[] = [
   'axes', 'projects', 'publications', 'researchers', 'formations',
-  'services', 'news', 'events', 'opportunities', 'partners'
+  'services', 'news', 'events', 'opportunities', 'partners', 'gallery'
 ];
 
 export interface InboxMessage {

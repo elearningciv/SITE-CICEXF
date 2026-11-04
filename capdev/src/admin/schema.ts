@@ -1,10 +1,22 @@
 import type { CollectionName } from '../types';
 
-export type FieldType = 'text' | 'textarea' | 'date' | 'year' | 'select' | 'axe' | 'image' | 'url';
+export type FieldType = 'text' | 'textarea' | 'date' | 'year' | 'select' | 'axe' | 'image' | 'images' | 'url';
 export interface Field { key: string; label: string; type: FieldType; options?: string[]; required?: boolean; help?: string }
 export interface CollectionDef { name: CollectionName; label: string; singular: string; tab: string; titleKey: string; subtitle: (it: Record<string, string>) => string; fields: Field[]; sortKey?: string }
 
 export const COLLECTION_DEFS: CollectionDef[] = [
+  {
+    name: 'gallery', label: 'Galerie', singular: 'activité', tab: 'Galerie', titleKey: 'title', sortKey: 'date', subtitle: it => `${it.date || ''} · ${it.category || ''} · ${(it.images || '').split('\n').filter(Boolean).length} photo(s)`,
+    fields: [
+      { key: 'title', label: "Titre de l'activité", type: 'text', required: true },
+      { key: 'category', label: 'Catégorie', type: 'select', options: ['Atelier', 'Formation', 'Séminaire', 'Colloque', 'Restitution', 'Mission de terrain', 'Partenariat', 'Visite'] },
+      { key: 'date', label: 'Date', type: 'date', required: true },
+      { key: 'place', label: 'Lieu', type: 'text' },
+      { key: 'images', label: 'Photos', type: 'images', help: 'Ajoutez une ou plusieurs photos. La première sert de couverture.' },
+      { key: 'summary', label: 'Résumé (affiché sur la carte)', type: 'textarea', required: true },
+      { key: 'body', label: 'Récit complet (affiché avec « Voir plus »)', type: 'textarea' }
+    ]
+  },
   {
     name: 'news', label: 'Actualités', singular: 'actualité', tab: 'Actualités', titleKey: 'title', sortKey: 'date', subtitle: it => `${it.date || ''} · ${it.category || ''}`,
     fields: [
@@ -47,7 +59,8 @@ export const COLLECTION_DEFS: CollectionDef[] = [
       { key: 'code', label: 'Code', type: 'text', help: 'Par exemple : AXE 7' },
       { key: 'title', label: 'Intitulé', type: 'text', required: true },
       { key: 'summary', label: 'Résumé (cartes)', type: 'textarea' },
-      { key: 'description', label: 'Description complète', type: 'textarea' }
+      { key: 'description', label: 'Description complète', type: 'textarea' },
+      { key: 'image', label: 'Image', type: 'image', help: 'Sans image, une illustration aux couleurs du site est créée automatiquement.' }
     ]
   },
   {
@@ -110,4 +123,4 @@ export const COLLECTION_DEFS: CollectionDef[] = [
 ];
 
 /** Keys whose values are never translated (identifiers, dates, links, images) */
-export const UNTRANSLATED = new Set(['id', 'date', 'deadline', 'link', 'url', 'image', 'photo', 'logo', 'axe', 'reference', 'email', 'palette', 'period', 'value', 'researchYear', 'publicationYear']);
+export const UNTRANSLATED = new Set(['id', 'date', 'deadline', 'link', 'url', 'image', 'photo', 'logo', 'axe', 'reference', 'email', 'palette', 'period', 'value', 'researchYear', 'publicationYear', 'images']);

@@ -88,7 +88,7 @@ function Dashboard({ inbox, convos, ai, go }: { inbox: InboxMessage[]; convos: C
     { label: 'publications en ligne', value: content.publications.length, to: 'contenus-publications' },
     { label: 'textes traduits (min.)', value: `${pct} %`, to: 'langues' }
   ];
-  const quick: [string, string][] = [['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Un accompagnement', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un docteur', 'contenus-researchers']];
+  const quick: [string, string][] = [['Une activité (galerie)', 'contenus-gallery'], ['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Un accompagnement', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un docteur', 'contenus-researchers']];
   return (
     <>
       <div className="admin-head"><div><h1>Bonjour</h1><p>Vous êtes connecté en tant qu'administrateur principal. Cet onglet n'est visible que pour vous.</p></div></div>
@@ -125,7 +125,8 @@ const GROUPS: { title: string; fields: SField[] }[] = [
     { key: 'siteName', label: 'Nom court' }, { key: 'fullName', label: 'Nom complet' }, { key: 'tagline', label: 'Signature (sous le logo)' }
   ] },
   { title: "Page d'accueil", fields: [
-    { key: 'heroEyebrow', label: 'Surtitre' }, { key: 'heroTitle', label: 'Titre (début)' }, { key: 'heroHighlight', label: 'Titre (partie mise en valeur)' }, { key: 'heroLead', label: 'Texte d\'introduction', long: true }
+    { key: 'heroTitle', label: 'Titre du disque (début)' }, { key: 'heroHighlight', label: 'Titre du disque (fin, sur une seconde ligne)' }, { key: 'heroLead', label: 'Texte d\'introduction', long: true },
+    { key: 'heroCta', label: 'Texte du bouton (mène aux publications)' }, { key: 'heroImage', label: 'Grande photo de l\'accueil', image: true, help: 'Sans photo, une photo par défaut est affichée.' }
   ] },
   { title: "Onglet L'Institut", fields: [
     { key: 'mission', label: 'Mission', long: true }, { key: 'vision', label: 'Vision', long: true }, { key: 'directorWord', label: 'Mot du Responsable de CapDev', long: true },

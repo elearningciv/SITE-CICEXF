@@ -21,9 +21,9 @@ export function knowledgeText(c: Content) {
     `Mission : ${s.mission}`, `Mot du Responsable de CapDev : ${s.directorWord}`, `Vision : ${s.vision}`, `Gouvernance : ${s.governance}`, `Historique : ${s.history}`,
     `Contact : ${s.address} · ${s.phone} · ${s.email} · ${s.hours} (page /contact)`,
     `Chiffres : ${s.stats.map(x => `${x.value} ${x.label}`).join(', ')}`,
-    '\n## Axes de recherche (page /recherche)',
+    '\n## Axes de recherche (page d’accueil, section axes)',
     ...c.axes.map(a => `- ${a.code} ${a.title} : ${a.description || a.summary}`),
-    '\n## Projets (page /recherche)',
+    '\n## Projets (page d’accueil, section axes)',
     ...c.projects.map(p => `- ${p.title} [${p.status}, ${p.period}, ${axeTitle(c, p.axe)}] : ${p.summary} Partenaires : ${p.partners}`),
     '\n## Publications (page /publications)',
     ...c.publications.map(p => `- ${p.type} « ${p.title} » (${p.authors}, recherche menée en ${p.researchYear}, publié en ${p.publicationYear}, zone : ${p.zone}, réf. ${p.reference}). Description : ${p.description} Résumé : ${p.summary}`),
@@ -39,6 +39,8 @@ export function knowledgeText(c: Content) {
     ...c.events.map(e => `- ${fmtDate(e.date)} · ${e.kind} · ${e.title} (${e.place})`),
     '\n## Opportunités (page /actualites)',
     ...c.opportunities.map(o => `- ${o.kind} : ${o.title}, date limite ${fmtDate(o.deadline)}. ${o.summary}`),
+    '\n## Galerie des activités réalisées (page /galerie)',
+    ...(c.gallery || []).map(g => `- ${fmtDate(g.date)} · ${g.category} · ${g.title} (${g.place}) : ${g.summary} ${g.body}`),
     '\n## Partenaires',
     ...c.partners.map(p => `- ${p.name} (${p.kind})`)
   ];

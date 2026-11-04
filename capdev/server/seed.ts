@@ -8,9 +8,11 @@ export const SEED: Content = {
     fullName: 'Institution de recherche pour le renforcement des capacités et le développement',
     tagline: 'Recherche · Capacités · Développement',
     heroEyebrow: 'Institution de recherche',
-    heroTitle: 'Des données probantes pour',
-    heroHighlight: 'renforcer les capacités',
-    heroLead: "CapDev conduit des recherches appliquées, forme les chercheurs et les cadres, et met ses résultats à la disposition des décideurs publics, des partenaires et des citoyens.",
+    heroTitle: 'Bienvenue à',
+    heroHighlight: 'CapDev',
+    heroLead: "Recherche appliquée, expertise et accompagnement pour renforcer les capacités des institutions et des communautés.",
+    heroImage: '',
+    heroCta: 'Découvrir nos publications',
     assistantName: 'Docteur',
     assistantGreeting: "Bonjour, je suis Docteur, l'assistant virtuel de CapDev. CapDev est une institution de recherche qui conduit des études appliquées, accompagne les institutions dans le renforcement de leurs capacités et publie ses travaux en accès libre. Comment puis-je vous aider ?",
     palette: 'lagune',
@@ -98,6 +100,11 @@ export const SEED: Content = {
     { id: 'pa-4', name: 'Réseau de recherche', kind: 'Réseau', url: '' },
     { id: 'pa-5', name: 'Organisation de la société civile', kind: 'ONG', url: '' },
     { id: 'pa-6', name: 'Entreprise partenaire', kind: 'Secteur privé', url: '' }
+  ],
+  gallery: [
+    { id: 'g-1', title: "Atelier de restitution de l'enquête sur la résilience climatique", category: 'Restitution', date: '2026-10-10', place: 'Exemple à remplacer', summary: "Les premiers résultats de l'enquête de panel sur 1 200 exploitations familiales ont été présentés aux partenaires et aux organisations paysannes.", body: "L'atelier a réuni chercheurs, partenaires techniques et représentants des organisations paysannes. Les échanges ont porté sur les stratégies d'adaptation observées et sur les recommandations pour le conseil agricole. Texte d'exemple : remplacez-le depuis l'Administration.", images: '' },
+    { id: 'g-2', title: "Session de formation à l'évaluation d'impact", category: 'Formation', date: '2026-09-18', place: 'Exemple à remplacer', summary: "Quatre jours de formation pour des cadres de ministères et d'organisations partenaires : cadre logique, méthodes expérimentales et quasi expérimentales.", body: "La session alternait apports méthodologiques, études de cas et exercices pratiques sur logiciel. Chaque participant est reparti avec un plan d'évaluation pour son propre programme. Texte d'exemple : remplacez-le depuis l'Administration.", images: '' },
+    { id: 'g-3', title: 'Signature d\'une convention de partenariat de recherche', category: 'Partenariat', date: '2026-07-02', place: 'Exemple à remplacer', summary: "CapDev et un partenaire universitaire ont signé une convention pour conduire des recherches conjointes et accueillir des stagiaires.", body: "La convention prévoit des projets de recherche communs, la co-publication des résultats et des échanges de chercheurs. Texte d'exemple : remplacez-le depuis l'Administration.", images: '' }
   ],
   translations: {
     en: {}

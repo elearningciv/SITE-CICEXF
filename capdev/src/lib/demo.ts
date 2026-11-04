@@ -5,7 +5,7 @@ import { offlineAnswer } from '../../server/offline';
 import { COLLECTIONS, type Content, type Session } from '../types';
 
 export const DEMO = import.meta.env.VITE_DEMO === '1';
-const KEY = 'capdev_demo_content_v2';
+const KEY = 'capdev_demo_content_v3';
 const DEMO_EMAIL = 'admin@capdev.local';
 const DEMO_PASSWORD = 'capdev-admin';
 
