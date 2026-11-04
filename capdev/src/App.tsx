@@ -5,10 +5,11 @@ import { Footer } from './components/Common';
 import Assistant from './components/Assistant';
 import { SiteProvider, useSite } from './lib/site';
 import { navigate, useLocation } from './lib/router';
-import { NAV } from './lib/nav';
+import { NAV, ALIASES } from './lib/nav';
 import { api } from './lib/api';
 import Home from './pages/Home';
-import { Institut, Recherche, Publications, Chercheurs, Formations, Expertise, Actualites, Opportunites, Contact, NotFound } from './pages/Sections';
+import { Institut, Recherche, Formations, Contact, NotFound } from './pages/Sections';
+import { Publications, Expertise, Actualites } from './pages/Merged';
 import Login from './pages/Login';
 import { EASE } from './components/Motion';
 
@@ -16,8 +17,8 @@ import { EASE } from './components/Motion';
 const Admin = lazy(() => import('./admin/Admin'));
 
 const PAGES: Record<string, React.ComponentType> = {
-  '/': Home, '/institut': Institut, '/recherche': Recherche, '/publications': Publications, '/chercheurs': Chercheurs,
-  '/formations': Formations, '/expertise': Expertise, '/actualites': Actualites, '/opportunites': Opportunites, '/contact': Contact,
+  '/': Home, '/institut': Institut, '/recherche': Recherche, '/publications': Publications,
+  '/formations': Formations, '/expertise': Expertise, '/actualites': Actualites, '/contact': Contact,
   '/connexion': Login
 };
 
@@ -25,6 +26,9 @@ function Shell() {
   const { content, session, t } = useSite();
   const { path, hash } = useLocation();
   const isAdmin = path === '/admin';
+
+  // Former addresses of merged tabs
+  useEffect(() => { if (ALIASES[path]) navigate(ALIASES[path]); }, [path]);
 
   // /admin without an admin session goes to the login page
   useEffect(() => { if (isAdmin && content && !session.admin) { api.session().then(s => { if (!s.admin) navigate('/connexion'); }); } }, [isAdmin, session.admin, content]);
@@ -42,7 +46,7 @@ function Shell() {
     return <div style={{ minHeight: '100dvh', display: 'grid', placeItems: 'center', background: 'var(--deep)' }}><motion.div style={{ width: 48, height: 48, borderRadius: 12, border: '3px solid var(--accent)', borderTopColor: 'transparent' }} animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.9, ease: 'linear' }} /></div>;
   }
 
-  const Page = isAdmin ? null : PAGES[path] || NotFound;
+  const Page = isAdmin || ALIASES[path] ? null : PAGES[path] || NotFound;
   return (
     <>
       <a href="#contenu" className="hp" style={{ position: 'absolute' }} onClick={e => { e.preventDefault(); document.getElementById('contenu')?.focus(); }}>{t('Aller au contenu')}</a>

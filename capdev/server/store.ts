@@ -30,6 +30,16 @@ let content: Content = readJson<Content>('content.json', SEED);
 // New settings added to the seed later are filled in for existing sites
 content.settings = { ...SEED.settings, ...content.settings };
 content.translations ||= {};
+// Earlier format: publications had a date and an axis; researchers had a category (doctoral students included)
+content.publications = content.publications.map((p: any) => ({
+  ...p,
+  publicationYear: p.publicationYear || String(p.date || '').slice(0, 4),
+  researchYear: p.researchYear || String(p.date || '').slice(0, 4),
+  description: p.description ?? p.summary ?? ''
+}));
+content.researchers = content.researchers
+  .filter((r: any) => r.category !== 'Doctorants')
+  .map((r: any) => ({ id: r.id, name: r.name, grade: r.grade || r.title || 'Docteur', specialty: r.specialty || r.bio || '', photo: r.photo }));
 if (!fs.existsSync(path.join(DATA_DIR, 'content.json'))) writeJson('content.json', content);
 
 let inbox: InboxMessage[] = readJson<InboxMessage[]>('inbox.json', []);

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useScroll, useSpring } from 'motion/react';
-import { ArrowRight, ChevronDown, Globe, Menu, Moon, Sun, SunMoon, X, ShieldCheck, Bot } from 'lucide-react';
+import { ChevronDown, Globe, Menu, Moon, Sun, SunMoon, X, ShieldCheck, Bot } from 'lucide-react';
 import { Link, navigate, useLocation } from '../lib/router';
 import { NAV } from '../lib/nav';
 import { LANGUAGES, useSite } from '../lib/site';
@@ -21,11 +21,9 @@ export function BrandMark({ className = 'brand-mark' }: { className?: string }) 
 export default function Header() {
   const { content, t, lang, setLang, mode, setMode, session, openAssistant } = useSite();
   const { path } = useLocation();
-  const [open, setOpen] = useState<string | null>(null);
   const [drawer, setDrawer] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30 });
 
@@ -34,9 +32,9 @@ export default function Header() {
     on(); window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
-  useEffect(() => { setOpen(null); setDrawer(false); setLangOpen(false); }, [path]);
+  useEffect(() => { setDrawer(false); setLangOpen(false); }, [path]);
   useEffect(() => {
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(null); setDrawer(false); setLangOpen(false); } };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { setDrawer(false); setLangOpen(false); } };
     window.addEventListener('keydown', esc);
     return () => window.removeEventListener('keydown', esc);
   }, []);
@@ -44,15 +42,9 @@ export default function Header() {
   const s = content?.settings;
   const languages = s?.languages || ['fr'];
   const activeTab = NAV.find(n => path.startsWith(n.path));
-  const openTab = NAV.find(n => n.id === open);
   const nextMode = mode === 'system' ? 'light' : mode === 'light' ? 'dark' : 'system';
   const ModeIcon = mode === 'system' ? SunMoon : mode === 'light' ? Sun : Moon;
   const modeLabel = mode === 'system' ? t('Thème automatique') : mode === 'light' ? t('Thème clair') : t('Thème sombre');
-
-  const hover = (id: string | null) => {
-    clearTimeout(closeTimer.current);
-    if (id) setOpen(id); else closeTimer.current = setTimeout(() => setOpen(null), 160);
-  };
 
   return (
     <>
@@ -86,7 +78,7 @@ export default function Header() {
         </div>
       </div>
 
-      <header className={`site-header${scrolled ? ' scrolled' : ''}`} onMouseLeave={() => hover(null)}>
+      <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
         <div className="container bar">
           <Link to="/" className="brand" aria-label={`${s?.siteName || 'CapDev'}, ${t('Accueil')}`}>
             <BrandMark />
@@ -97,15 +89,14 @@ export default function Header() {
             {NAV.map(tab => {
               const active = activeTab?.id === tab.id;
               return (
-                <Link key={tab.id} to={tab.path} className={`nav-tab${active ? ' active' : ''}`}
-                  aria-expanded={open === tab.id} onMouseEnter={() => hover(tab.id)} onFocus={() => hover(tab.id)}>
+                <Link key={tab.id} to={tab.path} className={`nav-tab${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
                   {t(tab.label)}
                   {active && <motion.span layoutId="nav-indicator" className="nav-indicator" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
                 </Link>
               );
             })}
             {session.admin && (
-              <Link to="/admin" className={`nav-tab admin-tab${path.startsWith('/admin') ? ' active' : ''}`} onMouseEnter={() => hover(null)}>
+              <Link to="/admin" className={`nav-tab admin-tab${path.startsWith('/admin') ? ' active' : ''}`}>
                 <ShieldCheck /> Administration
               </Link>
             )}
@@ -117,28 +108,6 @@ export default function Header() {
           <button className="menu-toggle" type="button" aria-label={t('Ouvrir le menu')} onClick={() => setDrawer(true)}><Menu /></button>
         </div>
 
-        <AnimatePresence>
-          {openTab && (
-            <motion.div key="mega" className="mega" onMouseEnter={() => hover(openTab.id)}
-              initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: EASE }}>
-              <div className="container">
-                <motion.div key={openTab.id + '-intro'} className="mega-intro" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.35, ease: EASE }}>
-                  <span className="mono">capdev.org{openTab.path}</span>
-                  <h3 className="h-md">{t(openTab.label)}</h3>
-                  <p className="muted">{t(openTab.intro)}</p>
-                  <Link to={openTab.path} className="link-arrow">{t('Ouvrir la rubrique')} <ArrowRight /></Link>
-                </motion.div>
-                <div className="mega-links">
-                  {openTab.items.map((it, i) => (
-                    <motion.div key={openTab.id + it.to + i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: EASE, delay: 0.03 * i }}>
-                      <Link to={it.to}>{t(it.label)} <ArrowRight /></Link>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       <AnimatePresence>
@@ -153,11 +122,9 @@ export default function Header() {
               </div>
               <Link to="/" className="direct">{t('Accueil')}</Link>
               {NAV.map((tab, i) => (
-                <motion.details key={tab.id} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i + 0.1, duration: 0.4, ease: EASE }}>
-                  <summary>{t(tab.label)} <ChevronDown /></summary>
-                  <Link to={tab.path}>{t('Vue d\'ensemble')}</Link>
-                  {tab.items.map((it, j) => <Link key={j} to={it.to}>{t(it.label)}</Link>)}
-                </motion.details>
+                <motion.div key={tab.id} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i + 0.1, duration: 0.4, ease: EASE }}>
+                  <Link to={tab.path} className="direct" aria-current={activeTab?.id === tab.id ? 'page' : undefined}>{t(tab.label)}</Link>
+                </motion.div>
               ))}
               {session.admin && <Link to="/admin" className="direct" style={{ color: 'var(--primary)' }}>Administration</Link>}
               <button className="btn btn-accent" style={{ marginTop: 18, justifyContent: 'center' }} type="button" onClick={() => { setDrawer(false); openAssistant(); }}>

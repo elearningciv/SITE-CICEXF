@@ -1,6 +1,6 @@
 import type { CollectionName } from '../types';
 
-export type FieldType = 'text' | 'textarea' | 'date' | 'select' | 'axe' | 'image' | 'url';
+export type FieldType = 'text' | 'textarea' | 'date' | 'year' | 'select' | 'axe' | 'image' | 'url';
 export interface Field { key: string; label: string; type: FieldType; options?: string[]; required?: boolean; help?: string }
 export interface CollectionDef { name: CollectionName; label: string; singular: string; tab: string; titleKey: string; subtitle: (it: Record<string, string>) => string; fields: Field[]; sortKey?: string }
 
@@ -26,16 +26,18 @@ export const COLLECTION_DEFS: CollectionDef[] = [
     ]
   },
   {
-    name: 'publications', label: 'Publications', singular: 'publication', tab: 'Publications', titleKey: 'title', sortKey: 'date', subtitle: it => `${it.type || ''} · ${it.reference || ''}`,
+    name: 'publications', label: 'Publications', singular: 'publication', tab: 'Publications', titleKey: 'title', sortKey: 'publicationYear', subtitle: it => `${it.type || ''} · publiée en ${it.publicationYear || '—'}`,
     fields: [
       { key: 'title', label: 'Titre', type: 'text', required: true },
       { key: 'type', label: 'Type', type: 'select', options: ['Article', 'Document de travail', 'Policy brief', 'Rapport', 'Ouvrage', 'Chapitre'] },
+      { key: 'image', label: 'Image', type: 'image', help: 'Sans image, une couverture aux couleurs du site est créée automatiquement.' },
+      { key: 'description', label: 'Description (texte court affiché sur la carte)', type: 'textarea', required: true },
+      { key: 'summary', label: 'Résumé', type: 'textarea', required: true },
+      { key: 'researchYear', label: 'Année de recherche', type: 'year', required: true },
+      { key: 'publicationYear', label: 'Année de publication', type: 'year', required: true },
       { key: 'authors', label: 'Auteurs', type: 'text' },
-      { key: 'date', label: 'Date de publication', type: 'date' },
       { key: 'reference', label: 'Référence (DOI, numéro…)', type: 'text' },
-      { key: 'axe', label: 'Axe de recherche', type: 'axe' },
-      { key: 'summary', label: 'Résumé', type: 'textarea' },
-      { key: 'link', label: 'Lien vers le PDF', type: 'url', help: 'Adresse du fichier en ligne (Google Drive, site, dépôt…).' }
+      { key: 'link', label: 'Lien vers le document (PDF)', type: 'url', help: 'Adresse du fichier en ligne (Google Drive, site, dépôt…).' }
     ]
   },
   {
@@ -59,14 +61,12 @@ export const COLLECTION_DEFS: CollectionDef[] = [
     ]
   },
   {
-    name: 'researchers', label: 'Chercheurs', singular: 'chercheur', tab: 'Chercheurs', titleKey: 'name', subtitle: it => `${it.category || ''} · ${it.title || ''}`,
+    name: 'researchers', label: 'Docteurs', singular: 'docteur', tab: 'Expertise', titleKey: 'name', subtitle: it => `${it.grade || ''} · ${it.specialty || ''}`,
     fields: [
-      { key: 'name', label: 'Nom et prénom', type: 'text', required: true },
-      { key: 'title', label: 'Fonction', type: 'text' },
-      { key: 'category', label: 'Catégorie', type: 'select', options: ['Équipe de direction', 'Chercheurs permanents', 'Chercheurs associés', 'Doctorants', 'Personnel d\'appui'] },
-      { key: 'axe', label: 'Axe de rattachement', type: 'axe' },
-      { key: 'bio', label: 'Présentation', type: 'textarea' },
-      { key: 'photo', label: 'Photo', type: 'image' }
+      { key: 'name', label: 'Nom et prénoms', type: 'text', required: true },
+      { key: 'grade', label: 'Grade', type: 'select', options: ['Professeur titulaire', 'Maître de conférences', 'Maître-assistant', 'Directeur de recherche', 'Maître de recherche', 'Chargé de recherche', 'Docteur'] },
+      { key: 'specialty', label: 'Spécialité', type: 'text', required: true },
+      { key: 'photo', label: 'Photo', type: 'image', help: 'Affichée sur le site sans possibilité de téléchargement par clic droit ou glisser-déposer.' }
     ]
   },
   {
@@ -89,7 +89,7 @@ export const COLLECTION_DEFS: CollectionDef[] = [
     ]
   },
   {
-    name: 'opportunities', label: 'Opportunités', singular: 'opportunité', tab: 'Opportunités', titleKey: 'title', sortKey: 'deadline', subtitle: it => `${it.kind || ''} · limite ${it.deadline || '—'}`,
+    name: 'opportunities', label: 'Opportunités', singular: 'opportunité', tab: 'Actualités', titleKey: 'title', sortKey: 'deadline', subtitle: it => `${it.kind || ''} · limite ${it.deadline || '—'}`,
     fields: [
       { key: 'title', label: 'Intitulé', type: 'text', required: true },
       { key: 'kind', label: 'Type', type: 'select', options: ['Appel à projets', 'Appel à communications', 'Bourse', 'Stage', 'Recrutement'] },
@@ -109,4 +109,4 @@ export const COLLECTION_DEFS: CollectionDef[] = [
 ];
 
 /** Keys whose values are never translated (identifiers, dates, links, images) */
-export const UNTRANSLATED = new Set(['id', 'date', 'deadline', 'link', 'url', 'image', 'photo', 'logo', 'axe', 'reference', 'email', 'palette', 'period', 'value']);
+export const UNTRANSLATED = new Set(['id', 'date', 'deadline', 'link', 'url', 'image', 'photo', 'logo', 'axe', 'reference', 'email', 'palette', 'period', 'value', 'researchYear', 'publicationYear']);

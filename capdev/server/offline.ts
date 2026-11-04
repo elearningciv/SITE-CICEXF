@@ -15,13 +15,13 @@ function docs(c: Content): Doc[] {
   return [
     ...c.axes.map(a => ({ kind: 'Axe de recherche', title: `${a.code} · ${a.title}`, text: `${a.summary} ${a.description}`, page: '/recherche' })),
     ...c.projects.map(p => ({ kind: 'Projet', title: p.title, text: `${p.summary} ${p.status} ${axeTitle(c, p.axe)}`, page: '/recherche' })),
-    ...c.publications.map(p => ({ kind: p.type, title: p.title, text: `${p.summary} ${p.authors} ${p.reference} publication ${axeTitle(c, p.axe)}`, page: '/publications' })),
+    ...c.publications.map(p => ({ kind: p.type, title: p.title, text: `${p.description} ${p.summary} ${p.authors} ${p.reference} publication ${p.publicationYear}`, page: '/publications' })),
     ...c.formations.map(f => ({ kind: 'Formation', title: f.title, text: `${f.summary} formation seminaire ${f.duration} ${f.mode} ${f.status} ${f.date ? fmtDate(f.date) : ''}`, page: '/formations' })),
     ...c.services.map(x => ({ kind: 'Expertise', title: x.title, text: `${x.summary} etude evaluation expertise`, page: '/expertise' })),
-    ...c.opportunities.map(o => ({ kind: o.kind, title: o.title, text: `${o.summary} opportunite ${o.kind} date limite ${fmtDate(o.deadline)}`, page: '/opportunites' })),
+    ...c.opportunities.map(o => ({ kind: o.kind, title: o.title, text: `${o.summary} opportunite ${o.kind} date limite ${fmtDate(o.deadline)}`, page: '/actualites' })),
     ...c.news.map(n => ({ kind: 'Actualité', title: n.title, text: `${n.summary} actualite ${n.category}`, page: '/actualites' })),
     ...c.events.map(e => ({ kind: e.kind, title: e.title, text: `${e.place} agenda evenement ${fmtDate(e.date)}`, page: '/actualites' })),
-    ...c.researchers.map(r => ({ kind: 'Chercheur', title: r.name, text: `${r.title} ${r.category} ${r.bio} chercheur equipe ${axeTitle(c, r.axe)}`, page: '/chercheurs' }))
+    ...c.researchers.map(r => ({ kind: 'Docteur', title: `${r.name} (${r.grade})`, text: `${r.specialty} ${r.grade} docteur chercheur expert equipe`, page: '/expertise' }))
   ];
 }
 
@@ -53,7 +53,7 @@ export function offlineAnswer(c: Content, message: string, lang: string): string
   }
   if (/(bourse|stage|appel|recrut|opportun|candidat|scholarship|internship|grant|job)/.test(q)) {
     const list = [...c.opportunities].sort((a, b) => a.deadline.localeCompare(b.deadline));
-    return `${en ? 'Current opportunities' : 'Opportunités en cours'} :\n${bullets(list.map(o => `**${tr(o.title)}** (${tr(o.kind)}) — ${en ? 'deadline' : 'date limite'} ${fmtDate(o.deadline)}`))}\n\n(page /opportunites)`;
+    return `${en ? 'Current opportunities' : 'Opportunités en cours'} :\n${bullets(list.map(o => `**${tr(o.title)}** (${tr(o.kind)}) — ${en ? 'deadline' : 'date limite'} ${fmtDate(o.deadline)}`))}\n\n(page /actualites)`;
   }
   if (/(agenda|evenement|colloque|conference|event)/.test(q)) {
     const list = [...c.events].sort((a, b) => a.date.localeCompare(b.date));
@@ -63,11 +63,11 @@ export function offlineAnswer(c: Content, message: string, lang: string): string
     return `${en ? 'Our research areas' : 'Nos axes de recherche'} :\n${bullets(c.axes.map(a => `**${tr(a.title)}** — ${tr(a.summary)}`))}\n\n(page /recherche)`;
   }
   if (/(publication|article|rapport|policy|brief|document de travail|working paper|report)/.test(q) && !searchIn('pub')) {
-    const list = [...c.publications].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 5);
-    return `${en ? 'Latest publications' : 'Dernières publications'} :\n${bullets(list.map(p => `**${tr(p.title)}** (${tr(p.type)}, ${fmtDate(p.date)})`))}\n\n(page /publications)`;
+    const list = [...c.publications].sort((a, b) => b.publicationYear.localeCompare(a.publicationYear)).slice(0, 5);
+    return `${en ? 'Latest publications' : 'Dernières publications'} :\n${bullets(list.map(p => `**${tr(p.title)}** (${tr(p.type)}, ${p.publicationYear})`))}\n\n(page /publications)`;
   }
-  if (/(chercheur|equipe|researcher|team|directeur)/.test(q)) {
-    return `${en ? 'Our team' : 'Notre équipe'} :\n${bullets(c.researchers.slice(0, 6).map(r => `**${tr(r.name)}** — ${tr(r.title)}`))}\n\n(page /chercheurs)`;
+  if (/(chercheur|equipe|researcher|team|docteur|expert|specialis)/.test(q)) {
+    return `${en ? 'Our doctors' : 'Nos docteurs'} :\n${bullets(c.researchers.slice(0, 8).map(r => `**${tr(r.name)}** — ${tr(r.grade)}, ${tr(r.specialty)}`))}\n\n(page /expertise)`;
   }
 
   const qt = tokens(message);

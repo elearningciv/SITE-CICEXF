@@ -55,7 +55,7 @@ function CollectionEditor({ def, content, onSaved }: { def: CollectionDef; conte
     finally { setSaving(false); }
   };
 
-  const blank = (): Row => Object.fromEntries(def.fields.map(f => [f.key, f.type === 'select' ? f.options?.[0] || '' : f.type === 'date' && def.sortKey === f.key ? new Date().toISOString().slice(0, 10) : '']));
+  const blank = (): Row => Object.fromEntries(def.fields.map(f => [f.key, f.type === 'select' ? f.options?.[0] || '' : f.type === 'year' ? String(new Date().getFullYear()) : f.type === 'date' && def.sortKey === f.key ? new Date().toISOString().slice(0, 10) : '']));
 
   const submit = async () => {
     if (!editing) return;
@@ -141,6 +141,7 @@ function CollectionEditor({ def, content, onSaved }: { def: CollectionDef; conte
                         {content.axes.map(a => <option key={a.id} value={a.id}>{a.code} · {a.title}</option>)}
                       </select>
                     ) : f.type === 'image' ? <ImageInput id={id} value={v} onChange={set} />
+                    : f.type === 'year' ? <input id={id} type="number" inputMode="numeric" min="1950" max="2100" step="1" placeholder="2026" value={v} onChange={e => set(e.target.value.slice(0, 4))} />
                     : <input id={id} type={f.type === 'date' ? 'date' : f.type === 'url' ? 'url' : 'text'} value={v} onChange={e => set(e.target.value)} />}
                   {f.help && <span className="help">{f.help}</span>}
                 </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import type { Publication } from '../types';
+import { PubCard, PubModal } from '../components/PubCard';
 import { motion } from 'motion/react';
-import { ArrowRight, Search, FileText } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { Link, navigate } from '../lib/router';
 import { useSite, LANGUAGES } from '../lib/site';
 import { Counter, EASE, Item, NetworkCanvas, Reveal, Stagger } from '../components/Motion';
@@ -10,9 +12,10 @@ import { AxeGlyph } from './shared';
 export default function Home() {
   const { content, t, fmtDate, lang, openAssistant } = useSite();
   const [q, setQ] = useState('');
+  const [openPub, setOpenPub] = useState<Publication | null>(null);
   if (!content) return null;
   const s = content.settings;
-  const pubs = [...content.publications].sort((a, b) => b.date.localeCompare(a.date));
+  const pubs = [...content.publications].sort((a, b) => (b.publicationYear || '').localeCompare(a.publicationYear || ''));
   const featured = pubs[0];
   const today = new Date().toISOString().slice(0, 10);
   const events = [...content.events].filter(e => e.date >= today).sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4);
@@ -46,7 +49,7 @@ export default function Home() {
               {[
                 [t('Policy briefs'), '/publications#policy-brief'],
                 [t('Formations'), '/formations'],
-                [t('Appels et bourses'), '/opportunites'],
+                [t('Appels et bourses'), '/actualites#opportunites'],
                 [t('Demander une étude'), '/expertise#demande']
               ].map(([label, to]) => (
                 <motion.button key={to} type="button" onClick={() => navigate(to)} variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}>{label}</motion.button>
@@ -60,9 +63,9 @@ export default function Home() {
               <Sparkline />
               <span className="tag" style={{ justifySelf: 'start' }}>{t(featured.type)}</span>
               <h3>{t(featured.title)}</h3>
-              <p className="muted" style={{ fontFamily: 'var(--f-body)' }}>{t(featured.summary)}</p>
-              <div className="meta"><span>{t(featured.authors)}</span><span>{fmtDate(featured.date)}</span></div>
-              <Link to="/publications" className="link-arrow">{t('Lire la publication')} <ArrowRight /></Link>
+              <p className="muted" style={{ fontFamily: 'var(--f-body)' }}>{t(featured.description)}</p>
+              <div className="meta"><span>{t(featured.authors)}</span><span>{t('Publié en')} {featured.publicationYear}</span></div>
+              <button type="button" className="link-arrow" style={{ background: 'none', border: 0, padding: 0, justifySelf: 'start' }} onClick={() => setOpenPub(featured)}>{t('Lire la publication')} <ArrowRight /></button>
             </motion.article>
           )}
         </div>
@@ -95,30 +98,30 @@ export default function Home() {
       </section>
 
       <section className="section" style={{ paddingTop: 0 }}>
-        <div className="container grid split" style={{ gridTemplateColumns: 'minmax(0,1.55fr) minmax(0,1fr)', gap: 40 }}>
-          <div>
-            <SectionHead eyebrow={t('Bibliothèque')} title={t('Publications récentes')} action={<Link to="/publications" className="link-arrow">{t('Toutes les publications')} <ArrowRight /></Link>} />
-            <Stagger className="pub-list">
-              {pubs.slice(0, 4).map(p => (
-                <Item key={p.id} className="pub">
-                  <div style={{ display: 'grid', gap: 8, justifyItems: 'start' }}><span className="tag">{t(p.type)}</span><span className="date">{fmtDate(p.date, { month: 'long', year: 'numeric' })}</span></div>
-                  <div><h3>{t(p.title)}</h3><p className="by">{t(p.authors)}</p><p className="ref mono">{p.reference}</p></div>
-                  {p.link ? <a className="chip" href={p.link} target="_blank" rel="noreferrer"><FileText size={14} /> PDF</a> : <span />}
-                </Item>
-              ))}
-            </Stagger>
-          </div>
-          <Reveal className="band on-deep" delay={0.1}>
-            <span className="eyebrow">{t('Agenda')}</span>
-            <h3 className="h-md" style={{ margin: '12px 0 8px', color: 'var(--on-deep)' }}>{t('Agenda scientifique')}</h3>
+        <div className="container">
+          <SectionHead eyebrow={t('Bibliothèque')} title={t('Publications récentes')} action={<Link to="/publications" className="link-arrow">{t('Toutes les publications')} <ArrowRight /></Link>} />
+          <Stagger className="pub-grid">
+            {pubs.slice(0, 3).map(p => <Item key={p.id}><PubCard pub={p} onOpen={() => setOpenPub(p)} /></Item>)}
+          </Stagger>
+        </div>
+      </section>
+
+      <section className="section" style={{ paddingTop: 0 }}>
+        <div className="container">
+          <Reveal className="band on-deep">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'end', gap: 16, flexWrap: 'wrap' }}>
+              <div><span className="eyebrow">{t('Agenda')}</span><h3 className="h-md" style={{ margin: '12px 0 8px', color: 'var(--on-deep)' }}>{t('Agenda scientifique')}</h3></div>
+              <Link to="/actualites#agenda" className="link-arrow" style={{ color: 'var(--accent)' }}>{t("Tout l'agenda")} <ArrowRight /></Link>
+            </div>
             {events.length === 0 && <p className="muted">{t('Aucun événement programmé pour le moment.')}</p>}
-            {events.map((e, i) => (
-              <motion.div key={e.id} className="event" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 * i + 0.2, duration: 0.6, ease: EASE }}>
-                <div className="d"><b>{fmtDate(e.date, { day: '2-digit' })}</b><span>{fmtDate(e.date, { month: 'short' })}</span></div>
-                <div><h4>{t(e.title)}</h4><p>{t(e.kind)} · {t(e.place)}</p></div>
-              </motion.div>
-            ))}
-            <Link to="/actualites#agenda" className="link-arrow" style={{ color: 'var(--accent)', marginTop: 14 }}>{t("Tout l'agenda")} <ArrowRight /></Link>
+            <div className="grid g-2" style={{ columnGap: 40, rowGap: 0 }}>
+              {events.map((e, i) => (
+                <motion.div key={e.id} className="event" initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 * i + 0.2, duration: 0.6, ease: EASE }}>
+                  <div className="d"><b>{fmtDate(e.date, { day: '2-digit' })}</b><span>{fmtDate(e.date, { month: 'short' })}</span></div>
+                  <div><h4>{t(e.title)}</h4><p>{t(e.kind)} · {t(e.place)}</p></div>
+                </motion.div>
+              ))}
+            </div>
           </Reveal>
         </div>
       </section>
@@ -169,6 +172,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <PubModal pub={openPub} onClose={() => setOpenPub(null)} />
     </>
   );
 }

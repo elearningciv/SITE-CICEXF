@@ -88,7 +88,7 @@ function Dashboard({ inbox, convos, ai, go }: { inbox: InboxMessage[]; convos: C
     { label: 'publications en ligne', value: content.publications.length, to: 'contenus-publications' },
     { label: 'textes traduits (min.)', value: `${pct} %`, to: 'langues' }
   ];
-  const quick: [string, string][] = [['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Une formation', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un chercheur', 'contenus-researchers']];
+  const quick: [string, string][] = [['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Une formation', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un docteur', 'contenus-researchers']];
   return (
     <>
       <div className="admin-head"><div><h1>Bonjour</h1><p>Vous êtes connecté en tant qu'administrateur principal. Cet onglet n'est visible que pour vous.</p></div></div>

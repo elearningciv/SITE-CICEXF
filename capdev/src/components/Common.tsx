@@ -108,11 +108,11 @@ export function Footer() {
         </div>
         <div>
           <h5>{t("L'Institut")}</h5>
-          <ul>{NAV.slice(0, 5).map(n => <li key={n.id}><Link to={n.path}>{t(n.label)}</Link></li>)}</ul>
+          <ul>{NAV.slice(0, 4).map(n => <li key={n.id}><Link to={n.path}>{t(n.label)}</Link></li>)}</ul>
         </div>
         <div>
           <h5>{t('Ressources')}</h5>
-          <ul>{NAV.slice(5).map(n => <li key={n.id}><Link to={n.path}>{t(n.label)}</Link></li>)}</ul>
+          <ul>{NAV.slice(4).map(n => <li key={n.id}><Link to={n.path}>{t(n.label)}</Link></li>)}</ul>
         </div>
         <div>
           <h5>{t("Lettre d'information")}</h5>
