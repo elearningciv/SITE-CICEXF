@@ -48,7 +48,10 @@ export function SiteProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session>({ admin: false });
   const [lang, setLangState] = useState(() => readPref('capdev_lang', 'fr'));
   const [mode, setModeState] = useState<Mode>(() => readPref('capdev_mode', 'system') as Mode);
-  const [systemDark, setSystemDark] = useState(() => window.matchMedia('(prefers-color-scheme: dark)').matches);
+  const [systemDark, setSystemDark] = useState(() => {
+    const forced = document.documentElement.getAttribute('data-theme');
+    return forced ? forced === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [preview, setPreview] = useState<PaletteId | null>(null);
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null);

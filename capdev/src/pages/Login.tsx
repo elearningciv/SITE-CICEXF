@@ -5,6 +5,7 @@ import { useSite } from '../lib/site';
 import { api } from '../lib/api';
 import { navigate } from '../lib/router';
 import { EASE } from '../components/Motion';
+import { DEMO } from '../lib/demo';
 
 export default function Login() {
   const { session, setSession } = useSite();
@@ -30,6 +31,7 @@ export default function Login() {
           <h1 style={{ fontSize: 26 }}>Espace administrateur</h1>
           <p className="muted">Réservé à l'administrateur principal de CapDev. Une fois connecté, l'onglet « Administration » apparaît dans le menu.</p>
         </div>
+        {DEMO && <div className="notice ok">Version de démonstration : e-mail <b>admin@capdev.local</b>, mot de passe <b>capdev-admin</b>. Vos changements restent dans votre navigateur.</div>}
         <div className="form">
           <div className="field"><label htmlFor="login-email">E-mail</label><input id="login-email" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></div>
           <div className="field"><label htmlFor="login-pass">Mot de passe</label><input id="login-pass" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></div>

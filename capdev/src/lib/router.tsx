@@ -1,14 +1,21 @@
 import React, { useEffect, useSyncExternalStore } from 'react';
+import { DEMO } from './demo';
 
 // Minimal router: one address per tab (/institut, /publications…), history API, scroll restoration.
 
 const listeners = new Set<() => void>();
-const subscribe = (fn: () => void) => { listeners.add(fn); window.addEventListener('popstate', fn); return () => { listeners.delete(fn); window.removeEventListener('popstate', fn); }; };
-const snapshot = () => window.location.pathname + window.location.hash;
+// In the demonstration build the address lives in the hash: "/institut#mission" is written "#institut--mission"
+const toHash = (to: string) => { const [p, h] = to.split('#'); const base = p.replace(/^\/+|\/+$/g, ''); return '#' + (base || 'accueil') + (h ? '--' + h : ''); };
+const fromHash = () => { const raw = window.location.hash.slice(1); if (!raw) return '/'; const [p, h] = raw.split('--'); return '/' + (p === 'accueil' ? '' : p) + (h ? '#' + h : ''); };
+const EVT = DEMO ? 'hashchange' : 'popstate';
+const subscribe = (fn: () => void) => { listeners.add(fn); window.addEventListener(EVT, fn); return () => { listeners.delete(fn); window.removeEventListener(EVT, fn); }; };
+const snapshot = () => (DEMO ? fromHash() : window.location.pathname + window.location.hash);
+export const hrefFor = (to: string) => (DEMO ? toHash(to) : to);
 
 export function navigate(to: string) {
   if (to === snapshot()) return;
-  window.history.pushState({}, '', to);
+  if (DEMO) window.location.hash = toHash(to).slice(1);
+  else window.history.pushState({}, '', to);
   listeners.forEach(fn => fn());
   const hash = to.split('#')[1];
   if (hash) requestAnimationFrame(() => setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350));
@@ -24,7 +31,7 @@ export function useLocation() {
 export function Link({ to, children, onClick, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { to: string }) {
   return (
     <a
-      href={to}
+      href={hrefFor(to)}
       {...rest}
       onClick={e => {
         onClick?.(e);

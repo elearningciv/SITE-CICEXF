@@ -1,6 +1,8 @@
 import type { Content, Session } from '../types';
+import { DEMO, demoRequest } from './demo';
 
 async function request<T>(method: string, url: string, body?: unknown): Promise<T> {
+  if (DEMO) return demoRequest(method, url, body) as Promise<T>;
   const res = await fetch(url, {
     method,
     credentials: 'same-origin',

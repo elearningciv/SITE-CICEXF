@@ -6,6 +6,7 @@ import Assistant from './components/Assistant';
 import { SiteProvider, useSite } from './lib/site';
 import { navigate, useLocation } from './lib/router';
 import { NAV } from './lib/nav';
+import { api } from './lib/api';
 import Home from './pages/Home';
 import { Institut, Recherche, Publications, Chercheurs, Formations, Expertise, Actualites, Opportunites, Contact, NotFound } from './pages/Sections';
 import Login from './pages/Login';
@@ -26,7 +27,7 @@ function Shell() {
   const isAdmin = path === '/admin';
 
   // /admin without an admin session goes to the login page
-  useEffect(() => { if (isAdmin && content && !session.admin) { fetch('/api/session').then(r => r.json()).then(s => { if (!s.admin) navigate('/connexion'); }); } }, [isAdmin, session.admin, content]);
+  useEffect(() => { if (isAdmin && content && !session.admin) { api.session().then(s => { if (!s.admin) navigate('/connexion'); }); } }, [isAdmin, session.admin, content]);
 
   useEffect(() => {
     const tab = NAV.find(n => n.path === path);
@@ -44,10 +45,10 @@ function Shell() {
   const Page = isAdmin ? null : PAGES[path] || NotFound;
   return (
     <>
-      <a href="#contenu" className="hp" style={{ position: 'absolute' }}>{t('Aller au contenu')}</a>
+      <a href="#contenu" className="hp" style={{ position: 'absolute' }} onClick={e => { e.preventDefault(); document.getElementById('contenu')?.focus(); }}>{t('Aller au contenu')}</a>
       <Header />
       <AnimatePresence mode="wait">
-        <motion.main id="contenu" key={path} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.45, ease: EASE }}>
+        <motion.main id="contenu" tabIndex={-1} key={path} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.45, ease: EASE }}>
           {isAdmin ? (session.admin ? <Suspense fallback={null}><Admin /></Suspense> : null) : Page && <Page />}
         </motion.main>
       </AnimatePresence>
