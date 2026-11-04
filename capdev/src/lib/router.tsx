@@ -18,7 +18,10 @@ export function navigate(to: string) {
   else window.history.pushState({}, '', to);
   listeners.forEach(fn => fn());
   const hash = to.split('#')[1];
-  if (hash) requestAnimationFrame(() => setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350));
+  // A section named in the address is scrolled into view; a sub-tab (no such section) opens at the top
+  const target = hash ? document.getElementById(hash) : null;
+  if (hash && target) requestAnimationFrame(() => setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 350));
+  else if (hash) requestAnimationFrame(() => setTimeout(() => { const el = document.getElementById(hash); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); else window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior }); }, 60));
   else window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
 }
 

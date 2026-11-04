@@ -88,11 +88,20 @@ export default function Header() {
           <nav className="nav" aria-label={t('Navigation principale')}>
             {NAV.map(tab => {
               const active = activeTab?.id === tab.id;
-              return (
+              const link = (
                 <Link key={tab.id} to={tab.path} className={`nav-tab${active ? ' active' : ''}`} aria-current={active ? 'page' : undefined}>
-                  {t(tab.label)}
+                  {t(tab.label)}{tab.subs && <ChevronDown className="nav-caret" />}
                   {active && <motion.span layoutId="nav-indicator" className="nav-indicator" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
                 </Link>
+              );
+              if (!tab.subs) return link;
+              return (
+                <div key={tab.id} className="nav-group">
+                  {link}
+                  <div className="nav-pop" role="menu">
+                    {tab.subs.map(sub => <Link key={sub.to} to={sub.to} role="menuitem">{t(sub.label)}</Link>)}
+                  </div>
+                </div>
               );
             })}
             {session.admin && (
@@ -124,6 +133,7 @@ export default function Header() {
               {NAV.map((tab, i) => (
                 <motion.div key={tab.id} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i + 0.1, duration: 0.4, ease: EASE }}>
                   <Link to={tab.path} className="direct" aria-current={activeTab?.id === tab.id ? 'page' : undefined}>{t(tab.label)}</Link>
+                  {tab.subs && <div className="drawer-subs">{tab.subs.map(sub => <Link key={sub.to} to={sub.to}>{t(sub.label)}</Link>)}</div>}
                 </motion.div>
               ))}
               {session.admin && <Link to="/admin" className="direct" style={{ color: 'var(--primary)' }}>Administration</Link>}

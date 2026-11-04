@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { CalendarDays, FileText, FlaskConical, X, BookOpen, UserRound } from 'lucide-react';
+import { CalendarDays, FileText, FlaskConical, X, BookOpen, UserRound, MapPin } from 'lucide-react';
 import type { Publication } from '../types';
 import { useSite } from '../lib/site';
 import { EASE } from './Motion';
@@ -28,8 +28,8 @@ export function PubCover({ pub }: { pub: Publication }) {
       <rect width="400" height="230" fill={`url(#g-${pub.id})`} />
       {lines.map((d, i) => <path key={i} d={d} fill="none" stroke={i === 2 ? 'var(--accent)' : 'var(--on-deep)'} strokeOpacity={i === 2 ? 0.7 : 0.14} strokeWidth={i === 2 ? 2 : 1} />)}
       {bars.map((v, i) => <rect key={i} x={250 + i * 14} y={200 - v} width="8" height={v} rx="2" fill={i === bars.length - 1 ? 'var(--accent)' : 'var(--primary)'} opacity={0.85} />)}
-      <text x="24" y="44" fill="var(--accent)" fontFamily="IBM Plex Mono, monospace" fontSize="13" letterSpacing="1">{pub.reference}</text>
-      <text x="24" y="200" fill="var(--on-deep)" fontFamily="Archivo, sans-serif" fontWeight="800" fontSize="34" opacity="0.92">{pub.publicationYear}</text>
+      <text x="24" y="44" fill="var(--accent)" fontFamily="Montserrat, sans-serif" fontWeight="600" fontSize="13" letterSpacing="1">{pub.reference}</text>
+      <text x="24" y="200" fill="var(--on-deep)" fontFamily="Montserrat, sans-serif" fontWeight="800" fontSize="34" opacity="0.92">{pub.publicationYear}</text>
     </svg>
   );
 }
@@ -46,6 +46,7 @@ export function PubCard({ pub, onOpen }: { pub: Publication; onOpen: () => void 
             <span className="pub-badge">{t(pub.type)}</span>
           </div>
           <h3>{t(pub.title)}</h3>
+          {pub.zone && <span className="pub-zone"><MapPin size={14} /> {t(pub.zone)}</span>}
           <p>{t(pub.description)}</p>
           <div className="pub-foot">
             <span><CalendarDays size={14} /> {t('Publié en')} {pub.publicationYear}</span>
@@ -80,6 +81,7 @@ export function PubModal({ pub, onClose }: { pub: Publication | null; onClose: (
               <dl className="pub-facts">
                 <div><dt>{t('Année de recherche')}</dt><dd>{pub.researchYear || '—'}</dd></div>
                 <div><dt>{t('Année de publication')}</dt><dd>{pub.publicationYear || '—'}</dd></div>
+                <div><dt>{t('Zone de recherche ou d\'intervention')}</dt><dd style={{ fontSize: 15 }}>{t(pub.zone) || '—'}</dd></div>
                 <div><dt>{t('Type')}</dt><dd>{t(pub.type)}</dd></div>
               </dl>
               <section><h3>{t('Description')}</h3><p className="prose">{t(pub.description)}</p></section>

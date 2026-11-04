@@ -35,6 +35,7 @@ export const COLLECTION_DEFS: CollectionDef[] = [
       { key: 'summary', label: 'Résumé', type: 'textarea', required: true },
       { key: 'researchYear', label: 'Année de recherche', type: 'year', required: true },
       { key: 'publicationYear', label: 'Année de publication', type: 'year', required: true },
+      { key: 'zone', label: 'Zone de recherche ou d\'intervention', type: 'text', required: true, help: 'Par exemple : Côte d\'Ivoire, région du Gbêkê' },
       { key: 'authors', label: 'Auteurs', type: 'text' },
       { key: 'reference', label: 'Référence (DOI, numéro…)', type: 'text' },
       { key: 'link', label: 'Lien vers le document (PDF)', type: 'url', help: 'Adresse du fichier en ligne (Google Drive, site, dépôt…).' }
@@ -70,7 +71,7 @@ export const COLLECTION_DEFS: CollectionDef[] = [
     ]
   },
   {
-    name: 'formations', label: 'Formations', singular: 'formation', tab: 'Formations', titleKey: 'title', sortKey: 'date', subtitle: it => `${it.status || ''} · ${it.date || 'sur demande'}`,
+    name: 'formations', label: 'Accompagnement', singular: 'formation', tab: 'Accompagnement', titleKey: 'title', sortKey: 'date', subtitle: it => `${it.status || ''} · ${it.date || 'sur demande'}`,
     fields: [
       { key: 'title', label: 'Intitulé', type: 'text', required: true },
       { key: 'summary', label: 'Résumé', type: 'textarea' },

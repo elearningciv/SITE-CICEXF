@@ -35,7 +35,8 @@ content.publications = content.publications.map((p: any) => ({
   ...p,
   publicationYear: p.publicationYear || String(p.date || '').slice(0, 4),
   researchYear: p.researchYear || String(p.date || '').slice(0, 4),
-  description: p.description ?? p.summary ?? ''
+  description: p.description ?? p.summary ?? '',
+  zone: p.zone ?? ''
 }));
 content.researchers = content.researchers
   .filter((r: any) => r.category !== 'Doctorants')

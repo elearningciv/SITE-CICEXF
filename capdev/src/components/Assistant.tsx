@@ -11,7 +11,7 @@ interface Msg { role: 'user' | 'assistant'; text: string }
 function Rich({ text, onNav }: { text: string; onNav: (to: string) => void }) {
   const blocks = text.split(/\n{2,}/);
   const inline = (s: string, key: string) => {
-    const parts = s.split(/(\*\*[^*]+\*\*|\/(?:institut|recherche|publications|chercheurs|formations|expertise|actualites|opportunites|contact)\b)/g);
+    const parts = s.split(/(\*\*[^*]+\*\*|\/(?:institut|recherche|publications|chercheurs|formations|accompagnement|expertise|actualites|opportunites|contact)\b)/g);
     return parts.map((p, i) => {
       if (p.startsWith('**') && p.endsWith('**')) return <strong key={key + i}>{p.slice(2, -2)}</strong>;
       if (/^\/[a-z]+$/.test(p)) return <a key={key + i} href={p} onClick={e => { e.preventDefault(); onNav(p); }}>{p}</a>;
@@ -45,14 +45,6 @@ export default function Assistant() {
   const conv = useRef<string | undefined>(undefined);
   const log = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const suggestions = [
-    t('Quels sont vos axes de recherche ?'),
-    t("Publications sur l'emploi des jeunes"),
-    t('Prochaines formations'),
-    t('Bourses et stages'),
-    t('Proposer un partenariat')
-  ];
 
   useEffect(() => { log.current?.scrollTo({ top: log.current.scrollHeight, behavior: 'smooth' }); }, [messages, busy]);
   useEffect(() => { if (assistantOpen) setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 300); }, [assistantOpen]);
@@ -113,11 +105,6 @@ export default function Assistant() {
               ))}
               {busy && <div className="typing" aria-label={t('Réponse en cours')}><i /><i /><i /></div>}
             </div>
-            {messages.length < 2 && (
-              <div className="chat-sugg">
-                {suggestions.map(s => <button key={s} type="button" onClick={() => send(s)}>{s}</button>)}
-              </div>
-            )}
             <form className="chat-form" onSubmit={e => { e.preventDefault(); send(input); }}>
               <label htmlFor="assistant-input" className="hp">{t('Votre question')}</label>
               <input id="assistant-input" ref={inputRef} value={input} onChange={e => setInput(e.target.value)} placeholder={t('Posez votre question…')} autoComplete="off" maxLength={1500} />

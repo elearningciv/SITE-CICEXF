@@ -18,7 +18,7 @@ const Admin = lazy(() => import('./admin/Admin'));
 
 const PAGES: Record<string, React.ComponentType> = {
   '/': Home, '/institut': Institut, '/recherche': Recherche, '/publications': Publications,
-  '/formations': Formations, '/expertise': Expertise, '/actualites': Actualites, '/contact': Contact,
+  '/accompagnement': Formations, '/expertise': Expertise, '/actualites': Actualites, '/contact': Contact,
   '/connexion': Login
 };
 

@@ -6,6 +6,7 @@ import { useSite, LANGUAGES } from '../lib/site';
 import { Counter, EASE, Item, Reveal, Stagger } from '../components/Motion';
 import { MessageForm, PageHero, SectionHead } from '../components/Common';
 import { AxeGlyph } from './shared';
+import { ProtectedPhoto } from '../components/PubCard';
 
 
 // ---------------- L'Institut ----------------
@@ -15,7 +16,7 @@ export function Institut() {
   const s = content.settings;
   return (
     <>
-      <PageHero eyebrow={t("L'Institut")} title={t('Qui nous sommes')} lead={t(s.fullName)} />
+      <PageHero eyebrow={t("L'Institut")} title={t('Qui nous sommes')} />
       <section className="section" id="mission">
         <div className="container grid g-2" style={{ gap: 48 }}>
           <Reveal><SectionHead eyebrow={t('Mission')} title={t('Notre mission')} /><div className="prose"><p>{t(s.mission)}</p></div></Reveal>
@@ -25,11 +26,11 @@ export function Institut() {
       <section className="section" id="mot" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="container">
           <Reveal>
-            <span className="eyebrow">{t('Mot du Directeur')}</span>
-            <blockquote style={{ margin: '20px 0 0', fontFamily: 'var(--f-body)', fontSize: 'clamp(21px, 2.4vw, 30px)', lineHeight: 1.45, maxWidth: '38em', borderLeft: '4px solid var(--accent)', paddingLeft: 28 }}>
-              « {t(s.directorWord)} »
-              <footer style={{ fontFamily: 'var(--f-display)', fontSize: 15, fontWeight: 700, marginTop: 18, color: 'var(--primary)' }}>{t(s.directorName)}</footer>
-            </blockquote>
+            <span className="eyebrow">{t('Mot du Responsable de CapDev')}</span>
+            <div className="word" style={{ marginTop: 20 }}>
+              <ProtectedPhoto src={s.directorPhoto} alt={t(s.directorName)} />
+              <blockquote>« {t(s.directorWord)} »<footer>{t(s.directorName)}</footer></blockquote>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -69,7 +70,7 @@ export function Recherche() {
   );
   return (
     <>
-      <PageHero eyebrow={t('Recherche')} title={t('Axes, programmes et projets')} lead={t('Nos travaux sont organisés en six axes. Chaque axe réunit des docteurs et des chercheurs associés autour de projets financés.')} />
+      <PageHero eyebrow={t('Recherche')} title={t('Axes, programmes et projets')} />
       <section className="section" id="axes">
         <div className="container">
           <SectionHead eyebrow={t('Programmes')} title={t('Les axes de recherche')} />
@@ -116,10 +117,10 @@ export function Formations() {
   const dated = content.formations.filter(f => f.date).sort((a, b) => a.date.localeCompare(b.date));
   return (
     <>
-      <PageHero eyebrow={t('Formations')} title={t('Renforcement des capacités')} lead={t('Formations courtes et séminaires méthodologiques pour chercheurs, cadres et institutions.')} />
+      <PageHero eyebrow={t('Accompagnement')} title={t('Accompagnement et renforcement des capacités')} />
       <section className="section" id="catalogue">
         <div className="container">
-          <SectionHead eyebrow={t('Catalogue')} title={t('Catalogue des formations')} />
+          <SectionHead eyebrow={t('Catalogue')} title={t('Nos accompagnements')} />
           <Stagger className="grid g-2">
             {content.formations.map(f => (
               <Item key={f.id} className="card hover">
@@ -132,7 +133,7 @@ export function Formations() {
                   <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}><CalendarDays size={15} /> {f.date ? fmtDate(f.date) : t('Sur demande')}</span>
                 </div>
                 <div className="foot"><span>{t(f.price)}</span>
-                  <Link to="/formations#inscription" className="link-arrow" onClick={() => setChosen(f.title)}>{t("S'inscrire")} <ArrowRight /></Link>
+                  <Link to="/accompagnement#inscription" className="link-arrow" onClick={() => setChosen(f.title)}>{t("S'inscrire")} <ArrowRight /></Link>
                 </div>
               </Item>
             ))}
@@ -169,7 +170,7 @@ export function Contact() {
   const s = content.settings;
   return (
     <>
-      <PageHero eyebrow={t('Contact')} title={t('Écrivez-nous')} lead={t('Une question, une demande de partenariat, une proposition de collaboration : nous vous répondons.')} />
+      <PageHero eyebrow={t('Contact')} title={t('Écrivez-nous')} />
       <section className="section" id="formulaire">
         <div className="container grid split" style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.4fr)', gap: 48 }}>
           <Reveal>
@@ -206,7 +207,7 @@ export function NotFound() {
   const { t } = useSite();
   return (
     <>
-      <PageHero eyebrow="404" title={t('Page introuvable')} lead={t("Cette adresse n'existe pas ou a changé.")} />
+      <PageHero eyebrow="404" title={t('Page introuvable')} />
       <section className="section"><div className="container"><Link to="/" className="btn btn-primary">{t("Retour à l'accueil")} <ArrowRight /></Link></div></section>
     </>
   );

@@ -8,7 +8,7 @@ import { PALETTES } from '../lib/palettes';
 import type { Content, Conversation, InboxMessage, PaletteId, Settings } from '../types';
 import Collections from './Collections';
 import Translations, { collectStrings } from './Translations';
-import { ToastProvider, useToast } from './ui';
+import { ImageInput, ToastProvider, useToast } from './ui';
 import './admin.css';
 
 const TABS = [
@@ -88,7 +88,7 @@ function Dashboard({ inbox, convos, ai, go }: { inbox: InboxMessage[]; convos: C
     { label: 'publications en ligne', value: content.publications.length, to: 'contenus-publications' },
     { label: 'textes traduits (min.)', value: `${pct} %`, to: 'langues' }
   ];
-  const quick: [string, string][] = [['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Une formation', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un docteur', 'contenus-researchers']];
+  const quick: [string, string][] = [['Une actualité', 'contenus-news'], ['Une publication', 'contenus-publications'], ['Un événement', 'contenus-events'], ['Un accompagnement', 'contenus-formations'], ['Une opportunité', 'contenus-opportunities'], ['Un docteur', 'contenus-researchers']];
   return (
     <>
       <div className="admin-head"><div><h1>Bonjour</h1><p>Vous êtes connecté en tant qu'administrateur principal. Cet onglet n'est visible que pour vous.</p></div></div>
@@ -119,7 +119,7 @@ function Dashboard({ inbox, convos, ai, go }: { inbox: InboxMessage[]; convos: C
   );
 }
 
-type SField = { key: keyof Settings; label: string; long?: boolean; help?: string };
+type SField = { key: keyof Settings; label: string; long?: boolean; help?: string; image?: boolean };
 const GROUPS: { title: string; fields: SField[] }[] = [
   { title: 'Identité', fields: [
     { key: 'siteName', label: 'Nom court' }, { key: 'fullName', label: 'Nom complet' }, { key: 'tagline', label: 'Signature (sous le logo)' }
@@ -128,8 +128,8 @@ const GROUPS: { title: string; fields: SField[] }[] = [
     { key: 'heroEyebrow', label: 'Surtitre' }, { key: 'heroTitle', label: 'Titre (début)' }, { key: 'heroHighlight', label: 'Titre (partie mise en valeur)' }, { key: 'heroLead', label: 'Texte d\'introduction', long: true }
   ] },
   { title: "Onglet L'Institut", fields: [
-    { key: 'mission', label: 'Mission', long: true }, { key: 'vision', label: 'Vision', long: true }, { key: 'directorWord', label: 'Mot du Directeur', long: true },
-    { key: 'directorName', label: 'Signature du mot' }, { key: 'history', label: 'Historique', long: true }, { key: 'governance', label: 'Gouvernance', long: true }
+    { key: 'mission', label: 'Mission', long: true }, { key: 'vision', label: 'Vision', long: true }, { key: 'directorWord', label: 'Mot du Responsable de CapDev', long: true },
+    { key: 'directorName', label: 'Signature du mot' }, { key: 'directorPhoto', label: 'Photo du Responsable', image: true }, { key: 'history', label: 'Historique', long: true }, { key: 'governance', label: 'Gouvernance', long: true }
   ] },
   { title: 'Coordonnées', fields: [
     { key: 'address', label: 'Adresse' }, { key: 'phone', label: 'Téléphone' }, { key: 'email', label: 'E-mail' }, { key: 'hours', label: 'Horaires' }, { key: 'newsletterText', label: "Texte de la lettre d'information" }
@@ -167,7 +167,8 @@ function SettingsForm() {
             {g.fields.map(f => (
               <div className="field" key={f.key}>
                 <label htmlFor={`s-${f.key}`}>{f.label}</label>
-                {f.long ? <textarea id={`s-${f.key}`} value={draft[f.key] as string} onChange={e => setDraft({ ...draft, [f.key]: e.target.value })} />
+                {f.image ? <ImageInput id={`s-${f.key}`} value={draft[f.key] as string} onChange={v => setDraft({ ...draft, [f.key]: v })} />
+                  : f.long ? <textarea id={`s-${f.key}`} value={draft[f.key] as string} onChange={e => setDraft({ ...draft, [f.key]: e.target.value })} />
                   : <input id={`s-${f.key}`} value={draft[f.key] as string} onChange={e => setDraft({ ...draft, [f.key]: e.target.value })} />}
                 {f.help && <span className="help">{f.help}</span>}
               </div>

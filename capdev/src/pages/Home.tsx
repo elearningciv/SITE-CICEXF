@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Publication } from '../types';
-import { PubCard, PubModal } from '../components/PubCard';
+import { PubCard, PubModal, ProtectedPhoto } from '../components/PubCard';
 import { motion } from 'motion/react';
 import { ArrowRight, Search } from 'lucide-react';
 import { Link, navigate } from '../lib/router';
@@ -48,7 +48,7 @@ export default function Home() {
             <motion.div className="hero-chips" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06, delayChildren: 0.9 } } }}>
               {[
                 [t('Policy briefs'), '/publications#policy-brief'],
-                [t('Formations'), '/formations'],
+                [t('Accompagnement'), '/accompagnement'],
                 [t('Appels et bourses'), '/actualites#opportunites'],
                 [t('Demander une étude'), '/expertise#demande']
               ].map(([label, to]) => (
@@ -79,9 +79,21 @@ export default function Home() {
 
       <section className="section">
         <div className="container">
+          <Reveal className="word">
+            <ProtectedPhoto src={s.directorPhoto} alt={t(s.directorName)} />
+            <div style={{ display: 'grid', gap: 14 }}>
+              <span className="eyebrow">{t('Mot du Responsable de CapDev')}</span>
+              <blockquote>« {t(s.directorWord)} »<footer>{t(s.directorName)}</footer></blockquote>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container">
           <SectionHead eyebrow={t('Recherche')} title={t('Nos axes de recherche')} lead={t('Six programmes qui structurent nos travaux, de la gouvernance au climat.')}
             action={<Link to="/recherche" className="link-arrow">{t('Tous les programmes')} <ArrowRight /></Link>} />
-          <Stagger className="grid g-3">
+          <Stagger className="grid g-axes">
             {content.axes.map((a, i) => {
               const n = content.projects.filter(p => p.axe === a.id && p.status === 'En cours').length;
               return (
@@ -100,8 +112,8 @@ export default function Home() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
           <SectionHead eyebrow={t('Bibliothèque')} title={t('Publications récentes')} action={<Link to="/publications" className="link-arrow">{t('Toutes les publications')} <ArrowRight /></Link>} />
-          <Stagger className="pub-grid">
-            {pubs.slice(0, 3).map(p => <Item key={p.id}><PubCard pub={p} onOpen={() => setOpenPub(p)} /></Item>)}
+          <Stagger className="pub-grid one-row">
+            {pubs.slice(0, 4).map(p => <Item key={p.id}><PubCard pub={p} onOpen={() => setOpenPub(p)} /></Item>)}
           </Stagger>
         </div>
       </section>
@@ -128,9 +140,9 @@ export default function Home() {
 
       <section className="section" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="container">
-          <SectionHead eyebrow={t('Renforcement des capacités')} title={t('Formations et séminaires')} lead={t('Des formations courtes, en présentiel, en ligne ou hybrides, conçues par nos chercheurs.')}
-            action={<Link to="/formations" className="link-arrow">{t('Catalogue des formations')} <ArrowRight /></Link>} />
-          <Stagger className="grid g-4">
+          <SectionHead eyebrow={t('Renforcement des capacités')} title={t('Accompagnement')} lead={t('Des formations courtes, en présentiel, en ligne ou hybrides, conçues par nos chercheurs.')}
+            action={<Link to="/accompagnement" className="link-arrow">{t('Tout l\'accompagnement')} <ArrowRight /></Link>} />
+          <Stagger className="grid g-fit">
             {content.formations.slice(0, 4).map(f => (
               <Item key={f.id} className="card hover" whileHover={{ y: -4 }}>
                 <span className={`tag${f.status === 'Inscriptions ouvertes' ? ' accent' : ''}`} style={{ justifySelf: 'start', alignSelf: 'start' }}>{t(f.status)}</span>

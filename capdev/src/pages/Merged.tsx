@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Search } from 'lucide-react';
-import { useLocation } from '../lib/router';
+import { Link, useLocation } from '../lib/router';
 import { useSite } from '../lib/site';
 import { slug } from '../lib/nav';
 import type { Publication } from '../types';
@@ -28,7 +28,7 @@ export function Publications() {
     .sort((a, b) => (b.publicationYear || '').localeCompare(a.publicationYear || ''));
   return (
     <>
-      <PageHero eyebrow={t('Publications')} title={t('Bibliothèque numérique')} lead={t('Articles, documents de travail, policy briefs et rapports, en accès libre.')} />
+      <PageHero eyebrow={t('Publications')} title={t('Bibliothèque numérique')} />
       <section className="section">
         <div className="container">
           <div style={{ display: 'grid', gap: 16, marginBottom: 32 }}>
@@ -68,13 +68,33 @@ export function Publications() {
   );
 }
 
+/** Two sub-tabs shown under the page title; the active one is named in the address (#chercheurs, #opportunites) */
+function ViewTabs({ base, tabs, active }: { base: string; tabs: { id: string; label: string }[]; active: string }) {
+  return (
+    <div className="container view-bar">
+      <nav className="view-tabs" aria-label="Sous-onglets">
+        {tabs.map(tb => (
+          <Link key={tb.id} to={tb.id ? `${base}#${tb.id}` : base} aria-current={active === tb.id ? 'page' : undefined}>
+            {active === tb.id && <motion.span layoutId={`pill-${base}`} className="pill" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
+            {tb.label}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
 // ---------------- Expertise (services + doctors) ----------------
 export function Expertise() {
   const { content, t } = useSite();
+  const { hash } = useLocation();
   if (!content) return null;
+  const view = hash === 'chercheurs' || hash === 'docteurs' ? 'chercheurs' : '';
   return (
     <>
-      <PageHero eyebrow={t('Expertise')} title={t('Études, évaluations et appui aux institutions')} lead={t("Nous mettons la rigueur de la recherche et l'expérience de nos docteurs au service de vos décisions.")} />
+      <PageHero eyebrow={t('Expertise')} title={view ? t('Nos chercheurs') : t('Études, évaluations et appui aux institutions')} />
+      <ViewTabs base="/expertise" active={view} tabs={[{ id: '', label: t('Expertise') }, { id: 'chercheurs', label: t('Chercheurs') }]} />
+      {!view && <>
       <section className="section" id="services">
         <div className="container">
           <SectionHead eyebrow={t('Services')} title={t('Nos services')} />
@@ -89,7 +109,14 @@ export function Expertise() {
           </Stagger>
         </div>
       </section>
-      <section className="section" id="docteurs" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+      <section className="section" id="demande" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+        <div className="container grid split" style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.3fr)', gap: 48 }}>
+          <SectionHead eyebrow={t('Demande')} title={t('Demander une étude')} lead={t('Décrivez votre besoin : objectifs, terrain, calendrier. Nous revenons vers vous avec une proposition.')} />
+          <MessageForm kind="etude" subjects={[t('Étude ou enquête'), t('Évaluation de programme'), t('Appui aux politiques publiques'), t('Renforcement institutionnel'), t('Partenariat de recherche')]} cta={t('Envoyer la demande')} />
+        </div>
+      </section>
+      </>}
+      {view === 'chercheurs' && <section className="section" id="equipe">
         <div className="container">
           <SectionHead eyebrow={t('Équipe scientifique')} title={t('Nos docteurs')} lead={t("Les docteurs de CapDev conduisent nos recherches et nos missions d'expertise.")} />
           <Stagger className="doc-grid">
@@ -105,13 +132,7 @@ export function Expertise() {
             ))}
           </Stagger>
         </div>
-      </section>
-      <section className="section" id="demande">
-        <div className="container grid split" style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.3fr)', gap: 48 }}>
-          <SectionHead eyebrow={t('Demande')} title={t('Demander une étude')} lead={t('Décrivez votre besoin : objectifs, terrain, calendrier. Nous revenons vers vous avec une proposition.')} />
-          <MessageForm kind="etude" subjects={[t('Étude ou enquête'), t('Évaluation de programme'), t('Appui aux politiques publiques'), t('Renforcement institutionnel'), t('Partenariat de recherche')]} cta={t('Envoyer la demande')} />
-        </div>
-      </section>
+      </section>}
     </>
   );
 }
@@ -119,14 +140,18 @@ export function Expertise() {
 // ---------------- Actualités (news, agenda, opportunities) ----------------
 export function Actualites() {
   const { content, t, fmtDate } = useSite();
+  const { hash } = useLocation();
   if (!content) return null;
+  const view = hash === 'opportunites' || hash === 'candidater' ? 'opportunites' : '';
   const news = [...content.news].sort((a, b) => b.date.localeCompare(a.date));
   const events = [...content.events].sort((a, b) => a.date.localeCompare(b.date));
   const today = new Date().toISOString().slice(0, 10);
   const opps = [...content.opportunities].sort((a, b) => a.deadline.localeCompare(b.deadline));
   return (
     <>
-      <PageHero eyebrow={t('Actualités')} title={t("La vie de l'institut")} lead={t('Nouvelles, agenda scientifique, appels, bourses et stages.')} />
+      <PageHero eyebrow={t('Actualités')} title={view ? t('Appels, bourses et stages') : t("La vie de l'institut")} />
+      <ViewTabs base="/actualites" active={view} tabs={[{ id: '', label: t('Actualités') }, { id: 'opportunites', label: t('Opportunités') }]} />
+      {!view && <>
       <section className="section" id="actualites">
         <div className="container">
           <SectionHead eyebrow={t('Actualités')} title={t('Dernières nouvelles')} />
@@ -156,7 +181,9 @@ export function Actualites() {
           </div>
         </div>
       </section>
-      <section className="section" id="opportunites" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
+      </>}
+      {view === 'opportunites' && <>
+      <section className="section" id="appels">
         <div className="container">
           <SectionHead eyebrow={t('Opportunités')} title={t('Appels, bourses et stages')} lead={t('Pour les chercheurs, les étudiants et les partenaires.')} />
           <Stagger className="grid g-3">
@@ -174,12 +201,13 @@ export function Actualites() {
           </Stagger>
         </div>
       </section>
-      <section className="section" id="candidater">
+      <section className="section" id="candidater" style={{ background: 'var(--surface)', borderBlock: '1px solid var(--line)' }}>
         <div className="container grid split" style={{ gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.3fr)', gap: 48 }}>
           <SectionHead eyebrow={t('Candidater')} title={t('Manifester votre intérêt')} lead={t("Indiquez l'opportunité visée et présentez-vous en quelques lignes. Nous vous enverrons le dossier complet.")} />
           <MessageForm kind="contact" subjects={content.opportunities.map(o => o.title)} cta={t('Envoyer')} />
         </div>
       </section>
+      </>}
     </>
   );
 }

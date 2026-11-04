@@ -15,8 +15,8 @@ function docs(c: Content): Doc[] {
   return [
     ...c.axes.map(a => ({ kind: 'Axe de recherche', title: `${a.code} · ${a.title}`, text: `${a.summary} ${a.description}`, page: '/recherche' })),
     ...c.projects.map(p => ({ kind: 'Projet', title: p.title, text: `${p.summary} ${p.status} ${axeTitle(c, p.axe)}`, page: '/recherche' })),
-    ...c.publications.map(p => ({ kind: p.type, title: p.title, text: `${p.description} ${p.summary} ${p.authors} ${p.reference} publication ${p.publicationYear}`, page: '/publications' })),
-    ...c.formations.map(f => ({ kind: 'Formation', title: f.title, text: `${f.summary} formation seminaire ${f.duration} ${f.mode} ${f.status} ${f.date ? fmtDate(f.date) : ''}`, page: '/formations' })),
+    ...c.publications.map(p => ({ kind: p.type, title: p.title, text: `${p.description} ${p.summary} ${p.authors} ${p.reference} ${p.zone} publication ${p.publicationYear}`, page: '/publications' })),
+    ...c.formations.map(f => ({ kind: 'Formation', title: f.title, text: `${f.summary} formation seminaire ${f.duration} ${f.mode} ${f.status} ${f.date ? fmtDate(f.date) : ''}`, page: '/accompagnement' })),
     ...c.services.map(x => ({ kind: 'Expertise', title: x.title, text: `${x.summary} etude evaluation expertise`, page: '/expertise' })),
     ...c.opportunities.map(o => ({ kind: o.kind, title: o.title, text: `${o.summary} opportunite ${o.kind} date limite ${fmtDate(o.deadline)}`, page: '/actualites' })),
     ...c.news.map(n => ({ kind: 'Actualité', title: n.title, text: `${n.summary} actualite ${n.category}`, page: '/actualites' })),
@@ -47,9 +47,9 @@ export function offlineAnswer(c: Content, message: string, lang: string): string
   // Topic questions get a structured list rather than a keyword search
   const bullets = (items: string[]) => items.map(i => `• ${i}`).join('\n');
   const searchIn = (kind: string) => /(sur|about|concernant|on)\s+\S+/.test(q) && kind === 'pub';
-  if (/(formation|seminaire|atelier|cours|training|course|inscri)/.test(q)) {
+  if (/(formation|seminaire|atelier|cours|training|course|inscri|accompagn)/.test(q)) {
     const list = [...c.formations].sort((a, b) => (a.date || '9').localeCompare(b.date || '9'));
-    return `${en ? 'Our training courses' : 'Nos formations'} :\n${bullets(list.map(f => `**${tr(f.title)}** — ${tr(f.duration)}, ${tr(f.mode)}, ${f.date ? fmtDate(f.date) : tr('Sur demande')} (${tr(f.status)})`))}\n\n${en ? 'You can register online' : 'Inscription en ligne'} : page /formations`;
+    return `${en ? 'Our training courses' : 'Nos formations'} :\n${bullets(list.map(f => `**${tr(f.title)}** — ${tr(f.duration)}, ${tr(f.mode)}, ${f.date ? fmtDate(f.date) : tr('Sur demande')} (${tr(f.status)})`))}\n\n${en ? 'You can register online' : 'Inscription en ligne'} : page /accompagnement`;
   }
   if (/(bourse|stage|appel|recrut|opportun|candidat|scholarship|internship|grant|job)/.test(q)) {
     const list = [...c.opportunities].sort((a, b) => a.deadline.localeCompare(b.deadline));

@@ -18,7 +18,7 @@ export function knowledgeText(c: Content) {
   const s = c.settings;
   const lines: string[] = [
     `# ${s.siteName} — ${s.fullName}`,
-    `Mission : ${s.mission}`, `Vision : ${s.vision}`, `Gouvernance : ${s.governance}`, `Historique : ${s.history}`,
+    `Mission : ${s.mission}`, `Mot du Responsable de CapDev : ${s.directorWord}`, `Vision : ${s.vision}`, `Gouvernance : ${s.governance}`, `Historique : ${s.history}`,
     `Contact : ${s.address} · ${s.phone} · ${s.email} · ${s.hours} (page /contact)`,
     `Chiffres : ${s.stats.map(x => `${x.value} ${x.label}`).join(', ')}`,
     '\n## Axes de recherche (page /recherche)',
@@ -26,10 +26,10 @@ export function knowledgeText(c: Content) {
     '\n## Projets (page /recherche)',
     ...c.projects.map(p => `- ${p.title} [${p.status}, ${p.period}, ${axeTitle(c, p.axe)}] : ${p.summary} Partenaires : ${p.partners}`),
     '\n## Publications (page /publications)',
-    ...c.publications.map(p => `- ${p.type} « ${p.title} » (${p.authors}, recherche menée en ${p.researchYear}, publié en ${p.publicationYear}, réf. ${p.reference}). Description : ${p.description} Résumé : ${p.summary}`),
+    ...c.publications.map(p => `- ${p.type} « ${p.title} » (${p.authors}, recherche menée en ${p.researchYear}, publié en ${p.publicationYear}, zone : ${p.zone}, réf. ${p.reference}). Description : ${p.description} Résumé : ${p.summary}`),
     '\n## Docteurs de l\'institution (page /expertise)',
     ...c.researchers.map(r => `- ${r.name}, ${r.grade}, spécialité : ${r.specialty}`),
-    '\n## Formations (page /formations, inscription en ligne sur cette page)',
+    '\n## Accompagnement : formations et séminaires (page /accompagnement, inscription en ligne sur cette page)',
     ...c.formations.map(f => `- ${f.title} : ${f.summary} Durée ${f.duration}, ${f.mode}, ${f.date ? 'session du ' + fmtDate(f.date) : 'date sur demande'}, ${f.price}, statut : ${f.status}`),
     '\n## Expertise et services (page /expertise, demande d\'étude en ligne)',
     ...c.services.map(x => `- ${x.title} : ${x.summary}`),

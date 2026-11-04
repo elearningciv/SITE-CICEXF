@@ -26,6 +26,8 @@ export interface Settings {
   vision: string;
   directorWord: string;
   directorName: string;
+  /** Photo shown beside the word of the Responsable */
+  directorPhoto: string;
   history: string;
   governance: string;
   newsletterText: string;
@@ -33,7 +35,7 @@ export interface Settings {
 
 export interface Axe { id: string; code: string; title: string; summary: string; description: string; image?: string }
 export interface Project { id: string; title: string; axe: string; status: string; period: string; summary: string; partners: string }
-export interface Publication { id: string; type: string; title: string; authors: string; description: string; summary: string; image?: string; researchYear: string; publicationYear: string; reference: string; link: string }
+export interface Publication { id: string; type: string; title: string; authors: string; description: string; summary: string; image?: string; researchYear: string; publicationYear: string; zone: string; reference: string; link: string }
 /** A doctor of the institution, shown in the Expertise tab */
 export interface Researcher { id: string; name: string; grade: string; specialty: string; photo?: string }
 export interface Formation { id: string; title: string; summary: string; duration: string; mode: string; date: string; price: string; status: string }
