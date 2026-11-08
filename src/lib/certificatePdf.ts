@@ -24,20 +24,24 @@ async function imageData(url: string): Promise<{ data: string; w: number; h: num
   try {
     const res = await fetch(url, { cache: 'force-cache' });
     if (!res.ok || !(res.headers.get('content-type') || '').startsWith('image/')) return null;
-    const blob = await res.blob();
-    const data = await new Promise<string>((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => resolve(String(r.result));
-      r.onerror = reject;
-      r.readAsDataURL(blob);
-    });
-    const size = await new Promise<{ w: number; h: number }>((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
-      img.onerror = reject;
-      img.src = data;
-    });
-    return { data, ...size };
+    // The hosting CDN may answer in WebP or JPEG instead of PNG: the image is redrawn
+    // and re-encoded as PNG (transparency kept) so that the PDF always receives a clean PNG.
+    const objectUrl = URL.createObjectURL(await res.blob());
+    try {
+      const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const i = new Image();
+        i.onload = () => resolve(i);
+        i.onerror = reject;
+        i.src = objectUrl;
+      });
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext('2d')!.drawImage(img, 0, 0);
+      return { data: canvas.toDataURL('image/png'), w: img.naturalWidth, h: img.naturalHeight };
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
   } catch {
     return null;
   }
@@ -213,7 +217,7 @@ export async function buildCertificatePdf(c: Certificate) {
     // Signature scan fitted in a 60 × 15 mm box above the line
     const scale = Math.min(60 / signature.w, 15 / signature.h);
     const w = signature.w * scale, h = signature.h * scale;
-    doc.addImage(signature.data, signature.data.startsWith('data:image/png') ? 'PNG' : 'JPEG', signX - w / 2, bottom - 6 - h, w, h);
+    doc.addImage(signature.data, 'PNG', signX - w / 2, bottom - 6 - h, w, h);
   }
   doc.setDrawColor(...INK);
   doc.setLineWidth(0.4);
