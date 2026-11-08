@@ -99,6 +99,15 @@ service cloud.firestore {
         allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
         allow write: if false;
       }
+      // Chapitre en cours (réponses non corrigées), pour reprendre plus tard : réservé à l'apprenant
+      match /drafts/{courseId} {
+        allow read, delete: if request.auth != null && request.auth.uid == uid;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['stepId', 'state', 'savedAt'])
+          && shortText(request.resource.data.stepId, 20)
+          && request.resource.data.state is string && request.resource.data.state.size() < 30000
+          && request.resource.data.savedAt == request.time;
+      }
     }
     // Suivi des parcours dans l'administration
     match /{path=**}/progress/{courseId} {

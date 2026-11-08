@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpenCheck, CheckCircle2, Loader2, LogOut, RotateCcw, XCircle } from 'lucide-react';
 import { PASS, isExam, stepQuestionCount, type Course, type CourseStep } from '../../data/elearning';
-import type { Answers, ElearningApi, GradeResult, Progress } from '../../lib/elearningApi';
+import type { Answers, Draft, ElearningApi, GradeResult, Progress } from '../../lib/elearningApi';
 import { learnerErrorMessage } from '../../lib/elearningApi';
 
 type Phase = 'lesson' | 'intro' | 'quiz' | 'result';
@@ -25,27 +25,36 @@ interface Props {
   onExit: () => void;
   onCertificate: () => void;
   onRestart: () => void;
+  /** Work saved when the learner left this step: they continue where they stopped */
+  resume?: Draft | null;
 }
 
 /**
  * Chapter (or exam) player in focus mode: the module text, then its quizzes one question at a time
  * (the text closes, no correction shown), and the result only at the end, graded by the server.
  */
-export default function ElearningPlayer({ api, course, step, onProgress, onExit, onCertificate, onRestart }: Props) {
+export default function ElearningPlayer({ api, course, step, onProgress, onExit, onCertificate, onRestart, resume }: Props) {
   const firstHasText = !!course.modules[step.modules[0].id].text;
-  const [mi, setMi] = useState(0);
-  const [phase, setPhase] = useState<Phase>(firstHasText ? 'lesson' : 'intro');
-  const [qi, setQi] = useState(0);
-  const [k, setK] = useState(0);
-  const [answers, setAnswers] = useState<Answers>({});
+  const saved = resume && resume.stepId === step.id && step.modules[resume.mi] ? resume : null;
+  const [mi, setMi] = useState(saved ? saved.mi : 0);
+  const [phase, setPhase] = useState<Phase>(saved ? saved.phase : firstHasText ? 'lesson' : 'intro');
+  const [qi, setQi] = useState(saved ? saved.qi : 0);
+  const [k, setK] = useState(saved ? saved.k : 0);
+  const [answers, setAnswers] = useState<Answers>(saved ? saved.answers : {});
+  const [resumed, setResumed] = useState(!!saved);
   const [result, setResult] = useState<GradeResult | null>(null);
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
-  // Answers appear in a new random order at every attempt
+  // Answers appear in a new random order at every attempt (kept when the learner resumes)
   const order = useMemo(() => {
     const o: Record<string, number[]> = {};
-    for (const m of step.modules) course.modules[m.id].quizzes.forEach((z, a) => z.questions.forEach((q, b) => { o[`${m.id}-${a}-${b}`] = shuffled(q.answers.length); }));
+    for (const m of step.modules) course.modules[m.id].quizzes.forEach((z, a) => z.questions.forEach((q, b) => {
+      const key = `${m.id}-${a}-${b}`;
+      const kept = saved?.order[key];
+      o[key] = kept && kept.length === q.answers.length ? kept : shuffled(q.answers.length);
+    }));
     return o;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [course, step]);
 
   const exam = isExam(step);
@@ -62,12 +71,11 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
     return () => document.body.classList.remove('el-focus');
   }, []);
   useEffect(() => { window.scrollTo({ top: 0 }); }, [mi, phase, qi, k]);
+  // Work in progress is saved continuously: leaving the site and coming back resumes here
   useEffect(() => {
-    if (phase === 'result' || answered === 0) return;
-    const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ''; };
-    window.addEventListener('beforeunload', warn);
-    return () => window.removeEventListener('beforeunload', warn);
-  }, [phase, answered]);
+    if (phase === 'result') return;
+    api.saveDraft(course.id, { stepId: step.id, mi, phase, qi, k, answers, order, savedAt: new Date().toISOString() });
+  }, [api, course.id, step.id, mi, phase, qi, k, answers, order]);
 
   const chosen = answers[mod.id]?.[qi]?.[k];
 
@@ -86,6 +94,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
     setError('');
     try {
       const r = await api.grade(course.id, step.id, final);
+      api.clearDraft(course.id);
       setResult(r);
       onProgress(r.progress);
     } catch (e) {
@@ -106,11 +115,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
     submit(answers);
   };
 
-  const quit = () => {
-    if (phase !== 'result' && answered > 0 &&
-      !window.confirm(`Quitter maintenant ? Vos réponses à ${exam ? 'cet examen' : 'ce chapitre'} ne seront pas conservées.`)) return;
-    onExit();
-  };
+  const quit = () => onExit();
 
   const where = phase === 'result'
     ? (exam ? "Résultat de l'examen" : 'Résultat du chapitre')
@@ -136,6 +141,17 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
           <LogOut className="w-4 h-4" /> Quitter {stepWord(step)}
         </button>
       </div>
+      {phase !== 'result' && (
+        <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">
+          Votre progression est enregistrée automatiquement : vous pouvez quitter et reprendre plus tard exactement à cet endroit.
+        </p>
+      )}
+      {resumed && phase !== 'result' && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-l-4 border-brand-blue px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
+          <span className="flex-1"><strong>Bon retour !</strong> Vous reprenez {stepWord(step)} là où vous vous étiez arrêté ({answered} question{answered > 1 ? 's' : ''} déjà répondue{answered > 1 ? 's' : ''}).</span>
+          <button onClick={() => setResumed(false)} className="text-xs font-bold underline">Fermer</button>
+        </div>
+      )}
 
       <article className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
         {phase === 'lesson' && (

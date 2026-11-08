@@ -45,6 +45,17 @@ export interface Certificate {
 }
 /** answers[moduleId][quizIndex][questionIndex] = index of the chosen answer */
 export type Answers = Record<string, number[][]>;
+/** A chapter or exam in progress, saved so that the learner can resume it later (on any device) */
+export interface Draft {
+  stepId: string;
+  mi: number;
+  phase: 'lesson' | 'intro' | 'quiz';
+  qi: number;
+  k: number;
+  answers: Answers;
+  order: Record<string, number[]>;
+  savedAt: string;
+}
 
 export interface ElearningApi {
   readonly simulated: boolean;
@@ -58,6 +69,10 @@ export interface ElearningApi {
   getProgress(courseId: string): Promise<Progress>;
   grade(courseId: string, stepId: string, answers: Answers): Promise<GradeResult>;
   issueCertificate(courseId: string): Promise<Certificate>;
+  getDraft(courseId: string): Promise<Draft | null>;
+  /** Saved at once in this browser, and in the account a moment later */
+  saveDraft(courseId: string, draft: Draft): void;
+  clearDraft(courseId: string): Promise<void>;
   verifyCertificate(number: string): Promise<Certificate | null>;
 }
 
@@ -69,6 +84,20 @@ export const ELEARNING_API_URL: string =
 export const CERTIFICATE_RE = /^CICEXF-EL-20\d{2}-\d{6}$/;
 
 export class ElearningError extends Error {}
+
+const draftKey = (uid: string, courseId: string) => `cicexf_el_draft_${uid}_${courseId}`;
+export const localDraft = {
+  get(uid: string, courseId: string): Draft | null {
+    try { return JSON.parse(localStorage.getItem(draftKey(uid, courseId)) || 'null'); } catch { return null; }
+  },
+  set(uid: string, courseId: string, d: Draft) {
+    try { localStorage.setItem(draftKey(uid, courseId), JSON.stringify(d)); } catch {}
+  },
+  clear(uid: string, courseId: string) {
+    try { localStorage.removeItem(draftKey(uid, courseId)); } catch {}
+  }
+};
+export const newestDraft = (a: Draft | null, b: Draft | null) => (!a ? b : !b ? a : a.savedAt >= b.savedAt ? a : b);
 
 export function learnerErrorMessage(err: any): string {
   if (err instanceof ElearningError) return err.message;
@@ -105,7 +134,9 @@ async function createFirebaseApi(): Promise<ElearningApi> {
     import('../firebase')
   ]);
   const { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } = authMod;
-  const { doc, getDoc, setDoc, serverTimestamp } = fs;
+  const { doc, getDoc, setDoc, deleteDoc, serverTimestamp } = fs;
+  const draftTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+  const draftRef = (uid: string, courseId: string) => doc(learnerDb, 'learners', uid, 'drafts', courseId);
 
   const call = async <T,>(body: Record<string, unknown>): Promise<T> => {
     const user = learnerAuth.currentUser;
@@ -190,6 +221,35 @@ async function createFirebaseApi(): Promise<ElearningApi> {
     },
     grade: (courseId, stepId, answers) => call<GradeResult>({ action: 'grade', courseId, stepId, answers }),
     issueCertificate: (courseId) => call<{ certificate: Certificate }>({ action: 'certificate', courseId }).then((r) => r.certificate),
+    async getDraft(courseId) {
+      const u = learnerAuth.currentUser;
+      if (!u) return null;
+      let remote: Draft | null = null;
+      try {
+        const snap = await getDoc(draftRef(u.uid, courseId));
+        if (snap.exists()) remote = { ...JSON.parse(snap.data().state), savedAt: toIso(snap.data().savedAt) || '' };
+      } catch {}
+      return newestDraft(localDraft.get(u.uid, courseId), remote);
+    },
+    saveDraft(courseId, draft) {
+      const u = learnerAuth.currentUser;
+      if (!u) return;
+      localDraft.set(u.uid, courseId, draft);
+      clearTimeout(draftTimers[courseId]);
+      draftTimers[courseId] = setTimeout(() => {
+        const { savedAt, ...state } = draft;
+        void savedAt;
+        setDoc(draftRef(u.uid, courseId), { stepId: draft.stepId, state: JSON.stringify(state), savedAt: serverTimestamp() })
+          .catch((e) => console.warn('Brouillon non enregistré en ligne :', e?.code));
+      }, 1500);
+    },
+    async clearDraft(courseId) {
+      const u = learnerAuth.currentUser;
+      if (!u) return;
+      clearTimeout(draftTimers[courseId]);
+      localDraft.clear(u.uid, courseId);
+      await deleteDoc(draftRef(u.uid, courseId)).catch(() => {});
+    },
     async verifyCertificate(number) {
       if (!CERTIFICATE_RE.test(number)) return null;
       const snap = await getDoc(doc(publicDb, 'certificates', number));

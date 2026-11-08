@@ -2,7 +2,7 @@
 // stored in this browser. It is never part of the production build (see getElearningApi).
 import { PASS } from '../data/elearning';
 import type { Answers, Certificate, ElearningApi, LearnerProfile, LearnerSession, Progress } from './elearningApi';
-import { EMPTY_PROGRESS, ElearningError } from './elearningApi';
+import { EMPTY_PROGRESS, ElearningError, localDraft } from './elearningApi';
 
 interface ServerCourse {
   id: string;
@@ -161,6 +161,18 @@ export function createMockApi(): ElearningApi {
       prog.certificate = number;
       save(s);
       return cert;
+    },
+    async getDraft(courseId) {
+      const me = current();
+      return me ? localDraft.get(me.uid, courseId) : null;
+    },
+    saveDraft(courseId, draft) {
+      const me = current();
+      if (me) localDraft.set(me.uid, courseId, draft);
+    },
+    async clearDraft(courseId) {
+      const me = current();
+      if (me) localDraft.clear(me.uid, courseId);
     },
     async verifyCertificate(number) {
       await wait();
