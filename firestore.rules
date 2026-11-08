@@ -71,6 +71,46 @@ service cloud.firestore {
       }
     }
 
+    // E-learning : chaque apprenant ne lit et ne modifie que son propre profil.
+    // La progression et les certificats sont écrits uniquement par le serveur (fonction elearning).
+    function shortText(v, max) {
+      return v is string && v.size() > 0 && v.size() <= max;
+    }
+    function validLearner(d) {
+      return d.keys().hasOnly(['nom', 'prenom', 'telephone', 'email', 'pays', 'activite', 'formation', 'experience', 'consent', 'createdAt', 'updatedAt'])
+        && d.keys().hasAll(['nom', 'prenom', 'telephone', 'email', 'pays', 'activite', 'formation', 'experience', 'consent', 'createdAt', 'updatedAt'])
+        && shortText(d.nom, 80) && shortText(d.prenom, 120) && shortText(d.telephone, 30)
+        && shortText(d.pays, 80) && shortText(d.activite, 120) && shortText(d.formation, 120) && shortText(d.experience, 40)
+        && d.email == request.auth.token.email
+        && d.consent == true
+        && d.updatedAt == request.time;
+    }
+    match /learners/{uid} {
+      allow create: if request.auth != null && request.auth.uid == uid
+        && validLearner(request.resource.data)
+        && request.resource.data.createdAt == request.time;
+      allow update: if request.auth != null && request.auth.uid == uid
+        && validLearner(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
+      allow delete: if isAdmin();
+
+      match /progress/{courseId} {
+        allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
+        allow write: if false;
+      }
+    }
+    // Suivi des parcours dans l'administration
+    match /{path=**}/progress/{courseId} {
+      allow read: if isAdmin();
+    }
+    // Certificats : vérification publique d'un numéro précis, liste réservée à l'admin
+    match /certificates/{number} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if false;
+    }
+
     // Contenus publics du site : lecture libre, modification admin uniquement
     match /formations/{id} {
       allow read: if true;

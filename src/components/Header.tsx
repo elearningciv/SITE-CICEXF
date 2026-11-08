@@ -531,6 +531,18 @@ export default function Header({
                 </div>
 
                 <button
+                  id="nav-elearning"
+                  onClick={() => handleNavClick('elearning')}
+                  className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
+                    activeTab === 'elearning'
+                      ? 'bg-white text-brand-blue-dark shadow-md scale-105 font-black'
+                      : 'text-white/90 hover:bg-white/10 hover:text-white hover:scale-105 active:scale-95'
+                  }`}
+                >
+                  E-learning
+                </button>
+
+                <button
                   id="nav-catalogue"
                   onClick={() => handleNavClick('catalogue')}
                   className={`px-1.5 lg:px-2 xl:px-2 2xl:px-3 py-1.5 xl:py-2 rounded-xl text-[10px] lg:text-[10.5px] xl:text-[11px] font-black uppercase tracking-normal transition-all duration-200 transform-gpu cursor-pointer shrink-0 ${
@@ -714,6 +726,12 @@ export default function Header({
                 <button onClick={() => handleNavClick('realisations')} className={`block w-full text-left pl-8 pr-4 py-2 rounded-lg text-sm font-semibold ${activeTab === 'realisations' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}>Nos réalisations</button>
               </div>
             )}
+            <button
+              onClick={() => handleNavClick('elearning')}
+              className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'elearning' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}
+            >
+              E-learning <span className="ml-1 text-[10px] font-black uppercase text-brand-emerald">gratuit</span>
+            </button>
             <button
               onClick={() => handleNavClick('catalogue')}
               className={`block w-full text-left px-4 py-2.5 rounded-lg text-sm font-bold ${activeTab === 'catalogue' ? 'bg-slate-100 dark:bg-slate-800 text-brand-blue' : 'text-slate-700 dark:text-slate-300'}`}

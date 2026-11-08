@@ -1,0 +1,213 @@
+// E-learning CICEXF : correction des chapitres et examens, progression et délivrance des certificats.
+// Les bonnes réponses restent ici (elearning/keys/*.json, non publiées) : le navigateur n'envoie que
+// les choix de l'apprenant, et seule cette fonction écrit la progression et les certificats.
+const { onRequest } = require('firebase-functions/v2/https');
+const { logger } = require('firebase-functions');
+const { initializeApp, getApps } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const { getFirestore, Timestamp } = require('firebase-admin/firestore');
+const fs = require('fs');
+const path = require('path');
+
+const DATABASE_ID = 'ai-studio-cicexfcabinetint-be0c0f21-7527-4112-ae7f-82c61d321a9c';
+const ALLOWED_ORIGINS = ['https://cicexf.com', 'https://www.cicexf.com', 'https://cicexf.gestionsaas.org', 'http://localhost:3000', 'http://localhost:5173'];
+const PASS = 80;
+
+if (!getApps().length) initializeApp();
+const db = getFirestore(DATABASE_ID);
+
+// Clés de correction, chargées une fois par instance
+const KEYS = {};
+const keysDir = path.join(__dirname, 'elearning', 'keys');
+if (fs.existsSync(keysDir)) {
+  for (const f of fs.readdirSync(keysDir).filter((x) => x.endsWith('.json'))) {
+    const k = JSON.parse(fs.readFileSync(path.join(keysDir, f), 'utf8'));
+    KEYS[k.id] = k;
+  }
+}
+
+const hits = new Map();
+function rateLimited(uid, max = 60) {
+  const now = Date.now();
+  const list = (hits.get(uid) || []).filter((t) => now - t < 10 * 60 * 1000);
+  list.push(now);
+  hits.set(uid, list);
+  return list.length > max;
+}
+
+const progressRef = (uid, courseId) => db.doc(`learners/${uid}/progress/${courseId}`);
+const isOpen = (course, scores, index) => course.steps.slice(0, index).every((s) => (scores[s.id] || 0) >= PASS);
+
+// Note d'une étape : bonnes réponses par module puis pour l'ensemble
+function grade(course, step, answers) {
+  const modules = step.modules.map((modId) => {
+    const key = course.key[modId];
+    const given = (answers && answers[modId]) || [];
+    let good = 0, total = 0;
+    key.forEach((quiz, qi) => quiz.forEach((g, k) => {
+      total++;
+      if (Array.isArray(given[qi]) && given[qi][k] === g) good++;
+    }));
+    return { id: modId, good, total, pct: Math.round((good / total) * 100) };
+  });
+  const good = modules.reduce((n, m) => n + m.good, 0);
+  const total = modules.reduce((n, m) => n + m.total, 0);
+  return { modules, good, total, pct: Math.round((good / total) * 100) };
+}
+
+const toIso = (v) => (v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v || null);
+const publicProgress = (d) => (d ? {
+  scores: d.scores || {},
+  attempts: d.attempts || {},
+  startedAt: toIso(d.startedAt),
+  finishedAt: toIso(d.finishedAt),
+  certificate: d.certificate || null
+} : { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null });
+
+async function handleGrade(uid, body) {
+  const course = KEYS[body.courseId];
+  if (!course) return [404, { error: 'Parcours introuvable' }];
+  const index = course.steps.findIndex((s) => s.id === body.stepId);
+  if (index < 0) return [404, { error: 'Étape introuvable' }];
+  const step = course.steps[index];
+
+  const learner = await db.doc(`learners/${uid}`).get();
+  if (!learner.exists) return [403, { error: 'Compte apprenant incomplet' }];
+
+  return db.runTransaction(async (tx) => {
+    const ref = progressRef(uid, course.id);
+    const snap = await tx.get(ref);
+    const prev = snap.exists ? snap.data() : {};
+    const scores = prev.scores || {};
+    if (!isOpen(course, scores, index)) return [403, { error: 'Cette étape n’est pas encore débloquée' }];
+
+    const result = grade(course, step, body.answers);
+    const best = Math.max(result.pct, scores[step.id] || 0);
+    const passed = result.pct >= PASS;
+    const now = Timestamp.now();
+    const update = {
+      courseId: course.id,
+      scores: { ...scores, [step.id]: best },
+      attempts: { ...(prev.attempts || {}), [step.id]: ((prev.attempts || {})[step.id] || 0) + 1 },
+      lastScores: { ...(prev.lastScores || {}), [step.id]: result.pct },
+      startedAt: prev.startedAt || now,
+      updatedAt: now
+    };
+    if (step.kind === 'final' && passed && !prev.finishedAt) update.finishedAt = now;
+    tx.set(ref, update, { merge: true });
+    return [200, { ...result, passed, best, progress: publicProgress({ ...prev, ...update }) }];
+  });
+}
+
+const pad = (n) => String(n).padStart(6, '0');
+
+async function handleCertificate(uid, courseId) {
+    const course = KEYS[courseId];
+    if (!course) return [404, { error: 'Parcours introuvable' }];
+    const learnerSnap = await db.doc(`learners/${uid}`).get();
+    if (!learnerSnap.exists) return [403, { error: 'Compte apprenant incomplet' }];
+    const learner = learnerSnap.data();
+
+    return db.runTransaction(async (tx) => {
+      const ref = progressRef(uid, course.id);
+      const snap = await tx.get(ref);
+      const prog = snap.exists ? snap.data() : {};
+      if (prog.certificate) {
+        const cert = await tx.get(db.doc(`certificates/${prog.certificate}`));
+        if (cert.exists) return [200, { certificate: serializeCertificate(cert.data()) }];
+      }
+      const scores = prog.scores || {};
+      if (!course.steps.every((s) => (scores[s.id] || 0) >= PASS)) return [403, { error: 'Toutes les étapes doivent être validées avec 80 % au moins' }];
+
+      const year = new Date().getFullYear();
+      const counterRef = db.doc(`elearning_meta/certificates_${year}`);
+      const counter = await tx.get(counterRef);
+      const seq = (counter.exists ? counter.data().last : 0) + 1;
+      const number = `CICEXF-EL-${year}-${pad(seq)}`;
+      const values = course.steps.map((s) => scores[s.id]);
+      const now = Timestamp.now();
+      const cert = {
+        number,
+        uid,
+        courseId: course.id,
+        courseTitle: course.certTitle,
+        lastName: String(learner.nom || '').trim(),
+        firstName: String(learner.prenom || '').trim(),
+        email: learner.email || null,
+        startedAt: prog.startedAt || now,
+        finishedAt: prog.finishedAt || now,
+        issuedAt: now,
+        average: Math.round(values.reduce((a, b) => a + b, 0) / values.length),
+        hours: course.hours,
+        stats: certificateStats(course)
+      };
+      tx.set(counterRef, { last: seq }, { merge: true });
+      tx.set(db.doc(`certificates/${number}`), cert);
+      tx.set(ref, { certificate: number }, { merge: true });
+      return [200, { certificate: serializeCertificate(cert) }];
+    });
+}
+
+function certificateStats(course) {
+  const chapters = course.steps.filter((s) => s.kind === 'chapitre');
+  const parts = course.steps.filter((s) => s.kind === 'examen').length;
+  const modules = chapters.reduce((n, s) => n + s.modules.length, 0);
+  const quizzes = chapters.reduce((n, s) => n + s.modules.reduce((a, m) => a + course.key[m].length, 0), 0);
+  return { parts, chapters: chapters.length, modules, quizzes };
+}
+
+function serializeCertificate(c) {
+  return {
+    number: c.number,
+    courseId: c.courseId,
+    courseTitle: c.courseTitle,
+    lastName: c.lastName,
+    firstName: c.firstName,
+    startedAt: toIso(c.startedAt),
+    finishedAt: toIso(c.finishedAt),
+    issuedAt: toIso(c.issuedAt),
+    average: c.average,
+    hours: c.hours,
+    stats: c.stats
+  };
+}
+
+exports.elearning = onRequest(
+  { region: 'europe-west1', invoker: 'public', timeoutSeconds: 30, memory: '256MiB', maxInstances: 5, concurrency: 40 },
+  async (req, res) => {
+    const origin = req.get('origin');
+    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Vary', 'Origin');
+    }
+    res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if (req.method === 'OPTIONS') return res.status(204).send('');
+    if (req.method !== 'POST') return res.status(405).json({ error: 'Méthode non autorisée' });
+    if (origin && !ALLOWED_ORIGINS.includes(origin)) return res.status(403).json({ error: 'Origine non autorisée' });
+
+    // Apprenant connecté : jeton Firebase Auth obligatoire
+    const token = (req.get('authorization') || '').replace(/^Bearer\s+/i, '');
+    let uid;
+    try {
+      uid = (await getAuth().verifyIdToken(token)).uid;
+    } catch {
+      return res.status(401).json({ error: 'Session expirée. Reconnectez-vous.' });
+    }
+    if (rateLimited(uid)) return res.status(429).json({ error: 'Trop de requêtes. Patientez quelques minutes.' });
+
+    const body = req.body || {};
+    try {
+      let out;
+      if (body.action === 'grade') out = await handleGrade(uid, body);
+      else if (body.action === 'certificate') out = await handleCertificate(uid, body.courseId);
+      else out = [400, { error: 'Action inconnue' }];
+      return res.status(out[0]).json(out[1]);
+    } catch (err) {
+      logger.error('E-learning', { action: body.action, error: err.message });
+      return res.status(500).json({ error: 'Opération impossible pour le moment. Réessayez.' });
+    }
+  }
+);
+
+exports.grade = grade;

@@ -1,0 +1,216 @@
+// Learner accounts, progress, grading and certificates for the E-learning tab.
+// In production: Firebase Auth (separate learner app) + Firestore + the `elearning` Cloud Function.
+// In development (npm run dev) a local simulation is used by default, so that tests never create
+// accounts or data online; set VITE_ELEARNING_MOCK=0 to test against the real services.
+
+export interface LearnerProfile {
+  nom: string;
+  prenom: string;
+  telephone: string;
+  email: string;
+  pays: string;
+  activite: string;
+  formation: string;
+  experience: string;
+}
+export interface LearnerSession { uid: string; email: string }
+export interface Progress {
+  scores: Record<string, number>;
+  attempts: Record<string, number>;
+  startedAt: string | null;
+  finishedAt: string | null;
+  certificate: string | null;
+}
+export interface GradeResult {
+  pct: number;
+  good: number;
+  total: number;
+  passed: boolean;
+  best: number;
+  modules: { id: string; good: number; total: number; pct: number }[];
+  progress: Progress;
+}
+export interface Certificate {
+  number: string;
+  courseId: string;
+  courseTitle: string;
+  lastName: string;
+  firstName: string;
+  startedAt: string;
+  finishedAt: string;
+  issuedAt: string;
+  average: number;
+  hours: number;
+  stats: { parts: number; chapters: number; modules: number; quizzes: number };
+}
+/** answers[moduleId][quizIndex][questionIndex] = index of the chosen answer */
+export type Answers = Record<string, number[][]>;
+
+export interface ElearningApi {
+  readonly simulated: boolean;
+  onSession(cb: (s: LearnerSession | null) => void): () => void;
+  signUp(profile: LearnerProfile, password: string): Promise<void>;
+  signIn(email: string, password: string): Promise<void>;
+  resetPassword(email: string): Promise<void>;
+  signOut(): Promise<void>;
+  getProfile(): Promise<LearnerProfile | null>;
+  saveProfile(profile: LearnerProfile): Promise<void>;
+  getProgress(courseId: string): Promise<Progress>;
+  grade(courseId: string, stepId: string, answers: Answers): Promise<GradeResult>;
+  issueCertificate(courseId: string): Promise<Certificate>;
+  verifyCertificate(number: string): Promise<Certificate | null>;
+}
+
+export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null };
+
+export const ELEARNING_API_URL: string =
+  import.meta.env.VITE_ELEARNING_API_URL || 'https://elearning-3ksz72m3ta-ew.a.run.app';
+
+export const CERTIFICATE_RE = /^CICEXF-EL-20\d{2}-\d{6}$/;
+
+export class ElearningError extends Error {}
+
+export function learnerErrorMessage(err: any): string {
+  if (err instanceof ElearningError) return err.message;
+  switch (err?.code) {
+    case 'auth/email-already-in-use':
+      return 'Un compte existe déjà avec cette adresse e-mail. Connectez-vous, ou utilisez « Mot de passe oublié ».';
+    case 'auth/invalid-email':
+      return "L'adresse e-mail n'est pas valide.";
+    case 'auth/weak-password':
+      return 'Mot de passe trop faible : 8 caractères au moins.';
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+      return "Adresse e-mail ou mot de passe incorrect. Vous pouvez utiliser « Mot de passe oublié ».";
+    case 'auth/too-many-requests':
+      return 'Trop de tentatives. Patientez quelques minutes avant de réessayer.';
+    case 'auth/network-request-failed':
+    case 'unavailable':
+      return 'Connexion réseau indisponible. Vérifiez votre accès Internet.';
+    case 'permission-denied':
+      return "Enregistrement refusé. Vérifiez les informations saisies, puis réessayez.";
+    default:
+      return 'Opération impossible pour le moment. Veuillez réessayer.';
+  }
+}
+
+const toIso = (v: any): string | null => (v && typeof v.toDate === 'function' ? v.toDate().toISOString() : v || null);
+
+async function createFirebaseApi(): Promise<ElearningApi> {
+  const [{ learnerAuth, learnerDb }, authMod, fs, { db: publicDb }] = await Promise.all([
+    import('../elearningFirebase'),
+    import('firebase/auth'),
+    import('firebase/firestore'),
+    import('../firebase')
+  ]);
+  const { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } = authMod;
+  const { doc, getDoc, setDoc, serverTimestamp } = fs;
+
+  const call = async <T,>(body: Record<string, unknown>): Promise<T> => {
+    const user = learnerAuth.currentUser;
+    if (!user) throw new ElearningError('Session expirée. Reconnectez-vous.');
+    const res = await fetch(ELEARNING_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await user.getIdToken()}` },
+      body: JSON.stringify(body)
+    }).catch(() => { throw new ElearningError('Connexion réseau indisponible. Vérifiez votre accès Internet.'); });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new ElearningError(data.error || 'Opération impossible pour le moment. Réessayez.');
+    return data as T;
+  };
+
+  const writeProfile = async (uid: string, email: string, profile: LearnerProfile, isNew: boolean) => {
+    const ref = doc(learnerDb, 'learners', uid);
+    const existing = isNew ? null : await getDoc(ref);
+    await setDoc(ref, {
+      nom: profile.nom.trim(),
+      prenom: profile.prenom.trim(),
+      telephone: profile.telephone.trim(),
+      email,
+      pays: profile.pays,
+      activite: profile.activite.trim(),
+      formation: profile.formation,
+      experience: profile.experience,
+      consent: true,
+      createdAt: existing?.exists() ? existing.data().createdAt : serverTimestamp(),
+      updatedAt: serverTimestamp()
+    });
+  };
+
+  // During a sign-up, the new session is announced only once the profile is saved
+  let pendingSignup: Promise<unknown> | null = null;
+
+  return {
+    simulated: false,
+    onSession: (cb) => onAuthStateChanged(learnerAuth, async (u) => {
+      if (pendingSignup) await pendingSignup.catch(() => {});
+      cb(u ? { uid: u.uid, email: u.email || '' } : null);
+    }),
+    async signUp(profile, password) {
+      pendingSignup = (async () => {
+        const { user } = await createUserWithEmailAndPassword(learnerAuth, profile.email.trim(), password);
+        await writeProfile(user.uid, user.email || profile.email.trim().toLowerCase(), profile, true);
+      })();
+      try {
+        await pendingSignup;
+      } finally {
+        pendingSignup = null;
+      }
+    },
+    async signIn(email, password) {
+      await signInWithEmailAndPassword(learnerAuth, email.trim(), password);
+    },
+    resetPassword: (email) => sendPasswordResetEmail(learnerAuth, email.trim()),
+    signOut: () => signOut(learnerAuth),
+    async getProfile() {
+      const u = learnerAuth.currentUser;
+      if (!u) return null;
+      const snap = await getDoc(doc(learnerDb, 'learners', u.uid));
+      return snap.exists() ? (snap.data() as LearnerProfile) : null;
+    },
+    async saveProfile(profile) {
+      const u = learnerAuth.currentUser;
+      if (!u) throw new ElearningError('Session expirée. Reconnectez-vous.');
+      await writeProfile(u.uid, u.email || profile.email, profile, false);
+    },
+    async getProgress(courseId) {
+      const u = learnerAuth.currentUser;
+      if (!u) return EMPTY_PROGRESS;
+      const snap = await getDoc(doc(learnerDb, 'learners', u.uid, 'progress', courseId));
+      if (!snap.exists()) return EMPTY_PROGRESS;
+      const d = snap.data();
+      return {
+        scores: d.scores || {},
+        attempts: d.attempts || {},
+        startedAt: toIso(d.startedAt),
+        finishedAt: toIso(d.finishedAt),
+        certificate: d.certificate || null
+      };
+    },
+    grade: (courseId, stepId, answers) => call<GradeResult>({ action: 'grade', courseId, stepId, answers }),
+    issueCertificate: (courseId) => call<{ certificate: Certificate }>({ action: 'certificate', courseId }).then((r) => r.certificate),
+    async verifyCertificate(number) {
+      if (!CERTIFICATE_RE.test(number)) return null;
+      const snap = await getDoc(doc(publicDb, 'certificates', number));
+      if (!snap.exists()) return null;
+      const d = snap.data();
+      return {
+        number: d.number, courseId: d.courseId, courseTitle: d.courseTitle, lastName: d.lastName, firstName: d.firstName,
+        startedAt: toIso(d.startedAt)!, finishedAt: toIso(d.finishedAt)!, issuedAt: toIso(d.issuedAt)!,
+        average: d.average, hours: d.hours, stats: d.stats
+      };
+    }
+  };
+}
+
+let apiPromise: Promise<ElearningApi> | null = null;
+
+export function getElearningApi(): Promise<ElearningApi> {
+  if (!apiPromise) {
+    apiPromise = import.meta.env.DEV && import.meta.env.VITE_ELEARNING_MOCK !== '0'
+      ? import('./elearningMock').then((m) => m.createMockApi())
+      : createFirebaseApi();
+  }
+  return apiPromise;
+}

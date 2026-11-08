@@ -16,6 +16,7 @@ const NAVIGATION_ORDER = [
   'home',
   'accompagnements',
   'formations',
+  'elearning',
   'news',
   'catalogue',
   'realisations',
@@ -27,6 +28,7 @@ const TAB_LABELS: Record<string, string> = {
   about: 'Qui sommes-nous',
   accompagnements: 'Accompagnement',
   formations: 'Formations',
+  elearning: 'E-learning',
   realisations: 'Réalisations',
   news: 'Actualités',
   catalogue: 'Catalogue',
@@ -39,6 +41,7 @@ const TAB_PATHS: Record<string, string> = {
   about: '/qui-sommes-nous',
   accompagnements: '/accompagnement',
   formations: '/formations',
+  elearning: '/e-learning',
   realisations: '/realisations',
   news: '/actualites',
   catalogue: '/catalogue',
@@ -59,6 +62,7 @@ const Interventions = lazy(() => import('./components/Interventions'));
 const Formations = lazy(() => import('./components/Formations'));
 const Realisations = lazy(() => import('./components/Realisations'));
 const Catalogue = lazy(() => import('./components/Catalogue'));
+const ELearning = lazy(() => import('./components/elearning/ELearning'));
 const Privacy = lazy(() => import('./components/Privacy'));
 const News = lazy(() => import('./components/News'));
 const Contact = lazy(() => import('./components/Contact'));
@@ -529,6 +533,8 @@ export default function App() {
         return <Formations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} formations={formations} domains={accompagnements} />;
       case 'catalogue':
         return <Catalogue setActiveTab={setActiveTab} />;
+      case 'elearning':
+        return <ELearning />;
       case 'realisations':
         return <Realisations selectedDomainId={selectedDomainId} setSelectedDomainId={setSelectedDomainId} setActiveTab={setActiveTab} projects={realisations} />;
       case 'news':

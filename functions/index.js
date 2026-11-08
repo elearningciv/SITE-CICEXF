@@ -8,6 +8,9 @@ const nodemailer = require('nodemailer');
 // Assistante virtuelle ADI (Gemini + contenu du site)
 exports.adilineChat = require('./adiline').adilineChat;
 
+// E-learning : correction des quiz et examens, progression et certificats des apprenants
+exports.elearning = require('./elearning').elearning;
+
 // Facebook & Instagram : prospects des publicités à formulaire et réponses d'ADI aux messages
 // (à déployer seulement après avoir enregistré les codes META_* : voir le guide dans l'administration)
 exports.metaWebhook = require('./meta').metaWebhook;

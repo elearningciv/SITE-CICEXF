@@ -386,3 +386,34 @@
 .dark .nav-dd-m > button + button { border-top-color: rgba(255, 255, 255, 0.18); }
 .dark .nav-dd-m > button:hover,
 .dark .nav-dd-m > button:active { background-color: rgba(253, 186, 116, 0.12) !important; color: #fdba74 !important; }
+
+/* E-learning: focus mode while a chapter or an exam is in progress (menu, footer and floating buttons hidden) */
+body.el-focus #main-header,
+body.el-focus #smart-page-navigator,
+body.el-focus #institutional-footer,
+body.el-focus #floating-actions-group,
+body.el-focus #btn-scroll-top {
+  display: none !important;
+}
+
+/* E-learning: comprehension texts */
+.el-text { color: #1e293b; line-height: 1.7; }
+.dark .el-text { color: #e2e8f0; }
+.el-text h3 { margin: 1.3rem 0 .4rem; font-size: 1.05rem; font-weight: 800; color: #8A1A24; }
+.dark .el-text h3 { color: #f4a3a3; }
+.el-text p { margin: .55rem 0; }
+.el-text ul, .el-text ol { margin: .5rem 0; padding-left: 1.4rem; }
+.el-text ul { list-style: disc; }
+.el-text ol { list-style: decimal; }
+.el-text li { margin: .2rem 0; }
+.el-text strong { color: #0f172a; }
+.dark .el-text strong { color: #fff; }
+.el-text .box { margin: .9rem 0; padding: .9rem 1rem; border-radius: .9rem; background: #e8f0f8; border-left: 4px solid #003B6F; }
+.dark .el-text .box { background: #0f2540; }
+.el-text table { width: 100%; border-collapse: collapse; margin: .7rem 0; font-size: .9rem; display: block; overflow-x: auto; }
+.el-text th, .el-text td { padding: .5rem .65rem; border: 1px solid #e2e8f0; text-align: left; vertical-align: top; }
+.el-text th { background: #f1f5f9; font-weight: 800; }
+.dark .el-text th { background: #1e293b; }
+.dark .el-text th, .dark .el-text td { border-color: #334155; }
+.el-text code { padding: .05rem .35rem; border-radius: .35rem; background: #f1f5f9; font-size: .88em; }
+.dark .el-text code { background: #1e293b; }

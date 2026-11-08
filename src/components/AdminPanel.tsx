@@ -5,6 +5,7 @@ import AdminCatalogue from './AdminCatalogue';
 import AdminProspection from './AdminProspection';
 import AdminInvoices from './AdminInvoices';
 import AdminConversations from './AdminConversations';
+import AdminLearners from './AdminLearners';
 import DomainAxisSelect from './DomainAxisSelect';
 import { db } from '../firebase';
 import { auth } from '../firebaseAuth';
@@ -37,7 +38,8 @@ import {
   AlertCircle, Search, RefreshCw, Calendar, Monitor, Download, ArrowLeftRight,
   Plus, Trash2, Edit3, Star, Image, BookOpen, Layers, ExternalLink, Sparkles, Check, HelpCircle, MapPin, Tag, FileText,
   FileSpreadsheet, Phone, MessageSquare, Send, CheckCheck, UserCheck, Filter, Clock, Briefcase, Award, Building, Compass,
-  Target, ShieldCheck, Cpu
+  Target, ShieldCheck, Cpu,
+  GraduationCap
 } from 'lucide-react';
 import { DOMAINS_INTERVENTION, PROJECTS, FORMATIONS, BLOG_POSTS, PARTNERS } from '../data';
 import { Prospect, exportProspectsToExcel, exportSingleProspectToExcel, saveProspect } from '../lib/prospects';
@@ -135,7 +137,7 @@ export default function AdminPanel({
   });
 
   const [dataLoading, setDataLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'prospection' | 'factures' | 'discussions' | 'visits' | 'subscribers'>('formations');
+  const [activeTab, setActiveTab] = useState<'formations' | 'accompagnements' | 'realisations' | 'blog_posts' | 'prospects' | 'partners' | 'testimonials' | 'catalogue' | 'prospection' | 'factures' | 'discussions' | 'elearning' | 'visits' | 'subscribers'>('formations');
   const [searchQuery, setSearchQuery] = useState('');
 
   // Form states for Formations
@@ -1779,6 +1781,18 @@ export default function AdminPanel({
               >
                 <FileText className="w-4 h-4" />
                 <span>Discussions</span>
+              </button>
+
+              <button
+                onClick={() => { setActiveTab('elearning'); setSearchQuery(''); }}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
+                  activeTab === 'elearning'
+                    ? 'bg-brand-blue text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-300 hover:text-brand-blue hover:bg-white dark:hover:bg-slate-800'
+                }`}
+              >
+                <GraduationCap className="w-4 h-4" />
+                <span>E-learning</span>
               </button>
 
               <button
@@ -3771,6 +3785,7 @@ export default function AdminPanel({
             {activeTab === 'factures' && <AdminInvoices formations={mergedFormations} />}
 
             {activeTab === 'discussions' && <AdminConversations />}
+            {activeTab === 'elearning' && <AdminLearners />}
 
           </div>
 

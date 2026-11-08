@@ -3,7 +3,7 @@ import { ShieldCheck } from 'lucide-react';
 
 /** Privacy policy (/confidentialite), kept short on purpose; also the URL given to Meta for lead ads */
 
-const UPDATED = '2 novembre 2026';
+const UPDATED = '8 novembre 2026';
 
 const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
   {
@@ -43,8 +43,29 @@ const SECTIONS: { id: string; title: string; body: ReactNode }[] = [
     )
   },
   {
+    id: 'e-learning',
+    title: '3. Compte e-learning',
+    body: (
+      <>
+        <p>
+          Pour suivre les parcours e-learning et obtenir un certificat, vous créez un compte avec vos nom, prénom, téléphone, adresse
+          e-mail, pays de résidence, domaine d'activité, domaine de formation et années d'expérience. Le site enregistre aussi vos
+          résultats aux quiz et aux examens, et les certificats qui vous sont délivrés.
+        </p>
+        <p>
+          Ces informations servent à gérer votre parcours, à établir votre certificat à votre nom et à vous informer des formations du
+          cabinet. Votre mot de passe est géré par notre service d'authentification sécurisé (Google Firebase) : le cabinet n'y a jamais accès.
+        </p>
+        <p>
+          Chaque certificat porte un numéro unique. En saisissant ce numéro sur le site, toute personne peut vérifier son authenticité :
+          seuls s'affichent alors le nom du titulaire, l'intitulé de la certification et les dates.
+        </p>
+      </>
+    )
+  },
+  {
     id: 'securite',
-    title: '3. Sécurité et confidentialité',
+    title: '4. Sécurité et confidentialité',
     body: (
       <>
         <p>
