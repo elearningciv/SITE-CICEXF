@@ -22,7 +22,7 @@ export const certificateName = (c: Pick<Certificate, 'lastName' | 'firstName'>) 
 
 async function imageData(url: string): Promise<{ data: string; w: number; h: number } | null> {
   try {
-    const res = await fetch(url, { cache: 'force-cache' });
+    const res = await fetch(url);
     if (!res.ok || !(res.headers.get('content-type') || '').startsWith('image/')) return null;
     // The hosting CDN may answer in WebP or JPEG instead of PNG: the image is redrawn
     // and re-encoded as PNG (transparency kept) so that the PDF always receives a clean PNG.
@@ -51,7 +51,7 @@ export async function buildCertificatePdf(c: Certificate) {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
   const W = 297, H = 210, CX = W / 2;
-  const [logo, signature] = await Promise.all([imageData('/elearning/logo-cicexf.png'), imageData('/elearning/signature.png')]);
+  const [logo, signature] = await Promise.all([imageData('/elearning/logo-cicexf.png'), imageData('/elearning/signature.png?v=2')]);
 
   doc.setProperties({
     title: `Certificat ${c.number}`,
@@ -211,21 +211,21 @@ export async function buildCertificatePdf(c: Certificate) {
   const signX = 205;
   doc.setFontSize(9);
   doc.setTextColor(...MUTED);
-  const placeY = bottom - 24;
-  doc.text(`Fait à Abidjan, le ${formatFrenchDate(c.issuedAt)}`, signX - doc.getTextWidth(`Fait à Abidjan, le ${formatFrenchDate(c.issuedAt)}`) / 2, placeY);
-  if (signature) {
-    // Signature scan fitted in a 60 × 15 mm box above the line
-    const scale = Math.min(60 / signature.w, 15 / signature.h);
-    const w = signature.w * scale, h = signature.h * scale;
-    doc.addImage(signature.data, 'PNG', signX - w / 2, bottom - 6 - h, w, h);
-  }
+  const place = `Fait à Abidjan, le ${formatFrenchDate(c.issuedAt)}`;
+  doc.text(place, signX - doc.getTextWidth(place) / 2, bottom - 31);
   doc.setDrawColor(...INK);
   doc.setLineWidth(0.4);
   doc.line(signX - 34, bottom - 5.2, signX + 34, bottom - 5.2);
+  if (signature) {
+    // Stamp and signature of the manager, fitted in a 64 × 24 mm box resting on the line
+    const scale = Math.min(64 / signature.w, 24 / signature.h);
+    const w = signature.w * scale, h = signature.h * scale;
+    doc.addImage(signature.data, 'PNG', signX - w / 2, bottom - 3.5 - h, w, h);
+  }
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.6);
   doc.setTextColor(...INK);
-  const sign = 'Pour le CICEXF, la Direction';
+  const sign = 'Pour le CICEXF, le Gérant';
   doc.text(sign, signX - doc.getTextWidth(sign) / 2, bottom - 0.6);
 
   return doc;
