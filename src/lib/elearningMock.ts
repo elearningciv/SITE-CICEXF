@@ -16,6 +16,7 @@ interface Store {
   session: string | null;
   progress: Record<string, Record<string, Progress & { lastScores?: Record<string, number> }>>;
   certificates: Record<string, Certificate & { uid: string }>;
+  enrollments?: Record<string, Record<string, { courseId: string; enrolledAt: string }>>;
   counter: number;
 }
 
@@ -161,6 +162,21 @@ export function createMockApi(): ElearningApi {
       prog.certificate = number;
       save(s);
       return cert;
+    },
+    async getEnrollments() {
+      const s = load(), me = current();
+      return (me && s.enrollments?.[me.uid]) || {};
+    },
+    async enroll(courseId) {
+      await wait();
+      const s = load(), me = current();
+      if (!me) throw new ElearningError('Session expirée. Reconnectez-vous.');
+      s.enrollments = s.enrollments || {};
+      s.enrollments[me.uid] = s.enrollments[me.uid] || {};
+      const e = s.enrollments[me.uid][courseId] || { courseId, enrolledAt: new Date().toISOString() };
+      s.enrollments[me.uid][courseId] = e;
+      save(s);
+      return e;
     },
     async getDraft(courseId) {
       const me = current();

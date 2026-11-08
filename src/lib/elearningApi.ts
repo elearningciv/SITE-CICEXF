@@ -45,6 +45,8 @@ export interface Certificate {
 }
 /** answers[moduleId][quizIndex][questionIndex] = index of the chosen answer */
 export type Answers = Record<string, number[][]>;
+/** Registration to a certification (confirmed by the learner) */
+export interface Enrollment { courseId: string; enrolledAt: string }
 /** A chapter or exam in progress, saved so that the learner can resume it later (on any device) */
 export interface Draft {
   stepId: string;
@@ -69,6 +71,8 @@ export interface ElearningApi {
   getProgress(courseId: string): Promise<Progress>;
   grade(courseId: string, stepId: string, answers: Answers): Promise<GradeResult>;
   issueCertificate(courseId: string): Promise<Certificate>;
+  getEnrollments(): Promise<Record<string, Enrollment>>;
+  enroll(courseId: string): Promise<Enrollment>;
   getDraft(courseId: string): Promise<Draft | null>;
   /** Saved at once in this browser, and in the account a moment later */
   saveDraft(courseId: string, draft: Draft): void;
@@ -134,7 +138,7 @@ async function createFirebaseApi(): Promise<ElearningApi> {
     import('../firebase')
   ]);
   const { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } = authMod;
-  const { doc, getDoc, setDoc, deleteDoc, serverTimestamp } = fs;
+  const { doc, getDoc, getDocs, setDoc, deleteDoc, collection, serverTimestamp } = fs;
   const draftTimers: Record<string, ReturnType<typeof setTimeout>> = {};
   const draftRef = (uid: string, courseId: string) => doc(learnerDb, 'learners', uid, 'drafts', courseId);
 
@@ -221,6 +225,20 @@ async function createFirebaseApi(): Promise<ElearningApi> {
     },
     grade: (courseId, stepId, answers) => call<GradeResult>({ action: 'grade', courseId, stepId, answers }),
     issueCertificate: (courseId) => call<{ certificate: Certificate }>({ action: 'certificate', courseId }).then((r) => r.certificate),
+    async getEnrollments() {
+      const u = learnerAuth.currentUser;
+      if (!u) return {};
+      const snap = await getDocs(collection(learnerDb, 'learners', u.uid, 'enrollments'));
+      return Object.fromEntries(snap.docs.map((d) => [d.id, { courseId: d.id, enrolledAt: toIso(d.data().enrolledAt) || '' }]));
+    },
+    async enroll(courseId) {
+      const u = learnerAuth.currentUser;
+      if (!u) throw new ElearningError('Session expirée. Reconnectez-vous.');
+      const ref = doc(learnerDb, 'learners', u.uid, 'enrollments', courseId);
+      const existing = await getDoc(ref);
+      if (!existing.exists()) await setDoc(ref, { courseId, enrolledAt: serverTimestamp() });
+      return { courseId, enrolledAt: existing.exists() ? toIso(existing.data().enrolledAt) || '' : new Date().toISOString() };
+    },
     async getDraft(courseId) {
       const u = learnerAuth.currentUser;
       if (!u) return null;

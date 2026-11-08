@@ -25,19 +25,33 @@ export interface Course {
   modules: Record<string, ModuleContent>;
 }
 
-export const COURSES: { id: string; load: () => Promise<Course> }[] = [
-  { id: 'cartographie-geomatique', load: () => import('./cartographie-geomatique.json').then((m) => m.default as Course) }
-];
+/** Short description of a course, enough for the cards and the training space */
+export interface CourseMeta {
+  id: string;
+  order: number;
+  title: string;
+  certTitle: string;
+  domain: string;
+  summary: string;
+  hours: number;
+  stats: { parts: number; chapters: number; modules: number; quizzes: number; exams: number };
+  steps: { id: string; kind: CourseStep['kind']; title: string; modules: number }[];
+}
 
-/** Courses in preparation, shown as "Bientôt disponible" */
-export const COMING_SOON = [
-  'Modélisation financière',
-  'Hygiène et sécurité au travail',
-  'Suivi-évaluation de projets',
-  'Cybersécurité',
-  'Conception pédagogique',
-  'Gestion des ressources humaines'
-];
+import catalog from './catalog.json';
+export const CATALOG = catalog as CourseMeta[];
+
+// Full courses are downloaded only when the learner opens one
+const files = import.meta.glob('./courses/*.json', { import: 'default' });
+const cache: Record<string, Promise<Course>> = {};
+export function loadCourse(id: string): Promise<Course> {
+  const loader = files[`./courses/${id}.json`];
+  if (!loader) return Promise.reject(new Error(`Parcours inconnu : ${id}`));
+  return (cache[id] ||= loader().then((c) => c as Course));
+}
+
+/** Courses in preparation, shown as "Bientôt disponible" (none at the moment) */
+export const COMING_SOON: string[] = [];
 
 export const COUNTRIES = [
   "Côte d'Ivoire", 'Bénin', 'Burkina Faso', 'Cameroun', 'Congo', 'République démocratique du Congo', 'Gabon', 'Guinée',

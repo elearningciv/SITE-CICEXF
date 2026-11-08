@@ -1,0 +1,548 @@
+[
+ {
+  "id": "cartographie-geomatique",
+  "order": 1,
+  "title": "Cartographie et géomatique",
+  "certTitle": "Cartographie et géomatique : réaliser des cartes et des analyses spatiales avec les SIG et QGIS",
+  "domain": "Ingénierie de développement territorial",
+  "summary": "Lire une carte, maîtriser les coordonnées, analyser l'espace et produire des cartes professionnelles avec QGIS.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Lire et comprendre une carte",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Les données géographiques",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Prendre en main QGIS",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Analyser l'espace",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Réaliser une carte professionnelle",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Collecter des données sur le terrain",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "modelisation-financiere",
+  "order": 2,
+  "title": "Modélisation financière",
+  "certTitle": "Modélisation financière : construire un modèle sous Excel, établir des prévisions et évaluer un projet",
+  "domain": "Ingénierie financière et de l'investissement",
+  "summary": "Lire les états financiers, bâtir un modèle Excel fiable, projeter l'activité et décider avec la VAN, le TRI et les scénarios.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Lire les états financiers",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Construire un modèle fiable sous Excel",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Projeter l'activité",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Les états financiers prévisionnels",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Mesurer la rentabilité d'un projet",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Analyser le risque et présenter le modèle",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "hygiene-securite-travail",
+  "order": 3,
+  "title": "Hygiène et sécurité au travail",
+  "certTitle": "Hygiène et sécurité au travail : évaluer les risques professionnels et organiser la prévention",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Identifier et évaluer les risques, choisir les bonnes mesures de prévention, réagir en cas d'urgence et piloter la santé-sécurité.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Comprendre la santé et la sécurité au travail",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Évaluer les risques professionnels",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Les risques les plus fréquents",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Les moyens de prévention",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Gérer les situations d'urgence",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Piloter la santé-sécurité",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "suivi-evaluation-projets",
+  "order": 4,
+  "title": "Suivi-évaluation de projets",
+  "certTitle": "Suivi-évaluation de projets : concevoir un dispositif, mesurer les résultats et rendre compte",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Construire la chaîne de résultats et le cadre logique, définir des indicateurs, collecter et analyser les données, évaluer et rendre compte.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Les fondamentaux du suivi-évaluation",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Les indicateurs",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Collecter les données",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Analyser et rendre compte",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Conduire une évaluation",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Redevabilité, apprentissage et changement",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "cybersecurite",
+  "order": 5,
+  "title": "Cybersécurité",
+  "certTitle": "Cybersécurité : protéger les informations, les postes et les réseaux d'une organisation",
+  "domain": "Ingénierie informatique et systèmes de réseaux",
+  "summary": "Comprendre les menaces, se protéger de l'hameçonnage et des rançongiciels, sécuriser comptes, postes et réseaux, et gérer un incident.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Les fondamentaux de la sécurité",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Les attaques les plus courantes",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Protéger les comptes et les postes",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Sécuriser les réseaux et les usages",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Organiser la sécurité",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Détecter et répondre aux incidents",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "conception-pedagogique",
+  "order": 6,
+  "title": "Conception pédagogique",
+  "certTitle": "Conception pédagogique : analyser les besoins, concevoir, animer et évaluer une formation pour adultes",
+  "domain": "Ingénierie de formation et de renforcement de capacités",
+  "summary": "Analyser les besoins, rédiger des objectifs, scénariser une formation présentielle ou à distance, l'animer et en mesurer les effets.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Les bases de la conception pédagogique",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Analyser et formuler les objectifs",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Concevoir le dispositif",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Supports et formation à distance",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Animer une formation",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Évaluer la formation",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "gestion-ressources-humaines",
+  "order": 7,
+  "title": "Gestion des ressources humaines",
+  "certTitle": "Gestion des ressources humaines : recruter, administrer, développer les compétences et piloter la fonction RH",
+  "domain": "Audit, consultance et stratégie de développement des organisations",
+  "summary": "Recruter et intégrer, administrer le personnel, développer les compétences, motiver, gérer les relations sociales et piloter avec des indicateurs.",
+  "hours": 12,
+  "stats": {
+   "parts": 3,
+   "chapters": 6,
+   "modules": 18,
+   "quizzes": 36,
+   "exams": 4
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : Comprendre la fonction RH",
+    "modules": 3
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Recruter et intégrer",
+    "modules": 3
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : Administrer le personnel",
+    "modules": 3
+   },
+   {
+    "id": "C4",
+    "kind": "chapitre",
+    "title": "Chapitre 4 : Développer les compétences",
+    "modules": 3
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C5",
+    "kind": "chapitre",
+    "title": "Chapitre 5 : Rémunération, motivation et bien-être",
+    "modules": 3
+   },
+   {
+    "id": "C6",
+    "kind": "chapitre",
+    "title": "Chapitre 6 : Relations sociales et pilotage RH",
+    "modules": 3
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ }
+]

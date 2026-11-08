@@ -99,6 +99,16 @@ service cloud.firestore {
         allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
         allow write: if false;
       }
+      // Inscription à une certification, confirmée par l'apprenant (une seule fois par certification)
+      match /enrollments/{courseId} {
+        allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
+        allow create: if request.auth != null && request.auth.uid == uid
+          && request.resource.data.keys().hasOnly(['courseId', 'enrolledAt'])
+          && request.resource.data.courseId == courseId
+          && courseId.matches('^[a-z0-9-]{3,60}$')
+          && request.resource.data.enrolledAt == request.time;
+        allow update, delete: if false;
+      }
       // Chapitre en cours (réponses non corrigées), pour reprendre plus tard : réservé à l'apprenant
       match /drafts/{courseId} {
         allow read, delete: if request.auth != null && request.auth.uid == uid;
@@ -111,6 +121,9 @@ service cloud.firestore {
     }
     // Suivi des parcours dans l'administration
     match /{path=**}/progress/{courseId} {
+      allow read: if isAdmin();
+    }
+    match /{path=**}/enrollments/{courseId} {
       allow read: if isAdmin();
     }
     // Certificats : vérification publique d'un numéro précis, liste réservée à l'admin

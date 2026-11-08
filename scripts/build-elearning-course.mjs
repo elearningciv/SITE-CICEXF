@@ -1,6 +1,7 @@
 // Builds an e-learning course from its authoring files (window.COURSE / window.CONTENT scripts).
 // Produces two files:
-//  - src/data/elearning/<course>.json : everything the learner sees, WITHOUT the correct answers;
+//  - src/data/elearning/courses/<course>.json : everything the learner sees, WITHOUT the correct answers;
+//  - src/data/elearning/catalog.json : a short description of every course (cards, training space);
 //  - functions/elearning/keys/<course>.json : the answer key, read only by the Cloud Function.
 // Answers are reordered with a fixed seed so that their position in the public file says nothing.
 // The answer key is not committed (see .gitignore): it is deployed with the function only.
@@ -23,7 +24,9 @@ const { COURSE, CONTENT } = sandbox.window;
 if (!COURSE || !CONTENT) throw new Error('COURSE ou CONTENT introuvable');
 
 // Deterministic shuffle (mulberry32)
-let seed = 0x5eed2026;
+// One seed per course (the first published course keeps its original seed)
+const hashSeed = (str) => [...str].reduce((h, c) => (Math.imul(h, 31) + c.charCodeAt(0)) | 0, 0x5eed2026);
+let seed = COURSE.id === 'cartographie-geomatique' ? 0x5eed2026 : hashSeed(COURSE.id);
 const rand = () => {
   seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
   let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
@@ -91,12 +94,36 @@ const server = {
   key
 };
 
-const out1 = path.join('src', 'data', 'elearning', `${COURSE.id}.json`);
+const out1 = path.join('src', 'data', 'elearning', 'courses', `${COURSE.id}.json`);
 const out2 = path.join('functions', 'elearning', 'keys', `${COURSE.id}.json`);
 fs.mkdirSync(path.dirname(out1), { recursive: true });
 fs.mkdirSync(path.dirname(out2), { recursive: true });
 fs.writeFileSync(out1, JSON.stringify(course));
 fs.writeFileSync(out2, JSON.stringify(server));
+
+// Catalogue entry (kept small: loaded with the E-learning tab, the full course only when needed)
+const chapters = steps.filter((s) => s.kind === 'chapitre');
+const meta = {
+  id: COURSE.id,
+  order: COURSE.order ?? 99,
+  title: COURSE.title,
+  certTitle: COURSE.certTitle,
+  domain: COURSE.domain,
+  summary: course.summary,
+  hours: Math.round(minutes / 60),
+  stats: {
+    parts: COURSE.parts.length,
+    chapters: chapters.length,
+    modules: chapters.reduce((n, s) => n + s.modules.length, 0),
+    quizzes: chapters.reduce((n, s) => n + s.modules.reduce((a, m) => a + modules[m.id].quizzes.length, 0), 0),
+    exams: steps.length - chapters.length
+  },
+  steps: steps.map((s) => ({ id: s.id, kind: s.kind, title: s.title, modules: s.modules.length }))
+};
+const catalogFile = path.join('src', 'data', 'elearning', 'catalog.json');
+const catalog = fs.existsSync(catalogFile) ? JSON.parse(fs.readFileSync(catalogFile, 'utf8')) : [];
+const next = [...catalog.filter((c) => c.id !== meta.id), meta].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+fs.writeFileSync(catalogFile, JSON.stringify(next, null, 1));
 const positions = Object.values(key).flat(2).reduce((a, g) => ((a[g] = (a[g] || 0) + 1), a), {});
 console.log(`${COURSE.id} : ${steps.length} étapes, ${Object.keys(modules).length} modules, ${questions} questions, ${Math.round(minutes / 60)} h`);
 console.log('Position des bonnes réponses :', positions);

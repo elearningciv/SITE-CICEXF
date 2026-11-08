@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { collection, collectionGroup, getDocs, Timestamp } from 'firebase/firestore';
 import { Award, Download, GraduationCap, Loader2, RefreshCw, Search, Users } from 'lucide-react';
 import { db } from '../firebase';
-import { COURSES, PASS, type Course } from '../data/elearning';
+import { CATALOG, PASS } from '../data/elearning';
 
 /** Admin tab "E-learning": registered learners, their progress and the certificates issued */
 
@@ -18,10 +18,10 @@ interface IssuedCertificate { number: string; uid: string; courseTitle: string; 
 const fmt = (t?: Timestamp) => (t ? t.toDate().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '');
 
 export default function AdminLearners() {
-  const [course, setCourse] = useState<Course | null>(null);
   const [learners, setLearners] = useState<Learner[]>([]);
   const [progress, setProgress] = useState<Map<string, LearnerProgress>>(new Map());
   const [certificates, setCertificates] = useState<IssuedCertificate[]>([]);
+  const [enrolledAt, setEnrolledAt] = useState<Map<string, Timestamp | undefined>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
@@ -32,19 +32,19 @@ export default function AdminLearners() {
     setLoading(true);
     setError('');
     Promise.all([
-      COURSES[0].load(),
       getDocs(collection(db, 'learners')),
       getDocs(collectionGroup(db, 'progress')),
-      getDocs(collection(db, 'certificates'))
-    ]).then(([c, ls, ps, cs]) => {
+      getDocs(collection(db, 'certificates')),
+      getDocs(collectionGroup(db, 'enrollments'))
+    ]).then(([ls, ps, cs, es]) => {
       if (cancelled) return;
-      setCourse(c);
       setLearners(ls.docs.map((d) => ({ uid: d.id, ...(d.data() as Omit<Learner, 'uid'>) }))
         .sort((a, b) => (b.createdAt?.toMillis() ?? 0) - (a.createdAt?.toMillis() ?? 0)));
       setProgress(new Map(ps.docs.map((d) => {
         const uid = d.ref.parent.parent?.id || '';
         return [`${uid}/${d.id}`, { uid, courseId: d.id, ...(d.data() as Omit<LearnerProgress, 'uid' | 'courseId'>) }];
       })));
+      setEnrolledAt(new Map(es.docs.map((d) => [`${d.ref.parent.parent?.id}/${d.id}`, d.data().enrolledAt as Timestamp | undefined])));
       setCertificates(cs.docs.map((d) => d.data() as IssuedCertificate)
         .sort((a, b) => (b.issuedAt?.toMillis() ?? 0) - (a.issuedAt?.toMillis() ?? 0)));
     }).catch((e) => {
@@ -54,26 +54,34 @@ export default function AdminLearners() {
     return () => { cancelled = true; };
   }, [reload]);
 
+  // One line per certification the learner registered for (or started)
   const rows = useMemo(() => learners.map((l) => {
-    const p = course ? progress.get(`${l.uid}/${course.id}`) : undefined;
-    const done = course && p ? course.steps.filter((s) => (p.scores?.[s.id] || 0) >= PASS).length : 0;
-    const current = course && p ? course.steps.find((s) => (p.scores?.[s.id] || 0) < PASS) : course?.steps[0];
-    return { l, p, done, current };
-  }), [learners, progress, course]);
+    const courses = CATALOG.map((meta) => {
+      const key = `${l.uid}/${meta.id}`;
+      const p = progress.get(key);
+      if (!p && !enrolledAt.has(key)) return null;
+      const done = p ? meta.steps.filter((s) => (p.scores?.[s.id] || 0) >= PASS).length : 0;
+      const current = meta.steps.find((s) => (p?.scores?.[s.id] || 0) < PASS);
+      return { meta, p, done, current, enrolledOn: enrolledAt.get(key) };
+    }).filter((x): x is NonNullable<typeof x> => !!x);
+    return { l, courses, enrolled: courses.length > 0 };
+  }), [learners, progress, enrolledAt]);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
-    return rows.filter(({ l, p }) => [l.nom, l.prenom, l.email, l.telephone, l.pays, l.formation, l.activite, p?.certificate].join(' ').toLowerCase().includes(q));
+    return rows.filter(({ l, courses }) => [l.nom, l.prenom, l.email, l.telephone, l.pays, l.formation, l.activite, ...courses.map((c) => `${c.meta.title} ${c.p?.certificate || ''}`)].join(' ').toLowerCase().includes(q));
   }, [rows, search]);
 
-  const started = rows.filter((r) => r.p).length;
-  const total = course?.steps.length || 0;
+  const started = rows.filter((r) => r.enrolled).length;
 
   const exportCsv = () => {
-    const head = ['Nom', 'Prénom', 'Téléphone', 'E-mail', 'Pays', "Domaine d'activité", 'Domaine de formation', 'Expérience', 'Inscrit le', 'Étapes validées', 'Certificat'];
+    const head = ['Nom', 'Prénom', 'Téléphone', 'E-mail', 'Pays', "Domaine d'activité", 'Domaine de formation', 'Expérience', 'Compte créé le', 'Certification', 'Inscrit le', 'Étapes validées', 'Certificat'];
     const cell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-    const lines = [head, ...rows.map(({ l, p, done }) => [l.nom, l.prenom, l.telephone, l.email, l.pays, l.activite, l.formation, l.experience, fmt(l.createdAt), `${done}/${total}`, p?.certificate || ''])]
+    const base = (l: Learner) => [l.nom, l.prenom, l.telephone, l.email, l.pays, l.activite, l.formation, l.experience, fmt(l.createdAt)];
+    const lines = [head, ...rows.flatMap(({ l, courses }) => courses.length
+      ? courses.map((c) => [...base(l), c.meta.title, fmt(c.enrolledOn), `${c.done}/${c.meta.steps.length}`, c.p?.certificate || ''])
+      : [[...base(l), '', '', '', '']])]
       .map((r) => r.map(cell).join(';'));
     const blob = new Blob(['﻿' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
     const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `apprenants-elearning-${new Date().toISOString().slice(0, 10)}.csv` });
@@ -89,7 +97,7 @@ export default function AdminLearners() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { icon: Users, label: 'Comptes créés', value: learners.length },
-          { icon: GraduationCap, label: 'Parcours commencés', value: started },
+          { icon: GraduationCap, label: 'Inscrits à une certification', value: started },
           { icon: Award, label: 'Certificats délivrés', value: certificates.length }
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
@@ -115,20 +123,28 @@ export default function AdminLearners() {
         <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-slate-800 text-left text-xs uppercase tracking-wide text-slate-500">
-              <tr><th className="p-3">Apprenant</th><th className="p-3">Contact</th><th className="p-3">Profil</th><th className="p-3">Inscrit le</th><th className="p-3">Progression</th><th className="p-3">Certificat</th></tr>
+              <tr><th className="p-3">Apprenant</th><th className="p-3">Contact</th><th className="p-3">Profil</th><th className="p-3">Compte créé le</th><th className="p-3">Progression</th><th className="p-3">Certificat</th></tr>
             </thead>
             <tbody>
-              {filtered.map(({ l, p, done, current }) => (
+              {filtered.map(({ l, courses }) => (
                 <tr key={l.uid} className="border-t border-slate-100 dark:border-slate-800 align-top">
                   <td className="p-3 font-bold text-slate-900 dark:text-white">{l.nom.toLocaleUpperCase('fr-FR')} {l.prenom}<div className="text-xs font-normal text-slate-500">{l.pays}</div></td>
                   <td className="p-3"><a href={`mailto:${l.email}`} className="text-brand-blue dark:text-sky-300 break-all">{l.email}</a><div className="text-xs">{l.telephone}</div></td>
                   <td className="p-3 text-xs text-slate-600 dark:text-slate-300">{l.formation}<br />{l.activite} · {l.experience}</td>
                   <td className="p-3 whitespace-nowrap">{fmt(l.createdAt)}</td>
-                  <td className="p-3 min-w-[170px]">
-                    <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><i className="block h-full bg-brand-blue" style={{ width: `${total ? (done / total) * 100 : 0}%` }} /></div>
-                    <div className="mt-1 text-xs text-slate-600 dark:text-slate-300">{done}/{total} étapes{p && current ? ` · en cours : ${current.title.split(' : ')[0]}${p.scores?.[current.id] !== undefined ? ` (${p.scores[current.id]} %)` : ''}` : !p ? ' · pas commencé' : ''}</div>
+                  <td className="p-3 min-w-[220px]">
+                    {!courses.length && <span className="text-xs text-slate-500">Pas encore inscrit à une certification</span>}
+                    {courses.map(({ meta, p, done, current, enrolledOn }) => (
+                      <div key={meta.id} className="mb-2 last:mb-0">
+                        <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{meta.title}</div>
+                        <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><i className="block h-full bg-brand-blue" style={{ width: `${(done / meta.steps.length) * 100}%` }} /></div>
+                        <div className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">{done}/{meta.steps.length} étapes{p && current ? ` · en cours : ${current.title.split(' : ')[0]}${p.scores?.[current.id] !== undefined ? ` (${p.scores[current.id]} %)` : ''}` : !p ? ' · pas commencé' : ''}{enrolledOn ? ` · inscrit le ${fmt(enrolledOn)}` : ''}</div>
+                      </div>
+                    ))}
                   </td>
-                  <td className="p-3 whitespace-nowrap">{p?.certificate ? <span className="inline-flex items-center gap-1 font-bold text-emerald-700 dark:text-emerald-400"><Award className="w-4 h-4" />{p.certificate}</span> : <span className="text-slate-400">—</span>}</td>
+                  <td className="p-3 whitespace-nowrap">{courses.some((c) => c.p?.certificate)
+                    ? courses.filter((c) => c.p?.certificate).map((c) => <div key={c.meta.id} className="inline-flex items-center gap-1 font-bold text-emerald-700 dark:text-emerald-400"><Award className="w-4 h-4" />{c.p!.certificate}</div>)
+                    : <span className="text-slate-400">—</span>}</td>
                 </tr>
               ))}
             </tbody>
