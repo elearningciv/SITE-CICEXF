@@ -90,10 +90,11 @@ export default function ELearning() {
     const id = ++request.current;
     if (!session) { setProfile(null); setProgressMap({}); setDraftMap({}); setEnrollments({}); return; }
     try {
-      const ids = CATALOG.map((c) => c.id);
-      const [p, en, progresses, drafts] = await Promise.all([
-        api.getProfile(),
-        api.getEnrollments(),
+      // Progress and saved work are read only for the certifications the learner registered for
+      // (to save database reads); a newly started course is updated by the player itself
+      const [p, en] = await Promise.all([api.getProfile(), api.getEnrollments()]);
+      const ids = CATALOG.map((c) => c.id).filter((c) => en[c]);
+      const [progresses, drafts] = await Promise.all([
         Promise.all(ids.map((c) => api.getProgress(c))),
         Promise.all(ids.map((c) => api.getDraft(c)))
       ]);

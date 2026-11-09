@@ -270,6 +270,20 @@ export default function AdminPanel({
     };
   }, []);
 
+  // Visits: loaded on demand (Visites tab), the 300 most recent, once per opening of the administration
+  const [visitsLoaded, setVisitsLoaded] = useState(false);
+  useEffect(() => {
+    if (activeTab !== 'visits' || visitsLoaded || !currentUser || !isAuthorizedAdminEmail(currentUser.email)) return;
+    setVisitsLoaded(true);
+    getDocs(query(collection(db, 'visits'), orderBy('timestamp', 'desc'), limit(300)))
+      .then((snap) => setVisits(snap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        timestamp: (doc.data().timestamp as Timestamp)?.toDate() || new Date()
+      }))))
+      .catch((e) => { console.error('Visites :', e); setVisitsLoaded(false); });
+  }, [activeTab, visitsLoaded, currentUser]);
+
   // Fetch all collections from Firestore
   const loadDashboardData = async () => {
     setDataLoading(true);
@@ -295,15 +309,8 @@ export default function AdminPanel({
         setProspects(prospectsData);
       }
 
-      // 1. Fetch Visits
-      const visitsQuery = query(collection(db, 'visits'), orderBy('timestamp', 'desc'), limit(1000));
-      const visitsSnapshot = await getDocs(visitsQuery);
-      const visitsData = visitsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        timestamp: (doc.data().timestamp as Timestamp)?.toDate() || new Date()
-      }));
-      setVisits(visitsData);
+      // 1. Visits are loaded only when the "Visites" tab is opened (see loadVisits): reading them at every
+      //    opening of the dashboard used up most of the database's free daily read quota.
 
       // 2. Fetch Subscribers
       const subsSnapshot = await getDocs(collection(db, 'subscribers'));
