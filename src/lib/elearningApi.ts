@@ -20,6 +20,8 @@ export interface Progress {
   startedAt: string | null;
   finishedAt: string | null;
   certificate: string | null;
+  /** Temporary simulation: steps unlock once attempted, even under 80 % (specimen certificate) */
+  simulation?: boolean;
 }
 export interface GradeResult {
   pct: number;
@@ -42,6 +44,8 @@ export interface Certificate {
   average: number;
   hours: number;
   stats: { parts: number; chapters: number; modules: number; quizzes: number };
+  /** Specimen issued in simulation mode, with no official value */
+  simulation?: boolean;
 }
 /** answers[moduleId][quizIndex][questionIndex] = index of the chosen answer */
 export type Answers = Record<string, number[][]>;
@@ -85,7 +89,11 @@ export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: n
 export const ELEARNING_API_URL: string =
   import.meta.env.VITE_ELEARNING_API_URL || 'https://elearning-3ksz72m3ta-ew.a.run.app';
 
-export const CERTIFICATE_RE = /^CICEXF-EL-20\d{2}-\d{6}$/;
+export const CERTIFICATE_RE = /^CICEXF-EL-(TEST-)?20\d{2}-\d{6}$/;
+
+/** A step counts as cleared at 80 % or more, or once attempted in simulation mode */
+export const stepCleared = (p: Progress, stepId: string, pass: number) =>
+  p.simulation ? p.scores[stepId] !== undefined : (p.scores[stepId] || 0) >= pass;
 
 export class ElearningError extends Error {}
 
@@ -220,7 +228,8 @@ async function createFirebaseApi(): Promise<ElearningApi> {
         attempts: d.attempts || {},
         startedAt: toIso(d.startedAt),
         finishedAt: toIso(d.finishedAt),
-        certificate: d.certificate || null
+        certificate: d.certificate || null,
+        simulation: !!d.simulation
       };
     },
     grade: (courseId, stepId, answers) => call<GradeResult>({ action: 'grade', courseId, stepId, answers }),
@@ -276,7 +285,7 @@ async function createFirebaseApi(): Promise<ElearningApi> {
       return {
         number: d.number, courseId: d.courseId, courseTitle: d.courseTitle, lastName: d.lastName, firstName: d.firstName,
         startedAt: toIso(d.startedAt)!, finishedAt: toIso(d.finishedAt)!, issuedAt: toIso(d.issuedAt)!,
-        average: d.average, hours: d.hours, stats: d.stats
+        average: d.average, hours: d.hours, stats: d.stats, simulation: !!d.simulation
       };
     }
   };

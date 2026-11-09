@@ -81,6 +81,17 @@ export async function buildCertificatePdf(c: Certificate) {
     doc.circle(0, H, r, 'S');
   }
 
+  // Specimen issued in simulation mode: large diagonal watermark
+  if (c.simulation) {
+    doc.setFont('times', 'bold');
+    doc.setFontSize(96);
+    doc.setTextColor(244, 226, 230);
+    const mark = 'SPÉCIMEN';
+    const mw = doc.getTextWidth(mark);
+    const a = (22 * Math.PI) / 180;
+    doc.text(mark, W / 2 - (mw / 2) * Math.cos(a), H / 2 + 14 + (mw / 2) * Math.sin(a), { angle: 22 });
+  }
+
   // Frame
   doc.setDrawColor(...NAVY);
   doc.setLineWidth(1.6);
@@ -204,6 +215,11 @@ export async function buildCertificatePdf(c: Certificate) {
   doc.setTextColor(...MUTED);
   doc.text(`Délivré le ${formatFrenchDate(c.issuedAt)}`, left, bottom - 4.6);
   doc.text('Authenticité vérifiable sur www.cicexf.com/e-learning', left, bottom - 0.2);
+  if (c.simulation) {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...BURGUNDY);
+    doc.text('Spécimen de démonstration, sans valeur officielle', left, bottom - 13.6);
+  }
 
   drawSeal(doc, CX, bottom - 20, 20);
 

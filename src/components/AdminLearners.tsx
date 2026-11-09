@@ -13,7 +13,7 @@ interface Learner {
   createdAt?: Timestamp;
 }
 interface LearnerProgress { uid: string; courseId: string; scores: Record<string, number>; attempts: Record<string, number>; certificate?: string; updatedAt?: Timestamp }
-interface IssuedCertificate { number: string; uid: string; courseTitle: string; lastName: string; firstName: string; average: number; issuedAt?: Timestamp }
+interface IssuedCertificate { number: string; uid: string; courseTitle: string; lastName: string; firstName: string; average: number; issuedAt?: Timestamp; simulation?: boolean }
 
 const fmt = (t?: Timestamp) => (t ? t.toDate().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '');
 
@@ -98,7 +98,7 @@ export default function AdminLearners() {
         {[
           { icon: Users, label: 'Comptes créés', value: learners.length },
           { icon: GraduationCap, label: 'Inscrits à une certification', value: started },
-          { icon: Award, label: 'Certificats délivrés', value: certificates.length }
+          { icon: Award, label: 'Certificats délivrés', value: certificates.filter((c) => !c.simulation).length }
         ].map(({ icon: Icon, label, value }) => (
           <div key={label} className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 flex items-center gap-3">
             <Icon className="w-7 h-7 text-brand-blue dark:text-sky-300" />
@@ -163,7 +163,7 @@ export default function AdminLearners() {
               <tbody>
                 {certificates.map((c) => (
                   <tr key={c.number} className="border-t border-slate-100 dark:border-slate-800">
-                    <td className="p-3 font-bold whitespace-nowrap">{c.number}</td>
+                    <td className="p-3 font-bold whitespace-nowrap">{c.number}{c.simulation && <span className="ml-2 rounded bg-violet-100 text-violet-800 px-1.5 py-0.5 text-[10px] font-extrabold uppercase">spécimen</span>}</td>
                     <td className="p-3">{`${c.lastName} ${c.firstName}`.toLocaleUpperCase('fr-FR')}</td>
                     <td className="p-3 text-xs">{c.courseTitle}</td>
                     <td className="p-3">{c.average} %</td>

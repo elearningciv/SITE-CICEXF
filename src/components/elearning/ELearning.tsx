@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEven
 import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, Clock, Download, GraduationCap, Loader2, Lock, LogOut, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
 import { CATALOG, COMING_SOON, PASS, isExam, loadCourse, stepQuestionCount, type Course, type CourseMeta, type CourseStep } from '../../data/elearning';
 import {
-  CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, learnerErrorMessage,
+  CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, learnerErrorMessage, stepCleared,
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
@@ -158,7 +158,7 @@ export default function ELearning() {
     const course = courses[courseId];
     if (!course) return spinner;
     const progress = progressOf(courseId), draft = draftOf(courseId);
-    const passed = (id: string) => (progress.scores[id] || 0) >= PASS;
+    const passed = (id: string) => stepCleared(progress, id, PASS);
     const path = (notice?: string) => shell(<PathView course={course} meta={meta} progress={progress} draft={draft} go={go} notice={notice} />);
 
     if (view === 'etape') {
@@ -441,9 +441,9 @@ function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go,
 
   const rows = metas.map((c) => {
     const p = progressOf(c.id), d = draftOf(c.id);
-    const done = c.steps.filter((s) => (p.scores[s.id] || 0) >= PASS).length;
-    const finished = (p.scores.FINAL || 0) >= PASS;
-    const current = c.steps.find((s) => (p.scores[s.id] || 0) < PASS);
+    const done = c.steps.filter((s) => stepCleared(p, s.id, PASS)).length;
+    const finished = stepCleared(p, 'FINAL', PASS);
+    const current = c.steps.find((s) => !stepCleared(p, s.id, PASS));
     return { c, p, d, done, finished, current, pct: Math.round((done / c.steps.length) * 100) };
   });
   const inProgress = rows.filter((r) => !r.finished);
@@ -561,7 +561,7 @@ function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go,
 function PathView({ course, meta, progress, draft, go, notice }: {
   course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string;
 }) {
-  const passed = (id: string) => (progress.scores[id] || 0) >= PASS;
+  const passed = (id: string) => stepCleared(progress, id, PASS);
   const isOpen = (i: number) => course.steps.slice(0, i).every((s) => passed(s.id));
   const done = course.steps.filter((s) => passed(s.id)).length;
   const pct = Math.round((done / course.steps.length) * 100);
@@ -584,7 +584,7 @@ function PathView({ course, meta, progress, draft, go, notice }: {
             <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{sub}</span>
             {resuming && <span className="block mt-0.5 text-xs sm:text-sm font-bold text-brand-emerald">En cours : {draftWhere(meta, draft!)}</span>}
           </div>
-          {sc !== undefined && <span className={`text-sm font-extrabold ${ok ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{sc} %</span>}
+          {sc !== undefined && <span className={`text-sm font-extrabold ${sc >= PASS ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{sc} %</span>}
           {open && (
             <button onClick={(e) => { e.stopPropagation(); go(target); }}
               className={`ml-12 sm:ml-0 inline-flex items-center justify-center rounded-xl px-4 py-2 font-extrabold text-sm transition-colors ${ok && !resuming ? 'border-2 border-brand-blue text-brand-blue dark:border-sky-300 dark:text-sky-300 hover:bg-brand-blue hover:text-white' : 'bg-brand-emerald hover:bg-brand-emerald-dark text-white'}`}>
@@ -615,6 +615,11 @@ function PathView({ course, meta, progress, draft, go, notice }: {
         {passed('FINAL') && <button onClick={() => go(`certificat/${course.id}`)} className={primary}><Award className="w-4 h-4" />Mon certificat</button>}
       </div>
 
+      {progress.simulation && (
+        <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-500 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
+          <strong>Mode simulation :</strong> chaque étape se débloque dès qu'elle a été passée, même sous {PASS} %. Le certificat délivré est un spécimen de démonstration, sans valeur officielle.
+        </p>
+      )}
       {notice && <p className="mb-4 rounded-2xl bg-amber-50 border-l-4 border-amber-400 px-4 py-3 text-sm font-bold text-slate-800">{notice}</p>}
       {course.parts.map((p) => (
         <div key={p.id} className={`${card} mb-4 overflow-hidden`}>
@@ -675,7 +680,9 @@ function CertificateView({ api, course, profile, progress, onProgress, go }: {
         {error && <p className="mt-4 font-bold text-brand-emerald">{error}</p>}
         {cert && (
           <>
-            <p className="mt-2 text-slate-600 dark:text-slate-300">Vous avez validé toutes les étapes avec une moyenne de {cert.average} %. Votre certificat est prêt.</p>
+            {cert.simulation
+              ? <p className="mt-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 px-3 py-2 text-violet-800 dark:text-violet-300 font-bold">Mode simulation : voici un certificat spécimen (moyenne {cert.average} %), sans valeur officielle, pour voir comment il est délivré.</p>
+              : <p className="mt-2 text-slate-600 dark:text-slate-300">Vous avez validé toutes les étapes avec une moyenne de {cert.average} %. Votre certificat est prêt.</p>}
             <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left text-sm">
               <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 p-4"><dt className="text-slate-500">Titulaire</dt><dd className="font-extrabold text-slate-900 dark:text-white">{`${cert.lastName} ${cert.firstName}`.toLocaleUpperCase('fr-FR')}</dd></div>
               <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 p-4"><dt className="text-slate-500">Numéro</dt><dd className="font-extrabold text-slate-900 dark:text-white">{cert.number}</dd></div>
@@ -732,7 +739,7 @@ function VerifyView({ api, initial, onBack }: { api: ElearningApi; initial: stri
       </form>
       {state.status === 'found' && state.cert && (
         <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-600 p-5">
-          <p className="inline-flex items-center gap-2 font-extrabold text-emerald-800 dark:text-emerald-300"><CheckCircle2 className="w-5 h-5" />Certificat authentique</p>
+          <p className="inline-flex items-center gap-2 font-extrabold text-emerald-800 dark:text-emerald-300"><CheckCircle2 className="w-5 h-5" />{state.cert.simulation ? 'Spécimen de démonstration (simulation), sans valeur officielle' : 'Certificat authentique'}</p>
           <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm text-slate-800 dark:text-slate-200">
             <dt className="text-slate-500">Titulaire</dt><dd className="font-bold">{`${state.cert.lastName} ${state.cert.firstName}`.toLocaleUpperCase('fr-FR')}</dd>
             <dt className="text-slate-500">Certification</dt><dd className="font-bold">{state.cert.courseTitle}</dd>

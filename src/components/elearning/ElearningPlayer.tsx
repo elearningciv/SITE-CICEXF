@@ -260,7 +260,15 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                       {exam ? "Révisez les chapitres concernés, puis repassez l'examen." : 'Relisez les modules où votre résultat est le plus faible, puis recommencez le chapitre.'} Vous pouvez recommencer autant de fois que nécessaire.
                     </p>
+                    {result.progress.simulation && (
+                      <p className="mt-3 rounded-xl bg-violet-50 dark:bg-violet-950/40 px-3 py-2 text-sm font-bold text-violet-800 dark:text-violet-300">
+                        Mode simulation : vous pouvez continuer {step.kind === 'final' ? 'et voir le certificat spécimen' : "vers l'étape suivante"} malgré ce résultat.
+                      </p>
+                    )}
                     <div className="mt-5 flex flex-wrap justify-center gap-3">
+                      {result.progress.simulation && (step.kind === 'final'
+                        ? <button onClick={onCertificate} className="inline-flex items-center gap-2 rounded-xl bg-violet-700 text-white px-5 py-3 font-extrabold text-sm"><BookOpenCheck className="w-4 h-4" /> Voir le certificat spécimen</button>
+                        : <button onClick={onExit} className="inline-flex items-center gap-2 rounded-xl bg-violet-700 text-white px-5 py-3 font-extrabold text-sm">Continuer le parcours <ArrowRight className="w-4 h-4" /></button>)}
                       <button onClick={onExit} className="rounded-xl border-2 border-brand-blue text-brand-blue dark:border-sky-300 dark:text-sky-300 px-5 py-2.5 font-extrabold text-sm">Retour au parcours</button>
                       <button onClick={onRestart} className="inline-flex items-center gap-2 rounded-xl bg-brand-emerald text-white px-5 py-3 font-extrabold text-sm"><RotateCcw className="w-4 h-4" /> Recommencer {stepWord(step)}</button>
                     </div>

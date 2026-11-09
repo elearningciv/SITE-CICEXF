@@ -50,6 +50,7 @@ export function createMockApi(): ElearningApi {
     return email ? { uid: s.users[email].uid, email } : null;
   };
   const emit = () => listeners.forEach((cb) => cb(current()));
+  const isSim = (courseId: string) => courseId === 'cartographie-geomatique' && (current()?.email || '').includes('+simu');
   const uid = () => {
     const s = current();
     if (!s) throw new ElearningError('Session expirée. Reconnectez-vous.');
@@ -108,10 +109,11 @@ export function createMockApi(): ElearningApi {
       await wait();
       const course = await serverCourse(courseId);
       const s = load(), id = uid();
+      const sim = isSim(courseId);
       const prev = s.progress[id]?.[courseId] || { ...EMPTY_PROGRESS };
       const index = course.steps.findIndex((x) => x.id === stepId);
       if (index < 0) throw new ElearningError('Étape introuvable');
-      if (!course.steps.slice(0, index).every((x) => (prev.scores[x.id] || 0) >= PASS)) throw new ElearningError("Cette étape n'est pas encore débloquée");
+      if (!course.steps.slice(0, index).every((x) => (sim ? prev.scores[x.id] !== undefined : (prev.scores[x.id] || 0) >= PASS))) throw new ElearningError("Cette étape n'est pas encore débloquée");
       const step = course.steps[index];
       const modules = step.modules.map((modId) => {
         let good = 0, total = 0;
@@ -126,7 +128,8 @@ export function createMockApi(): ElearningApi {
         scores: { ...prev.scores, [stepId]: Math.max(pct, prev.scores[stepId] || 0) },
         attempts: { ...prev.attempts, [stepId]: (prev.attempts[stepId] || 0) + 1 },
         startedAt: prev.startedAt || now,
-        finishedAt: prev.finishedAt || (step.kind === 'final' && passed ? now : null)
+        finishedAt: prev.finishedAt || (step.kind === 'final' && (passed || sim) ? now : null),
+        simulation: sim
       };
       s.progress[id] = { ...(s.progress[id] || {}), [courseId]: progress };
       save(s);
@@ -139,11 +142,12 @@ export function createMockApi(): ElearningApi {
       if (!me) throw new ElearningError('Session expirée. Reconnectez-vous.');
       const prog = s.progress[me.uid]?.[courseId];
       if (prog?.certificate && s.certificates[prog.certificate]) return s.certificates[prog.certificate];
-      if (!prog || !course.steps.every((x) => (prog.scores[x.id] || 0) >= PASS)) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
+      const sim = isSim(courseId);
+      if (!prog || !course.steps.every((x) => (sim ? prog.scores[x.id] !== undefined : (prog.scores[x.id] || 0) >= PASS))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
       const profile = s.users[me.email].profile!;
       const year = new Date().getFullYear();
       s.counter += 1;
-      const number = `CICEXF-EL-${year}-${String(s.counter).padStart(6, '0')}`;
+      const number = `CICEXF-EL-${sim ? 'TEST-' : ''}${year}-${String(s.counter).padStart(6, '0')}`;
       const chapters = course.steps.filter((x) => x.kind === 'chapitre');
       const values = course.steps.map((x) => prog.scores[x.id]);
       const cert = {
@@ -151,6 +155,7 @@ export function createMockApi(): ElearningApi {
         lastName: profile.nom, firstName: profile.prenom,
         startedAt: prog.startedAt!, finishedAt: prog.finishedAt!, issuedAt: new Date().toISOString(),
         average: Math.round(values.reduce((a, b) => a + b, 0) / values.length), hours: course.hours,
+        simulation: sim,
         stats: {
           parts: course.steps.filter((x) => x.kind === 'examen').length,
           chapters: chapters.length,

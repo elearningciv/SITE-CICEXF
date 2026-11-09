@@ -26,6 +26,17 @@ if (fs.existsSync(keysDir)) {
   }
 }
 
+// Mode simulation (temporaire) : pour les comptes et parcours listés dans elearning/simulation.json
+// (fichier non publié), les étapes se débloquent dès qu'elles ont été tentées, même sous 80 %,
+// et le certificat délivré est un spécimen à numérotation de test, sans valeur officielle.
+let SIMULATION = { emails: [], courses: [] };
+const simFile = path.join(__dirname, 'elearning', 'simulation.json');
+if (fs.existsSync(simFile)) SIMULATION = { emails: [], courses: [], ...JSON.parse(fs.readFileSync(simFile, 'utf8')) };
+const isSimulation = (email, courseId) =>
+  !!email && SIMULATION.emails.map((e) => e.toLowerCase()).includes(String(email).toLowerCase()) && SIMULATION.courses.includes(courseId);
+// Étape franchie : 80 % au moins, ou simplement tentée en mode simulation
+const cleared = (scores, stepId, sim) => (sim ? scores[stepId] !== undefined : (scores[stepId] || 0) >= PASS);
+
 const hits = new Map();
 function rateLimited(uid, max = 60) {
   const now = Date.now();
@@ -36,7 +47,7 @@ function rateLimited(uid, max = 60) {
 }
 
 const progressRef = (uid, courseId) => db.doc(`learners/${uid}/progress/${courseId}`);
-const isOpen = (course, scores, index) => course.steps.slice(0, index).every((s) => (scores[s.id] || 0) >= PASS);
+const isOpen = (course, scores, index, sim) => course.steps.slice(0, index).every((s) => cleared(scores, s.id, sim));
 
 // Note d'une étape : bonnes réponses par module puis pour l'ensemble
 function grade(course, step, answers) {
@@ -61,11 +72,13 @@ const publicProgress = (d) => (d ? {
   attempts: d.attempts || {},
   startedAt: toIso(d.startedAt),
   finishedAt: toIso(d.finishedAt),
-  certificate: d.certificate || null
-} : { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null });
+  certificate: d.certificate || null,
+  simulation: !!d.simulation
+} : { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null, simulation: false });
 
-async function handleGrade(uid, body) {
+async function handleGrade(uid, email, body) {
   const course = KEYS[body.courseId];
+  const sim = isSimulation(email, body.courseId);
   if (!course) return [404, { error: 'Parcours introuvable' }];
   const index = course.steps.findIndex((s) => s.id === body.stepId);
   if (index < 0) return [404, { error: 'Étape introuvable' }];
@@ -79,7 +92,7 @@ async function handleGrade(uid, body) {
     const snap = await tx.get(ref);
     const prev = snap.exists ? snap.data() : {};
     const scores = prev.scores || {};
-    if (!isOpen(course, scores, index)) return [403, { error: 'Cette étape n’est pas encore débloquée' }];
+    if (!isOpen(course, scores, index, sim)) return [403, { error: 'Cette étape n’est pas encore débloquée' }];
 
     const result = grade(course, step, body.answers);
     const best = Math.max(result.pct, scores[step.id] || 0);
@@ -91,9 +104,10 @@ async function handleGrade(uid, body) {
       attempts: { ...(prev.attempts || {}), [step.id]: ((prev.attempts || {})[step.id] || 0) + 1 },
       lastScores: { ...(prev.lastScores || {}), [step.id]: result.pct },
       startedAt: prev.startedAt || now,
-      updatedAt: now
+      updatedAt: now,
+      simulation: sim
     };
-    if (step.kind === 'final' && passed && !prev.finishedAt) update.finishedAt = now;
+    if (step.kind === 'final' && (passed || sim) && !prev.finishedAt) update.finishedAt = now;
     tx.set(ref, update, { merge: true });
     return [200, { ...result, passed, best, progress: publicProgress({ ...prev, ...update }) }];
   });
@@ -101,8 +115,9 @@ async function handleGrade(uid, body) {
 
 const pad = (n) => String(n).padStart(6, '0');
 
-async function handleCertificate(uid, courseId) {
+async function handleCertificate(uid, email, courseId) {
     const course = KEYS[courseId];
+    const sim = isSimulation(email, courseId);
     if (!course) return [404, { error: 'Parcours introuvable' }];
     const learnerSnap = await db.doc(`learners/${uid}`).get();
     if (!learnerSnap.exists) return [403, { error: 'Compte apprenant incomplet' }];
@@ -117,13 +132,16 @@ async function handleCertificate(uid, courseId) {
         if (cert.exists) return [200, { certificate: serializeCertificate(cert.data()) }];
       }
       const scores = prog.scores || {};
-      if (!course.steps.every((s) => (scores[s.id] || 0) >= PASS)) return [403, { error: 'Toutes les étapes doivent être validées avec 80 % au moins' }];
+      if (!course.steps.every((s) => cleared(scores, s.id, sim))) {
+        return [403, { error: sim ? 'Toutes les étapes doivent avoir été passées' : 'Toutes les étapes doivent être validées avec 80 % au moins' }];
+      }
 
+      // Les spécimens de simulation ont leur propre numérotation, distincte des vrais certificats
       const year = new Date().getFullYear();
-      const counterRef = db.doc(`elearning_meta/certificates_${year}`);
+      const counterRef = db.doc(sim ? `elearning_meta/certificates_test_${year}` : `elearning_meta/certificates_${year}`);
       const counter = await tx.get(counterRef);
       const seq = (counter.exists ? counter.data().last : 0) + 1;
-      const number = `CICEXF-EL-${year}-${pad(seq)}`;
+      const number = sim ? `CICEXF-EL-TEST-${year}-${pad(seq)}` : `CICEXF-EL-${year}-${pad(seq)}`;
       const values = course.steps.map((s) => scores[s.id]);
       const now = Timestamp.now();
       const cert = {
@@ -139,7 +157,8 @@ async function handleCertificate(uid, courseId) {
         issuedAt: now,
         average: Math.round(values.reduce((a, b) => a + b, 0) / values.length),
         hours: course.hours,
-        stats: certificateStats(course)
+        stats: certificateStats(course),
+        simulation: sim
       };
       tx.set(counterRef, { last: seq }, { merge: true });
       tx.set(db.doc(`certificates/${number}`), cert);
@@ -168,7 +187,8 @@ function serializeCertificate(c) {
     issuedAt: toIso(c.issuedAt),
     average: c.average,
     hours: c.hours,
-    stats: c.stats
+    stats: c.stats,
+    simulation: !!c.simulation
   };
 }
 
@@ -188,9 +208,9 @@ exports.elearning = onRequest(
 
     // Apprenant connecté : jeton Firebase Auth obligatoire
     const token = (req.get('authorization') || '').replace(/^Bearer\s+/i, '');
-    let uid;
+    let uid, email;
     try {
-      uid = (await getAuth().verifyIdToken(token)).uid;
+      ({ uid, email } = await getAuth().verifyIdToken(token));
     } catch {
       return res.status(401).json({ error: 'Session expirée. Reconnectez-vous.' });
     }
@@ -199,8 +219,8 @@ exports.elearning = onRequest(
     const body = req.body || {};
     try {
       let out;
-      if (body.action === 'grade') out = await handleGrade(uid, body);
-      else if (body.action === 'certificate') out = await handleCertificate(uid, body.courseId);
+      if (body.action === 'grade') out = await handleGrade(uid, email, body);
+      else if (body.action === 'certificate') out = await handleCertificate(uid, email, body.courseId);
       else out = [400, { error: 'Action inconnue' }];
       return res.status(out[0]).json(out[1]);
     } catch (err) {

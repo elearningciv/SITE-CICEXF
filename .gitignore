@@ -9,3 +9,4 @@ coverage/
 
 # Clés de correction de l’e-learning : déployées avec la fonction, jamais publiées
 functions/elearning/keys/
+functions/elearning/simulation.json
