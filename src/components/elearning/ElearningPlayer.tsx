@@ -152,7 +152,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
         </div>
         <div className="min-w-[180px]">
           <div className="h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-            <i className="block h-full bg-gradient-to-r from-brand-blue to-amber-400 transition-all" style={{ width: `${Math.round((answered / total) * 100)}%` }} />
+            <i className="block h-full bg-amber-400 transition-all" style={{ width: `${Math.round((answered / total) * 100)}%` }} />
           </div>
           <small className="text-slate-500 dark:text-slate-400">{answered} / {total} questions répondues</small>
         </div>

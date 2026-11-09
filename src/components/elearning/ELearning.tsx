@@ -562,7 +562,7 @@ function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, pr
             {statusOf(c.id) !== 'open' && <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-900 px-2.5 py-1 text-xs font-bold"><PauseCircle className="w-3.5 h-3.5" />Momentanément fermée : votre progression est conservée</p>}
             {enrollments[c.id]?.enrolledAt && <p className="text-xs text-slate-500">Inscrit le {fmtDate(enrollments[c.id].enrolledAt)}</p>}
             <div className="mt-3 flex items-center gap-3">
-              <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><i className="block h-full bg-gradient-to-r from-brand-blue to-amber-400" style={{ width: `${pct}%` }} /></div>
+              <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><i className="block h-full bg-amber-400" style={{ width: `${pct}%` }} /></div>
               <strong className="text-sm text-brand-blue dark:text-sky-300">{pct} %</strong>
             </div>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{done} étape{done > 1 ? 's' : ''} validée{done > 1 ? 's' : ''} sur {c.steps.length}{current ? ` · prochaine étape : ${current.title}` : ''}</p>
@@ -690,7 +690,7 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
           <span className="text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">{course.domain}</span>
           <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">{course.title}</h1>
           <div className="mt-2 flex items-center gap-3 max-w-md">
-            <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><i className="block h-full bg-gradient-to-r from-brand-blue to-amber-400" style={{ width: `${pct}%` }} /></div>
+            <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><i className="block h-full bg-amber-400" style={{ width: `${pct}%` }} /></div>
             <span className="text-sm text-slate-500 whitespace-nowrap">{done}/{course.steps.length} étapes</span>
           </div>
         </div>

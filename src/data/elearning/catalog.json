@@ -304,6 +304,627 @@
   ]
  },
  {
+  "id": "analyse-spatiale-modelisation",
+  "order": 1.6,
+  "title": "Analyse spatiale et modélisation du territoire : concepts, méthodes et simulation",
+  "certTitle": "Analyse spatiale et modélisation du territoire : concepts, méthodes et simulation",
+  "domain": "Ingénierie de développement territorial",
+  "summary": "Mesurer distances et accessibilité, analyser les répartitions, l'autocorrélation et l'interpolation, puis modéliser et simuler l'évolution d'un territoire.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 264
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Espace, lieu, distance et position",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les principes qui structurent l'analyse spatiale",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Distances et réseaux",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : L'accessibilité et les aires de desserte",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Centre, dispersion et orientation",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Analyser un semis de points",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Voisinage et autocorrélation globale",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Indicateurs locaux et points chauds",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les méthodes déterministes d'interpolation",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : La géostatistique et le krigeage",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Régression et dépendance spatiale",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : La régression géographiquement pondérée",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Le modèle gravitaire et les aires d'attraction",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Lieux centraux et hiérarchie urbaine",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Les automates cellulaires",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Les systèmes multi-agents",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Construire, calibrer et valider un modèle",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Scénarios prospectifs, décision et limites",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "collecte-donnees-terrain",
+  "order": 1.7,
+  "title": "Collecter des données géospatiales sur le terrain : outils mobiles, protocoles et qualité",
+  "certTitle": "Collecte de données géospatiales sur le terrain : outils mobiles, protocoles et qualité",
+  "domain": "Ingénierie de développement territorial",
+  "summary": "Maîtriser le positionnement GNSS, concevoir des formulaires mobiles (KoboToolbox, ODK, QField), organiser une collecte rigoureuse et garantir la qualité et la protection des données.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 265
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Le fonctionnement des GNSS",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les sources d'erreur et la précision",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Corrections différentielles et techniques de précision",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Mesurer la précision avec des points de contrôle",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Terminaux et applications de collecte",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Concevoir un formulaire au format XLSForm",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Objectifs, indicateurs et dictionnaire de données",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : L'échantillonnage",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Formuler les questions et éviter les biais",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Contrôles de saisie et pré-test",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Planifier, cartographier et former les équipes",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Consentement, sécurité et relations avec les communautés",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les dimensions de la qualité",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Contrôler la qualité pendant et après la collecte",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Formats, sauvegarde et métadonnées",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Nettoyer les données et les intégrer dans un SIG",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Protéger les données personnelles",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Données participatives, partage et restitution",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "geomatique-urbaine-risques",
+  "order": 1.8,
+  "title": "Géomatique pour l'aménagement urbain et l'évaluation des risques",
+  "certTitle": "Géomatique appliquée à l'aménagement urbain et à l'évaluation des risques",
+  "domain": "Ingénierie de développement territorial",
+  "summary": "Analyser la ville par les données et la télédétection, cartographier aléas, vulnérabilités et risques (inondations, glissements, risques technologiques) et éclairer la planification par l'analyse multicritère.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 259
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Les sources de données urbaines",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Le système d'information géographique municipal",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Images satellites et indices spectraux",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Classer les images et valider les résultats",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Mesurer l'étalement urbain",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : L'accès aux services et la planification",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Aléa, exposition, vulnérabilité et risque",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : La vulnérabilité sociale et territoriale",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Modèle numérique de terrain et hydrologie",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Cartographier les zones inondables",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Glissements de terrain, érosion et littoral",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Risques technologiques et sanitaires",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les principes de l'analyse multicritère",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Pondérer les critères avec la méthode AHP",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Croiser aléas et enjeux",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Cartes de risque, zonage et communication",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Risque, urbanisme et alerte précoce",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Suivre, évaluer et associer les habitants",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "modelisation-financiere",
   "order": 2,
   "title": "Modélisation financière",
