@@ -141,7 +141,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
       : phase === 'lesson' ? 'Lecture du module' : 'Quiz du module';
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
+    <div className="max-w-6xl mx-auto px-4 py-6 sm:py-8">
       {/* Top bar */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-5 mb-4">
         <img src="/elearning/logo-cicexf.png" alt="CICEXF" className="h-9 w-auto" />
@@ -207,17 +207,15 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
         </section>
       )}
 
-      <article className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">
+      <article className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-10 shadow-sm">
         {phase === 'lesson' && (
           <>
-            <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">Texte de compréhension</p>
-            <h2 className="mt-1 text-2xl font-extrabold text-brand-blue dark:text-sky-300">{mod.title}</h2>
-            <div className="mt-4 mb-5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-700 px-5 py-4">
-              <strong className="text-emerald-800 dark:text-emerald-300">Objectifs du module</strong>
-              <ul className="mt-1.5 list-disc pl-5 space-y-0.5 text-slate-800 dark:text-slate-200">
-                {content.objectives.map((o) => <li key={o}>{o}</li>)}
-              </ul>
-            </div>
+            <h2 className="font-display text-2xl sm:text-[32px] font-extrabold uppercase leading-tight text-slate-900 dark:text-white break-words">{mod.title}</h2>
+            <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] text-brand-emerald dark:text-orange-300">Objectifs du module</p>
+            <ul className="mt-1.5 list-disc pl-5 space-y-1 text-[15px] sm:text-base leading-relaxed text-slate-700 dark:text-slate-200">
+              {content.objectives.map((o) => <li key={o}>{o}</li>)}
+            </ul>
+            <hr className="my-6 border-slate-200 dark:border-slate-800" />
             <div className="el-text" dangerouslySetInnerHTML={{ __html: content.text }} />
             <div className="mt-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 px-5 py-4 text-sm text-slate-800 dark:text-slate-200">
               <strong>Avant de commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} :</strong> ce module comporte {content.quizzes.length > 1 ? `${content.quizzes.length} quiz de ${content.quizzes[0].questions.length} questions` : `un quiz de ${content.quizzes[0].questions.length} questions`}{step.kind === 'module' ? `, à réussir avec ${PASS} % au moins pour débloquer l'étape suivante` : ''}.

@@ -702,11 +702,6 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
           <strong>Progression contrôlée :</strong> chaque module se valide avec {PASS} % au moins pour ouvrir le suivant ; chaque chapitre se termine par un test et chaque partie par un examen, à réussir avec {PASS} % au moins. L'examen final de certification compte {stepQuestionCount(course, finalStep)} questions.
         </p>
       )}
-      {reviewer && (
-        <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-600 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
-          <strong>Mode contrôle administrateur :</strong> toutes les étapes sont ouvertes, sans la condition des {PASS} %. Dans chaque étape, vous pouvez afficher toutes les questions avec leur bonne réponse et passer d'une étape à l'autre sans répondre. Vos éventuels résultats ne comptent pas et ne produisent qu'un certificat spécimen.
-        </p>
-      )}
       {progress.simulation && !reviewer && (
         <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-500 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
           <strong>Mode simulation :</strong> chaque étape se débloque dès qu'elle a été passée, même sous {PASS} %. Le certificat délivré est un spécimen de démonstration, sans valeur officielle.
