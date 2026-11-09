@@ -3,7 +3,7 @@
 import { PASS } from '../data/elearning';
 import type { Answers, Certificate, ElearningApi, LearnerProfile, LearnerSession, Progress } from './elearningApi';
 import type { CourseStatus } from '../data/elearning';
-import { EMPTY_PROGRESS, ElearningError, localDraft } from './elearningApi';
+import { EMPTY_PROGRESS, ElearningError, isReviewerEmail, localDraft } from './elearningApi';
 
 interface ServerCourse {
   id: string;
@@ -116,13 +116,14 @@ export function createMockApi(): ElearningApi {
       await wait();
       const course = await serverCourse(courseId);
       const s = load(), id = uid();
-      const sim = isSim(courseId);
+      const reviewer = await isReviewerEmail(current()?.email);
+      const sim = reviewer || isSim(courseId);
       const status = mockStatuses()[courseId] || course.defaultStatus || 'open';
-      if (status !== 'open') throw new ElearningError(status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée.');
+      if (status !== 'open' && !reviewer) throw new ElearningError(status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée.');
       const prev = s.progress[id]?.[courseId] || { ...EMPTY_PROGRESS };
       const index = course.steps.findIndex((x) => x.id === stepId);
       if (index < 0) throw new ElearningError('Étape introuvable');
-      if (!course.steps.slice(0, index).every((x) => (sim ? prev.scores[x.id] !== undefined : (prev.scores[x.id] || 0) >= PASS))) throw new ElearningError("Cette étape n'est pas encore débloquée");
+      if (!reviewer && !course.steps.slice(0, index).every((x) => (sim ? prev.scores[x.id] !== undefined : (prev.scores[x.id] || 0) >= PASS))) throw new ElearningError("Cette étape n'est pas encore débloquée");
       const step = course.steps[index];
       const modules = step.modules.map((modId) => {
         let good = 0, total = 0;
@@ -151,8 +152,9 @@ export function createMockApi(): ElearningApi {
       if (!me) throw new ElearningError('Session expirée. Reconnectez-vous.');
       const prog = s.progress[me.uid]?.[courseId];
       if (prog?.certificate && s.certificates[prog.certificate]) return s.certificates[prog.certificate];
-      const sim = isSim(courseId);
-      if (!prog || !course.steps.every((x) => (sim ? prog.scores[x.id] !== undefined : (prog.scores[x.id] || 0) >= PASS))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
+      const reviewer = await isReviewerEmail(me.email);
+      const sim = reviewer || isSim(courseId);
+      if (!prog || (reviewer ? prog.scores.FINAL === undefined : !course.steps.every((x) => (sim ? prog.scores[x.id] !== undefined : (prog.scores[x.id] || 0) >= PASS)))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
       const profile = s.users[me.email].profile!;
       s.counter += 1;
       const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -212,6 +214,10 @@ export function createMockApi(): ElearningApi {
     },
     async getCourseStatuses() {
       return mockStatuses();
+    },
+    async getAnswerKey(courseId) {
+      if (!(await isReviewerEmail(current()?.email))) throw new ElearningError('Accès réservé aux administrateurs');
+      return (await serverCourse(courseId)).key;
     }
   };
 }

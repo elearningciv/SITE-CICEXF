@@ -5,7 +5,7 @@ import {
   type Course, type CourseMeta, type CourseStatus, type CourseStep
 } from '../../data/elearning';
 import {
-  CERTIFICATE_EXAMPLE, CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, learnerErrorMessage, stepCleared,
+  CERTIFICATE_EXAMPLE, CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, isReviewerEmail, learnerErrorMessage, stepCleared,
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
@@ -44,6 +44,8 @@ export default function ELearning() {
   const [enrollments, setEnrollments] = useState<Record<string, Enrollment>>({});
   const [courses, setCourses] = useState<Record<string, Course>>({});
   const [statuses, setStatuses] = useState<Record<string, CourseStatus> | null>(null);
+  // Administrator (control account): every certification and every step open, without the 80 % condition
+  const [reviewer, setReviewer] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [attempt, setAttempt] = useState(0);
 
@@ -105,6 +107,11 @@ export default function ELearning() {
     }
   }, [api, session]);
   useEffect(() => { setProfile(undefined); refresh(); }, [refresh]);
+  useEffect(() => {
+    let live = true;
+    isReviewerEmail(session?.email).then((r) => live && setReviewer(r)).catch(() => live && setReviewer(false));
+    return () => { live = false; };
+  }, [session]);
 
   if (loadError) return <Shell><p className="text-center font-bold text-brand-emerald py-16">{loadError}</p></Shell>;
   if (!api || !statuses || session === undefined || (session && profile === undefined)) {
@@ -117,11 +124,12 @@ export default function ELearning() {
   const setDraftFor = (id: string, d: Draft | null) => setDraftMap((m) => ({ ...m, [id]: d }));
   const signedIn = !!session && !!profile;
   // Registered: confirmed registration (or a course already started before registrations existed)
-  const isEnrolled = (id: string) => !!enrollments[id] || Object.keys(progressOf(id).scores).length > 0 || !!draftOf(id);
+  const isEnrolled = (id: string) => reviewer || !!enrollments[id] || Object.keys(progressOf(id).scores).length > 0 || !!draftOf(id);
   // Certifications closed by the administrator are hidden (progress kept); deleted ones disappear,
   // except for learners who already passed them (their certificate stays available)
   const statusOf = (id: string): CourseStatus => { const m = metaOf(id); return m ? courseStatus(m, statuses) : 'deleted'; };
-  const openMetas = CATALOG.filter((c) => statusOf(c.id) === 'open');
+  const openMetas = CATALOG.filter((c) => (reviewer ? statusOf(c.id) !== 'deleted' : statusOf(c.id) === 'open'));
+  const noteOf = (id: string) => (reviewer && statusOf(id) !== 'open' ? 'Fermée au public : visible en mode contrôle administrateur' : undefined);
   const finishedCourse = (id: string) => stepCleared(progressOf(id), 'FINAL', PASS);
   const mySpace = CATALOG.filter((c) => isEnrolled(c.id) && (statusOf(c.id) !== 'deleted' || finishedCourse(c.id)));
   const bar = signedIn ? <LearnerBar api={api} profile={profile!} go={go} /> : null;
@@ -151,7 +159,7 @@ export default function ELearning() {
   if (signedIn && view === 'profil') {
     return shell(<SignupForm api={api} initial={profile} onDone={async () => { await refresh(); go('espace'); }} onLogin={() => {}} />);
   }
-  const certificationsView = <CertificationsView metas={openMetas} isEnrolled={isEnrolled} go={go} />;
+  const certificationsView = <CertificationsView metas={openMetas} noteOf={noteOf} isEnrolled={isEnrolled} go={go} />;
   if (signedIn && view === 'certifications') return shell(certificationsView);
 
   if (signedIn && view === 'espace') {
@@ -178,15 +186,15 @@ export default function ELearning() {
     if (!course) return spinner;
     const progress = progressOf(courseId), draft = draftOf(courseId);
     const passed = (id: string) => stepCleared(progress, id, PASS);
-    const closedNotice = status === 'open' ? undefined
+    const closedNotice = status === 'open' || reviewer ? undefined
       : passed('FINAL') ? 'Cette certification est fermée aux nouvelles inscriptions. Votre certificat reste disponible.'
       : 'Cette certification est momentanément fermée. Votre progression est conservée : vous pourrez la reprendre dès sa réouverture.';
-    const path = (notice?: string) => shell(<PathView course={course} meta={meta} progress={progress} draft={draft} go={go} notice={notice || closedNotice} locked={status !== 'open'} />);
+    const path = (notice?: string) => shell(<PathView course={course} meta={meta} progress={progress} draft={draft} go={go} notice={notice || closedNotice} locked={status !== 'open' && !reviewer} reviewer={reviewer} />);
 
     if (view === 'etape') {
-      if (status !== 'open') return path();
+      if (status !== 'open' && !reviewer) return path();
       const i = course.steps.findIndex((s) => s.id === stepId);
-      if (i < 0 || !course.steps.slice(0, i).every((s) => passed(s.id))) return path("Cette étape n'est pas encore débloquée : validez d'abord les étapes précédentes.");
+      if (i < 0 || (!reviewer && !course.steps.slice(0, i).every((s) => passed(s.id)))) return path("Cette étape n'est pas encore débloquée : validez d'abord les étapes précédentes.");
       return (
         <Suspense fallback={<p className="flex justify-center py-24"><Loader2 className="w-5 h-5 animate-spin" /></p>}>
           <ElearningPlayer
@@ -195,6 +203,8 @@ export default function ELearning() {
             course={course}
             step={course.steps[i]}
             resume={draft}
+            reviewer={reviewer}
+            onNavigate={(id) => go(`etape/${course.id}/${id}`)}
             onProgress={(p) => { setProgressFor(course.id, p); setDraftFor(course.id, null); }}
             onExit={async () => { setDraftFor(course.id, await api.getDraft(course.id)); go(`parcours/${course.id}`); }}
             onCertificate={() => go(`certificat/${course.id}`)}
@@ -204,14 +214,14 @@ export default function ELearning() {
       );
     }
     if (view === 'certificat') {
-      if (!passed('FINAL')) return path("Le certificat se débloque après la réussite de l'examen final.");
+      if (!passed('FINAL') && !(reviewer && progress.scores.FINAL !== undefined)) return path("Le certificat se débloque après la réussite de l'examen final.");
       return shell(<CertificateView api={api} course={course} profile={profile!} progress={progress} onProgress={(p) => setProgressFor(course.id, p)} go={go} />);
     }
     return path();
   }
 
   const startFor = (id: string) => (!signedIn ? 'inscription' : isEnrolled(id) ? `parcours/${id}` : `inscrire/${id}`);
-  return shell(<HomeView metas={openMetas} signedIn={signedIn} go={go} startFor={startFor} isEnrolled={isEnrolled} />);
+  return shell(<HomeView metas={openMetas} noteOf={noteOf} signedIn={signedIn} go={go} startFor={startFor} isEnrolled={isEnrolled} />);
 }
 
 /** A certification that is closed (or no longer offered) cannot be joined */
@@ -249,8 +259,8 @@ function Shell({ children, simulated, bar }: { children: ReactNode; simulated?: 
 // ---------------------------------------------------------------------------
 // Home
 // ---------------------------------------------------------------------------
-function HomeView({ metas, signedIn, go, startFor, isEnrolled }: {
-  metas: CourseMeta[]; signedIn: boolean; go: (h: string) => void; startFor: (id: string) => string; isEnrolled: (id: string) => boolean;
+function HomeView({ metas, noteOf, signedIn, go, startFor, isEnrolled }: {
+  metas: CourseMeta[]; noteOf?: (id: string) => string | undefined; signedIn: boolean; go: (h: string) => void; startFor: (id: string) => string; isEnrolled: (id: string) => boolean;
 }) {
   return (
     <>
@@ -287,7 +297,7 @@ function HomeView({ metas, signedIn, go, startFor, isEnrolled }: {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {!metas.length && <NoOpenCourse />}
         {metas.map((c) => (
-          <CourseCard key={c.id} meta={c}>
+          <CourseCard key={c.id} meta={c} note={noteOf?.(c.id)}>
             <button onClick={() => go(startFor(c.id))} className={`${primary} mt-4`}>
               <Play className="w-4 h-4" />{!signedIn ? 'Commencer gratuitement' : isEnrolled(c.id) ? 'Continuer' : "S'inscrire"}
             </button>
@@ -308,13 +318,14 @@ function HomeView({ metas, signedIn, go, startFor, isEnrolled }: {
   );
 }
 
-function CourseCard({ meta, children }: { meta: CourseMeta; children: ReactNode; key?: string }) {
+function CourseCard({ meta, note, children }: { meta: CourseMeta; note?: string; children: ReactNode; key?: string }) {
   return (
     <div className={`${card} p-5 flex flex-col border-2 border-brand-emerald/70`}>
       <span className="self-start text-[11px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full bg-sky-50 text-brand-blue dark:bg-sky-950 dark:text-sky-300">{meta.domain}</span>
       <h3 className="mt-3 mb-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{meta.title}</h3>
       <p className="flex-1 text-sm text-slate-600 dark:text-slate-400">{meta.summary}</p>
       <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{statsLine(meta.stats, meta.hours)}</p>
+      {note && <p className="mt-2 inline-flex items-center gap-1.5 self-start rounded-full bg-amber-100 text-amber-900 px-2.5 py-1 text-xs font-bold"><PauseCircle className="w-3.5 h-3.5" />{note}</p>}
       {children}
     </div>
   );
@@ -393,7 +404,7 @@ const fmtDate = (iso?: string | null) => (iso ? new Date(iso).toLocaleDateString
 // ---------------------------------------------------------------------------
 // Certifications open for registration
 // ---------------------------------------------------------------------------
-function CertificationsView({ metas, isEnrolled, go }: { metas: CourseMeta[]; isEnrolled: (id: string) => boolean; go: (h: string) => void }) {
+function CertificationsView({ metas, noteOf, isEnrolled, go }: { metas: CourseMeta[]; noteOf?: (id: string) => string | undefined; isEnrolled: (id: string) => boolean; go: (h: string) => void }) {
   return (
     <>
       <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">S'inscrire à une certification</h1>
@@ -401,7 +412,7 @@ function CertificationsView({ metas, isEnrolled, go }: { metas: CourseMeta[]; is
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {!metas.length && <NoOpenCourse />}
         {metas.map((c) => (
-          <CourseCard key={c.id} meta={c}>
+          <CourseCard key={c.id} meta={c} note={noteOf?.(c.id)}>
             {isEnrolled(c.id)
               ? <button onClick={() => go(`parcours/${c.id}`)} className={`${ghost} mt-4`}><CheckCircle2 className="w-4 h-4" />Déjà inscrit : continuer</button>
               : <button onClick={() => go(`inscrire/${c.id}`)} className={`${primary} mt-4`}><ClipboardCheck className="w-4 h-4" />S'inscrire</button>}
@@ -603,11 +614,11 @@ function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, pr
 // ---------------------------------------------------------------------------
 // Learner path (full width, compact)
 // ---------------------------------------------------------------------------
-function PathView({ course, meta, progress, draft, go, notice, locked }: {
-  course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string; locked?: boolean;
+function PathView({ course, meta, progress, draft, go, notice, locked, reviewer }: {
+  course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string; locked?: boolean; reviewer?: boolean;
 }) {
   const passed = (id: string) => stepCleared(progress, id, PASS);
-  const isOpen = (i: number) => !locked && course.steps.slice(0, i).every((s) => passed(s.id));
+  const isOpen = (i: number) => !locked && (reviewer || course.steps.slice(0, i).every((s) => passed(s.id)));
   const done = course.steps.filter((s) => passed(s.id)).length;
   const pct = Math.round((done / course.steps.length) * 100);
 
@@ -690,7 +701,12 @@ function PathView({ course, meta, progress, draft, go, notice, locked }: {
           <strong>Progression contrôlée :</strong> chaque module se valide avec {PASS} % au moins pour ouvrir le suivant ; chaque chapitre se termine par un test et chaque partie par un examen, à réussir avec {PASS} % au moins. L'examen final de certification compte {stepQuestionCount(course, finalStep)} questions.
         </p>
       )}
-      {progress.simulation && (
+      {reviewer && (
+        <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-600 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
+          <strong>Mode contrôle administrateur :</strong> toutes les étapes sont ouvertes, sans la condition des {PASS} %. Dans chaque étape, vous pouvez afficher toutes les questions avec leur bonne réponse et passer d'une étape à l'autre sans répondre. Vos éventuels résultats ne comptent pas et ne produisent qu'un certificat spécimen.
+        </p>
+      )}
+      {progress.simulation && !reviewer && (
         <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-500 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
           <strong>Mode simulation :</strong> chaque étape se débloque dès qu'elle a été passée, même sous {PASS} %. Le certificat délivré est un spécimen de démonstration, sans valeur officielle.
         </p>

@@ -85,6 +85,8 @@ export interface ElearningApi {
   verifyCertificate(number: string): Promise<Certificate | null>;
   /** Opening status chosen by the administrator for each course (courses not listed keep their default) */
   getCourseStatuses(): Promise<Record<string, CourseStatus>>;
+  /** Answer key of a course (control accounts only): index of the right answer in the public file order */
+  getAnswerKey(courseId: string): Promise<Record<string, number[][]>>;
 }
 
 export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null };
@@ -96,6 +98,21 @@ export const ELEARNING_API_URL: string =
  *  the first certificates (CICEXF-EL-2026-000001) remain valid */
 export const CERTIFICATE_RE = /^(CICEXF-EL-(TEST-)?20\d{2}-\d{6}|(CX|SP)-[A-Z0-9]{3}-\d{6}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4})$/;
 export const CERTIFICATE_EXAMPLE = 'CX-SEM-261109-K7QF-3MZP';
+
+/** Control accounts (administrators): SHA-256 of their e-mail, so that the addresses are not published.
+ *  The server keeps its own list (functions/elearning/reviewers.json) and enforces the access. */
+const REVIEWER_HASHES = [
+  '3f7544895a8ca49c74e0bcf5d359f745eae010ab17b31f205c32913e02bff87b',
+  'cdcf121e0ba29e7b5949dc72a088024b07ee9e7a19cddc861cd1c0a7ea34ad40',
+  '3932f8b3097248dffe7eef25da0038e10d4a66dd71439600d83e6f96d1c14912',
+  ...(import.meta.env.DEV ? ['7c1174a877c6fb78f60f8fec7192fa7f5f3ad6e5109465611ddb1d5250c62146'] : []) // local test account
+];
+export async function isReviewerEmail(email: string | null | undefined): Promise<boolean> {
+  if (!email || !globalThis.crypto?.subtle) return false;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  return REVIEWER_HASHES.includes(hex);
+}
 
 /** A step counts as cleared at 80 % or more, or once attempted in simulation mode */
 export const stepCleared = (p: Progress, stepId: string, pass: number) =>
@@ -283,6 +300,7 @@ async function createFirebaseApi(): Promise<ElearningApi> {
       localDraft.clear(u.uid, courseId);
       await deleteDoc(draftRef(u.uid, courseId)).catch(() => {});
     },
+    getAnswerKey: (courseId) => call<{ key: Record<string, number[][]> }>({ action: 'review', courseId }).then((r) => r.key),
     async getCourseStatuses() {
       const snap = await getDocs(collection(publicDb, 'elearning_courses'));
       return Object.fromEntries(snap.docs.map((d) => [d.id, d.data().status as CourseStatus]).filter(([, st]) => ['open', 'closed', 'deleted'].includes(st as string)));

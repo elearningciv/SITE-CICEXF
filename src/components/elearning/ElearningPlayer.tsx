@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, BookOpenCheck, CheckCircle2, Loader2, LogOut, RotateCcw, XCircle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpenCheck, CheckCircle2, Eye, EyeOff, Loader2, LogOut, RotateCcw, XCircle } from 'lucide-react';
 import { PASS, isExam, stepQuestionCount, stepWords, type Course, type CourseStep } from '../../data/elearning';
 import type { Answers, Draft, ElearningApi, GradeResult, Progress } from '../../lib/elearningApi';
 import { learnerErrorMessage } from '../../lib/elearningApi';
@@ -27,13 +27,19 @@ interface Props {
   onRestart: () => void;
   /** Work saved when the learner left this step: they continue where they stopped */
   resume?: Draft | null;
+  /** Administrator control mode: free navigation between steps and preview of the questions with their answers */
+  reviewer?: boolean;
+  onNavigate?: (stepId: string) => void;
 }
+
+// Answer keys fetched for the control mode, kept for the session
+const keyCache: Record<string, Promise<Record<string, number[][]>>> = {};
 
 /**
  * Chapter (or exam) player in focus mode: the module text, then its quizzes one question at a time
  * (the text closes, no correction shown), and the result only at the end, graded by the server.
  */
-export default function ElearningPlayer({ api, course, step, onProgress, onExit, onCertificate, onRestart, resume }: Props) {
+export default function ElearningPlayer({ api, course, step, onProgress, onExit, onCertificate, onRestart, resume, reviewer, onNavigate }: Props) {
   const firstHasText = !!course.modules[step.modules[0].id].text;
   const saved = resume && resume.stepId === step.id && step.modules[resume.mi] ? resume : null;
   const [mi, setMi] = useState(saved ? saved.mi : 0);
@@ -45,6 +51,15 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
   const [result, setResult] = useState<GradeResult | null>(null);
   const [error, setError] = useState('');
   const [sending, setSending] = useState(false);
+  const [preview, setPreview] = useState(false);
+  const [answerKey, setAnswerKey] = useState<Record<string, number[][]> | null>(null);
+  const [keyError, setKeyError] = useState('');
+  useEffect(() => {
+    if (!reviewer || !preview || answerKey) return;
+    (keyCache[course.id] ||= api.getAnswerKey(course.id)).then(setAnswerKey).catch((e) => { delete keyCache[course.id]; setKeyError(learnerErrorMessage(e)); });
+  }, [reviewer, preview, answerKey, api, course.id]);
+  const stepIndex = course.steps.findIndex((x) => x.id === step.id);
+  const prevStep = course.steps[stepIndex - 1], nextStep = course.steps[stepIndex + 1];
   // Answers appear in a new random order at every attempt (kept when the learner resumes)
   const order = useMemo(() => {
     const o: Record<string, number[]> = {};
@@ -155,6 +170,41 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
           <span className="flex-1"><strong>Bon retour !</strong> Vous reprenez {stepWord(step)} là où vous vous étiez arrêté ({answered} question{answered > 1 ? 's' : ''} déjà répondue{answered > 1 ? 's' : ''}).</span>
           <button onClick={() => setResumed(false)} className="text-xs font-bold underline">Fermer</button>
         </div>
+      )}
+
+      {reviewer && (
+        <div className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 p-3 flex flex-wrap items-center gap-2">
+          <strong className="text-sm text-violet-900 dark:text-violet-200 mr-auto">Mode contrôle administrateur</strong>
+          <button disabled={!prevStep} onClick={() => prevStep && onNavigate?.(prevStep.id)} className="inline-flex items-center gap-1.5 rounded-xl border border-violet-300 bg-white dark:bg-slate-900 px-3 py-2 text-sm font-bold text-violet-900 dark:text-violet-200 disabled:opacity-40"><ArrowLeft className="w-4 h-4" />Étape précédente</button>
+          <button onClick={() => setPreview((v) => !v)} className="inline-flex items-center gap-1.5 rounded-xl bg-violet-700 px-3 py-2 text-sm font-bold text-white">{preview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}{preview ? 'Masquer les questions' : 'Voir toutes les questions et réponses'}</button>
+          <button disabled={!nextStep} onClick={() => nextStep && onNavigate?.(nextStep.id)} className="inline-flex items-center gap-1.5 rounded-xl border border-violet-300 bg-white dark:bg-slate-900 px-3 py-2 text-sm font-bold text-violet-900 dark:text-violet-200 disabled:opacity-40">Étape suivante<ArrowRight className="w-4 h-4" /></button>
+        </div>
+      )}
+      {reviewer && preview && (
+        <section className="mb-5 rounded-3xl bg-white dark:bg-slate-900 border-2 border-violet-300 dark:border-violet-800 p-5 sm:p-7">
+          <p className="text-xs font-extrabold tracking-widest uppercase text-violet-700 dark:text-violet-300">Aperçu administrateur · {total} questions</p>
+          <h2 className="mt-1 text-xl font-extrabold text-brand-blue dark:text-sky-300">{step.title}</h2>
+          {keyError && <p className="mt-2 text-sm font-bold text-brand-emerald">{keyError}</p>}
+          {!answerKey && !keyError && <p className="mt-2 inline-flex items-center gap-2 text-sm text-slate-500"><Loader2 className="w-4 h-4 animate-spin" />Chargement des bonnes réponses…</p>}
+          {step.modules.map((m) => course.modules[m.id].quizzes.map((z, zi) => (
+            <div key={`${m.id}-${zi}`} className="mt-4">
+              <h3 className="font-extrabold text-slate-900 dark:text-white">{z.title}</h3>
+              <ol className="mt-2 space-y-3 list-decimal pl-5">
+                {z.questions.map((qq, qk) => (
+                  <li key={qk} className="text-slate-800 dark:text-slate-200">
+                    <span className="font-bold">{qq.question}</span>
+                    <ul className="mt-1 space-y-0.5">
+                      {qq.answers.map((a, ai) => {
+                        const good = answerKey?.[m.id]?.[zi]?.[qk] === ai;
+                        return <li key={ai} className={`text-sm ${good ? 'font-bold text-emerald-700 dark:text-emerald-400' : 'text-slate-600 dark:text-slate-400'}`}>{good ? '✓ ' : '• '}{a}</li>;
+                      })}
+                    </ul>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          )))}
+        </section>
       )}
 
       <article className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-8 shadow-sm">

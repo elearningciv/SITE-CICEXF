@@ -35,6 +35,13 @@ const simFile = path.join(__dirname, 'elearning', 'simulation.json');
 if (fs.existsSync(simFile)) SIMULATION = { emails: [], courses: [], ...JSON.parse(fs.readFileSync(simFile, 'utf8')) };
 const isSimulation = (email, courseId) =>
   !!email && SIMULATION.emails.map((e) => e.toLowerCase()).includes(String(email).toLowerCase()) && SIMULATION.courses.includes(courseId);
+// Comptes de contrôle (administrateurs, liste non publiée elearning/reviewers.json) : toutes les étapes
+// et toutes les certifications, même fermées, sont accessibles sans la condition des 80 % ; leurs résultats
+// sont marqués comme simulation et un éventuel certificat est un spécimen. Ils peuvent aussi voir les corrigés.
+let REVIEWERS = [];
+const reviewersFile = path.join(__dirname, 'elearning', 'reviewers.json');
+if (fs.existsSync(reviewersFile)) REVIEWERS = (JSON.parse(fs.readFileSync(reviewersFile, 'utf8')).emails || []).map((e) => String(e).toLowerCase());
+const isReviewer = (email) => !!email && REVIEWERS.includes(String(email).toLowerCase());
 // Étape franchie : 80 % au moins, ou simplement tentée en mode simulation
 const cleared = (scores, stepId, sim) => (sim ? scores[stepId] !== undefined : (scores[stepId] || 0) >= PASS);
 
@@ -100,10 +107,11 @@ const publicProgress = (d) => (d ? {
 
 async function handleGrade(uid, email, body) {
   const course = KEYS[body.courseId];
-  const sim = isSimulation(email, body.courseId);
+  const reviewer = isReviewer(email);
+  const sim = reviewer || isSimulation(email, body.courseId);
   if (!course) return [404, { error: 'Parcours introuvable' }];
   const status = await courseStatus(course);
-  if (status !== 'open') return [403, { error: status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée. Votre progression est conservée.' }];
+  if (status !== 'open' && !reviewer) return [403, { error: status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée. Votre progression est conservée.' }];
   const index = course.steps.findIndex((s) => s.id === body.stepId);
   if (index < 0) return [404, { error: 'Étape introuvable' }];
   const step = course.steps[index];
@@ -116,7 +124,7 @@ async function handleGrade(uid, email, body) {
     const snap = await tx.get(ref);
     const prev = snap.exists ? snap.data() : {};
     const scores = prev.scores || {};
-    if (!isOpen(course, scores, index, sim)) return [403, { error: 'Cette étape n’est pas encore débloquée' }];
+    if (!reviewer && !isOpen(course, scores, index, sim)) return [403, { error: 'Cette étape n’est pas encore débloquée' }];
 
     const result = grade(course, step, body.answers);
     const best = Math.max(result.pct, scores[step.id] || 0);
@@ -139,7 +147,8 @@ async function handleGrade(uid, email, body) {
 
 async function handleCertificate(uid, email, courseId) {
     const course = KEYS[courseId];
-    const sim = isSimulation(email, courseId);
+    const reviewer = isReviewer(email);
+    const sim = reviewer || isSimulation(email, courseId);
     if (!course) return [404, { error: 'Parcours introuvable' }];
     const learnerSnap = await db.doc(`learners/${uid}`).get();
     if (!learnerSnap.exists) return [403, { error: 'Compte apprenant incomplet' }];
@@ -154,7 +163,7 @@ async function handleCertificate(uid, email, courseId) {
         if (cert.exists) return [200, { certificate: serializeCertificate(cert.data()) }];
       }
       const scores = prog.scores || {};
-      if (!course.steps.every((s) => cleared(scores, s.id, sim))) {
+      if (reviewer ? scores.FINAL === undefined : !course.steps.every((s) => cleared(scores, s.id, sim))) {
         return [403, { error: sim ? 'Toutes les étapes doivent avoir été passées' : 'Toutes les étapes doivent être validées avec 80 % au moins' }];
       }
 
@@ -187,6 +196,14 @@ async function handleCertificate(uid, email, courseId) {
       tx.set(ref, { certificate: number }, { merge: true });
       return [200, { certificate: serializeCertificate(cert) }];
     });
+}
+
+// Corrigé d'un parcours, réservé aux comptes de contrôle (index des bonnes réponses dans l'ordre du fichier public)
+function handleReview(email, courseId) {
+  if (!isReviewer(email)) return [403, { error: 'Accès réservé aux administrateurs' }];
+  const course = KEYS[courseId];
+  if (!course) return [404, { error: 'Parcours introuvable' }];
+  return [200, { key: course.key }];
 }
 
 function certificateStats(course) {
@@ -243,6 +260,7 @@ exports.elearning = onRequest(
       let out;
       if (body.action === 'grade') out = await handleGrade(uid, email, body);
       else if (body.action === 'certificate') out = await handleCertificate(uid, email, body.courseId);
+      else if (body.action === 'review') out = handleReview(email, body.courseId);
       else out = [400, { error: 'Action inconnue' }];
       return res.status(out[0]).json(out[1]);
     } catch (err) {
