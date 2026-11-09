@@ -11,7 +11,7 @@ import type { Certificate } from '../lib/elearningApi';
 interface Learner {
   uid: string;
   nom: string; prenom: string; telephone: string; email: string; pays: string;
-  activite: string; formation: string; experience: string;
+  activite: string; formation: string; niveau?: string; experience: string;
   createdAt?: Timestamp;
 }
 interface LearnerProgress { uid: string; courseId: string; scores: Record<string, number>; attempts: Record<string, number>; certificate?: string; updatedAt?: Timestamp }
@@ -98,15 +98,15 @@ export default function AdminLearners() {
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (!q) return rows;
-    return rows.filter(({ l, courses }) => [l.nom, l.prenom, l.email, l.telephone, l.pays, l.formation, l.activite, ...courses.map((c) => `${c.meta.title} ${c.p?.certificate || ''}`)].join(' ').toLowerCase().includes(q));
+    return rows.filter(({ l, courses }) => [l.nom, l.prenom, l.email, l.telephone, l.pays, l.formation, l.niveau || '', l.activite, ...courses.map((c) => `${c.meta.title} ${c.p?.certificate || ''}`)].join(' ').toLowerCase().includes(q));
   }, [rows, search]);
 
   const started = rows.filter((r) => r.enrolled).length;
 
   const exportCsv = () => {
-    const head = ['Nom', 'Prénom', 'Téléphone', 'E-mail', 'Pays', "Domaine d'activité", 'Domaine de formation', 'Expérience', 'Compte créé le', 'Certification', 'Inscrit le', 'Étapes validées', 'Certificat'];
+    const head = ['Nom', 'Prénom', 'Téléphone', 'E-mail', 'Pays', "Domaine d'activité", 'Domaine de formation', "Niveau d'études", 'Expérience', 'Compte créé le', 'Certification', 'Inscrit le', 'Étapes validées', 'Certificat'];
     const cell = (v: unknown) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-    const base = (l: Learner) => [l.nom, l.prenom, l.telephone, l.email, l.pays, l.activite, l.formation, l.experience, fmt(l.createdAt)];
+    const base = (l: Learner) => [l.nom, l.prenom, l.telephone, l.email, l.pays, l.activite, l.formation, l.niveau || '', l.experience, fmt(l.createdAt)];
     const lines = [head, ...rows.flatMap(({ l, courses }) => courses.length
       ? courses.map((c) => [...base(l), c.meta.title, fmt(c.enrolledOn), `${c.done}/${c.meta.steps.length}`, c.p?.certificate || ''])
       : [[...base(l), '', '', '', '']])]
@@ -184,7 +184,7 @@ export default function AdminLearners() {
                 <tr key={l.uid} className="border-t border-slate-100 dark:border-slate-800 align-top">
                   <td className="p-3 font-bold text-slate-900 dark:text-white">{l.nom.toLocaleUpperCase('fr-FR')} {l.prenom}<div className="text-xs font-normal text-slate-500">{l.pays}</div></td>
                   <td className="p-3"><a href={`mailto:${l.email}`} className="text-brand-blue dark:text-sky-300 break-all">{l.email}</a><div className="text-xs">{l.telephone}</div></td>
-                  <td className="p-3 text-xs text-slate-600 dark:text-slate-300">{l.formation}<br />{l.activite} · {l.experience}</td>
+                  <td className="p-3 text-xs text-slate-600 dark:text-slate-300">{l.formation}{l.niveau ? ` · ${l.niveau}` : ''}<br />{l.activite} · {l.experience}</td>
                   <td className="p-3 whitespace-nowrap">{fmt(l.createdAt)}</td>
                   <td className="p-3 min-w-[220px]">
                     {!courses.length && <span className="text-xs text-slate-500">Pas encore inscrit à une certification</span>}

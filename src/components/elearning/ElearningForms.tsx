@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Loader2 } from 'lucide-react';
-import { COUNTRIES, EXPERIENCE_LEVELS, TRAINING_DOMAINS } from '../../data/elearning';
+import { COUNTRIES, EXPERIENCE_LEVELS, STUDY_LEVELS, TRAINING_DOMAINS, TRAINING_DOMAIN_GROUPS } from '../../data/elearning';
 import type { ElearningApi, LearnerProfile } from '../../lib/elearningApi';
 import { learnerErrorMessage } from '../../lib/elearningApi';
 
@@ -9,7 +9,7 @@ const label = 'block text-xs font-extrabold tracking-wide uppercase text-slate-6
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm';
 const panel = 'max-w-3xl mx-auto rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 shadow-sm';
 
-const EMPTY: LearnerProfile = { nom: '', prenom: '', telephone: '', email: '', pays: '', activite: '', formation: '', experience: '' };
+const EMPTY: LearnerProfile = { nom: '', prenom: '', telephone: '', email: '', pays: '', activite: '', formation: '', niveau: '', experience: '' };
 
 interface SignupProps {
   api: ElearningApi;
@@ -31,8 +31,8 @@ export function SignupForm({ api, completeFor, initial, onDone, onLogin }: Signu
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const required: (keyof LearnerProfile)[] = ['nom', 'prenom', 'telephone', 'email', 'pays', 'activite', 'formation', 'experience'];
-    if (required.some((k) => !p[k].trim())) return setError('Merci de remplir tous les champs.');
+    const required: (keyof LearnerProfile)[] = ['nom', 'prenom', 'telephone', 'email', 'pays', 'activite', 'formation', 'niveau', 'experience'];
+    if (required.some((k) => !(p[k] || '').trim())) return setError('Merci de remplir tous les champs.');
     if (!/^\S+@\S+\.\S+$/.test(p.email.trim())) return setError("L'adresse e-mail n'est pas valide.");
     if (!/^[+\d][\d\s().-]{6,}$/.test(p.telephone.trim())) return setError("Le numéro de téléphone n'est pas valide.");
     if (!completeFor && !editing && password.length < 8) return setError('Le mot de passe doit contenir au moins 8 caractères.');
@@ -77,7 +77,20 @@ export function SignupForm({ api, completeFor, initial, onDone, onLogin }: Signu
           <label className={label} htmlFor="el-formation">Domaine de formation</label>
           <select id="el-formation" className={field} value={p.formation} onChange={set('formation')}>
             <option value="">Choisir…</option>
-            {TRAINING_DOMAINS.map((d) => <option key={d}>{d}</option>)}
+            {/* A value chosen from an older list stays selectable */}
+            {p.formation && !TRAINING_DOMAINS.includes(p.formation) && <option>{p.formation}</option>}
+            {TRAINING_DOMAIN_GROUPS.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.items.map((d) => <option key={d}>{d}</option>)}
+              </optgroup>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className={label} htmlFor="el-niveau">Niveau d'études (en cours ou atteint)</label>
+          <select id="el-niveau" className={field} value={p.niveau || ''} onChange={set('niveau')}>
+            <option value="">Choisir…</option>
+            {STUDY_LEVELS.map((x) => <option key={x}>{x}</option>)}
           </select>
         </div>
         <div>

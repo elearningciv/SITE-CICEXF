@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Testimonial } from '../types';
+import { useSiteContent } from './siteContent';
 
 // Testimonials are managed from the admin console and stored in a single settings document
 // (app_settings is already readable by everyone and writable by admins only).
@@ -7,7 +8,14 @@ import { Testimonial } from '../types';
 const loadDoc = () => Promise.all([import('../firebase'), import('firebase/firestore')])
   .then(([{ db }, firestore]) => ({ ref: firestore.doc(db, 'app_settings', 'testimonials'), ...firestore }));
 
+/** Public pages: testimonials from the site content copy (no database read) */
 export function useTestimonials(): Testimonial[] {
+  const content = useSiteContent();
+  return (content?.testimonials || []).filter(t => t && t.text);
+}
+
+/** Administration: live view of the settings document */
+export function useTestimonialsLive(): Testimonial[] {
   const [items, setItems] = useState<Testimonial[]>([]);
   useEffect(() => {
     let unsubscribe = () => {};

@@ -11,6 +11,7 @@ import { MessageSquare, ArrowUp, X, Sparkles, ChevronLeft, ChevronRight, Bot } f
 import { FORMATIONS, DOMAINS_INTERVENTION, BLOG_POSTS, PARTNERS, PROJECTS } from './data';
 import { Formation, DomainIntervention, Project, BlogPost } from './types';
 import { SEO_PAGES, SITE_URL } from './seo';
+import { cachedSiteContent, loadSiteContent, type SiteContent } from './lib/siteContent';
 
 const NAVIGATION_ORDER = [
   'home',
@@ -201,6 +202,35 @@ export default function App() {
 
     let cancelled = false;
     const unsubscribers: Array<() => void> = [];
+
+    // Visitors: one copy of the content served by the siteContent function (no Firestore read).
+    // The database's free daily read allowance is small and is shared by the whole site.
+    const applySite = (c: SiteContent | null) => {
+      if (!c || cancelled) return;
+      latestDbFormations = c.formations;
+      latestDbAccompagnements = c.accompagnements;
+      latestDbRealisations = c.realisations;
+      latestDbBlog = c.blog_posts;
+      latestDbPartners = c.partners;
+      deletedMap = {
+        formations: c.deleted.formations || [],
+        accompagnements: c.deleted.accompagnements || [],
+        realisations: c.deleted.realisations || [],
+        blog_posts: c.deleted.blog_posts || [],
+        partners: c.deleted.partners || []
+      };
+      try {
+        localStorage.setItem('cicexf_deleted_items', JSON.stringify(deletedMap));
+      } catch (e) {}
+      recomputeAll();
+    };
+    if (!isAdminLoggedIn) {
+      applySite(cachedSiteContent());
+      loadSiteContent().then(applySite);
+      return () => { cancelled = true; };
+    }
+
+    // Administrators: live view of the database, so their changes show at once
     Promise.all([loadFirebase(), import('firebase/firestore')]).then(([{ db }, { collection, onSnapshot, doc, updateDoc }]) => {
     if (cancelled) return;
 
@@ -289,7 +319,7 @@ export default function App() {
       cancelled = true;
       unsubscribers.forEach(unsub => unsub());
     };
-  }, []);
+  }, [isAdminLoggedIn]);
 
   // /admin stays closed to visitors: open only with the private link or on a device already used by an admin
   const [adminUnlocked, setAdminUnlocked] = useState<boolean>(hasAdminAccess);

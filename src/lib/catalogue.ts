@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { deleteDoc, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { SITE_CONTENT_URL, useSiteContent } from './siteContent';
 
 /**
  * Training catalogue (PDF) uploaded from the admin console.
@@ -23,7 +24,16 @@ const CHUNK_CHARS = 700_000; // ~700 KB of base64 per document, well under the 1
 const META_REF = () => doc(db, 'app_settings', 'catalogue');
 const CHUNK_REF = (i: number) => doc(db, 'app_settings', `catalogue_chunk_${i}`);
 
+/** Public pages: catalogue description from the site content copy (no database read) */
 export function useCatalogueMeta(): { meta: CatalogueMeta | null; loading: boolean } {
+  const content = useSiteContent();
+  const [timedOut, setTimedOut] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setTimedOut(true), 8000); return () => clearTimeout(t); }, []);
+  return { meta: content?.catalogue || null, loading: !content && !timedOut };
+}
+
+/** Administration: live view of the catalogue document */
+export function useCatalogueMetaLive(): { meta: CatalogueMeta | null; loading: boolean } {
   const [state, setState] = useState<{ meta: CatalogueMeta | null; loading: boolean }>({ meta: null, loading: true });
   useEffect(() => onSnapshot(
     META_REF(),
@@ -84,15 +94,14 @@ export async function deleteCatalogue(): Promise<void> {
 // The assembled file is kept in memory per version, so opening it twice costs one download
 let cache: { version: number; blob: Blob } | null = null;
 
+// The PDF is downloaded from the copy kept by the siteContent function, never from the database chunks
+// (a 6 Mo catalogue read from Firestore used thousands of the database's daily read units)
 export async function loadCatalogueBlob(meta: CatalogueMeta): Promise<Blob> {
   if (cache && cache.version === meta.version) return cache.blob;
-  const parts = await Promise.all(
-    Array.from({ length: meta.chunkCount }, (_, i) => getDoc(CHUNK_REF(i)).then(s => (s.data()?.data as string) || ''))
-  );
-  const binary = atob(parts.join(''));
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const res = await fetch(`${SITE_CONTENT_URL}?catalogue=${encodeURIComponent(String(meta.version))}`);
+  if (res.status === 404) throw new Error('Le catalogue est en cours de mise en ligne : réessayez dans une minute.');
+  if (!res.ok) throw new Error(`Catalogue indisponible (${res.status})`);
+  const blob = new Blob([await res.arrayBuffer()], { type: 'application/pdf' });
   cache = { version: meta.version, blob };
   return blob;
 }

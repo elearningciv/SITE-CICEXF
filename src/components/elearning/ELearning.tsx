@@ -114,7 +114,14 @@ export default function ELearning() {
     return () => { live = false; };
   }, [session]);
 
-  if (loadError) return <Shell><p className="text-center font-bold text-brand-emerald py-16">{loadError}</p></Shell>;
+  if (loadError) return (
+    <Shell>
+      <div className="py-16 text-center">
+        <p className="font-bold text-brand-emerald">{loadError}</p>
+        <button type="button" onClick={() => window.location.reload()} className="mt-4 rounded-xl bg-brand-blue px-5 py-2.5 text-sm font-extrabold text-white">Réessayer</button>
+      </div>
+    </Shell>
+  );
   if (!api || !statuses || session === undefined || (session && profile === undefined)) {
     return <Shell><p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement de l'e-learning…</p></Shell>;
   }
@@ -390,6 +397,7 @@ function LearnerBar({ api, profile, go }: { api: ElearningApi; profile: LearnerP
               <div className={row}><dt className="text-slate-500">Pays</dt><dd className="font-bold text-slate-800 dark:text-slate-200">{profile.pays}</dd></div>
               <div className={row}><dt className="text-slate-500">Activité</dt><dd className="font-bold text-slate-800 dark:text-slate-200">{profile.activite}</dd></div>
               <div className={row}><dt className="text-slate-500">Formation</dt><dd className="font-bold text-slate-800 dark:text-slate-200">{profile.formation}</dd></div>
+              {profile.niveau && <div className={row}><dt className="text-slate-500">Niveau</dt><dd className="font-bold text-slate-800 dark:text-slate-200">{profile.niveau}</dd></div>}
               <div className={row}><dt className="text-slate-500">Expérience</dt><dd className="font-bold text-slate-800 dark:text-slate-200">{profile.experience}</dd></div>
             </dl>
             <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700 grid gap-1 text-sm font-bold">

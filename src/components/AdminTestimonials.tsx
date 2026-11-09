@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, Edit3, Star, Save, X } from 'lucide-react';
 import { Testimonial } from '../types';
-import { saveTestimonials, useTestimonials } from '../lib/testimonials';
+import { saveTestimonials, useTestimonialsLive } from '../lib/testimonials';
 
 const EMPTY = { name: '', role: '', organization: '', text: '', rating: 5 };
 
 /** Admin tab: add, edit and remove the testimonials shown on the home and Réalisations pages */
 export default function AdminTestimonials() {
-  const items = useTestimonials();
+  const items = useTestimonialsLive();
   const [form, setForm] = useState(EMPTY);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);

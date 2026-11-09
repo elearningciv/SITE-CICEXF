@@ -75,17 +75,65 @@ export const COUNTRIES = [
   'Belgique', 'Canada', 'Autre pays'
 ];
 
-/** The CICEXF domains, offered as "Domaine de formation" */
-export const TRAINING_DOMAINS = [
-  'Ingénierie de formation et de renforcement de capacités',
-  "Ingénierie financière et de l'investissement",
-  'Ingénierie informatique et systèmes de réseaux',
-  'Ingénierie de développement territorial',
-  'Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)',
-  'Audit, consultance et stratégie de développement des organisations',
-  'Études spécialisées et ingénierie de projets',
-  'Accompagnement technique et institutionnel',
-  'Autre'
+/** University fields of study offered as "Domaine de formation", grouped by family */
+export const TRAINING_DOMAIN_GROUPS: { label: string; items: string[] }[] = [
+  { label: 'Sciences humaines et sociales', items: [
+    'Géographie', 'Aménagement du territoire et urbanisme', 'Sociologie', 'Anthropologie', 'Ethnologie', 'Histoire', 'Archéologie',
+    'Philosophie', 'Psychologie', 'Sciences de l\'éducation', 'Démographie', 'Sciences politiques', 'Relations internationales',
+    'Sciences de l\'information et de la communication', 'Journalisme', 'Travail social', 'Études du développement', 'Études de genre', 'Criminologie'
+  ] },
+  { label: 'Lettres, langues et arts', items: [
+    'Lettres modernes', 'Lettres classiques', 'Linguistique', 'Anglais', 'Espagnol', 'Allemand', 'Arabe', 'Chinois',
+    'Langues étrangères appliquées', 'Traduction et interprétariat', 'Arts plastiques', 'Musique', 'Arts du spectacle',
+    'Cinéma et audiovisuel', 'Design et arts appliqués', 'Patrimoine et muséologie'
+  ] },
+  { label: 'Droit et sciences juridiques', items: [
+    'Droit privé', 'Droit public', 'Droit des affaires', 'Droit international', 'Droit de l\'environnement', 'Droit social et du travail',
+    'Droit fiscal', 'Notariat', 'Sciences criminelles'
+  ] },
+  { label: 'Économie, gestion et administration', items: [
+    'Sciences économiques', 'Économie du développement', 'Économétrie et statistique économique', 'Gestion des entreprises', 'Comptabilité',
+    'Finance', 'Banque et assurance', 'Audit et contrôle de gestion', 'Marketing et communication commerciale', 'Commerce international',
+    'Logistique et transport', 'Gestion des ressources humaines', 'Management de projets', 'Entrepreneuriat', 'Administration publique',
+    'Gestion des ONG et de l\'action humanitaire'
+  ] },
+  { label: 'Mathématiques et informatique', items: [
+    'Mathématiques', 'Mathématiques appliquées', 'Statistique', 'Actuariat', 'Informatique', 'Génie logiciel', 'Réseaux et télécommunications',
+    'Cybersécurité', 'Science des données et intelligence artificielle', 'Systèmes d\'information', 'Géomatique et systèmes d\'information géographique', 'Télédétection'
+  ] },
+  { label: 'Sciences physiques et chimiques', items: [
+    'Physique', 'Chimie', 'Physique-chimie', 'Biochimie', 'Sciences des matériaux', 'Astronomie et astrophysique'
+  ] },
+  { label: 'Sciences de la vie et de la Terre', items: [
+    'Biologie', 'Biologie végétale', 'Biologie animale', 'Microbiologie', 'Génétique', 'Écologie', 'Sciences de l\'environnement', 'Géologie',
+    'Hydrologie et ressources en eau', 'Océanographie', 'Météorologie et climatologie', 'Sciences du sol'
+  ] },
+  { label: 'Agriculture, élevage et alimentation', items: [
+    'Agronomie', 'Agroéconomie', 'Zootechnie et productions animales', 'Foresterie et gestion des forêts', 'Halieutique et aquaculture',
+    'Sciences et technologies des aliments', 'Génie rural', 'Médecine vétérinaire'
+  ] },
+  { label: 'Santé', items: [
+    'Médecine', 'Pharmacie', 'Odontologie (chirurgie dentaire)', 'Sciences infirmières', 'Maïeutique (sage-femme)', 'Santé publique', 'Épidémiologie',
+    'Biologie médicale', 'Kinésithérapie et réadaptation', 'Nutrition et diététique'
+  ] },
+  { label: 'Ingénierie et technologies', items: [
+    'Génie civil', 'Bâtiment et travaux publics', 'Architecture', 'Génie mécanique', 'Génie électrique', 'Électronique', 'Automatique et robotique',
+    'Génie industriel', 'Génie chimique et des procédés', 'Mines et géologie appliquée', 'Pétrole et gaz', 'Génie hydraulique', 'Topographie',
+    'Énergies renouvelables', 'Énergétique', 'Mécatronique', 'Maintenance industrielle', 'Aéronautique'
+  ] },
+  { label: 'Environnement, qualité, hygiène et sécurité', items: [
+    'QHSE (qualité, hygiène, sécurité, environnement)', 'HSE (hygiène, sécurité, environnement)', 'Gestion de l\'environnement', 'Gestion des déchets',
+    'Gestion des risques et des catastrophes', 'Santé et sécurité au travail', 'Développement durable', 'Eau, hygiène et assainissement'
+  ] },
+  { label: 'Autres situations', items: ['Sans formation universitaire', 'Autre domaine'] }
+];
+export const TRAINING_DOMAINS = TRAINING_DOMAIN_GROUPS.flatMap((g) => g.items);
+
+/** Study level of the learner (current enrolment or highest level reached) */
+export const STUDY_LEVELS = [
+  'Sans diplôme', "Certificat d'études primaires (CEPE)", 'BEPC ou équivalent', 'CAP ou BEP', 'Baccalauréat', 'Bac + 1',
+  'BTS ou DUT (Bac + 2)', 'Licence 1', 'Licence 2', 'Licence 3 (Bac + 3)', 'Master 1 (Bac + 4)', 'Master 2 (Bac + 5)',
+  "Diplôme d'ingénieur", 'Doctorat en cours', 'Doctorat', 'Post-doctorat', 'Certification professionnelle', 'Autre niveau'
 ];
 
 export const EXPERIENCE_LEVELS = ['Aucune', 'Moins de 2 ans', '2 à 5 ans', '6 à 10 ans', 'Plus de 10 ans'];

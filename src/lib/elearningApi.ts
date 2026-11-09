@@ -3,6 +3,7 @@
 // In development (npm run dev) a local simulation is used by default, so that tests never create
 // accounts or data online; set VITE_ELEARNING_MOCK=0 to test against the real services.
 import type { CourseStatus } from '../data/elearning';
+import { cachedSiteContent, loadSiteContent, type SiteContent } from './siteContent';
 
 export interface LearnerProfile {
   nom: string;
@@ -11,6 +12,8 @@ export interface LearnerProfile {
   email: string;
   pays: string;
   activite: string;
+  /** Study level (added later: older profiles may not have it) */
+  niveau?: string;
   formation: string;
   experience: string;
 }
@@ -152,6 +155,8 @@ export function learnerErrorMessage(err: any): string {
     case 'auth/network-request-failed':
     case 'unavailable':
       return 'Connexion réseau indisponible. Vérifiez votre accès Internet.';
+    case 'resource-exhausted':
+      return "Le service e-learning est momentanément saturé. Votre progression est conservée : réessayez un peu plus tard.";
     case 'permission-denied':
       return "Enregistrement refusé. Vérifiez les informations saisies, puis réessayez.";
     default:
@@ -197,6 +202,7 @@ async function createFirebaseApi(): Promise<ElearningApi> {
       pays: profile.pays,
       activite: profile.activite.trim(),
       formation: profile.formation,
+      niveau: profile.niveau || '',
       experience: profile.experience,
       consent: true,
       createdAt: existing?.exists() ? existing.data().createdAt : serverTimestamp(),
@@ -302,8 +308,17 @@ async function createFirebaseApi(): Promise<ElearningApi> {
     },
     getAnswerKey: (courseId) => call<{ key: Record<string, number[][]> }>({ action: 'review', courseId }).then((r) => r.key),
     async getCourseStatuses() {
+      const valid = (entries: [string, unknown][]) =>
+        Object.fromEntries(entries.filter(([, st]) => ['open', 'closed', 'deleted'].includes(st as string))) as Record<string, CourseStatus>;
+      // Read from the site content copy (no database read); the database only if the copy is unreachable
+      // (the e-learning waits 5 seconds at most for it, then uses the copy saved on the device)
+      const site = await Promise.race([
+        loadSiteContent(),
+        new Promise<SiteContent | null>((r) => setTimeout(() => r(cachedSiteContent()), 5000))
+      ]) || cachedSiteContent();
+      if (site?.elearningCourses) return valid(Object.entries(site.elearningCourses));
       const snap = await getDocs(collection(publicDb, 'elearning_courses'));
-      return Object.fromEntries(snap.docs.map((d) => [d.id, d.data().status as CourseStatus]).filter(([, st]) => ['open', 'closed', 'deleted'].includes(st as string)));
+      return valid(snap.docs.map((d) => [d.id, d.data().status]));
     },
     async verifyCertificate(number) {
       if (!CERTIFICATE_RE.test(number)) return null;

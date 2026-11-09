@@ -26,6 +26,7 @@ const PAGES = fs.readFileSync(path.join(__dirname, 'knowledge', 'pages.md'), 'ut
 
 if (!getApps().length) initializeApp();
 const db = getFirestore(DATABASE_ID);
+const { readSiteContent } = require('./siteContent');
 const ai = new GoogleGenAI({ vertexai: true, project: PROJECT_ID, location: 'global' });
 
 // ---------------------------------------------------------------------------
@@ -43,14 +44,22 @@ const clean = (value) => {
 const cleanTitle = (t) => (t || '').replace(/Nouvelle\s+Formation\s+d['’]Excellence\s*[:\-–—]?\s*/gi, '').trim();
 
 let liveCache = { at: 0, data: null };
+// Site content comes from the public copy kept in Cloud Storage (siteContent.js), never from a
+// full Firestore read: the database's free daily read allowance is small.
 async function getLiveContent() {
   if (liveCache.data && Date.now() - liveCache.at < 5 * 60 * 1000) return liveCache.data;
-  const read = async (name) => (await db.collection(name).get()).docs.map(d => ({ id: d.id, ...d.data() }));
-  const [formations, accompagnements, realisations, blog, partners, deletedSnap] = await Promise.all([
-    read('formations'), read('accompagnements'), read('realisations'), read('blog_posts'), read('partners'),
-    db.doc('app_settings/deleted_items').get()
-  ]);
-  const del = deletedSnap.exists ? deletedSnap.data() : {};
+  let site = {};
+  try {
+    site = await readSiteContent();
+  } catch (err) {
+    logger.warn('Copie du contenu indisponible, contenu statique seul', { error: err.message });
+  }
+  const { formations = [], accompagnements = [], realisations = [], blog_posts: blog = [], partners = [] } = site;
+  const d = site.deleted || {};
+  const del = {
+    deletedFormationIds: d.formations, deletedAccompagnementIds: d.accompagnements, deletedRealisationIds: d.realisations,
+    deletedBlogPostIds: d.blog_posts, deletedPartnerIds: d.partners
+  };
   const merge = (dbItems, staticItems, deletedIds = []) => {
     const ids = new Set(dbItems.map(i => i.id));
     return [...dbItems, ...staticItems.filter(s => !ids.has(s.id))].filter(i => !deletedIds.includes(i.id));

@@ -11,6 +11,12 @@ exports.adilineChat = require('./adiline').adilineChat;
 // E-learning : correction des quiz et examens, progression et certificats des apprenants
 exports.elearning = require('./elearning').elearning;
 
+// Contenu public du site servi depuis une copie dans Cloud Storage (images, catalogue, formations…) :
+// les visiteurs ne lisent plus la base Firestore, dont le quota gratuit quotidien est limité
+const site = require('./siteContent');
+for (const name of ['siteContent', 'siteFormationsChanged', 'siteAccompagnementsChanged', 'siteRealisationsChanged',
+  'siteBlogChanged', 'sitePartnersChanged', 'siteSettingsChanged', 'siteCoursesChanged']) exports[name] = site[name];
+
 // Facebook & Instagram : prospects des publicités à formulaire et réponses d'ADI aux messages
 // (à déployer seulement après avoir enregistré les codes META_* : voir le guide dans l'administration)
 exports.metaWebhook = require('./meta').metaWebhook;

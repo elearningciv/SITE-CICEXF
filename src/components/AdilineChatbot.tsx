@@ -10,7 +10,8 @@ import {
 import adilineAvatar from '../assets/images/adiline_avatar_1792359280949.webp';
 import { CABINET_INFO, FORMATIONS, TEAM_MEMBERS } from '../knowledgeBase';
 import { saveProspect } from '../lib/prospects';
-import { getCatalogueMeta, useCatalogueMeta } from '../lib/catalogue';
+import { useCatalogueMeta } from '../lib/catalogue';
+import { loadSiteContent } from '../lib/siteContent';
 import CatalogueActions from './CatalogueActions';
 import { useRegistration, REGISTRATION_RE, RegistrationFormation, ProformaAttachment } from './adiline/useRegistration';
 
@@ -705,7 +706,7 @@ Comment puis-je vous accompagner aujourd'hui ?`,
    */
   const attachCatalogue = async (query: string, assistantMsgId: string): Promise<boolean> => {
     if (!query || !CATALOGUE_RE.test(query)) return false;
-    const catalogue = catalogueMeta || await getCatalogueMeta().catch(() => null);
+    const catalogue = catalogueMeta || (await loadSiteContent())?.catalogue || null;
     if (!catalogue) return false;
     if (query.length < 90 || CATALOGUE_ONLY_RE.test(query)) {
       setMessages(prev => prev.map(m => m.id === assistantMsgId ? {

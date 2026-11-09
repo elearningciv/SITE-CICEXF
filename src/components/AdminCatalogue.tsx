@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { FileText, Trash2, UploadCloud } from 'lucide-react';
-import { deleteCatalogue, formatSize, MAX_CATALOGUE_BYTES, uploadCatalogue, useCatalogueMeta } from '../lib/catalogue';
+import { deleteCatalogue, formatSize, MAX_CATALOGUE_BYTES, uploadCatalogue, useCatalogueMetaLive } from '../lib/catalogue';
 import CatalogueActions from './CatalogueActions';
 
 /** Admin tab: upload, replace or remove the training catalogue PDF */
 export default function AdminCatalogue() {
-  const { meta, loading } = useCatalogueMeta();
+  const { meta, loading } = useCatalogueMetaLive();
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
