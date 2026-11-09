@@ -188,7 +188,7 @@ export async function buildCertificatePdf(c: Certificate) {
   doc.setFontSize(9.6);
   const s = c.stats;
   const facts = [
-    `${s.parts} parties · ${s.chapters} chapitres · ${s.modules} modules · ${s.quizzes} quiz`,
+    `${s.parts > 1 ? `${s.parts} parties · ` : ''}${s.chapters} chapitres · ${s.modules} modules · ${s.quizzes} quiz`,
     `Durée estimée : ${c.hours} heures`,
     `Résultat moyen : ${c.average} %`
   ];

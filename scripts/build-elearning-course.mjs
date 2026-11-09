@@ -43,10 +43,12 @@ const permutation = (n) => {
 const steps = [];
 for (const p of COURSE.parts) {
   for (const c of p.chapters) steps.push({ id: c.id, kind: 'chapitre', part: p.id, title: c.title, modules: c.modules });
+  // Short courses (COURSE.partExams === false) have no part exam, only the final exam
+  if (COURSE.partExams === false) continue;
   const title = 'Examen de la ' + p.title.split(' : ')[0].toLowerCase();
   steps.push({ id: p.id + 'E', kind: 'examen', part: p.id, title, modules: [{ id: p.id + 'E', title, minutes: 20 }] });
 }
-steps.push({ id: 'FINAL', kind: 'final', part: null, title: 'Examen final de certification', modules: [{ id: 'FINAL', title: 'Examen final de certification', minutes: 40 }] });
+steps.push({ id: 'FINAL', kind: 'final', part: null, title: 'Examen final de certification', modules: [{ id: 'FINAL', title: 'Examen final de certification', minutes: COURSE.finalMinutes ?? 40 }] });
 
 const modules = {};
 const key = {};
@@ -89,7 +91,8 @@ const minutes = steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 
 const server = {
   id: COURSE.id,
   certTitle: COURSE.certTitle,
-  hours: Math.round(minutes / 60),
+  hours: Math.max(1, Math.round(minutes / 60)),
+  parts: COURSE.parts.length,
   steps: steps.map((s) => ({ id: s.id, kind: s.kind, modules: s.modules.map((m) => m.id) })),
   key
 };
@@ -110,7 +113,7 @@ const meta = {
   certTitle: COURSE.certTitle,
   domain: COURSE.domain,
   summary: course.summary,
-  hours: Math.round(minutes / 60),
+  hours: Math.max(1, Math.round(minutes / 60)),
   stats: {
     parts: COURSE.parts.length,
     chapters: chapters.length,

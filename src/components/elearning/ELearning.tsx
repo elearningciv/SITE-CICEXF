@@ -273,7 +273,7 @@ function CourseCard({ meta, children }: { meta: CourseMeta; children: ReactNode;
       <span className="self-start text-[11px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full bg-sky-50 text-brand-blue dark:bg-sky-950 dark:text-sky-300">{meta.domain}</span>
       <h3 className="mt-3 mb-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{meta.title}</h3>
       <p className="flex-1 text-sm text-slate-600 dark:text-slate-400">{meta.summary}</p>
-      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{st.chapters} chapitres · {st.modules} modules · {st.quizzes} quiz · {st.exams} examens · {meta.hours} h environ</p>
+      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{st.chapters} chapitres · {st.modules} modules · {st.quizzes} quiz · {st.exams} examen{st.exams > 1 ? 's' : ''} · {meta.hours} h environ</p>
       {children}
     </div>
   );
@@ -402,8 +402,8 @@ function EnrollView({ api, meta, profile, go, onEnrolled }: {
       <p className="mt-2 text-slate-600 dark:text-slate-400">{meta.summary}</p>
 
       <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm">
-        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><BookOpen className="w-4 h-4 text-brand-blue shrink-0" />{st.parts} parties · {st.chapters} chapitres · {st.modules} modules</li>
-        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><ClipboardCheck className="w-4 h-4 text-brand-blue shrink-0" />{st.quizzes} quiz et {st.exams} examens</li>
+        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><BookOpen className="w-4 h-4 text-brand-blue shrink-0" />{st.parts > 1 ? `${st.parts} parties · ` : ''}{st.chapters} chapitres · {st.modules} modules</li>
+        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><ClipboardCheck className="w-4 h-4 text-brand-blue shrink-0" />{st.quizzes} quiz et {st.exams > 1 ? `${st.exams} examens` : 'un examen final'}</li>
         <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><Clock className="w-4 h-4 text-brand-blue shrink-0" />{meta.hours} heures environ, à votre rythme</li>
         <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><Award className="w-4 h-4 text-brand-blue shrink-0" />Certificat de réussite dès {PASS} % à chaque étape</li>
       </ul>

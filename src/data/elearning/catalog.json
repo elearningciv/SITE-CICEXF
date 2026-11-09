@@ -78,6 +78,48 @@
   ]
  },
  {
+  "id": "cartographie-semiologie",
+  "order": 1.5,
+  "title": "Principes fondamentaux de la cartographie et de la sémiologie graphique en géographie",
+  "certTitle": "Les principes fondamentaux de la cartographie et de la sémiologie graphique en géographie",
+  "domain": "Ingénierie de développement territorial",
+  "summary": "Comprendre ce qu'est une carte, maîtriser échelle, projection et généralisation, et choisir les bonnes variables visuelles selon Jacques Bertin.",
+  "hours": 3,
+  "stats": {
+   "parts": 1,
+   "chapters": 3,
+   "modules": 6,
+   "quizzes": 6,
+   "exams": 1
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Chapitre 1 : La carte, un langage pour représenter l'espace",
+    "modules": 2
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Chapitre 2 : Échelle, projection et généralisation",
+    "modules": 2
+   },
+   {
+    "id": "C3",
+    "kind": "chapitre",
+    "title": "Chapitre 3 : La sémiologie graphique de Jacques Bertin",
+    "modules": 2
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "modelisation-financiere",
   "order": 2,
   "title": "Modélisation financière",

@@ -169,7 +169,7 @@ async function handleCertificate(uid, email, courseId) {
 
 function certificateStats(course) {
   const chapters = course.steps.filter((s) => s.kind === 'chapitre');
-  const parts = course.steps.filter((s) => s.kind === 'examen').length;
+  const parts = course.parts ?? course.steps.filter((s) => s.kind === 'examen').length;
   const modules = chapters.reduce((n, s) => n + s.modules.length, 0);
   const quizzes = chapters.reduce((n, s) => n + s.modules.reduce((a, m) => a + course.key[m].length, 0), 0);
   return { parts, chapters: chapters.length, modules, quizzes };
