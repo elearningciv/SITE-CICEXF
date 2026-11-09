@@ -2,10 +2,13 @@
 // stored in this browser. It is never part of the production build (see getElearningApi).
 import { PASS } from '../data/elearning';
 import type { Answers, Certificate, ElearningApi, LearnerProfile, LearnerSession, Progress } from './elearningApi';
+import type { CourseStatus } from '../data/elearning';
 import { EMPTY_PROGRESS, ElearningError, localDraft } from './elearningApi';
 
 interface ServerCourse {
   id: string;
+  code?: string;
+  defaultStatus?: CourseStatus;
   certTitle: string;
   hours: number;
   steps: { id: string; kind: string; modules: string[] }[];
@@ -21,6 +24,10 @@ interface Store {
 }
 
 const KEY = 'cicexf_elearning_simulation';
+/** Local test of the opening status (set from the browser console: localStorage.cicexf_el_course_status = '{"id":"closed"}') */
+const mockStatuses = (): Record<string, CourseStatus> => {
+  try { return JSON.parse(localStorage.getItem('cicexf_el_course_status') || '{}'); } catch { return {}; }
+};
 const load = (): Store => {
   try {
     return { users: {}, session: null, progress: {}, certificates: {}, counter: 0, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
@@ -110,6 +117,8 @@ export function createMockApi(): ElearningApi {
       const course = await serverCourse(courseId);
       const s = load(), id = uid();
       const sim = isSim(courseId);
+      const status = mockStatuses()[courseId] || course.defaultStatus || 'open';
+      if (status !== 'open') throw new ElearningError(status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée.');
       const prev = s.progress[id]?.[courseId] || { ...EMPTY_PROGRESS };
       const index = course.steps.findIndex((x) => x.id === stepId);
       if (index < 0) throw new ElearningError('Étape introuvable');
@@ -145,9 +154,11 @@ export function createMockApi(): ElearningApi {
       const sim = isSim(courseId);
       if (!prog || !course.steps.every((x) => (sim ? prog.scores[x.id] !== undefined : (prog.scores[x.id] || 0) >= PASS))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
       const profile = s.users[me.email].profile!;
-      const year = new Date().getFullYear();
       s.counter += 1;
-      const number = `CICEXF-EL-${sim ? 'TEST-' : ''}${year}-${String(s.counter).padStart(6, '0')}`;
+      const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const rnd = () => Array.from({ length: 4 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('');
+      const day = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+      const number = `${sim ? 'SP' : 'CX'}-${(course.code || courseId.slice(0, 3)).toUpperCase()}-${day}-${rnd()}-${rnd()}`;
       const chapters = course.steps.filter((x) => x.kind === 'chapitre');
       const values = course.steps.map((x) => prog.scores[x.id]);
       const cert = {
@@ -198,6 +209,9 @@ export function createMockApi(): ElearningApi {
     async verifyCertificate(number) {
       await wait();
       return load().certificates[number] || null;
+    },
+    async getCourseStatuses() {
+      return mockStatuses();
     }
   };
 }

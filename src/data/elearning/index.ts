@@ -6,8 +6,12 @@ export const PASS = 80;
 export interface CourseModule { id: string; title: string; minutes: number }
 export interface CourseStep {
   id: string;
-  kind: 'chapitre' | 'examen' | 'final';
+  /** chapitre: a chapter of several modules graded together; module: one module (text + quiz);
+   *  test: a chapter test; examen: a part exam; final: the certification exam */
+  kind: 'chapitre' | 'module' | 'test' | 'examen' | 'final';
   part: string | null;
+  /** Chapter of a module or chapter test (courses structured module by module) */
+  chapter?: string;
   title: string;
   modules: CourseModule[];
 }
@@ -20,7 +24,9 @@ export interface Course {
   certTitle: string;
   domain: string;
   summary: string;
-  parts: { id: string; title: string }[];
+  parts: { id: string; title: string; sources?: string[] }[];
+  /** Courses structured module by module: chapters listed for the path view */
+  chapters?: { id: string; title: string; part: string }[];
   steps: CourseStep[];
   modules: Record<string, ModuleContent>;
 }
@@ -34,9 +40,17 @@ export interface CourseMeta {
   domain: string;
   summary: string;
   hours: number;
-  stats: { parts: number; chapters: number; modules: number; quizzes: number; exams: number };
+  /** Opening status when the administrator has not set one */
+  defaultStatus?: CourseStatus;
+  stats: { parts: number; chapters: number; modules: number; quizzes: number; exams: number; tests?: number; questions?: number };
   steps: { id: string; kind: CourseStep['kind']; title: string; modules: number }[];
 }
+
+/** open: visible and playable; closed: hidden for now (progress kept); deleted: removed for good */
+export type CourseStatus = 'open' | 'closed' | 'deleted';
+/** Status chosen by the administrator, otherwise the course default (open) */
+export const courseStatus = (meta: Pick<CourseMeta, 'id' | 'defaultStatus'>, chosen: Record<string, CourseStatus>): CourseStatus =>
+  chosen[meta.id] || meta.defaultStatus || 'open';
 
 import catalog from './catalog.json';
 export const CATALOG = catalog as CourseMeta[];
@@ -74,11 +88,26 @@ export const TRAINING_DOMAINS = [
 
 export const EXPERIENCE_LEVELS = ['Aucune', 'Moins de 2 ans', '2 à 5 ans', '6 à 10 ans', 'Plus de 10 ans'];
 
-export const isExam = (s: CourseStep) => s.kind !== 'chapitre';
+/** Steps without a lesson text: chapter tests and exams */
+export const isExam = (s: Pick<CourseStep, 'kind'>) => s.kind === 'test' || s.kind === 'examen' || s.kind === 'final';
+/** Words used to talk about a step */
+export const stepWords = (s: Pick<CourseStep, 'kind'>) => {
+  switch (s.kind) {
+    case 'module': return { the: 'le module', of: 'du module', done: 'module validé', next: 'passer au module suivant' };
+    case 'test': return { the: 'le test', of: 'du test', done: 'test du chapitre réussi', next: 'passer au chapitre suivant' };
+    case 'examen': return { the: "l'examen", of: "de l'examen", done: 'examen de partie réussi', next: 'passer à la partie suivante' };
+    case 'final': return { the: "l'examen", of: "de l'examen", done: 'examen final réussi', next: 'obtenir votre certificat' };
+    default: return { the: 'le chapitre', of: 'du chapitre', done: 'chapitre validé', next: 'passer au chapitre suivant' };
+  }
+};
 export const stepQuestionCount = (course: Course, s: CourseStep) =>
   s.modules.reduce((n, m) => n + course.modules[m.id].quizzes.reduce((a, z) => a + z.questions.length, 0), 0);
 export const courseHours = (course: Course) =>
   Math.round(course.steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 0) / 60);
+/** One-line description of a course (cards and registration) */
+export const statsLine = (st: CourseMeta['stats'], hours: number) => st.tests
+  ? `${st.parts} parties · ${st.chapters} chapitres · ${st.modules} modules · ${st.tests} tests de chapitre · ${st.exams} examens · ${st.questions} questions · ${hours} h environ`
+  : `${st.chapters} chapitres · ${st.modules} modules · ${st.quizzes} quiz · ${st.exams} examen${st.exams > 1 ? 's' : ''} · ${hours} h environ`;
 export const courseStats = (course: Course) => {
   const chapters = course.steps.filter((s) => s.kind === 'chapitre');
   return {

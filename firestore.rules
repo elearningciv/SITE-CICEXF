@@ -106,7 +106,9 @@ service cloud.firestore {
           && request.resource.data.keys().hasOnly(['courseId', 'enrolledAt'])
           && request.resource.data.courseId == courseId
           && courseId.matches('^[a-z0-9-]{3,60}$')
-          && request.resource.data.enrolledAt == request.time;
+          && request.resource.data.enrolledAt == request.time
+          && (!exists(/databases/$(database)/documents/elearning_courses/$(courseId))
+              || get(/databases/$(database)/documents/elearning_courses/$(courseId)).data.status == 'open');
         allow update, delete: if false;
       }
       // Chapitre en cours (réponses non corrigées), pour reprendre plus tard : réservé à l'apprenant
@@ -125,6 +127,19 @@ service cloud.firestore {
     }
     match /{path=**}/enrollments/{courseId} {
       allow read: if isAdmin();
+    }
+    // Ouverture des certifications e-learning : lecture publique, choix de l'administrateur.
+    // Une certification supprimée ne peut plus être rouverte (suppression définitive).
+    match /elearning_courses/{courseId} {
+      allow read: if true;
+      allow create: if isAdmin() && validCourseStatus();
+      allow update: if isAdmin() && resource.data.status != 'deleted' && validCourseStatus();
+      allow delete: if false;
+    }
+    function validCourseStatus() {
+      return request.resource.data.keys().hasOnly(['status', 'updatedAt'])
+        && request.resource.data.status in ['open', 'closed', 'deleted']
+        && request.resource.data.updatedAt == request.time;
     }
     // Certificats : vérification publique d'un numéro précis, liste réservée à l'admin
     match /certificates/{number} {

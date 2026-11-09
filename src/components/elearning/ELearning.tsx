@@ -1,8 +1,11 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, Clock, Download, GraduationCap, Loader2, Lock, LogOut, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
-import { CATALOG, COMING_SOON, PASS, isExam, loadCourse, stepQuestionCount, type Course, type CourseMeta, type CourseStep } from '../../data/elearning';
+import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, Clock, Download, GraduationCap, Library, Loader2, Lock, LogOut, PauseCircle, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
 import {
-  CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, learnerErrorMessage, stepCleared,
+  CATALOG, COMING_SOON, PASS, courseStatus, isExam, loadCourse, statsLine, stepQuestionCount,
+  type Course, type CourseMeta, type CourseStatus, type CourseStep
+} from '../../data/elearning';
+import {
+  CERTIFICATE_EXAMPLE, CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, learnerErrorMessage, stepCleared,
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
@@ -40,6 +43,7 @@ export default function ELearning() {
   const [draftMap, setDraftMap] = useState<Record<string, Draft | null>>({});
   const [enrollments, setEnrollments] = useState<Record<string, Enrollment>>({});
   const [courses, setCourses] = useState<Record<string, Course>>({});
+  const [statuses, setStatuses] = useState<Record<string, CourseStatus> | null>(null);
   const [loadError, setLoadError] = useState('');
   const [attempt, setAttempt] = useState(0);
 
@@ -58,7 +62,12 @@ export default function ELearning() {
   useEffect(() => {
     let unsub = () => {};
     getElearningApi()
-      .then((a) => { setApi(a); unsub = a.onSession(setSession); })
+      .then((a) => {
+        setApi(a);
+        unsub = a.onSession(setSession);
+        // Opening status chosen in the administration (if unreadable, the course defaults apply)
+        a.getCourseStatuses().then(setStatuses).catch(() => setStatuses({}));
+      })
       .catch(() => setLoadError("L'e-learning n'a pas pu se charger. Vérifiez votre connexion puis rechargez la page."));
     return () => unsub();
   }, []);
@@ -98,7 +107,7 @@ export default function ELearning() {
   useEffect(() => { setProfile(undefined); refresh(); }, [refresh]);
 
   if (loadError) return <Shell><p className="text-center font-bold text-brand-emerald py-16">{loadError}</p></Shell>;
-  if (!api || session === undefined || (session && profile === undefined)) {
+  if (!api || !statuses || session === undefined || (session && profile === undefined)) {
     return <Shell><p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement de l'e-learning…</p></Shell>;
   }
 
@@ -109,6 +118,12 @@ export default function ELearning() {
   const signedIn = !!session && !!profile;
   // Registered: confirmed registration (or a course already started before registrations existed)
   const isEnrolled = (id: string) => !!enrollments[id] || Object.keys(progressOf(id).scores).length > 0 || !!draftOf(id);
+  // Certifications closed by the administrator are hidden (progress kept); deleted ones disappear,
+  // except for learners who already passed them (their certificate stays available)
+  const statusOf = (id: string): CourseStatus => { const m = metaOf(id); return m ? courseStatus(m, statuses) : 'deleted'; };
+  const openMetas = CATALOG.filter((c) => statusOf(c.id) === 'open');
+  const finishedCourse = (id: string) => stepCleared(progressOf(id), 'FINAL', PASS);
+  const mySpace = CATALOG.filter((c) => isEnrolled(c.id) && (statusOf(c.id) !== 'deleted' || finishedCourse(c.id)));
   const bar = signedIn ? <LearnerBar api={api} profile={profile!} go={go} /> : null;
   const shell = (children: ReactNode) => <Shell simulated={api.simulated} bar={bar}>{children}</Shell>;
   const spinner = shell(<p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement du parcours…</p>);
@@ -136,11 +151,12 @@ export default function ELearning() {
   if (signedIn && view === 'profil') {
     return shell(<SignupForm api={api} initial={profile} onDone={async () => { await refresh(); go('espace'); }} onLogin={() => {}} />);
   }
-  if (signedIn && view === 'certifications') return shell(<CertificationsView isEnrolled={isEnrolled} go={go} />);
+  const certificationsView = <CertificationsView metas={openMetas} isEnrolled={isEnrolled} go={go} />;
+  if (signedIn && view === 'certifications') return shell(certificationsView);
 
   if (signedIn && view === 'espace') {
     return shell(
-      <EspaceView api={api} metas={CATALOG.filter((c) => isEnrolled(c.id))} enrollments={enrollments} progressOf={progressOf} draftOf={draftOf}
+      <EspaceView api={api} metas={mySpace} statusOf={statusOf} enrollments={enrollments} progressOf={progressOf} draftOf={draftOf}
         profile={profile!} go={go} onCertificate={(id, number) => setProgressFor(id, { ...progressOf(id), certificate: number })} />
     );
   }
@@ -148,8 +164,11 @@ export default function ELearning() {
   // Course views: registration, path, chapter player, certificate
   if (signedIn && courseId) {
     const meta = metaOf(courseId);
-    if (!meta) return shell(<CertificationsView isEnrolled={isEnrolled} go={go} />);
+    const status = statusOf(courseId);
+    // Unknown or deleted certification (unless already passed): back to the open certifications
+    if (!meta || (status === 'deleted' && !finishedCourse(courseId))) return shell(certificationsView);
     if (!isEnrolled(courseId)) {
+      if (status !== 'open') return shell(<ClosedNotice meta={meta} go={go} />);
       return shell(
         <EnrollView api={api} meta={meta} profile={profile!} go={go}
           onEnrolled={(e) => { setEnrollments((m) => ({ ...m, [e.courseId]: e })); go(`parcours/${e.courseId}`); }} />
@@ -159,9 +178,13 @@ export default function ELearning() {
     if (!course) return spinner;
     const progress = progressOf(courseId), draft = draftOf(courseId);
     const passed = (id: string) => stepCleared(progress, id, PASS);
-    const path = (notice?: string) => shell(<PathView course={course} meta={meta} progress={progress} draft={draft} go={go} notice={notice} />);
+    const closedNotice = status === 'open' ? undefined
+      : passed('FINAL') ? 'Cette certification est fermée aux nouvelles inscriptions. Votre certificat reste disponible.'
+      : 'Cette certification est momentanément fermée. Votre progression est conservée : vous pourrez la reprendre dès sa réouverture.';
+    const path = (notice?: string) => shell(<PathView course={course} meta={meta} progress={progress} draft={draft} go={go} notice={notice || closedNotice} locked={status !== 'open'} />);
 
     if (view === 'etape') {
+      if (status !== 'open') return path();
       const i = course.steps.findIndex((s) => s.id === stepId);
       if (i < 0 || !course.steps.slice(0, i).every((s) => passed(s.id))) return path("Cette étape n'est pas encore débloquée : validez d'abord les étapes précédentes.");
       return (
@@ -188,8 +211,26 @@ export default function ELearning() {
   }
 
   const startFor = (id: string) => (!signedIn ? 'inscription' : isEnrolled(id) ? `parcours/${id}` : `inscrire/${id}`);
-  return shell(<HomeView signedIn={signedIn} go={go} startFor={startFor} isEnrolled={isEnrolled} />);
+  return shell(<HomeView metas={openMetas} signedIn={signedIn} go={go} startFor={startFor} isEnrolled={isEnrolled} />);
 }
+
+/** A certification that is closed (or no longer offered) cannot be joined */
+function ClosedNotice({ meta, go }: { meta: CourseMeta; go: (h: string) => void }) {
+  return (
+    <div className={`${card} max-w-2xl mx-auto p-7 text-center`}>
+      <PauseCircle className="w-10 h-10 mx-auto text-amber-500" />
+      <h1 className="mt-2 text-xl font-extrabold text-slate-900 dark:text-white">{meta.title}</h1>
+      <p className="mt-2 text-slate-600 dark:text-slate-400">Cette certification n'est pas ouverte aux inscriptions pour le moment.</p>
+      <button onClick={() => go('certifications')} className={`${primary} mt-5`}><ClipboardCheck className="w-4 h-4" />Voir les certifications ouvertes</button>
+    </div>
+  );
+}
+
+const NoOpenCourse = () => (
+  <p className={`${card} p-6 text-center text-slate-600 dark:text-slate-400 sm:col-span-2 lg:col-span-3`}>
+    Aucune certification n'est ouverte pour le moment. Revenez bientôt : de nouvelles sessions seront annoncées.
+  </p>
+);
 
 function Shell({ children, simulated, bar }: { children: ReactNode; simulated?: boolean; bar?: ReactNode }) {
   return (
@@ -208,8 +249,8 @@ function Shell({ children, simulated, bar }: { children: ReactNode; simulated?: 
 // ---------------------------------------------------------------------------
 // Home
 // ---------------------------------------------------------------------------
-function HomeView({ signedIn, go, startFor, isEnrolled }: {
-  signedIn: boolean; go: (h: string) => void; startFor: (id: string) => string; isEnrolled: (id: string) => boolean;
+function HomeView({ metas, signedIn, go, startFor, isEnrolled }: {
+  metas: CourseMeta[]; signedIn: boolean; go: (h: string) => void; startFor: (id: string) => string; isEnrolled: (id: string) => boolean;
 }) {
   return (
     <>
@@ -219,7 +260,7 @@ function HomeView({ signedIn, go, startFor, isEnrolled }: {
         <h1 className="relative mt-2 text-3xl sm:text-4xl font-extrabold text-white max-w-2xl leading-tight">Apprenez à votre rythme et obtenez une certification gratuite</h1>
         <p className="relative mt-3 max-w-2xl text-sky-100">
           Des parcours en ligne construits sur les thématiques du cabinet. Créez votre compte, inscrivez-vous à une certification, étudiez chaque
-          module, répondez aux quiz et validez chaque chapitre avec {PASS} % au moins pour obtenir votre certificat.
+          module, répondez aux quiz et validez chaque étape avec {PASS} % au moins pour obtenir votre certificat.
         </p>
         <div className="relative mt-6 flex flex-wrap gap-3">
           <button onClick={() => go(signedIn ? 'espace' : 'inscription')} className={primary}><GraduationCap className="w-4 h-4" />{signedIn ? 'Mon espace e-learning' : 'Créer mon compte gratuit'}</button>
@@ -244,7 +285,8 @@ function HomeView({ signedIn, go, startFor, isEnrolled }: {
 
       <h2 className="mt-10 mb-4 text-xl font-extrabold text-slate-900 dark:text-white">Certifications disponibles</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {CATALOG.map((c) => (
+        {!metas.length && <NoOpenCourse />}
+        {metas.map((c) => (
           <CourseCard key={c.id} meta={c}>
             <button onClick={() => go(startFor(c.id))} className={`${primary} mt-4`}>
               <Play className="w-4 h-4" />{!signedIn ? 'Commencer gratuitement' : isEnrolled(c.id) ? 'Continuer' : "S'inscrire"}
@@ -267,13 +309,12 @@ function HomeView({ signedIn, go, startFor, isEnrolled }: {
 }
 
 function CourseCard({ meta, children }: { meta: CourseMeta; children: ReactNode; key?: string }) {
-  const st = meta.stats;
   return (
     <div className={`${card} p-5 flex flex-col border-2 border-brand-emerald/70`}>
       <span className="self-start text-[11px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full bg-sky-50 text-brand-blue dark:bg-sky-950 dark:text-sky-300">{meta.domain}</span>
       <h3 className="mt-3 mb-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{meta.title}</h3>
       <p className="flex-1 text-sm text-slate-600 dark:text-slate-400">{meta.summary}</p>
-      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{st.chapters} chapitres · {st.modules} modules · {st.quizzes} quiz · {st.exams} examen{st.exams > 1 ? 's' : ''} · {meta.hours} h environ</p>
+      <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">{statsLine(meta.stats, meta.hours)}</p>
       {children}
     </div>
   );
@@ -352,13 +393,14 @@ const fmtDate = (iso?: string | null) => (iso ? new Date(iso).toLocaleDateString
 // ---------------------------------------------------------------------------
 // Certifications open for registration
 // ---------------------------------------------------------------------------
-function CertificationsView({ isEnrolled, go }: { isEnrolled: (id: string) => boolean; go: (h: string) => void }) {
+function CertificationsView({ metas, isEnrolled, go }: { metas: CourseMeta[]; isEnrolled: (id: string) => boolean; go: (h: string) => void }) {
   return (
     <>
       <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">S'inscrire à une certification</h1>
       <p className="mt-1 text-slate-600 dark:text-slate-400">Choisissez la certification que vous voulez suivre. L'inscription est gratuite et se fait en une confirmation.</p>
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {CATALOG.map((c) => (
+        {!metas.length && <NoOpenCourse />}
+        {metas.map((c) => (
           <CourseCard key={c.id} meta={c}>
             {isEnrolled(c.id)
               ? <button onClick={() => go(`parcours/${c.id}`)} className={`${ghost} mt-4`}><CheckCircle2 className="w-4 h-4" />Déjà inscrit : continuer</button>
@@ -403,9 +445,11 @@ function EnrollView({ api, meta, profile, go, onEnrolled }: {
 
       <ul className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm">
         <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><BookOpen className="w-4 h-4 text-brand-blue shrink-0" />{st.parts > 1 ? `${st.parts} parties · ` : ''}{st.chapters} chapitres · {st.modules} modules</li>
-        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><ClipboardCheck className="w-4 h-4 text-brand-blue shrink-0" />{st.quizzes} quiz et {st.exams > 1 ? `${st.exams} examens` : 'un examen final'}</li>
+        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><ClipboardCheck className="w-4 h-4 text-brand-blue shrink-0" />{st.tests
+          ? `${st.modules} quiz de module, ${st.tests} tests de chapitre, ${st.exams - 1} examens de partie et l'examen final`
+          : `${st.quizzes} quiz et ${st.exams > 1 ? `${st.exams} examens` : 'un examen final'}`}</li>
         <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><Clock className="w-4 h-4 text-brand-blue shrink-0" />{meta.hours} heures environ, à votre rythme</li>
-        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><Award className="w-4 h-4 text-brand-blue shrink-0" />Certificat de réussite dès {PASS} % à chaque étape</li>
+        <li className="flex items-center gap-2 rounded-xl bg-slate-50 dark:bg-slate-800 px-3 py-2.5"><Award className="w-4 h-4 text-brand-blue shrink-0" />{st.tests ? `Certificat de réussite : ${PASS} % exigés à chaque module, chapitre et partie` : `Certificat de réussite dès ${PASS} % à chaque étape`}</li>
       </ul>
 
       <div className="mt-5 rounded-2xl border border-slate-200 dark:border-slate-700 p-4">
@@ -431,8 +475,8 @@ function EnrollView({ api, meta, profile, go, onEnrolled }: {
 // ---------------------------------------------------------------------------
 // Personal training space: only the certifications the learner registered for
 // ---------------------------------------------------------------------------
-function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go, onCertificate }: {
-  api: ElearningApi; metas: CourseMeta[]; enrollments: Record<string, Enrollment>; progressOf: (id: string) => Progress; draftOf: (id: string) => Draft | null;
+function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, profile, go, onCertificate }: {
+  api: ElearningApi; metas: CourseMeta[]; statusOf: (id: string) => CourseStatus; enrollments: Record<string, Enrollment>; progressOf: (id: string) => Progress; draftOf: (id: string) => Draft | null;
   profile: LearnerProfile; go: (h: string) => void; onCertificate: (courseId: string, number: string) => void;
 }) {
   const [certs, setCerts] = useState<Record<string, Certificate | null>>({});
@@ -503,6 +547,7 @@ function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go,
           <div key={c.id} className={`${card} p-5`}>
             <span className="text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">{c.domain}</span>
             <h3 className="mt-1 text-lg font-extrabold text-slate-900 dark:text-white">{c.title}</h3>
+            {statusOf(c.id) !== 'open' && <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-900 px-2.5 py-1 text-xs font-bold"><PauseCircle className="w-3.5 h-3.5" />Momentanément fermée : votre progression est conservée</p>}
             {enrollments[c.id]?.enrolledAt && <p className="text-xs text-slate-500">Inscrit le {fmtDate(enrollments[c.id].enrolledAt)}</p>}
             <div className="mt-3 flex items-center gap-3">
               <div className="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"><i className="block h-full bg-gradient-to-r from-brand-blue to-amber-400" style={{ width: `${pct}%` }} /></div>
@@ -511,7 +556,7 @@ function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go,
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{done} étape{done > 1 ? 's' : ''} validée{done > 1 ? 's' : ''} sur {c.steps.length}{current ? ` · prochaine étape : ${current.title}` : ''}</p>
             {d && <p className="mt-2 rounded-xl bg-sky-50 dark:bg-sky-950/40 px-3 py-2 text-sm text-slate-800 dark:text-slate-200"><strong>Reprise enregistrée :</strong> {draftWhere(c, d)}</p>}
             <div className="mt-4 flex flex-wrap gap-3">
-              <button onClick={() => go(d ? `etape/${c.id}/${d.stepId}` : current ? `etape/${c.id}/${current.id}` : `parcours/${c.id}`)} className={primary}><Play className="w-4 h-4" />{d ? 'Reprendre là où je me suis arrêté' : done ? 'Continuer' : 'Commencer'}</button>
+              <button disabled={statusOf(c.id) !== 'open'} onClick={() => go(d ? `etape/${c.id}/${d.stepId}` : current ? `etape/${c.id}/${current.id}` : `parcours/${c.id}`)} className={primary}><Play className="w-4 h-4" />{d ? 'Reprendre là où je me suis arrêté' : done ? 'Continuer' : 'Commencer'}</button>
               <button onClick={() => go(`parcours/${c.id}`)} className={ghost}>Voir le parcours</button>
             </div>
           </div>
@@ -558,30 +603,37 @@ function EspaceView({ api, metas, enrollments, progressOf, draftOf, profile, go,
 // ---------------------------------------------------------------------------
 // Learner path (full width, compact)
 // ---------------------------------------------------------------------------
-function PathView({ course, meta, progress, draft, go, notice }: {
-  course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string;
+function PathView({ course, meta, progress, draft, go, notice, locked }: {
+  course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string; locked?: boolean;
 }) {
   const passed = (id: string) => stepCleared(progress, id, PASS);
-  const isOpen = (i: number) => course.steps.slice(0, i).every((s) => passed(s.id));
+  const isOpen = (i: number) => !locked && course.steps.slice(0, i).every((s) => passed(s.id));
   const done = course.steps.filter((s) => passed(s.id)).length;
   const pct = Math.round((done / course.steps.length) * 100);
 
-  const block = (s: CourseStep, i: number) => {
+  const subtitle = (s: CourseStep) => {
+    const n = stepQuestionCount(course, s);
+    if (s.kind === 'module') return `Texte de cours et quiz de ${n} questions · ${PASS} % requis`;
+    if (s.kind === 'test') return `Test de chapitre · ${n} questions · ${PASS} % requis`;
+    if (isExam(s)) return `${n} questions · ${PASS} % requis`;
+    return `${s.modules.length} modules · ${s.modules.reduce((k, m) => k + course.modules[m.id].quizzes.length, 0)} quiz · ${PASS} % requis`;
+  };
+
+  const block = (s: CourseStep, i: number, inset = false) => {
     const open = isOpen(i), ok = passed(s.id), sc = progress.scores[s.id];
     const resuming = open && draft?.stepId === s.id;
-    const sub = isExam(s)
-      ? `${stepQuestionCount(course, s)} questions · ${PASS} % requis`
-      : `${s.modules.length} modules · ${s.modules.reduce((n, m) => n + course.modules[m.id].quizzes.length, 0)} quiz · ${PASS} % requis`;
     const target = `etape/${course.id}/${s.id}`;
+    const exam = s.kind === 'examen' || s.kind === 'final';
+    const tint = exam ? 'bg-amber-50/60 dark:bg-amber-950/20' : s.kind === 'test' ? 'bg-sky-50/60 dark:bg-sky-950/20' : '';
     return (
-      <div key={s.id} className="px-4 sm:px-5 py-4 border-t border-slate-200 dark:border-slate-800">
-        <div className={`flex flex-wrap items-center gap-3 ${open ? 'cursor-pointer' : ''}`} onClick={open ? () => go(target) : undefined}>
-          <span className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center ${ok ? 'bg-emerald-100 text-emerald-700' : open ? 'bg-brand-emerald text-white' : 'bg-slate-100 text-slate-400 dark:bg-slate-800'}`}>
+      <div key={s.id} className={`px-4 sm:px-5 ${inset ? 'py-3' : 'py-4'} border-t border-slate-200 dark:border-slate-800 ${tint}`}>
+        <div className={`flex flex-wrap items-center gap-3 ${inset ? 'sm:pl-6' : ''} ${open ? 'cursor-pointer' : ''}`} onClick={open ? () => go(target) : undefined}>
+          <span className={`shrink-0 ${inset ? 'w-8 h-8' : 'w-9 h-9'} rounded-full flex items-center justify-center ${ok ? 'bg-emerald-100 text-emerald-700' : open ? 'bg-brand-emerald text-white' : 'bg-slate-100 text-slate-400 dark:bg-slate-800'}`}>
             {ok ? <CheckCircle2 className="w-5 h-5" /> : open ? <Play className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
           </span>
           <div className="flex-1 min-w-[190px]">
-            <strong className={`block text-base sm:text-lg leading-snug ${open ? 'text-brand-blue dark:text-sky-300' : 'text-slate-400'}`}>{s.title}</strong>
-            <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{sub}</span>
+            <strong className={`block ${inset ? 'text-[15px] sm:text-base' : 'text-base sm:text-lg'} leading-snug ${open ? 'text-brand-blue dark:text-sky-300' : 'text-slate-400'}`}>{s.title}</strong>
+            <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{subtitle(s)}</span>
             {resuming && <span className="block mt-0.5 text-xs sm:text-sm font-bold text-brand-emerald">En cours : {draftWhere(meta, draft!)}</span>}
           </div>
           {sc !== undefined && <span className={`text-sm font-extrabold ${sc >= PASS ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{sc} %</span>}
@@ -592,7 +644,7 @@ function PathView({ course, meta, progress, draft, go, notice }: {
             </button>
           )}
         </div>
-        {!isExam(s) && (
+        {s.kind === 'chapitre' && (
           <ul className={`mt-2 ml-12 space-y-0.5 text-sm ${open ? 'text-slate-700 dark:text-slate-300' : 'text-slate-400'}`}>
             {s.modules.map((m) => <li key={m.id}><span className="text-amber-500">▸ </span>{m.title} · {m.minutes} min</li>)}
           </ul>
@@ -600,6 +652,24 @@ function PathView({ course, meta, progress, draft, go, notice }: {
       </div>
     );
   };
+
+  // Courses structured module by module: each chapter is a group of modules followed by its test
+  const chapterGroup = (c: { id: string; title: string }) => {
+    const items = course.steps.map((s, i) => ({ s, i })).filter(({ s }) => s.chapter === c.id);
+    const cleared = items.filter(({ s }) => passed(s.id)).length;
+    return (
+      <div key={c.id}>
+        <div className="flex flex-wrap items-center gap-2 px-4 sm:px-5 py-2.5 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60">
+          <BookOpen className="w-4 h-4 text-brand-blue dark:text-sky-300" />
+          <strong className="flex-1 text-sm sm:text-base text-slate-900 dark:text-white">{c.title}</strong>
+          <span className="text-xs font-bold text-slate-500">{cleared}/{items.length} validés</span>
+        </div>
+        {items.map(({ s, i }) => block(s, i, true))}
+      </div>
+    );
+  };
+
+  const finalStep = course.steps[course.steps.length - 1];
 
   return (
     <>
@@ -615,6 +685,11 @@ function PathView({ course, meta, progress, draft, go, notice }: {
         {passed('FINAL') && <button onClick={() => go(`certificat/${course.id}`)} className={primary}><Award className="w-4 h-4" />Mon certificat</button>}
       </div>
 
+      {course.chapters && (
+        <p className="mb-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-l-4 border-brand-blue px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
+          <strong>Progression contrôlée :</strong> chaque module se valide avec {PASS} % au moins pour ouvrir le suivant ; chaque chapitre se termine par un test et chaque partie par un examen, à réussir avec {PASS} % au moins. L'examen final de certification compte {stepQuestionCount(course, finalStep)} questions.
+        </p>
+      )}
       {progress.simulation && (
         <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border-l-4 border-violet-500 px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
           <strong>Mode simulation :</strong> chaque étape se débloque dès qu'elle a été passée, même sous {PASS} %. Le certificat délivré est un spécimen de démonstration, sans valeur officielle.
@@ -624,12 +699,28 @@ function PathView({ course, meta, progress, draft, go, notice }: {
       {course.parts.map((p) => (
         <div key={p.id} className={`${card} mb-4 overflow-hidden`}>
           <h2 className="px-4 sm:px-5 py-3 text-base sm:text-lg text-white font-extrabold bg-gradient-to-r from-brand-blue to-brand-blue-light">{p.title}</h2>
-          {course.steps.map((s, i) => (s.part === p.id ? block(s, i) : null))}
+          {course.chapters ? (
+            <>
+              {course.chapters.filter((c) => c.part === p.id).map(chapterGroup)}
+              {course.steps.map((s, i) => (s.part === p.id && s.kind === 'examen' ? block(s, i) : null))}
+            </>
+          ) : course.steps.map((s, i) => (s.part === p.id ? block(s, i) : null))}
+          {p.sources && p.sources.length > 0 && (
+            <details className="group border-t border-slate-200 dark:border-slate-800">
+              <summary className="flex items-center gap-2 px-4 sm:px-5 py-3 cursor-pointer text-sm font-extrabold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/60">
+                <Library className="w-4 h-4 text-brand-blue dark:text-sky-300" />Sources consultées pour cette partie ({p.sources.length})
+                <ChevronDown className="ml-auto w-4 h-4 transition-transform group-open:rotate-180" />
+              </summary>
+              <ol className="list-decimal pl-10 pr-5 pb-4 space-y-1.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                {p.sources.map((src) => <li key={src}>{src}</li>)}
+              </ol>
+            </details>
+          )}
         </div>
       ))}
       <div className={`${card} overflow-hidden`}>
         <h2 className="px-4 sm:px-5 py-3 text-base sm:text-lg text-white font-extrabold bg-gradient-to-r from-brand-emerald to-brand-emerald-light">Certification</h2>
-        {block(course.steps[course.steps.length - 1], course.steps.length - 1)}
+        {block(finalStep, course.steps.length - 1)}
       </div>
     </>
   );
@@ -731,9 +822,9 @@ function VerifyView({ api, initial, onBack }: { api: ElearningApi; initial: stri
         <BadgeCheck className="w-8 h-8 text-brand-blue dark:text-sky-300" />
         <h2 className="text-2xl font-extrabold text-brand-blue dark:text-sky-300">Vérifier un certificat</h2>
       </div>
-      <p className="mt-2 text-slate-600 dark:text-slate-400">Saisissez le numéro inscrit en bas à gauche du certificat, par exemple CICEXF-EL-2026-000001.</p>
+      <p className="mt-2 text-slate-600 dark:text-slate-400">Saisissez le numéro inscrit en bas à gauche du certificat, par exemple {CERTIFICATE_EXAMPLE}.</p>
       <form onSubmit={submit} className="mt-5 flex flex-col sm:flex-row gap-3">
-        <input value={number} onChange={(e) => setNumber(e.target.value)} placeholder="CICEXF-EL-2026-000001" aria-label="Numéro du certificat"
+        <input value={number} onChange={(e) => setNumber(e.target.value)} placeholder={CERTIFICATE_EXAMPLE} aria-label="Numéro du certificat"
           className="flex-1 rounded-xl border-[1.5px] border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 uppercase tracking-wide text-slate-900 dark:text-white" />
         <button type="submit" disabled={state.status === 'busy'} className={primary}>{state.status === 'busy' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}Vérifier</button>
       </form>

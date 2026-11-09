@@ -8,6 +8,7 @@ const { getAuth } = require('firebase-admin/auth');
 const { getFirestore, Timestamp } = require('firebase-admin/firestore');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const DATABASE_ID = 'ai-studio-cicexfcabinetint-be0c0f21-7527-4112-ae7f-82c61d321a9c';
 const ALLOWED_ORIGINS = ['https://cicexf.com', 'https://www.cicexf.com', 'https://cicexf.gestionsaas.org', 'http://localhost:3000', 'http://localhost:5173'];
@@ -47,6 +48,27 @@ function rateLimited(uid, max = 60) {
 }
 
 const progressRef = (uid, courseId) => db.doc(`learners/${uid}/progress/${courseId}`);
+
+// Ouverture des certifications : choisie par l'administrateur (elearning_courses/{id}), sinon valeur par défaut du parcours
+async function courseStatus(course) {
+  const snap = await db.doc(`elearning_courses/${course.id}`).get();
+  const chosen = snap.exists ? snap.data().status : null;
+  return ['open', 'closed', 'deleted'].includes(chosen) ? chosen : course.defaultStatus || 'open';
+}
+
+// Numéro de certificat : CX-<code du parcours>-<AAMMJJ>-XXXX-XXXX, 8 caractères tirés au hasard
+// (alphabet sans 0/O ni 1/I), donc impossible à deviner ; SP- pour les spécimens de simulation.
+const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const randomBlock = () => Array.from({ length: 4 }, () => ALPHABET[crypto.randomInt(ALPHABET.length)]).join('');
+function courseCode(course) {
+  if (course.code) return course.code;
+  const w = course.id.toUpperCase().split('-');
+  return w.length >= 3 ? w.slice(0, 3).map((x) => x[0]).join('') : w.length === 2 ? w[0][0] + w[1].slice(0, 2) : w[0].slice(0, 3);
+}
+function certificateNumber(course, sim) {
+  const day = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // AAMMJJ (heure d'Abidjan = UTC)
+  return `${sim ? 'SP' : 'CX'}-${courseCode(course)}-${day}-${randomBlock()}-${randomBlock()}`;
+}
 const isOpen = (course, scores, index, sim) => course.steps.slice(0, index).every((s) => cleared(scores, s.id, sim));
 
 // Note d'une étape : bonnes réponses par module puis pour l'ensemble
@@ -80,6 +102,8 @@ async function handleGrade(uid, email, body) {
   const course = KEYS[body.courseId];
   const sim = isSimulation(email, body.courseId);
   if (!course) return [404, { error: 'Parcours introuvable' }];
+  const status = await courseStatus(course);
+  if (status !== 'open') return [403, { error: status === 'deleted' ? "Cette certification n'est plus disponible." : 'Cette certification est momentanément fermée. Votre progression est conservée.' }];
   const index = course.steps.findIndex((s) => s.id === body.stepId);
   if (index < 0) return [404, { error: 'Étape introuvable' }];
   const step = course.steps[index];
@@ -113,8 +137,6 @@ async function handleGrade(uid, email, body) {
   });
 }
 
-const pad = (n) => String(n).padStart(6, '0');
-
 async function handleCertificate(uid, email, courseId) {
     const course = KEYS[courseId];
     const sim = isSimulation(email, courseId);
@@ -136,12 +158,13 @@ async function handleCertificate(uid, email, courseId) {
         return [403, { error: sim ? 'Toutes les étapes doivent avoir été passées' : 'Toutes les étapes doivent être validées avec 80 % au moins' }];
       }
 
-      // Les spécimens de simulation ont leur propre numérotation, distincte des vrais certificats
-      const year = new Date().getFullYear();
-      const counterRef = db.doc(sim ? `elearning_meta/certificates_test_${year}` : `elearning_meta/certificates_${year}`);
-      const counter = await tx.get(counterRef);
-      const seq = (counter.exists ? counter.data().last : 0) + 1;
-      const number = sim ? `CICEXF-EL-TEST-${year}-${pad(seq)}` : `CICEXF-EL-${year}-${pad(seq)}`;
+      // Numéro aléatoire, vérifié comme inédit (les spécimens de simulation commencent par SP-)
+      let number = null;
+      for (let i = 0; i < 5 && !number; i++) {
+        const candidate = certificateNumber(course, sim);
+        if (!(await tx.get(db.doc(`certificates/${candidate}`))).exists) number = candidate;
+      }
+      if (!number) throw new Error('Numéro de certificat indisponible');
       const values = course.steps.map((s) => scores[s.id]);
       const now = Timestamp.now();
       const cert = {
@@ -160,7 +183,6 @@ async function handleCertificate(uid, email, courseId) {
         stats: certificateStats(course),
         simulation: sim
       };
-      tx.set(counterRef, { last: seq }, { merge: true });
       tx.set(db.doc(`certificates/${number}`), cert);
       tx.set(ref, { certificate: number }, { merge: true });
       return [200, { certificate: serializeCertificate(cert) }];

@@ -75,7 +75,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "cartographie-semiologie",
@@ -83,33 +84,216 @@
   "title": "Principes fondamentaux de la cartographie et de la sémiologie graphique en géographie",
   "certTitle": "Les principes fondamentaux de la cartographie et de la sémiologie graphique en géographie",
   "domain": "Ingénierie de développement territorial",
-  "summary": "Comprendre ce qu'est une carte, maîtriser échelle, projection et généralisation, et choisir les bonnes variables visuelles selon Jacques Bertin.",
-  "hours": 3,
+  "summary": "Un parcours approfondi et sourcé : nature et géométrie de la carte, sémiologie graphique de Jacques Bertin, traitement des données et conception de cartes thématiques rigoureuses.",
+  "hours": 17,
+  "defaultStatus": "open",
   "stats": {
-   "parts": 1,
-   "chapters": 3,
-   "modules": 6,
-   "quizzes": 6,
-   "exams": 1
+   "parts": 3,
+   "chapters": 9,
+   "modules": 21,
+   "quizzes": 21,
+   "tests": 9,
+   "exams": 4,
+   "questions": 301
   },
   "steps": [
    {
-    "id": "C1",
-    "kind": "chapitre",
-    "title": "Chapitre 1 : La carte, un langage pour représenter l'espace",
-    "modules": 2
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définir la carte et la cartographie",
+    "modules": 1
    },
    {
-    "id": "C2",
-    "kind": "chapitre",
-    "title": "Chapitre 2 : Échelle, projection et généralisation",
-    "modules": 2
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Des premières cartes à la cartographie thématique",
+    "modules": 1
    },
    {
-    "id": "C3",
-    "kind": "chapitre",
-    "title": "Chapitre 3 : La sémiologie graphique de Jacques Bertin",
-    "modules": 2
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les modèles de la communication cartographique",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Lire une carte avec un esprit critique",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : L'échelle et la précision",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : La forme de la Terre et les systèmes de référence",
+    "modules": 1
+   },
+   {
+    "id": "C3M3",
+    "kind": "module",
+    "title": "Module 3.3 : Les projections et leurs déformations",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Jacques Bertin et la naissance de la sémiologie graphique",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Les composantes de l'information et leurs niveaux d'organisation",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Le plan et les trois implantations",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Les six variables rétiniennes",
+    "modules": 1
+   },
+   {
+    "id": "C5M3",
+    "kind": "module",
+    "title": "Module 5.3 : Propriétés perceptives et longueur des variables",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : L'image, les niveaux de lecture et l'efficacité",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Accorder la variable visuelle à la donnée",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Données absolues, données relatives et maillages",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : La discrétisation des séries statistiques",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Cartes choroplèthes et symboles proportionnels",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Points, isolignes, flux, anamorphoses et modèles graphiques",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : La couleur en cartographie",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : La généralisation cartographique",
+    "modules": 1
+   },
+   {
+    "id": "C9M3",
+    "kind": "module",
+    "title": "Module 9.3 : Mise en page, typographie et éthique de la carte",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
    },
    {
     "id": "FINAL",
@@ -195,7 +379,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "hygiene-securite-travail",
@@ -273,7 +458,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "suivi-evaluation-projets",
@@ -351,7 +537,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "cybersecurite",
@@ -429,7 +616,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "conception-pedagogique",
@@ -507,7 +695,8 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  },
  {
   "id": "gestion-ressources-humaines",
@@ -585,6 +774,7 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ]
+  ],
+  "defaultStatus": "closed"
  }
 ]

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpenCheck, CheckCircle2, Loader2, LogOut, RotateCcw, XCircle } from 'lucide-react';
-import { PASS, isExam, stepQuestionCount, type Course, type CourseStep } from '../../data/elearning';
+import { PASS, isExam, stepQuestionCount, stepWords, type Course, type CourseStep } from '../../data/elearning';
 import type { Answers, Draft, ElearningApi, GradeResult, Progress } from '../../lib/elearningApi';
 import { learnerErrorMessage } from '../../lib/elearningApi';
 
@@ -15,7 +15,7 @@ const shuffled = (n: number) => {
   return idx;
 };
 
-const stepWord = (s: CourseStep) => (isExam(s) ? "l'examen" : 'le chapitre');
+const stepWord = (s: CourseStep) => stepWords(s).the;
 
 interface Props {
   api: ElearningApi;
@@ -58,6 +58,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
   }, [course, step]);
 
   const exam = isExam(step);
+  const words = stepWords(step);
   const mod = step.modules[mi];
   const content = course.modules[mod.id];
   const quiz = content.quizzes[qi];
@@ -118,8 +119,11 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
   const quit = () => onExit();
 
   const where = phase === 'result'
-    ? (exam ? "Résultat de l'examen" : 'Résultat du chapitre')
-    : `${exam ? 'Examen' : `Module ${mi + 1}/${step.modules.length}`}${phase === 'lesson' ? ' · Lecture' : exam ? '' : ` · Quiz ${qi + 1}/${content.quizzes.length}`}`;
+    ? `Résultat ${words.of}`
+    : exam ? (step.kind === 'test' ? 'Test de chapitre' : 'Examen')
+    : step.modules.length > 1
+      ? `Module ${mi + 1}/${step.modules.length}${phase === 'lesson' ? ' · Lecture' : ` · Quiz ${qi + 1}/${content.quizzes.length}`}`
+      : phase === 'lesson' ? 'Lecture du module' : 'Quiz du module';
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8">
@@ -166,12 +170,12 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
             </div>
             <div className="el-text" dangerouslySetInnerHTML={{ __html: content.text }} />
             <div className="mt-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 px-5 py-4 text-sm text-slate-800 dark:text-slate-200">
-              <strong>Avant de commencer les quiz :</strong> ce module comporte {content.quizzes.length} quiz de {content.quizzes[0].questions.length} questions.
+              <strong>Avant de commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} :</strong> ce module comporte {content.quizzes.length > 1 ? `${content.quizzes.length} quiz de ${content.quizzes[0].questions.length} questions` : `un quiz de ${content.quizzes[0].questions.length} questions`}{step.kind === 'module' ? `, à réussir avec ${PASS} % au moins pour débloquer l'étape suivante` : ''}.
               Dès que vous commencez, <strong>ce texte se ferme</strong> et vous ne pourrez plus le consulter pendant les questions. Prenez le temps de bien le lire.
             </div>
             <div className="mt-5 flex justify-end">
               <button onClick={() => { setQi(0); setK(0); setPhase('intro'); }} className="inline-flex items-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark text-white px-5 py-3 font-extrabold text-sm">
-                J'ai terminé ma lecture, commencer les quiz <ArrowRight className="w-4 h-4" />
+                J'ai terminé ma lecture, commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </>
@@ -182,9 +186,9 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
             <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">{exam ? course.title : mod.title}</p>
             <h2 className="mt-1 text-2xl font-extrabold text-brand-blue dark:text-sky-300">{quiz.title}</h2>
             <p className="mt-3 text-slate-700 dark:text-slate-300">{quiz.questions.length} questions, une à la fois. Choisissez une réponse puis passez à la suivante : il n'est pas possible de revenir en arrière.</p>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Aucune correction n'est affichée pendant {exam ? "l'examen" : 'le quiz'}. Votre résultat sera calculé à la fin {exam ? "de l'examen" : 'du chapitre'}.</p>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Aucune correction n'est affichée pendant {exam ? words.the : 'le quiz'}. Votre résultat sera calculé à la fin {words.of}.</p>
             <button onClick={() => { setK(0); setPhase('quiz'); }} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark text-white px-6 py-3 font-extrabold text-sm">
-              {exam ? "Commencer l'examen" : `Commencer le ${quiz.title.split(' : ')[0].toLowerCase()}`} <ArrowRight className="w-4 h-4" />
+              {exam ? `Commencer ${words.the}` : `Commencer le ${quiz.title.split(' : ')[0].toLowerCase()}`} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         )}
@@ -211,7 +215,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
 
         {phase === 'result' && (
           <div className="text-center py-2">
-            <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">{exam ? "Fin de l'examen" : 'Fin du chapitre'}</p>
+            <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">Fin {words.of}</p>
             <h2 className="mt-1 text-2xl font-extrabold text-brand-blue dark:text-sky-300">{step.title}</h2>
             {sending && <p className="mt-8 mb-6 inline-flex items-center gap-2 text-slate-600 dark:text-slate-300"><Loader2 className="w-5 h-5 animate-spin" /> Correction en cours…</p>}
             {!sending && error && (
@@ -226,7 +230,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
               <>
                 <p className={`mt-2 text-5xl font-extrabold ${result.passed ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{result.pct} %</p>
                 <p className="mt-1 text-slate-700 dark:text-slate-300"><strong>{result.good} bonnes réponses sur {result.total}.</strong> Seuil requis : {PASS} %.</p>
-                {!exam && (
+                {!exam && result.modules.length > 1 && (
                   <table className="w-full mt-5 text-sm text-left">
                     <thead><tr className="border-b border-slate-200 dark:border-slate-700"><th className="py-2 pr-3">Module</th><th className="py-2 text-right">Résultat</th></tr></thead>
                     <tbody>
@@ -243,7 +247,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                   <>
                     <p className="mt-5 inline-flex items-center gap-2 font-extrabold text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="w-5 h-5" />
-                      Félicitations : {exam ? 'examen réussi' : 'chapitre validé'}. {step.kind === 'final' ? 'Votre certificat est prêt.' : nextTitle(course, step)}
+                      Félicitations : {words.done}. {step.kind === 'final' ? 'Votre certificat est prêt.' : nextTitle(course, step)}
                     </p>
                     <div className="mt-5 flex justify-center">
                       {step.kind === 'final'
@@ -255,10 +259,10 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                   <>
                     <p className="mt-5 inline-flex items-center gap-2 font-extrabold text-brand-emerald">
                       <XCircle className="w-5 h-5" />
-                      Vous n'avez pas atteint les {PASS} % requis {exam ? 'pour valider cet examen' : 'pour passer au chapitre suivant'}.
+                      Vous n'avez pas atteint les {PASS} % requis pour {words.next}.
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                      {exam ? "Révisez les chapitres concernés, puis repassez l'examen." : 'Relisez les modules où votre résultat est le plus faible, puis recommencez le chapitre.'} Vous pouvez recommencer autant de fois que nécessaire.
+                      {step.kind === 'module' ? 'Relisez attentivement le texte du module, puis recommencez-le.' : step.kind === 'test' ? 'Revoyez les modules du chapitre, puis repassez le test.' : exam ? "Révisez les chapitres concernés, puis repassez l'examen." : 'Relisez les modules où votre résultat est le plus faible, puis recommencez le chapitre.'} Vous pouvez recommencer autant de fois que nécessaire.
                     </p>
                     {result.progress.simulation && (
                       <p className="mt-3 rounded-xl bg-violet-50 dark:bg-violet-950/40 px-3 py-2 text-sm font-bold text-violet-800 dark:text-violet-300">

@@ -2,6 +2,7 @@
 // In production: Firebase Auth (separate learner app) + Firestore + the `elearning` Cloud Function.
 // In development (npm run dev) a local simulation is used by default, so that tests never create
 // accounts or data online; set VITE_ELEARNING_MOCK=0 to test against the real services.
+import type { CourseStatus } from '../data/elearning';
 
 export interface LearnerProfile {
   nom: string;
@@ -82,6 +83,8 @@ export interface ElearningApi {
   saveDraft(courseId: string, draft: Draft): void;
   clearDraft(courseId: string): Promise<void>;
   verifyCertificate(number: string): Promise<Certificate | null>;
+  /** Opening status chosen by the administrator for each course (courses not listed keep their default) */
+  getCourseStatuses(): Promise<Record<string, CourseStatus>>;
 }
 
 export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null };
@@ -89,7 +92,10 @@ export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: n
 export const ELEARNING_API_URL: string =
   import.meta.env.VITE_ELEARNING_API_URL || 'https://elearning-3ksz72m3ta-ew.a.run.app';
 
-export const CERTIFICATE_RE = /^CICEXF-EL-(TEST-)?20\d{2}-\d{6}$/;
+/** Certificate numbers: CX-<course>-<YYMMDD>-XXXX-XXXX (8 random characters), SP- for simulation specimens;
+ *  the first certificates (CICEXF-EL-2026-000001) remain valid */
+export const CERTIFICATE_RE = /^(CICEXF-EL-(TEST-)?20\d{2}-\d{6}|(CX|SP)-[A-Z0-9]{3}-\d{6}-[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4})$/;
+export const CERTIFICATE_EXAMPLE = 'CX-SEM-261109-K7QF-3MZP';
 
 /** A step counts as cleared at 80 % or more, or once attempted in simulation mode */
 export const stepCleared = (p: Progress, stepId: string, pass: number) =>
@@ -276,6 +282,10 @@ async function createFirebaseApi(): Promise<ElearningApi> {
       clearTimeout(draftTimers[courseId]);
       localDraft.clear(u.uid, courseId);
       await deleteDoc(draftRef(u.uid, courseId)).catch(() => {});
+    },
+    async getCourseStatuses() {
+      const snap = await getDocs(collection(publicDb, 'elearning_courses'));
+      return Object.fromEntries(snap.docs.map((d) => [d.id, d.data().status as CourseStatus]).filter(([, st]) => ['open', 'closed', 'deleted'].includes(st as string)));
     },
     async verifyCertificate(number) {
       if (!CERTIFICATE_RE.test(number)) return null;

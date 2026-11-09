@@ -39,14 +39,22 @@ const permutation = (n) => {
   return idx;
 };
 
-// Ordered path: chapters of each part, the part exam, then the final exam
+// Ordered path: chapters of each part, the part exam, then the final exam.
+// With COURSE.structure === 'modules', every module is a step of its own (80 % to open the next module),
+// each chapter ends with a chapter test and each part with a part exam (80 % to move on each time).
+const granular = COURSE.structure === 'modules';
 const steps = [];
 for (const p of COURSE.parts) {
-  for (const c of p.chapters) steps.push({ id: c.id, kind: 'chapitre', part: p.id, title: c.title, modules: c.modules });
+  for (const c of p.chapters) {
+    if (!granular) { steps.push({ id: c.id, kind: 'chapitre', part: p.id, title: c.title, modules: c.modules }); continue; }
+    for (const m of c.modules) steps.push({ id: m.id, kind: 'module', part: p.id, chapter: c.id, title: m.title, modules: [m] });
+    const testTitle = 'Test du ' + c.title.split(' : ')[0].toLowerCase();
+    steps.push({ id: c.id + 'T', kind: 'test', part: p.id, chapter: c.id, title: testTitle, modules: [{ id: c.id + 'T', title: testTitle, minutes: c.testMinutes ?? 15 }] });
+  }
   // Short courses (COURSE.partExams === false) have no part exam, only the final exam
   if (COURSE.partExams === false) continue;
   const title = 'Examen de la ' + p.title.split(' : ')[0].toLowerCase();
-  steps.push({ id: p.id + 'E', kind: 'examen', part: p.id, title, modules: [{ id: p.id + 'E', title, minutes: 20 }] });
+  steps.push({ id: p.id + 'E', kind: 'examen', part: p.id, title, modules: [{ id: p.id + 'E', title, minutes: granular ? 25 : 20 }] });
 }
 steps.push({ id: 'FINAL', kind: 'final', part: null, title: 'Examen final de certification', modules: [{ id: 'FINAL', title: 'Examen final de certification', minutes: COURSE.finalMinutes ?? 40 }] });
 
@@ -83,13 +91,23 @@ const course = {
   certTitle: COURSE.certTitle,
   domain: COURSE.domain,
   summary: COURSE.summary || "Lire une carte, maîtriser les coordonnées, analyser l'espace et produire des cartes professionnelles avec QGIS.",
-  parts: COURSE.parts.map((p) => ({ id: p.id, title: p.title })),
+  parts: COURSE.parts.map((p) => ({ id: p.id, title: p.title, ...(p.sources ? { sources: p.sources } : {}) })),
+  ...(granular ? { chapters: COURSE.parts.flatMap((p) => p.chapters.map((c) => ({ id: c.id, title: c.title, part: p.id }))) } : {}),
   steps,
   modules
 };
 const minutes = steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 0);
+// Course code used in certificate numbers (3 characters)
+const words = COURSE.id.toUpperCase().split('-');
+const code = COURSE.code || (words.length >= 3 ? words.slice(0, 3).map((w) => w[0]).join('') : words.length === 2 ? words[0][0] + words[1].slice(0, 2) : words[0].slice(0, 3));
+// Opening status when the administrator has not set one (open unless stated otherwise; kept from the catalogue)
+const catalogFile = path.join('src', 'data', 'elearning', 'catalog.json');
+const catalog = fs.existsSync(catalogFile) ? JSON.parse(fs.readFileSync(catalogFile, 'utf8')) : [];
+const defaultStatus = COURSE.defaultStatus || catalog.find((c) => c.id === COURSE.id)?.defaultStatus || 'open';
 const server = {
   id: COURSE.id,
+  code,
+  defaultStatus,
   certTitle: COURSE.certTitle,
   hours: Math.max(1, Math.round(minutes / 60)),
   parts: COURSE.parts.length,
@@ -106,6 +124,22 @@ fs.writeFileSync(out2, JSON.stringify(server));
 
 // Catalogue entry (kept small: loaded with the E-learning tab, the full course only when needed)
 const chapters = steps.filter((s) => s.kind === 'chapitre');
+const moduleSteps = steps.filter((s) => s.kind === 'module');
+const stats = granular ? {
+  parts: COURSE.parts.length,
+  chapters: COURSE.parts.reduce((n, p) => n + p.chapters.length, 0),
+  modules: moduleSteps.length,
+  quizzes: moduleSteps.reduce((n, s) => n + modules[s.id].quizzes.length, 0),
+  tests: steps.filter((s) => s.kind === 'test').length,
+  exams: steps.filter((s) => s.kind === 'examen' || s.kind === 'final').length,
+  questions
+} : {
+  parts: COURSE.parts.length,
+  chapters: chapters.length,
+  modules: chapters.reduce((n, s) => n + s.modules.length, 0),
+  quizzes: chapters.reduce((n, s) => n + s.modules.reduce((a, m) => a + modules[m.id].quizzes.length, 0), 0),
+  exams: steps.length - chapters.length
+};
 const meta = {
   id: COURSE.id,
   order: COURSE.order ?? 99,
@@ -114,17 +148,10 @@ const meta = {
   domain: COURSE.domain,
   summary: course.summary,
   hours: Math.max(1, Math.round(minutes / 60)),
-  stats: {
-    parts: COURSE.parts.length,
-    chapters: chapters.length,
-    modules: chapters.reduce((n, s) => n + s.modules.length, 0),
-    quizzes: chapters.reduce((n, s) => n + s.modules.reduce((a, m) => a + modules[m.id].quizzes.length, 0), 0),
-    exams: steps.length - chapters.length
-  },
+  defaultStatus,
+  stats,
   steps: steps.map((s) => ({ id: s.id, kind: s.kind, title: s.title, modules: s.modules.length }))
 };
-const catalogFile = path.join('src', 'data', 'elearning', 'catalog.json');
-const catalog = fs.existsSync(catalogFile) ? JSON.parse(fs.readFileSync(catalogFile, 'utf8')) : [];
 const next = [...catalog.filter((c) => c.id !== meta.id), meta].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
 fs.writeFileSync(catalogFile, JSON.stringify(next, null, 1));
 const positions = Object.values(key).flat(2).reduce((a, g) => ((a[g] = (a[g] || 0) + 1), a), {});

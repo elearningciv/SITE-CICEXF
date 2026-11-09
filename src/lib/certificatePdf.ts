@@ -171,7 +171,8 @@ export async function buildCertificatePdf(c: Certificate) {
   y += 1.5;
   doc.setFontSize(11);
   const parts: [string, boolean][] = [
-    ['Formation suivie du ', false], [formatFrenchDate(c.startedAt), true], [' au ', false], [formatFrenchDate(c.finishedAt), true]
+    ['Formation suivie du ', false], [formatFrenchDate(c.startedAt), true], [' au ', false], [formatFrenchDate(c.finishedAt), true],
+    [` · durée estimée : ${c.hours} heures`, false]
   ];
   const widthOf = ([t, b]: [string, boolean]) => { doc.setFont('helvetica', b ? 'bold' : 'normal'); return doc.getTextWidth(t); };
   let x = CX - parts.reduce((n, p) => n + widthOf(p), 0) / 2;
@@ -182,26 +183,27 @@ export async function buildCertificatePdf(c: Certificate) {
     x += w;
   }
 
-  // Facts
-  y += 5;
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9.6);
-  const s = c.stats;
-  const facts = [
-    `${s.parts > 1 ? `${s.parts} parties · ` : ''}${s.chapters} chapitres · ${s.modules} modules · ${s.quizzes} quiz`,
-    `Durée estimée : ${c.hours} heures`,
-    `Résultat moyen : ${c.average} %`
-  ];
-  const pad = 3.4, gap = 6, chipH = 6;
-  const widths = facts.map((f) => doc.getTextWidth(f) + pad * 2);
-  x = CX - (widths.reduce((a, b) => a + b, 0) + gap * (facts.length - 1)) / 2;
-  facts.forEach((f, i) => {
-    doc.setFillColor(241, 245, 249);
-    doc.roundedRect(x, y, widths[i], chipH, 3, 3, 'F');
-    doc.setTextColor(...MUTED);
-    doc.text(f, x + pad, y + chipH / 2 + 9.6 * PT * 0.35);
-    x += widths[i] + gap;
-  });
+  // Result obtained: larger and underlined (the number of chapters and modules is not shown)
+  y += 9;
+  const label = 'Résultat obtenu : ';
+  const score = `${c.average} %`;
+  doc.setFont('times', 'bold');
+  doc.setFontSize(17);
+  const labelW = doc.getTextWidth(label);
+  doc.setFontSize(21);
+  const scoreW = doc.getTextWidth(score);
+  x = CX - (labelW + scoreW) / 2;
+  doc.setFontSize(17);
+  doc.setTextColor(...NAVY);
+  doc.text(label, x, y);
+  doc.setFontSize(21);
+  doc.setTextColor(...BURGUNDY);
+  doc.text(score, x + labelW, y);
+  doc.setDrawColor(...BURGUNDY);
+  doc.setLineWidth(0.8);
+  doc.line(x, y + 2.2, x + labelW + scoreW, y + 2.2);
+  doc.setLineWidth(0.3);
+  doc.line(x, y + 3.3, x + labelW + scoreW, y + 3.3);
 
   // Bottom: reference, seal, signature
   const bottom = H - 13 - 2;
