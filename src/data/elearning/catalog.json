@@ -1004,6 +1004,1041 @@
   "defaultStatus": "closed"
  },
  {
+  "id": "comptabilite-generale",
+  "order": 2.1,
+  "title": "Fondamentaux de la comptabilité générale (SYSCOHADA révisé)",
+  "certTitle": "Fondamentaux de la comptabilité générale selon le SYSCOHADA révisé",
+  "domain": "Ingénierie financière et de l'investissement",
+  "summary": "Comprendre les principes et mécanismes comptables, tenir la comptabilité selon le SYSCOHADA révisé, enregistrer les opérations courantes et établir journal, grand livre, balance, bilan et compte de résultat.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 267
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Rôle de la comptabilité et cadre OHADA",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les principes comptables",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Ressources, emplois et équation du bilan",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Les opérations qui modifient le bilan",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Le compte et la partie double",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Le plan de comptes SYSCOHADA",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Pièces justificatives, livres et conservation",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Journaux auxiliaires, centralisation et contrôle",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Achats, ventes et TVA",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Réductions, frais accessoires et emballages",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Les opérations de trésorerie",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Les charges de personnel et les impôts",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Le journal et le grand livre",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : La balance et les contrôles de cohérence",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Les amortissements",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Dépréciations, provisions, stocks et régularisations",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Le bilan et le compte de résultat",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Tableau des flux de trésorerie, notes annexes et diffusion",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "gestion-financiere-budgetaire",
+  "order": 2.2,
+  "title": "Gestion financière, budgétaire et analyse des états financiers",
+  "certTitle": "Gestion financière, budgétaire et analyse des états financiers",
+  "domain": "Ingénierie financière et de l'investissement",
+  "summary": "Élaborer et suivre un budget, piloter la trésorerie et le besoin en fonds de roulement, analyser bilan et compte de résultat, calculer et interpréter les ratios de rentabilité et de solvabilité.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 267
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : La démarche budgétaire",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Le suivi et le contrôle budgétaires",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Le budget de trésorerie",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Financements et placements à court terme",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Comprendre et mesurer le BFR",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les leviers d'optimisation du BFR",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Le bilan fonctionnel : FRNG, BFR, trésorerie nette",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : L'approche liquidité et solvabilité",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Évolution de l'activité et soldes significatifs",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Capacité d'autofinancement et autofinancement",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Lire le tableau des flux de trésorerie",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Diagnostiquer une tension de trésorerie",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Ratios de structure et de liquidité",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Ratios d'activité et de rotation",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Rentabilité économique et rentabilité financière",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : L'effet de levier et la décomposition DuPont",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Capacité de remboursement et seuil de rentabilité",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Construire et présenter un diagnostic financier",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "controle-gestion-performance",
+  "order": 2.3,
+  "title": "Contrôle de gestion et pilotage de la performance",
+  "certTitle": "Contrôle de gestion et pilotage de la performance",
+  "domain": "Audit, consultance et stratégie de développement des organisations",
+  "summary": "Calculer les coûts et les marges, analyser les écarts budgétaires, construire des tableaux de bord et un balanced scorecard, et éclairer les décisions de gestion par des indicateurs pertinents.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définition, finalités et notion de performance",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Centres de responsabilité et rôle du contrôleur",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Typologie des charges et des coûts",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : La méthode des centres d'analyse",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Coût variable, coût spécifique et marges",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : La méthode ABC et le coût cible",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les coûts standards",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Le budget flexible et le contrôle des projets",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Écarts sur matières et sur main-d'œuvre",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Écarts sur charges indirectes",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Écarts sur marge et sur chiffre d'affaires",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Du constat à l'action corrective",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Principes et qualités d'un tableau de bord",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Construire un tableau de bord avec la méthode OVAR",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Les quatre perspectives de Kaplan et Norton",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Carte stratégique et indicateurs avancés",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Coûts pertinents et décisions de gestion",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Effets pervers des indicateurs et pilotage des organisations publiques",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "audit-comptable-financier",
+  "order": 2.4,
+  "title": "Audit comptable et financier",
+  "certTitle": "Audit comptable et financier",
+  "domain": "Audit, consultance et stratégie de développement des organisations",
+  "summary": "Maîtriser la méthodologie de l'audit selon les normes ISA : risques, seuil de signification, planification, techniques de collecte, contrôle des comptes, détection des anomalies et de la fraude, rapport et recommandations.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définitions, types d'audit et normes ISA",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Déontologie et indépendance de l'auditeur",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les assertions de la direction",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Le modèle du risque d'audit",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Le seuil de signification",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les éléments probants",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Acceptation, lettre de mission et connaissance de l'entité",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Évaluer le contrôle interne",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les procédures d'audit",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Les sondages en audit",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Ventes, clients et trésorerie",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Achats, stocks, immobilisations et paie",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Anomalies, erreurs et leur évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : La fraude et le scepticisme professionnel",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Événements postérieurs, continuité et déclarations écrites",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Communiquer avec la gouvernance",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : L'opinion de l'auditeur",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Rédiger des recommandations et auditer des projets",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "controle-interne-risques",
+  "order": 2.5,
+  "title": "Contrôle interne, gestion des risques et conformité financière",
+  "certTitle": "Contrôle interne, gestion des risques et conformité financière",
+  "domain": "Audit, consultance et stratégie de développement des organisations",
+  "summary": "Concevoir un dispositif de contrôle interne selon le COSO, cartographier et traiter les risques financiers selon l'ISO 31000, prévenir la fraude et la corruption, et piloter la conformité.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définition, objectifs et limites",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les cinq composantes et dix-sept principes du COSO",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les activités de contrôle",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Le modèle des trois lignes et la gouvernance",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Manuel de procédures et délégations",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Contrôler l'application des procédures",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les référentiels ISO 31000 et COSO ERM",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Les grandes familles de risques financiers",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Identifier et évaluer les risques",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Cartographier, traiter et suivre les risques",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Risques de change et de taux",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Risques de crédit et de liquidité",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Typologie et signaux d'alerte de la fraude",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Prévention, détection et dispositif d'alerte",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Conformité et lutte contre le blanchiment de capitaux",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Lutte contre la corruption et conflits d'intérêts",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Surveillance continue et audit interne",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Feuille de route, reporting et amélioration continue",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "hygiene-securite-travail",
   "order": 3,
   "title": "Hygiène et sécurité au travail",
@@ -1160,6 +2195,627 @@
    }
   ],
   "defaultStatus": "closed"
+ },
+ {
+  "id": "genre-action-humanitaire",
+  "order": 4.1,
+  "title": "Genre et égalité dans l'action humanitaire (niveau 1)",
+  "certTitle": "Genre et égalité dans l'action humanitaire",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Premier niveau du parcours humanitaire : comprendre les concepts de genre, le cadre normatif des Nations unies, réaliser une analyse de genre et intégrer l'égalité dans chaque étape d'un projet humanitaire, selon les outils de l'IASC, d'ONU Femmes, de la Croix-Rouge et des grandes ONG.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Sexe, genre, rôles et normes sociales",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Égalité, équité, autonomisation et approche intégrée",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : CEDAW, Beijing et objectifs de développement durable",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Femmes, paix et sécurité ; le Protocole de Maputo",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : La politique de l'IASC et le manuel genre",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Mouvement de la Croix-Rouge, agences et ONG",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les cadres de Harvard, de Moser et de Longwe",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : L'analyse rapide de genre et les données ventilées",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Catastrophes, conflits et déplacements selon le genre et l'âge",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Santé sexuelle et reproductive en situation de crise",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Participation et leadership des femmes et des filles",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Hommes, garçons et masculinités",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Objectifs, activités et indicateurs sensibles au genre",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Les marqueurs genre et âge de l'IASC et d'ECHO",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Eau, assainissement, abris et sécurité alimentaire",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Transferts monétaires, moyens d'existence et éducation",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Suivi-évaluation sensible au genre",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Budget, ressources humaines et redevabilité",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "protection-transversale-humanitaire",
+  "order": 4.2,
+  "title": "Protection transversale et prévention des violences dans l'action humanitaire (niveau 2)",
+  "certTitle": "Protection transversale et prévention des violences dans l'action humanitaire",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Deuxième niveau du parcours humanitaire : fondements juridiques de la protection, principes humanitaires, intégration transversale de la protection selon Sphère et le Cluster mondial protection, analyse des risques, référencement, violences basées sur le genre, protection de l'enfance et protection contre l'exploitation et les abus sexuels.",
+  "hours": 15,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : La définition de la protection et le modèle de l'œuf",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Droit international humanitaire, droits de l'homme et droit des réfugiés",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les principes humanitaires et les principes fondamentaux de la Croix-Rouge",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : « Ne pas nuire » et l'éthique de l'intervention",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : La centralité de la protection et la politique de l'IASC",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les acteurs : CICR, HCR, Cluster protection, MSF et ONG",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les quatre éléments de la protection transversale",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Les principes de protection du manuel Sphère",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Menaces, vulnérabilités et capacités",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Une programmation sûre dans chaque secteur",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Cartographie des services et circuits de référencement",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Confidentialité et protection des données",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Comprendre les violences basées sur le genre",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : L'approche centrée sur les survivantes et les standards minimums",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Les risques pour les enfants et les standards minimums",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Enfants non accompagnés et enfants associés aux groupes armés",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Les règles de la PEAS",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Mécanismes de plainte, enquêtes et assistance aux victimes",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "inclusion-sociale-humanitaire",
+  "order": 4.3,
+  "title": "Inclusion sociale et protection sociale dans l'action humanitaire (niveau 3)",
+  "certTitle": "Inclusion sociale et protection sociale dans l'action humanitaire",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Troisième niveau du parcours humanitaire : approche âge, genre et diversité, inclusion des personnes handicapées et âgées, socles de protection sociale de l'OIT, protection sociale réactive aux chocs, transferts monétaires, redevabilité et pilotage d'une stratégie d'inclusion, selon les normes des Nations unies, de l'IASC, de la Croix-Rouge et des grandes ONG.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Exclusion sociale et « ne laisser personne de côté »",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : L'approche âge, genre et diversité et l'intersectionnalité",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : La CDPH, le modèle social et les obstacles",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Les directives de l'IASC (2019) et le Groupe de Washington",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Les standards d'inclusion humanitaire pour les personnes âgées et handicapées",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Minorités, apatrides, peuples autochtones et autres groupes marginalisés",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Droit à la sécurité sociale et socles de protection sociale de l'OIT",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Instruments et systèmes de protection sociale en Afrique",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les cinq options de réponse aux chocs",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Le nexus humanitaire-développement-paix",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Concevoir des transferts monétaires à usages multiples",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Ciblage, inclusion et risques des transferts",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : La Norme humanitaire fondamentale et ses neuf engagements",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Communication, retour d'information et localisation",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Collecter et analyser des données inclusives",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Indicateurs, suivi et évaluation de l'inclusion",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Accessibilité, conception universelle et aménagement raisonnable",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Plan d'action, budget et transition vers les systèmes nationaux",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
  },
  {
   "id": "cybersecurite",
