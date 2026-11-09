@@ -30,6 +30,7 @@ export default function AdminLearners() {
   const [enrolledAt, setEnrolledAt] = useState<Map<string, Timestamp | undefined>>(new Map());
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [warning, setWarning] = useState('');
   const [search, setSearch] = useState('');
   const [reload, setReload] = useState(0);
   const [section, setSection] = useState<'learners' | 'courses' | 'archive'>('learners');
@@ -38,25 +39,45 @@ export default function AdminLearners() {
     let cancelled = false;
     setLoading(true);
     setError('');
-    Promise.all([
+    setWarning('');
+    // Each list is loaded on its own: one failure no longer hides everything, and its cause is shown
+    const names = ['comptes apprenants', 'progressions', 'certificats', 'inscriptions'];
+    Promise.allSettled([
       getDocs(collection(db, 'learners')),
       getDocs(collectionGroup(db, 'progress')),
       getDocs(collection(db, 'certificates')),
       getDocs(collectionGroup(db, 'enrollments'))
-    ]).then(([ls, ps, cs, es]) => {
+    ]).then((res) => {
       if (cancelled) return;
-      setLearners(ls.docs.map((d) => ({ uid: d.id, ...(d.data() as Omit<Learner, 'uid'>) }))
+      const docsOf = (i: number) => {
+        const r = res[i];
+        return r.status === 'fulfilled' ? r.value.docs : [];
+      };
+      const failed = res.map((r, i) => {
+        if (r.status === 'fulfilled') return null;
+        const e = r.reason as { code?: string; message?: string };
+        console.error(`E-learning admin (${names[i]}):`, e);
+        return { name: names[i], code: e?.code || e?.message || 'erreur inconnue' };
+      }).filter((x): x is { name: string; code: string } => !!x);
+      setLearners(docsOf(0).map((d) => ({ uid: d.id, ...(d.data() as Omit<Learner, 'uid'>) }))
         .sort((a, b) => (b.createdAt?.toMillis() ?? 0) - (a.createdAt?.toMillis() ?? 0)));
-      setProgress(new Map(ps.docs.map((d) => {
+      setProgress(new Map(docsOf(1).map((d) => {
         const uid = d.ref.parent.parent?.id || '';
-        return [`${uid}/${d.id}`, { uid, courseId: d.id, ...(d.data() as Omit<LearnerProgress, 'uid' | 'courseId'>) }];
+        return [`${uid}/${d.id}`, { uid, courseId: d.id, ...(d.data() as Omit<LearnerProgress, 'uid' | 'courseId'>) }] as [string, LearnerProgress];
       })));
-      setEnrolledAt(new Map(es.docs.map((d) => [`${d.ref.parent.parent?.id}/${d.id}`, d.data().enrolledAt as Timestamp | undefined])));
-      setCertificates(cs.docs.map((d) => d.data() as IssuedCertificate)
+      setEnrolledAt(new Map(docsOf(3).map((d) => [`${d.ref.parent.parent?.id}/${d.id}`, d.data().enrolledAt as Timestamp | undefined])));
+      setCertificates(docsOf(2).map((d) => d.data() as IssuedCertificate)
         .sort((a, b) => (b.issuedAt?.toMillis() ?? 0) - (a.issuedAt?.toMillis() ?? 0)));
-    }).catch((e) => {
-      console.error('E-learning admin:', e);
-      if (!cancelled) setError("Impossible de charger les données de l'e-learning.");
+      if (failed.length) {
+        const denied = failed.some((f) => f.code === 'permission-denied');
+        const offline = failed.some((f) => f.code === 'unavailable');
+        const hint = denied
+          ? " Accès refusé : reconnectez-vous à l'administration avec un compte administrateur (elearningciv@gmail.com ou cabinetcicexf@gmail.com)."
+          : offline ? ' Connexion réseau indisponible : vérifiez votre accès Internet.' : '';
+        const detail = failed.map((f) => `${f.name} (${f.code})`).join(', ');
+        if (failed.length === res.length) setError(`Impossible de charger les données de l'e-learning : ${detail}.${hint}`);
+        else setWarning(`Données partielles, non chargé : ${detail}.${hint}`);
+      }
     }).finally(() => !cancelled && setLoading(false));
     return () => { cancelled = true; };
   }, [reload]);
@@ -97,7 +118,12 @@ export default function AdminLearners() {
   };
 
   if (loading) return <p className="flex items-center gap-2 py-12 justify-center text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement des apprenants…</p>;
-  if (error) return <p className="py-12 text-center font-bold text-brand-emerald">{error}</p>;
+  if (error) return (
+    <div className="py-12 text-center">
+      <p className="max-w-2xl mx-auto font-bold text-brand-emerald">{error}</p>
+      <button onClick={() => setReload((n) => n + 1)} className="mt-4 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-blue text-white text-sm font-bold"><RefreshCw className="w-4 h-4" />Réessayer</button>
+    </div>
+  );
 
   const tabs = [
     { id: 'learners' as const, label: 'Apprenants', icon: Users },
@@ -114,12 +140,14 @@ export default function AdminLearners() {
       ))}
     </div>
   );
-  if (section === 'courses') return <div className="space-y-5">{nav}<CoursesAdmin progress={progress} enrolledAt={enrolledAt} certificates={certificates} /></div>;
-  if (section === 'archive') return <div className="space-y-5">{nav}<CertificateArchive certificates={certificates} onReload={() => setReload((n) => n + 1)} /></div>;
+  const warn = warning ? <p className="rounded-xl bg-amber-50 p-3 text-sm font-bold text-amber-900">{warning} <button onClick={() => setReload((n) => n + 1)} className="underline">Réessayer</button></p> : null;
+  if (section === 'courses') return <div className="space-y-5">{nav}{warn}<CoursesAdmin progress={progress} enrolledAt={enrolledAt} certificates={certificates} /></div>;
+  if (section === 'archive') return <div className="space-y-5">{nav}{warn}<CertificateArchive certificates={certificates} onReload={() => setReload((n) => n + 1)} /></div>;
 
   return (
     <div className="space-y-5">
       {nav}
+      {warn}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
           { icon: Users, label: 'Comptes créés', value: learners.length },
