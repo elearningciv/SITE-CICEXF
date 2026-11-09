@@ -7,6 +7,7 @@
   "domain": "Ingénierie de développement territorial",
   "summary": "Lire une carte, maîtriser les coordonnées, analyser l'espace et produire des cartes professionnelles avec QGIS.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -75,8 +76,7 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  },
  {
   "id": "cartographie-semiologie",
@@ -932,6 +932,7 @@
   "domain": "Ingénierie financière et de l'investissement",
   "summary": "Lire les états financiers, bâtir un modèle Excel fiable, projeter l'activité et décider avec la VAN, le TRI et les scénarios.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -1000,8 +1001,7 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  },
  {
   "id": "comptabilite-generale",
@@ -2046,6 +2046,7 @@
   "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
   "summary": "Identifier et évaluer les risques, choisir les bonnes mesures de prévention, réagir en cas d'urgence et piloter la santé-sécurité.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -2114,8 +2115,1042 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
+ },
+ {
+  "id": "qhse-fondamentaux",
+  "order": 3.1,
+  "title": "Principes fondamentaux du management de la qualité, de l'hygiène, de la sécurité et de l'environnement (QHSE)",
+  "certTitle": "Principes fondamentaux du management QHSE",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Comprendre les quatre piliers du QHSE, les principes de management de la qualité de l'ISO, les enjeux de santé-sécurité au travail selon l'OIT et de l'environnement, le cadre légal ivoirien, l'approche processus et les outils de base de la qualité.",
+  "hours": 15,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définitions et sept principes de management de la qualité",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les pionniers de la qualité",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les enjeux mondiaux de la santé-sécurité au travail",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Notions clés et responsabilités",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Développement durable et responsabilité sociétale",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Aspects et impacts environnementaux",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : L'ISO, la normalisation et la certification",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : La structure harmonisée et l'approche par les risques",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Le Code du travail et la santé-sécurité",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Le Code de l'environnement et les institutions",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Analyser le contexte et les parties intéressées",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Le leadership et la politique QHSE",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les sept outils de base de la qualité",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : QQOQCP, cinq pourquoi et roue de Deming",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Identifier et cartographier les processus",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Les informations documentées",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Les indicateurs QHSE",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : La culture de sécurité et de qualité",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "qhse-risques-professionnels",
+  "order": 3.2,
+  "title": "Principes de prévention des risques professionnels, d'hygiène et de sécurité au travail",
+  "certTitle": "Prévention des risques professionnels, hygiène et sécurité au travail",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Appliquer les principes généraux de prévention, évaluer les risques et hiérarchiser les mesures, maîtriser les risques physiques, chimiques, biologiques, ergonomiques et psychosociaux, analyser les accidents et organiser l'hygiène, la santé au travail et les situations d'urgence.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Les neuf principes généraux de prévention",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les acteurs de la prévention",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Identifier et coter les risques",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Le document d'évaluation des risques et le plan d'action",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : De l'élimination aux mesures organisationnelles",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les équipements de protection individuelle",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Bruit, vibrations, chaleur et éclairage",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Chutes, machines et risque électrique",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Le risque chimique et le SGH",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Le risque biologique",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Troubles musculosquelettiques et manutention",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Risques psychosociaux et risque routier",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : L'arbre des causes",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Déclarer, suivre et tirer les leçons des accidents",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Services de santé au travail et hygiène des lieux de travail",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Accueil, formation, consignes et permis de travail",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Prévention et lutte contre l'incendie",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Premiers secours, évacuation et plan d'urgence",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "qhse-environnement-dechets",
+  "order": 3.3,
+  "title": "Principes de management environnemental, de prévention des pollutions et de gestion des déchets",
+  "certTitle": "Management environnemental, prévention des pollutions et gestion des déchets",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Mettre en place un management environnemental selon l'ISO 14001, conduire une évaluation environnementale, prévenir les pollutions de l'air, de l'eau et des sols, maîtriser l'énergie et les émissions de gaz à effet de serre, et organiser une gestion des déchets conforme et circulaire.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Les grands enjeux environnementaux",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Aspects, impacts et analyse environnementale",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Les exigences clés de l'ISO 14001:2015",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Maîtrise opérationnelle et situations d'urgence",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : L'étude d'impact environnemental et social",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les principes du droit de l'environnement et les standards des bailleurs",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les polluants atmosphériques et leurs effets",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Réduire et surveiller les émissions",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les effluents et leur traitement",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Prévenir la pollution des sols et les déversements",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Les émissions de gaz à effet de serre",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Efficacité énergétique, bruit et autres nuisances",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les catégories de déchets",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : La hiérarchie des modes de traitement",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Tri, stockage, transport et traçabilité",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Les conventions internationales et le cas ivoirien",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Économie circulaire, écoconception et analyse du cycle de vie",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Indicateurs, sensibilisation et reporting",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "qhse-systeme-integre",
+  "order": 3.4,
+  "title": "Principes de mise en place et de pilotage d'un système de management intégré QHSE selon les normes ISO 9001, ISO 14001 et ISO 45001",
+  "certTitle": "Mise en place et pilotage d'un système de management intégré QHSE (ISO 9001, ISO 14001, ISO 45001)",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Comprendre les exigences des normes ISO 9001, ISO 14001 et ISO 45001, les intégrer grâce à la structure harmonisée, concevoir un système de management intégré, le déployer comme un projet, le piloter par les indicateurs, l'audit et la revue de direction, et préparer la certification.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Finalité et logique de l'ISO 9001:2015",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les exigences opérationnelles de l'ISO 9001",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : La norme ISO 45001:2018",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Comparer les trois normes",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Les éléments communs aux trois normes",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Avantages, limites et niveaux d'intégration",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Contexte, parties intéressées et domaine d'application",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Politique intégrée, rôles et participation",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Risques, opportunités, aspects et dangers",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Objectifs et programmes intégrés",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Ressources, compétences, sensibilisation et communication",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Un système documentaire intégré",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Diagnostic des écarts et planification",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Conduite du changement et formation",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Indicateurs, tableaux de bord et évaluation de la conformité",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Audit interne et revue de direction",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Le processus de certification",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Faire vivre et améliorer le système",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "qhse-audit-amelioration",
+  "order": 3.5,
+  "title": "Principes d'audit QHSE, de gestion des non-conformités et d'amélioration continue selon la norme ISO 19011",
+  "certTitle": "Audit QHSE, gestion des non-conformités et amélioration continue (ISO 19011)",
+  "domain": "Ingénierie QHSE (Qualité, Hygiène, Sécurité, Environnement)",
+  "summary": "Maîtriser les principes et le programme d'audit de l'ISO 19011:2018, préparer, conduire et rapporter un audit QHSE, rédiger des constats, traiter les non-conformités par l'analyse des causes et les actions correctives, et faire vivre l'amélioration continue (PDCA, Kaizen, Lean, Six Sigma).",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 269
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Qu'est-ce qu'un audit ?",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les sept principes de l'audit selon l'ISO 19011",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Établir le programme d'audit",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Mettre en œuvre, surveiller et améliorer le programme",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Comportement et connaissances de l'auditeur",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Évaluer et développer les auditeurs",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Lancer l'audit et revoir les informations documentées",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Le plan d'audit et les documents de travail",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Réunion d'ouverture et communication",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Collecter et vérifier les preuves",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Formuler les constats d'audit",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Réunion de clôture, rapport et suivi",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Correction, action corrective et gestion des non-conformités",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Les méthodes d'analyse des causes",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Plans d'actions et vérification de l'efficacité",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : La méthode 8D et le retour d'expérience",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : PDCA, Kaizen et Lean",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Six Sigma et culture d'amélioration",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
  },
  {
   "id": "suivi-evaluation-projets",
@@ -2125,6 +3160,7 @@
   "domain": "Études spécialisées et ingénierie de projets",
   "summary": "Construire la chaîne de résultats et le cadre logique, définir des indicateurs, collecter et analyser les données, évaluer et rendre compte.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -2193,13 +3229,12 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  },
  {
   "id": "genre-action-humanitaire",
   "order": 4.1,
-  "title": "Genre et égalité dans l'action humanitaire (niveau 1)",
+  "title": "Genre et égalité dans l'action humanitaire",
   "certTitle": "Genre et égalité dans l'action humanitaire",
   "domain": "Études spécialisées et ingénierie de projets",
   "summary": "Premier niveau du parcours humanitaire : comprendre les concepts de genre, le cadre normatif des Nations unies, réaliser une analyse de genre et intégrer l'égalité dans chaque étape d'un projet humanitaire, selon les outils de l'IASC, d'ONU Femmes, de la Croix-Rouge et des grandes ONG.",
@@ -2406,7 +3441,7 @@
  {
   "id": "protection-transversale-humanitaire",
   "order": 4.2,
-  "title": "Protection transversale et prévention des violences dans l'action humanitaire (niveau 2)",
+  "title": "Protection transversale et prévention des violences dans l'action humanitaire",
   "certTitle": "Protection transversale et prévention des violences dans l'action humanitaire",
   "domain": "Études spécialisées et ingénierie de projets",
   "summary": "Deuxième niveau du parcours humanitaire : fondements juridiques de la protection, principes humanitaires, intégration transversale de la protection selon Sphère et le Cluster mondial protection, analyse des risques, référencement, violences basées sur le genre, protection de l'enfance et protection contre l'exploitation et les abus sexuels.",
@@ -2613,7 +3648,7 @@
  {
   "id": "inclusion-sociale-humanitaire",
   "order": 4.3,
-  "title": "Inclusion sociale et protection sociale dans l'action humanitaire (niveau 3)",
+  "title": "Inclusion sociale et protection sociale dans l'action humanitaire",
   "certTitle": "Inclusion sociale et protection sociale dans l'action humanitaire",
   "domain": "Études spécialisées et ingénierie de projets",
   "summary": "Troisième niveau du parcours humanitaire : approche âge, genre et diversité, inclusion des personnes handicapées et âgées, socles de protection sociale de l'OIT, protection sociale réactive aux chocs, transferts monétaires, redevabilité et pilotage d'une stratégie d'inclusion, selon les normes des Nations unies, de l'IASC, de la Croix-Rouge et des grandes ONG.",
@@ -2818,6 +3853,1041 @@
   ]
  },
  {
+  "id": "se-gar-fondamentaux",
+  "order": 4.4,
+  "title": "Principes fondamentaux du suivi-évaluation et de la gestion axée sur les résultats (GAR)",
+  "certTitle": "Principes fondamentaux du suivi-évaluation et de la gestion axée sur les résultats",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Distinguer suivi et évaluation, maîtriser la chaîne des résultats, la théorie du changement et le cadre logique, et poser les bases d'un système de suivi-évaluation selon l'OCDE, les Nations unies et la Banque mondiale.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Définitions du suivi et de l'évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Audit, contrôle, recherche et suivi-évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Origines et principes de la GAR",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : La chaîne des résultats",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Le suivi-évaluation dans le cycle de projet",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les parties prenantes du suivi-évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Construire une théorie du changement",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Hypothèses, risques et chemins de causalité",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : La matrice du cadre logique",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Logique verticale et logique horizontale",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Le cadre de résultats",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Premiers pas avec les indicateurs",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les composantes d'un plan de suivi-évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Calendrier, responsabilités et budget",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Les étapes de Kusek et Rist",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Systèmes nationaux et capacités",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Les critères de l'OCDE et les normes du GNUE",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Éthique et culture des résultats",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "se-indicateurs-collecte",
+  "order": 4.5,
+  "title": "Principes de conception des dispositifs de suivi, des indicateurs et de collecte des données",
+  "certTitle": "Conception des dispositifs de suivi, des indicateurs et de collecte des données",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Formuler des indicateurs de qualité et leurs fiches de référence, choisir des méthodes de collecte quantitatives et qualitatives, dimensionner un échantillon, utiliser les outils numériques et garantir la qualité, la sécurité et l'éthique des données.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Les types d'indicateurs",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les critères SMART et CREAM",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : La fiche de référence de l'indicateur",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Situation de référence, cibles et jalons",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : La désagrégation des données",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Mesurer les capacités, les perceptions et les changements qualitatifs",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Enquêtes et questionnaires",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Échantillonnage et taille de l'échantillon",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Entretiens, groupes de discussion et observation",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Méthodes participatives et changement le plus significatif",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Données de routine et données administratives",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : La collecte numérique",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les dimensions de la qualité des données",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Contrôler et vérifier la qualité",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Le plan de collecte et le flux des données",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Bases de données, codification et archivage",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Consentement, confidentialité et ne pas nuire",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Le cadre juridique de la protection des données",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "se-analyse-reporting",
+  "order": 4.6,
+  "title": "Principes d'analyse des données, de reporting et de pilotage de la performance des projets",
+  "certTitle": "Analyse des données, reporting et pilotage de la performance des projets",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Préparer et analyser des données quantitatives et qualitatives, rédiger des rapports orientés résultats, concevoir des visualisations et des tableaux de bord, et piloter la performance par les revues, l'analyse des écarts et la gestion adaptative.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Nettoyer et préparer les données",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les statistiques descriptives",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Tableaux croisés et comparaisons",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Interpréter avec prudence",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : L'analyse qualitative",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : La triangulation et la synthèse",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les types de rapports",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Rédiger un rapport orienté résultats",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Choisir le bon graphique",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Concevoir un tableau de bord",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : Notes de synthèse et supports adaptés",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Restitution et validation des résultats",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Organiser les revues de performance",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : Analyser les écarts et décider",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Collaborer, apprendre et s'adapter",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Suivre le contexte, les hypothèses et les risques",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Relier résultats et ressources",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Le pilotage stratégique",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "se-evaluation-projets",
+  "order": 4.7,
+  "title": "Principes et méthodologies d'évaluation des projets et programmes",
+  "certTitle": "Principes et méthodologies d'évaluation des projets et programmes",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Concevoir, conduire et utiliser une évaluation de projet ou de programme : critères de l'OCDE, normes du GNUE, évaluabilité, termes de référence, matrice d'évaluation, méthodes mixtes, analyse de contribution, approches réalistes, efficience, rapport et utilisation.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Pourquoi et quand évaluer ?",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : L'évaluation dans les politiques publiques et en Afrique",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Appliquer les six critères de l'OCDE",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Normes, standards de qualité et éthique",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : L'évaluabilité",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Les termes de référence",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Formuler les questions et construire la matrice",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Le rapport de démarrage",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les dispositifs de méthodes mixtes",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : Études de cas et revue documentaire",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : L'analyse de contribution et le traçage des processus",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : Évaluation réaliste et récolte des effets",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Les phases et l'organisation d'une évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : L'équipe d'évaluation et l'indépendance",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Analyses coût-efficacité et coût-avantage",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Durabilité, effets non voulus, genre et droits humains",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Le rapport d'évaluation",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : L'utilisation des évaluations",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
+  "id": "se-impact-redevabilite",
+  "order": 4.8,
+  "title": "Principes de l'évaluation d'impact, de la redevabilité et de l'apprentissage organisationnel",
+  "certTitle": "Évaluation d'impact, redevabilité et apprentissage organisationnel",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Comprendre le contrefactuel et les principales méthodes d'évaluation d'impact (essais randomisés, différence des différences, appariement, discontinuité), organiser la redevabilité et la transparence, et faire de l'organisation une organisation apprenante fondée sur les données probantes.",
+  "hours": 16,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 3,
+   "chapters": 9,
+   "modules": 18,
+   "quizzes": 18,
+   "tests": 9,
+   "exams": 4,
+   "questions": 268
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Le problème fondamental de l'évaluation d'impact",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Les faux contrefactuels et le biais de sélection",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Le principe de la randomisation",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Mettre en œuvre un essai randomisé",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : La différence des différences",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Appariement, discontinuité et variables instrumentales",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Les dimensions de la redevabilité",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : La transparence et l'Initiative internationale pour la transparence de l'aide",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "C5M1",
+    "kind": "module",
+    "title": "Module 5.1 : Les mécanismes de retour d'information et de plainte",
+    "modules": 1
+   },
+   {
+    "id": "C5M2",
+    "kind": "module",
+    "title": "Module 5.2 : La redevabilité sociale",
+    "modules": 1
+   },
+   {
+    "id": "C5T",
+    "kind": "test",
+    "title": "Test du chapitre 5",
+    "modules": 1
+   },
+   {
+    "id": "C6M1",
+    "kind": "module",
+    "title": "Module 6.1 : L'évaluation participative et l'évaluation d'autonomisation",
+    "modules": 1
+   },
+   {
+    "id": "C6M2",
+    "kind": "module",
+    "title": "Module 6.2 : La redevabilité mutuelle et la révolution de la participation",
+    "modules": 1
+   },
+   {
+    "id": "C6T",
+    "kind": "test",
+    "title": "Test du chapitre 6",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "C7M1",
+    "kind": "module",
+    "title": "Module 7.1 : Senge, Argyris et Schön",
+    "modules": 1
+   },
+   {
+    "id": "C7M2",
+    "kind": "module",
+    "title": "Module 7.2 : La gestion des connaissances",
+    "modules": 1
+   },
+   {
+    "id": "C7T",
+    "kind": "test",
+    "title": "Test du chapitre 7",
+    "modules": 1
+   },
+   {
+    "id": "C8M1",
+    "kind": "module",
+    "title": "Module 8.1 : Revues après action, capitalisation et communautés de pratique",
+    "modules": 1
+   },
+   {
+    "id": "C8M2",
+    "kind": "module",
+    "title": "Module 8.2 : Revues systématiques et synthèses de données probantes",
+    "modules": 1
+   },
+   {
+    "id": "C8T",
+    "kind": "test",
+    "title": "Test du chapitre 8",
+    "modules": 1
+   },
+   {
+    "id": "C9M1",
+    "kind": "module",
+    "title": "Module 9.1 : Construire un système intégré de suivi, évaluation, redevabilité et apprentissage",
+    "modules": 1
+   },
+   {
+    "id": "C9M2",
+    "kind": "module",
+    "title": "Module 9.2 : Utiliser les preuves pour décider et changer d'échelle",
+    "modules": 1
+   },
+   {
+    "id": "C9T",
+    "kind": "test",
+    "title": "Test du chapitre 9",
+    "modules": 1
+   },
+   {
+    "id": "P3E",
+    "kind": "examen",
+    "title": "Examen de la partie 3",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "cybersecurite",
   "order": 5,
   "title": "Cybersécurité",
@@ -2825,6 +4895,7 @@
   "domain": "Ingénierie informatique et systèmes de réseaux",
   "summary": "Comprendre les menaces, se protéger de l'hameçonnage et des rançongiciels, sécuriser comptes, postes et réseaux, et gérer un incident.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -2893,8 +4964,7 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  },
  {
   "id": "conception-pedagogique",
@@ -2904,6 +4974,7 @@
   "domain": "Ingénierie de formation et de renforcement de capacités",
   "summary": "Analyser les besoins, rédiger des objectifs, scénariser une formation présentielle ou à distance, l'animer et en mesurer les effets.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -2972,8 +5043,7 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  },
  {
   "id": "gestion-ressources-humaines",
@@ -2983,6 +5053,7 @@
   "domain": "Audit, consultance et stratégie de développement des organisations",
   "summary": "Recruter et intégrer, administrer le personnel, développer les compétences, motiver, gérer les relations sociales et piloter avec des indicateurs.",
   "hours": 12,
+  "defaultStatus": "closed",
   "stats": {
    "parts": 3,
    "chapters": 6,
@@ -3051,7 +5122,6 @@
     "title": "Examen final de certification",
     "modules": 1
    }
-  ],
-  "defaultStatus": "closed"
+  ]
  }
 ]

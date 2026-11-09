@@ -29,6 +29,8 @@ export interface Course {
   chapters?: { id: string; title: string; part: string }[];
   steps: CourseStep[];
   modules: Record<string, ModuleContent>;
+  /** Acronyms used in the course, with their definition */
+  glossary?: { s: string; d: string }[];
 }
 
 /** Short description of a course, enough for the cards and the training space */

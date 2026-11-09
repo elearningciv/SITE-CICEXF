@@ -746,6 +746,22 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
           )}
         </div>
       ))}
+      {course.glossary && course.glossary.length > 0 && (
+        <details className={`${card} group overflow-hidden`}>
+          <summary className="flex items-center gap-2 px-4 sm:px-5 py-3 cursor-pointer text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/60">
+            <BookOpen className="w-4 h-4 text-brand-blue dark:text-sky-300" />Sigles et abréviations de la formation ({course.glossary.length})
+            <ChevronDown className="ml-auto w-4 h-4 transition-transform group-open:rotate-180" />
+          </summary>
+          <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-2 px-4 sm:px-5 pb-4 text-xs sm:text-sm">
+            {course.glossary.map((g) => (
+              <div key={g.s} className="flex gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5">
+                <dt className="font-extrabold text-brand-blue dark:text-sky-300 shrink-0 min-w-[3.5rem]">{g.s}</dt>
+                <dd className="text-slate-600 dark:text-slate-400">{g.d}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
       <div className={`${card} overflow-hidden`}>
         <h2 className="px-4 sm:px-5 py-3 text-base sm:text-lg text-white font-extrabold bg-gradient-to-r from-brand-emerald to-brand-emerald-light">Certification</h2>
         {block(finalStep, course.steps.length - 1)}

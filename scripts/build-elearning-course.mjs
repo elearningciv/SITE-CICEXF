@@ -10,6 +10,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import { applyAcronyms } from './elearning-acronyms.mjs';
 
 const dir = process.argv[2] || 'maquettes/e-learning';
 const files = fs.readdirSync(dir).filter((f) => /^contenu-.*\.js$/.test(f)).sort((a, b) => {
@@ -96,6 +97,9 @@ const course = {
   steps,
   modules
 };
+// Acronyms spelled out at their first use in each module, and glossary of the course
+const undefinedAcronyms = applyAcronyms(course);
+if (undefinedAcronyms.length) console.log('Sigles sans définition :', undefinedAcronyms.join(', '));
 const minutes = steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 0);
 // Course code used in certificate numbers (3 characters)
 const words = COURSE.id.toUpperCase().split('-');

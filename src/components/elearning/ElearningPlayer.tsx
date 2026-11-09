@@ -77,6 +77,9 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
   const mod = step.modules[mi];
   const content = course.modules[mod.id];
   const quiz = content.quizzes[qi];
+  // Acronyms that appear in this module's text (definitions from the course glossary)
+  const moduleText = content.text.replace(/<[^>]+>/g, ' ') + ' ' + content.objectives.join(' ');
+  const moduleGlossary = (course.glossary || []).filter((g) => new RegExp(`(^|[^\\p{L}\\d])${g.s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^\\p{L}\\d])`, 'u').test(moduleText));
   const total = stepQuestionCount(course, step);
   const answered = (Object.values(answers) as number[][][]).reduce<number>((n, m) => n + m.reduce<number>((a, arr) => a + (arr ? arr.filter((v) => v !== undefined).length : 0), 0), 0);
   const partTitle = step.part ? course.parts.find((p) => p.id === step.part)?.title.split(' : ')[0] : 'Certification';
@@ -217,6 +220,19 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
             </ul>
             <hr className="my-6 border-slate-200 dark:border-slate-800" />
             <div className="el-text" dangerouslySetInnerHTML={{ __html: content.text }} />
+            {moduleGlossary.length > 0 && (
+              <details className="group mt-6 rounded-2xl border border-slate-200 dark:border-slate-800">
+                <summary className="flex items-center gap-2 px-4 py-3 cursor-pointer text-sm font-extrabold text-slate-800 dark:text-slate-100">
+                  Sigles utilisés dans ce module ({moduleGlossary.length})
+                  <span className="ml-auto text-xs font-bold text-brand-blue dark:text-sky-300 group-open:hidden">Afficher</span>
+                </summary>
+                <dl className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 px-4 pb-4 text-sm">
+                  {moduleGlossary.map((g) => (
+                    <div key={g.s} className="flex gap-2"><dt className="font-extrabold text-brand-blue dark:text-sky-300 shrink-0 min-w-[3.5rem]">{g.s}</dt><dd className="text-slate-600 dark:text-slate-400">{g.d}</dd></div>
+                  ))}
+                </dl>
+              </details>
+            )}
             <div className="mt-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 px-5 py-4 text-sm text-slate-800 dark:text-slate-200">
               <strong>Avant de commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} :</strong> ce module comporte {content.quizzes.length > 1 ? `${content.quizzes.length} quiz de ${content.quizzes[0].questions.length} questions` : `un quiz de ${content.quizzes[0].questions.length} questions`}{step.kind === 'module' ? `, à réussir avec ${PASS} % au moins pour débloquer l'étape suivante` : ''}.
               Dès que vous commencez, <strong>ce texte se ferme</strong> et vous ne pourrez plus le consulter pendant les questions. Prenez le temps de bien le lire.
