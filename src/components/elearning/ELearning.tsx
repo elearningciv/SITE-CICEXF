@@ -319,9 +319,22 @@ function HomeView({ metas, noteOf, signedIn, go, startFor, isEnrolled }: {
   );
 }
 
+/** Illustration of a certification (original drawings in public/elearning/illustrations) */
+const illustrationOf = (id: string) => `/elearning/illustrations/${id}.svg`;
+/** Full-bleed banner: `bleed` holds the negative margins matching the card padding, `ratio` the aspect ratio */
+function Illustration({ id, bleed, ratio }: { id: string; bleed: string; ratio: string }) {
+  return (
+    <div className={bleed}>
+      <img src={illustrationOf(id)} alt="" loading="lazy" decoding="async" className={`block w-full object-cover ${ratio}`}
+        onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none'; }} />
+    </div>
+  );
+}
+
 function CourseCard({ meta, note, children }: { meta: CourseMeta; note?: string; children: ReactNode; key?: string }) {
   return (
-    <div className={`${card} p-5 flex flex-col border-2 border-brand-emerald/70`}>
+    <div className={`${card} p-5 flex flex-col border-2 border-brand-emerald/70 overflow-hidden`}>
+      <Illustration id={meta.id} bleed="-mx-5 -mt-5 mb-4" ratio="aspect-[16/7]" />
       <span className="self-start text-[11px] font-extrabold tracking-wider uppercase px-2.5 py-1 rounded-full bg-sky-50 text-brand-blue dark:bg-sky-950 dark:text-sky-300">{meta.domain}</span>
       <h3 className="mt-3 mb-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{meta.title}</h3>
       <p className="flex-1 text-sm text-slate-600 dark:text-slate-400">{meta.summary}</p>
@@ -450,7 +463,8 @@ function EnrollView({ api, meta, profile, go, onEnrolled }: {
   };
 
   return (
-    <form onSubmit={submit} className={`${card} max-w-3xl mx-auto p-6 sm:p-8`}>
+    <form onSubmit={submit} className={`${card} max-w-3xl mx-auto p-6 sm:p-8 overflow-hidden`}>
+      <Illustration id={meta.id} bleed="-mx-6 -mt-6 sm:-mx-8 sm:-mt-8 mb-6" ratio="aspect-[16/6]" />
       <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">Inscription à une certification</p>
       <h1 className="mt-1 text-2xl font-extrabold text-brand-blue dark:text-sky-300">{meta.title}</h1>
       <p className="mt-2 text-slate-600 dark:text-slate-400">{meta.summary}</p>
@@ -556,7 +570,8 @@ function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, pr
       {inProgress.length > 0 && <h2 className={heading}><Play className="w-5 h-5 text-brand-emerald" />Mes formations en cours</h2>}
       <div className="grid gap-4">
         {inProgress.map(({ c, d, done, pct, current }) => (
-          <div key={c.id} className={`${card} p-5`}>
+          <div key={c.id} className={`${card} p-5 overflow-hidden`}>
+            <Illustration id={c.id} bleed="-mx-5 -mt-5 mb-4" ratio="aspect-[16/5]" />
             <span className="text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">{c.domain}</span>
             <h3 className="mt-1 text-lg font-extrabold text-slate-900 dark:text-white">{c.title}</h3>
             {statusOf(c.id) !== 'open' && <p className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-amber-100 text-amber-900 px-2.5 py-1 text-xs font-bold"><PauseCircle className="w-3.5 h-3.5" />Momentanément fermée : votre progression est conservée</p>}
@@ -686,6 +701,7 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
   return (
     <>
       <div className={`${card} p-5 mb-5 flex flex-wrap items-center gap-4`}>
+        <img src={illustrationOf(course.id)} alt="" className="w-full sm:w-44 aspect-[16/7] rounded-2xl object-cover" onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
         <div className="flex-1 min-w-[220px]">
           <span className="text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">{course.domain}</span>
           <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">{course.title}</h1>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-hidden="true">
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E8F1FB"/><stop offset="1" stop-color="#FBF3E6"/></linearGradient></defs>
+<rect width="640" height="280" fill="url(#bg)"/>
+<circle cx="590" cy="30" r="90" fill="#FFFFFF" opacity=".45"/><circle cx="40" cy="260" r="70" fill="#FFFFFF" opacity=".4"/>
+<g stroke="#003B6F" stroke-width="4" fill="none"><path d="M320 92 V125 M170 125 H470 M170 125 V150 M320 125 V150 M470 125 V150"/></g>
+<g transform="translate(320 40)"><circle cx="0" cy="18" r="18" fill="#8A1A24"/><path d="M-30 70 C-30 45 -15 36 0 36 S30 45 30 70 Z" fill="#8A1A24"/></g><g transform="translate(170 160)"><circle cx="0" cy="18" r="18" fill="#003B6F"/><path d="M-30 70 C-30 45 -15 36 0 36 S30 45 30 70 Z" fill="#003B6F"/></g><g transform="translate(320 160)"><circle cx="0" cy="18" r="18" fill="#1F8A5B"/><path d="M-30 70 C-30 45 -15 36 0 36 S30 45 30 70 Z" fill="#1F8A5B"/></g><g transform="translate(470 160)"><circle cx="0" cy="18" r="18" fill="#E89B2D"/><path d="M-30 70 C-30 45 -15 36 0 36 S30 45 30 70 Z" fill="#E89B2D"/></g>
+<g fill="#003B6F" opacity=".35"><circle cx="80" cy="220" r="10"/><circle cx="110" cy="232" r="7"/><circle cx="560" cy="60" r="9"/></g>
+</svg>
