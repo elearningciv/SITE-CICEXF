@@ -3853,6 +3853,43 @@
   ]
  },
  {
+  "id": "droits-enfant-cadre-juridique",
+  "order": 4.35,
+  "title": "Cadre juridique et principes fondamentaux des droits de l'enfant",
+  "certTitle": "Cadre juridique et principes fondamentaux des droits de l'enfant",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Fondements et évolution des droits de l'enfant, définition de l'enfant et principes de la Convention relative aux droits de l'enfant, protection de l'enfant, prévention des violences et mécanismes de prise en charge.",
+  "hours": 1,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 1,
+   "chapters": 2,
+   "modules": 3,
+   "quizzes": 3,
+   "exams": 1
+  },
+  "steps": [
+   {
+    "id": "C1",
+    "kind": "chapitre",
+    "title": "Module 1 : Cadre juridique et principes fondamentaux des droits de l'enfant",
+    "modules": 2
+   },
+   {
+    "id": "C2",
+    "kind": "chapitre",
+    "title": "Module 2 : Protection de l'enfant, prévention des violences et mécanismes de prise en charge",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "se-gar-fondamentaux",
   "order": 4.4,
   "title": "Principes fondamentaux du suivi-évaluation et de la gestion axée sur les résultats (GAR)",
