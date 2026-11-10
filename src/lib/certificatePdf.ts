@@ -47,6 +47,31 @@ async function imageData(url: string): Promise<{ data: string; w: number; h: num
   }
 }
 
+/** Page that confirms the certificate when its QR code is scanned (the number is checked automatically) */
+export const certificateVerifyUrl = (number: string) => `https://www.cicexf.com/e-learning#verifier/${encodeURIComponent(number)}`;
+
+/** QR code drawn as vector squares (sharp at any zoom or print size), on a white quiet zone */
+async function drawQrCode(doc: import('jspdf').jsPDF, text: string, x: number, y: number, size: number) {
+  const QRCode = (await import('qrcode')).default;
+  const qr = QRCode.create(text, { errorCorrectionLevel: 'M' });
+  const n = qr.modules.size;
+  const quiet = 2; // modules of white margin around the code
+  const cell = size / (n + quiet * 2);
+  doc.setFillColor(255, 255, 255);
+  doc.rect(x, y, size, size, 'F');
+  doc.setFillColor(...INK);
+  for (let r = 0; r < n; r++) {
+    for (let col = 0; col < n; col++) {
+      // Consecutive dark modules of a row are merged into one rectangle (smaller file, no hairline gaps)
+      if (!qr.modules.get(r, col)) continue;
+      let run = 1;
+      while (col + run < n && qr.modules.get(r, col + run)) run++;
+      doc.rect(x + (quiet + col) * cell, y + (quiet + r) * cell, run * cell, cell, 'F');
+      col += run - 1;
+    }
+  }
+}
+
 export async function buildCertificatePdf(c: Certificate) {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
@@ -205,22 +230,26 @@ export async function buildCertificatePdf(c: Certificate) {
   doc.setLineWidth(0.3);
   doc.line(x, y + 3.3, x + labelW + scoreW, y + 3.3);
 
-  // Bottom: reference, seal, signature
+  // Bottom: verification QR code, reference, seal, signature
   const bottom = H - 13 - 2;
-  const left = 22;
+  const qrSize = 24;
+  await drawQrCode(doc, certificateVerifyUrl(c.number), 22, bottom - qrSize + 0.8, qrSize);
+  const left = 22 + qrSize + 4;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.4);
   doc.setTextColor(...NAVY);
-  doc.text(`N° ${c.number}`, left, bottom - 9);
+  doc.text(`N° ${c.number}`, left, bottom - 13.4);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.6);
   doc.setTextColor(...MUTED);
-  doc.text(`Délivré le ${formatFrenchDate(c.issuedAt)}`, left, bottom - 4.6);
-  doc.text('Authenticité vérifiable sur www.cicexf.com/e-learning', left, bottom - 0.2);
+  doc.text(`Délivré le ${formatFrenchDate(c.issuedAt)}`, left, bottom - 9);
+  doc.text('Scannez le QR code pour vérifier', left, bottom - 4.6);
+  doc.text("l'authenticité sur www.cicexf.com", left, bottom - 0.2);
   if (c.simulation) {
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(...BURGUNDY);
-    doc.text('Spécimen de démonstration, sans valeur officielle', left, bottom - 13.6);
+    doc.text('Spécimen de démonstration,', left, bottom - 22.4);
+    doc.text('sans valeur officielle', left, bottom - 18.2);
   }
 
   drawSeal(doc, CX, bottom - 20, 20);

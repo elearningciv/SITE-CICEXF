@@ -122,6 +122,11 @@ export default function ELearning() {
       </div>
     </Shell>
   );
+  // Verification is public and shown at once (QR code scanned on a certificate): it does not wait
+  // for the learner's account or the list of certifications
+  if (view === 'verifier' && api) {
+    return <Shell simulated={api.simulated}><VerifyView api={api} initial={route.slice(9)} onBack={() => go('')} /></Shell>;
+  }
   if (!api || !statuses || session === undefined || (session && profile === undefined)) {
     return <Shell><p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement de l'e-learning…</p></Shell>;
   }
@@ -143,9 +148,6 @@ export default function ELearning() {
   const bar = signedIn ? <LearnerBar api={api} profile={profile!} go={go} /> : null;
   const shell = (children: ReactNode) => <Shell simulated={api.simulated} bar={bar}>{children}</Shell>;
   const spinner = shell(<p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement du parcours…</p>);
-
-  // Verification is public
-  if (view === 'verifier') return shell(<VerifyView api={api} initial={route.slice(9)} onBack={() => go('')} />);
 
   // Signed in without a profile (rare: interrupted sign-up): complete it first
   if (session && !profile) {
@@ -866,7 +868,7 @@ function VerifyView({ api, initial, onBack }: { api: ElearningApi; initial: stri
   useEffect(() => { if (initial) check(initial); }, [initial, check]);
 
   const submit = (e: FormEvent) => { e.preventDefault(); check(number); };
-  const date = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  const date = (iso: string) => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Abidjan' }).replace(/^1 /, '1er ');
 
   return (
     <div className={`${card} max-w-2xl mx-auto p-6 sm:p-8`}>
@@ -881,18 +883,21 @@ function VerifyView({ api, initial, onBack }: { api: ElearningApi; initial: stri
         <button type="submit" disabled={state.status === 'busy'} className={primary}>{state.status === 'busy' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}Vérifier</button>
       </form>
       {state.status === 'found' && state.cert && (
-        <div className="mt-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border-l-4 border-emerald-600 p-5">
-          <p className="inline-flex items-center gap-2 font-extrabold text-emerald-800 dark:text-emerald-300"><CheckCircle2 className="w-5 h-5" />{state.cert.simulation ? 'Spécimen de démonstration (simulation), sans valeur officielle' : 'Certificat authentique'}</p>
-          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm text-slate-800 dark:text-slate-200">
-            <dt className="text-slate-500">Titulaire</dt><dd className="font-bold">{`${state.cert.lastName} ${state.cert.firstName}`.toLocaleUpperCase('fr-FR')}</dd>
-            <dt className="text-slate-500">Certification</dt><dd className="font-bold">{state.cert.courseTitle}</dd>
-            <dt className="text-slate-500">Formation suivie</dt><dd>du {date(state.cert.startedAt)} au {date(state.cert.finishedAt)}</dd>
-            <dt className="text-slate-500">Délivré le</dt><dd>{date(state.cert.issuedAt)}</dd>
-            <dt className="text-slate-500">Numéro</dt><dd className="font-bold">{state.cert.number}</dd>
-          </dl>
+        <div className="mt-6 rounded-2xl bg-brand-blue/[0.05] dark:bg-sky-950/40 border border-brand-blue/15 dark:border-sky-900 border-l-4 border-l-brand-blue dark:border-l-sky-400 p-5">
+          {/* Colours of CICEXF: navy blue, burgundy and the gold of the certificate (no green) */}
+          <p className="inline-flex items-center gap-2 text-lg font-extrabold text-brand-blue dark:text-sky-300"><CheckCircle2 className="w-6 h-6 text-[#C9933F]" />{state.cert.simulation ? 'Spécimen de démonstration (simulation), sans valeur officielle' : 'Certificat authentique'}</p>
+          <p className="mt-3 leading-relaxed text-slate-800 dark:text-slate-200">
+            Délivré à <strong>{`${state.cert.lastName} ${state.cert.firstName}`.toLocaleUpperCase('fr-FR')}</strong> pour la formation
+            « <strong>{state.cert.courseTitle}</strong> », le {date(state.cert.issuedAt)}.
+          </p>
+          {typeof state.cert.average === 'number' && (
+            <p className="mt-2 text-slate-800 dark:text-slate-200">Résultat obtenu : <strong>{Math.round(state.cert.average)} %</strong></p>
+          )}
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Formation suivie du {date(state.cert.startedAt)} au {date(state.cert.finishedAt)}</p>
+          <p className="mt-1 text-sm font-bold text-brand-emerald dark:text-[#E9A091]">N° {state.cert.number}</p>
         </div>
       )}
-      {state.status === 'missing' && <p className="mt-6 rounded-2xl bg-rose-50 dark:bg-rose-950/30 border-l-4 border-brand-emerald p-4 font-bold text-brand-emerald">Aucun certificat ne correspond à ce numéro. Vérifiez la saisie.</p>}
+      {state.status === 'missing' && <p className="mt-6 rounded-2xl bg-brand-emerald/[0.06] dark:bg-[#8A2E1C]/20 border-l-4 border-brand-emerald p-4 font-bold text-brand-emerald">Aucun certificat ne correspond à ce numéro. Vérifiez la saisie.</p>}
       {state.status === 'error' && <p className="mt-6 font-bold text-brand-emerald">Vérification impossible pour le moment. Réessayez.</p>}
       <p className="mt-6"><button onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-bold underline text-slate-600 dark:text-slate-300"><BookOpen className="w-4 h-4" />Découvrir l'e-learning CICEXF</button></p>
     </div>
