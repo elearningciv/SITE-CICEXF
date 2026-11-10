@@ -11,6 +11,9 @@ exports.adilineChat = require('./adiline').adilineChat;
 // E-learning : correction des quiz et examens, progression et certificats des apprenants
 exports.elearning = require('./elearning').elearning;
 
+// E-learning : certificat envoyé en PDF à l'apprenant dès sa délivrance
+exports.certificateMail = require('./certificateMail').certificateMail;
+
 // Contenu public du site servi depuis une copie dans Cloud Storage (images, catalogue, formations…) :
 // les visiteurs ne lisent plus la base Firestore, dont le quota gratuit quotidien est limité
 const site = require('./siteContent');
