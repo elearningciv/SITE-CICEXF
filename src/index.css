@@ -397,6 +397,15 @@ body.el-focus #btn-scroll-top {
 }
 
 /* E-learning: comprehension texts */
+/* E-learning: questions cannot be selected, copied or printed by learners during quizzes and exams */
+body.el-exam-locked, body.el-exam-locked * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+@media print {
+  body.el-exam-locked * { visibility: hidden !important; }
+}
 .el-text { color: #334155; line-height: 1.75; font-size: 1rem; }
 .dark .el-text { color: #e2e8f0; }
 @media (min-width: 640px) { .el-text { font-size: 1.04rem; } }

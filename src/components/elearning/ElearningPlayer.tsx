@@ -54,6 +54,42 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
   const [preview, setPreview] = useState(false);
   const [answerKey, setAnswerKey] = useState<Record<string, number[][]> | null>(null);
   const [keyError, setKeyError] = useState('');
+
+  // Questions cannot be copied by learners (to paste them into an AI or a search engine):
+  // no selection, no copy, cut, drag, right-click menu, copy shortcuts or printing while a quiz or
+  // an exam is on screen. Administrators (control mode) keep the normal behaviour.
+  const locked = !reviewer && phase === 'quiz';
+  const [copyWarning, setCopyWarning] = useState(false);
+  useEffect(() => {
+    if (!locked) return;
+    const warn = () => { setCopyWarning(true); window.setTimeout(() => setCopyWarning(false), 3500); };
+    const block = (e: Event) => { e.preventDefault(); warn(); };
+    const onKey = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && ['c', 'x', 'a', 'p', 's', 'u'].includes(key)) block(e);
+      if (key === 'printscreen') { block(e); try { navigator.clipboard?.writeText(''); } catch { /* not allowed */ } }
+    };
+    const clearSelection = () => { const sel = window.getSelection(); if (sel && sel.toString()) sel.removeAllRanges(); };
+    document.addEventListener('copy', block, true);
+    document.addEventListener('cut', block, true);
+    document.addEventListener('contextmenu', block, true);
+    document.addEventListener('dragstart', block, true);
+    document.addEventListener('selectstart', block, true);
+    document.addEventListener('keydown', onKey, true);
+    document.addEventListener('selectionchange', clearSelection);
+    document.body.classList.add('el-exam-locked');
+    clearSelection();
+    return () => {
+      document.removeEventListener('copy', block, true);
+      document.removeEventListener('cut', block, true);
+      document.removeEventListener('contextmenu', block, true);
+      document.removeEventListener('dragstart', block, true);
+      document.removeEventListener('selectstart', block, true);
+      document.removeEventListener('keydown', onKey, true);
+      document.removeEventListener('selectionchange', clearSelection);
+      document.body.classList.remove('el-exam-locked');
+    };
+  }, [locked]);
   useEffect(() => {
     if (!reviewer || !preview || answerKey) return;
     (keyCache[course.id] ||= api.getAnswerKey(course.id)).then(setAnswerKey).catch((e) => { delete keyCache[course.id]; setKeyError(learnerErrorMessage(e)); });
@@ -259,6 +295,11 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
 
         {phase === 'quiz' && (
           <>
+            {locked && (
+              <p className={`mb-3 rounded-xl px-3 py-2 text-xs font-semibold ${copyWarning ? 'bg-brand-emerald/10 text-brand-emerald dark:text-[#E9A091]' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'}`}>
+                {copyWarning ? 'La copie des questions est désactivée pendant les quiz et les examens.' : 'Pour garantir la valeur du certificat, la copie des questions est désactivée.'}
+              </p>
+            )}
             <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">{quiz.title} · Question {k + 1} sur {quiz.questions.length}</p>
             <p className="mt-2 mb-5 text-lg sm:text-xl font-bold text-slate-900 dark:text-white">{quiz.questions[k].question}</p>
             <div role="radiogroup" className="space-y-2.5">
