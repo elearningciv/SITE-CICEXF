@@ -337,6 +337,11 @@ export const GLOSSARY = {
   UNEG: "United Nations Evaluation Group, Groupe des Nations unies pour l'évaluation",
   MEAL: 'Monitoring, Evaluation, Accountability and Learning : suivi, évaluation, redevabilité et apprentissage',
   RACI: 'Responsible, Accountable, Consulted, Informed : qui réalise, qui valide, qui est consulté, qui est informé',
+  TDR: 'termes de référence',
+  MGP: 'mécanisme de gestion des plaintes',
+  UCP: 'unité de coordination du projet',
+  SCI: "Situation, Comportement, Impact : méthode de retour d'information",
+  PGC: 'Projet de gestion du cadre de vie (PGC-Vie)',
   USAID: 'Agence des États-Unis pour le développement international',
   CREAM: "Clair, Pertinent (Relevant), Économique, Adéquat, Suivable (Monitorable) : critères de qualité d'un indicateur",
   LQAS: "Lot Quality Assurance Sampling, sondage par lots pour l'assurance de la qualité",
@@ -402,7 +407,7 @@ export const GLOSSARY = {
 };
 
 // Uppercase tokens that are not acronyms to spell out (cell references, function names, emphasis…)
-const IGNORE = new Set(['P-SST', 'D5-D6', 'ALORS', 'PARCE', 'QUE', 'SI', 'PAS', 'AND', 'OR', 'MAX', 'MIN', 'SI', 'ET', 'OK', 'ERREUR', 'CHOISIR', 'SOMME', 'INDEX', 'EQUIV', 'RECHERCHEX',
+const IGNORE = new Set(['P-SST', 'D5-D6', 'A-B','ALORS', 'PARCE', 'QUE', 'SI', 'PAS', 'AND', 'OR', 'MAX', 'MIN', 'SI', 'ET', 'OK', 'ERREUR', 'CHOISIR', 'SOMME', 'INDEX', 'EQUIV', 'RECHERCHEX',
   'VPM', 'XX', 'XXE', 'XYZ', 'FINAL', 'AB', 'ST', 'UN', 'CO', 'CR', 'RES', 'CF', 'DG', 'RS', 'UK', 'ACM', 'ICTD', 'TN', 'GOV', 'LEGAL',
   'OECD', 'OECD-DAC', 'JOSAA', 'AAG', 'SIMPOP2', 'RG2004', 'ODI', 'IA', 'II', 'III', 'IV', 'VI', 'VII', 'VIII', 'IX', 'XI', 'XII', 'XIX', 'XV', 'XVI', 'XVII', 'XVIII']);
 const isNoise = (t) => IGNORE.has(t) || /^[A-Z]{1,2}\d{1,3}$/.test(t) || /^[PC]\d+([MTE]\d*)?$/.test(t) || /\d{3,}-\d/.test(t) || /^[IVXLC]+$/.test(t);

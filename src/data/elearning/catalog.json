@@ -4925,6 +4925,189 @@
   ]
  },
  {
+  "id": "management-pilotage-communautaire",
+  "order": 4.9,
+  "title": "Devenez l'Expert Indispensable en Management et Pilotage Communautaire de Projets",
+  "certTitle": "Management et pilotage communautaire de projets",
+  "domain": "Études spécialisées et ingénierie de projets",
+  "summary": "Démarrer un projet communautaire (offre technique, diagnostic logistique, cadre logique, collecte, parties prenantes et RACI), manager une équipe de terrain (délégation, plan de charge, matrice d'Eisenhower révisée, charte, réunions), piloter les opérations (Gantt, supervision, suivi budgétaire, risques) et rendre compte (tableau de bord, mission de supervision, redevabilité, rapports), avec quatre cas pratiques tirés du projet PGC-Vie.",
+  "hours": 17,
+  "defaultStatus": "open",
+  "stats": {
+   "parts": 2,
+   "chapters": 4,
+   "modules": 20,
+   "quizzes": 20,
+   "tests": 4,
+   "exams": 3,
+   "questions": 229
+  },
+  "steps": [
+   {
+    "id": "C1M1",
+    "kind": "module",
+    "title": "Module 1.1 : Lire les TDR et bâtir l'offre technique et financière",
+    "modules": 1
+   },
+   {
+    "id": "C1M2",
+    "kind": "module",
+    "title": "Module 1.2 : Diagnostic et analyse des moyens logistiques",
+    "modules": 1
+   },
+   {
+    "id": "C1M3",
+    "kind": "module",
+    "title": "Module 1.3 : Cadre logique et indicateurs de performance",
+    "modules": 1
+   },
+   {
+    "id": "C1M4",
+    "kind": "module",
+    "title": "Module 1.4 : Outils et méthodes de collecte de données terrain",
+    "modules": 1
+   },
+   {
+    "id": "C1M5",
+    "kind": "module",
+    "title": "Module 1.5 : Ancrage institutionnel, parties prenantes et matrice RACI",
+    "modules": 1
+   },
+   {
+    "id": "C1M6",
+    "kind": "module",
+    "title": "Module 1.6 : Cas pratique 1, le démarrage du projet PGC-Vie",
+    "modules": 1
+   },
+   {
+    "id": "C1T",
+    "kind": "test",
+    "title": "Test du chapitre 1",
+    "modules": 1
+   },
+   {
+    "id": "C2M1",
+    "kind": "module",
+    "title": "Module 2.1 : Délégation, plan de charge et matrice d'Eisenhower révisée",
+    "modules": 1
+   },
+   {
+    "id": "C2M2",
+    "kind": "module",
+    "title": "Module 2.2 : Management des équipes et gestion des conflits",
+    "modules": 1
+   },
+   {
+    "id": "C2M3",
+    "kind": "module",
+    "title": "Module 2.3 : Communication managériale, charte d'équipe et conduite de réunion",
+    "modules": 1
+   },
+   {
+    "id": "C2M4",
+    "kind": "module",
+    "title": "Module 2.4 : Cas pratique 2, « Le rapport, les indemnités et le silence »",
+    "modules": 1
+   },
+   {
+    "id": "C2T",
+    "kind": "test",
+    "title": "Test du chapitre 2",
+    "modules": 1
+   },
+   {
+    "id": "P1E",
+    "kind": "examen",
+    "title": "Examen de la partie 1",
+    "modules": 1
+   },
+   {
+    "id": "C3M1",
+    "kind": "module",
+    "title": "Module 3.1 : Planification opérationnelle et diagramme de Gantt",
+    "modules": 1
+   },
+   {
+    "id": "C3M2",
+    "kind": "module",
+    "title": "Module 3.2 : Animation, encadrement terrain et fiche de supervision",
+    "modules": 1
+   },
+   {
+    "id": "C3M3",
+    "kind": "module",
+    "title": "Module 3.3 : Gestion des ressources et suivi budgétaire",
+    "modules": 1
+   },
+   {
+    "id": "C3M4",
+    "kind": "module",
+    "title": "Module 3.4 : Risques opérationnels et mesures d'atténuation",
+    "modules": 1
+   },
+   {
+    "id": "C3M5",
+    "kind": "module",
+    "title": "Module 3.5 : Cas pratique 3, le suivi budgétaire du PGC-Vie",
+    "modules": 1
+   },
+   {
+    "id": "C3T",
+    "kind": "test",
+    "title": "Test du chapitre 3",
+    "modules": 1
+   },
+   {
+    "id": "C4M1",
+    "kind": "module",
+    "title": "Module 4.1 : Collecte, analyse des données et tableau de bord des indicateurs",
+    "modules": 1
+   },
+   {
+    "id": "C4M2",
+    "kind": "module",
+    "title": "Module 4.2 : Organiser une mission de supervision (TDR, grille, rapport)",
+    "modules": 1
+   },
+   {
+    "id": "C4M3",
+    "kind": "module",
+    "title": "Module 4.3 : Redevabilité, gestion des plaintes et apprentissage",
+    "modules": 1
+   },
+   {
+    "id": "C4M4",
+    "kind": "module",
+    "title": "Module 4.4 : Canevas et rédaction du rapport d'activités axé sur les résultats",
+    "modules": 1
+   },
+   {
+    "id": "C4M5",
+    "kind": "module",
+    "title": "Module 4.5 : Cas pratique 4, la mission de supervision",
+    "modules": 1
+   },
+   {
+    "id": "C4T",
+    "kind": "test",
+    "title": "Test du chapitre 4",
+    "modules": 1
+   },
+   {
+    "id": "P2E",
+    "kind": "examen",
+    "title": "Examen de la partie 2",
+    "modules": 1
+   },
+   {
+    "id": "FINAL",
+    "kind": "final",
+    "title": "Examen final de certification",
+    "modules": 1
+   }
+  ]
+ },
+ {
   "id": "cybersecurite",
   "order": 5,
   "title": "Cybersécurité",
