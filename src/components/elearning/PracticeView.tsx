@@ -2,10 +2,10 @@
 // written answers corrected from their key ideas. Formative: the correction is shown after each attempt.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Lock, PenLine, RotateCcw, XCircle } from 'lucide-react';
-import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type PracticeSet, type SheetCell, type SheetExercise, type WritingExercise } from '../../data/elearning/practice';
+import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
 import { PASS } from '../../data/elearning';
-import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeWriting, makeCtx, wordCount } from '../../lib/practiceGrading';
+import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, tableWritingKey, wordCount } from '../../lib/practiceGrading';
 
 const card = 'rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm';
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm transition-colors';
@@ -124,6 +124,70 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
   );
 }
 
+/** Load levels in the CICEXF colours (no green): grey under-load, navy balanced, gold tight, burgundy overload */
+const TONE_CLASS: Record<Tone, string> = {
+  low: 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-100',
+  ok: 'bg-[#003B6F]/15 text-[#003B6F] dark:bg-sky-900/60 dark:text-sky-100',
+  high: 'bg-[#C9933F]/30 text-[#6B4A12] dark:bg-amber-800/60 dark:text-amber-50',
+  over: 'bg-[#8A2E1C] text-white'
+};
+
+const QUADS: { n: 1 | 2 | 3 | 4; title: string; sub: string; box: string; dot: string }[] = [
+  { n: 1, title: '1 · Faire maintenant', sub: 'Important et urgent', box: 'bg-[#8A2E1C]/10 border-[#8A2E1C]/40', dot: 'bg-[#8A2E1C] text-white' },
+  { n: 2, title: '2 · Planifier', sub: 'Important, pas urgent', box: 'bg-[#003B6F]/10 border-[#003B6F]/40', dot: 'bg-[#003B6F] text-white' },
+  { n: 3, title: '3 · Déléguer', sub: 'Urgent, peu important', box: 'bg-[#C9933F]/15 border-[#C9933F]/50', dot: 'bg-[#C9933F] text-white' },
+  { n: 4, title: '4 · Éliminer ou reporter', sub: 'Ni urgent ni important', box: 'bg-slate-100 border-slate-300 dark:bg-slate-800/60 dark:border-slate-600', dot: 'bg-slate-500 text-white' }
+];
+
+/** Eisenhower matrix drawn from the learner's entries: bubbles sized by the days of each activity */
+function EisenhowerView({ chart, ctx }: { chart: EisenhowerChart; ctx: ReturnType<typeof makeCtx> }) {
+  let items: ReturnType<EisenhowerChart['items']> = [];
+  try { items = chart.items(ctx).filter((it) => it.value > 0); } catch { items = []; }
+  const total = items.reduce((n, it) => n + it.value, 0);
+  const max = Math.max(1, ...items.map((it) => it.value));
+  const fmt = (v: number) => v.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
+  return (
+    <div className="mt-3">
+      {!items.length ? (
+        <p className="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 px-4 py-6 text-center text-sm text-slate-500">{chart.empty}</p>
+      ) : (
+        <div className="grid grid-cols-[auto_1fr_1fr] gap-2 text-sm">
+          <span />
+          <span className="text-center text-xs font-extrabold uppercase tracking-wider text-slate-500">Urgent</span>
+          <span className="text-center text-xs font-extrabold uppercase tracking-wider text-slate-500">Pas urgent</span>
+          {[0, 1].map((row) => (
+            <div key={row} className="contents">
+              <span className="flex items-center justify-center text-xs font-extrabold uppercase tracking-wider text-slate-500 [writing-mode:vertical-rl] rotate-180">{row === 0 ? 'Important' : 'Peu important'}</span>
+              {QUADS.slice(row * 2, row * 2 + 2).map((q) => {
+                const its = items.filter((it) => it.quadrant === q.n);
+                const days = its.reduce((n, it) => n + it.value, 0);
+                return (
+                  <div key={q.n} className={`min-h-[9rem] rounded-xl border p-3 ${q.box}`}>
+                    <p className="font-extrabold text-slate-900 dark:text-white">{q.title}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-300">{q.sub} · {fmt(days)} {chart.unit} ({total ? Math.round((days / total) * 100) : 0} %)</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {its.map((it) => {
+                        const d = Math.round(30 + 34 * Math.sqrt(it.value / max));
+                        return (
+                          <span key={it.label} className="inline-flex items-center gap-1.5 rounded-full bg-white/80 dark:bg-slate-900/70 pr-2.5 shadow-sm">
+                            <span className={`inline-flex items-center justify-center rounded-full font-extrabold text-xs ${q.dot}`} style={{ width: d, height: d }}>{fmt(it.value)}</span>
+                            <span className="text-xs font-bold text-slate-800 dark:text-slate-100 max-w-[11rem]">{it.label}</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      )}
+      {chart.note && <div className="mt-2 text-xs text-slate-500 dark:text-slate-400" dangerouslySetInnerHTML={{ __html: chart.note }} />}
+    </div>
+  );
+}
+
 /** Something typed since the last validation */
 const isStarted = (e?: PracticeEntry) =>
   !!e?.pending && (Object.values(e.answers || {}).some((v) => (v || '').trim() !== '') || (e.text || '').trim() !== '');
@@ -213,7 +277,7 @@ function NoPasteTextarea({ id, value, onChange, rows = 12, placeholder }: { id: 
 }
 
 /** Result of a writing: accepted from 80 %, expected elements listed, missing ones highlighted (no model answer) */
-function WritingFeedback({ result, minWords, showAnswers }: { result: ReturnType<typeof gradeWriting>; minWords: number; showAnswers?: boolean }) {
+function WritingFeedback({ result, minWords, maxWords, showAnswers }: { result: ReturnType<typeof gradeWriting>; minWords: number; maxWords?: number; showAnswers?: boolean }) {
   const accepted = result.score >= PASS;
   return (
     <Result score={result.score}>
@@ -223,6 +287,7 @@ function WritingFeedback({ result, minWords, showAnswers }: { result: ReturnType
         <p className="mt-1 font-extrabold text-brand-emerald dark:text-[#E9A091]">Rédaction non acceptée : il faut au moins {PASS} %. Complétez votre texte avec les éléments surlignés ci-dessous, puis validez à nouveau.</p>
       )}
       {result.tooShort && <p className="mt-1 font-bold text-brand-emerald">Réponse trop courte ({result.words} mots pour {minWords} attendus) : le résultat est limité à 50 %.</p>}
+      {result.tooLong && <p className="mt-1 font-bold text-brand-emerald">Réponse trop longue ({result.words} mots pour {maxWords} au maximum) : raccourcissez-la ; le résultat est limité à 50 %.</p>}
       <p className="mt-3 font-bold text-slate-800 dark:text-slate-100">Les éléments recherchés dans votre texte :</p>
       <ul className="mt-2 space-y-1.5">
         {result.criteria.map((c) => (
@@ -246,6 +311,8 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
   const ctx = useMemo(() => makeCtx(ex, answers), [ex, answers]);
   const result = useMemo(() => gradeSheet(ex, answers), [ex, answers]);
   const writingResult = useMemo(() => gradeSheetWriting(ex, answers, text), [ex, answers, text]);
+  const tableWritings = useMemo(() => Object.fromEntries(gradeTableWritings(ex, answers).map((w) => [w.id, w.result])), [ex, answers]);
+  const rowShown = (t: SheetExercise['tables'][number], ri: number) => { if (!t.showRow) return true; try { return t.showRow(ctx, ri); } catch { return true; } };
   const cells = inputCells(ex);
   const graded = new Set(gradedCells(ex).map((c) => c.id));
   const filled = cells.filter((c) => (answers[c.id] || '').trim()).length;
@@ -264,10 +331,12 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
   const validate = () => {
     const r = gradeSheet(ex, answers);
     const w = gradeSheetWriting(ex, answers, text);
+    // Several writings: the lowest result decides whether the writing part is accepted
+    const ws = [...(w ? [w.score] : []), ...gradeTableWritings(ex, answers).map((t) => t.result.score)];
     setChecked(true);
     onChange({
       ...entry, answers, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0),
-      ...(w ? { writingScore: w.score } : {}), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1
+      ...(ws.length ? { writingScore: Math.min(...ws) } : {}), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1
     });
   };
   const restart = () => { setAnswers({}); setText(''); setChecked(false); onChange({ ...entry, answers: {}, text: '', pending: false }); };
@@ -276,6 +345,7 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
     const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
     const lines = [esc(ex.title), ''];
     for (const t of ex.tables) {
+      if (!t.columns.length) continue;
       if (t.title) lines.push(esc(t.title));
       lines.push(t.columns.map(esc).join(';'));
       for (const row of t.rows) {
@@ -309,7 +379,10 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
       {ex.tables.map((t, ti) => (
         <div key={ti} className="mt-5">
           {t.title && <h2 className="mb-2 font-extrabold text-brand-blue dark:text-sky-300">{t.title}</h2>}
-          <div className="overflow-x-auto rounded-xl border border-slate-300 dark:border-slate-700">
+          {t.columns.length > 0 && t.showRow && !t.rows.some((_r, ri) => rowShown(t, ri)) && (
+            <p className="rounded-xl border border-dashed border-slate-300 dark:border-slate-600 px-4 py-5 text-center text-sm text-slate-500">{t.emptyText || 'Rien à afficher pour le moment.'}</p>
+          )}
+          {t.columns.length > 0 && (!t.showRow || t.rows.some((_r, ri) => rowShown(t, ri))) && <div className="overflow-x-auto rounded-xl border border-slate-300 dark:border-slate-700">
             <table className="min-w-full text-sm border-collapse">
               <thead>
                 <tr className="bg-slate-100 dark:bg-slate-800">
@@ -317,11 +390,13 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
                 </tr>
               </thead>
               <tbody>
-                {t.rows.map((row, ri) => (
+                {t.rows.map((row, ri) => !rowShown(t, ri) ? null : (
                   <tr key={ri} className="even:bg-slate-50/60 dark:even:bg-slate-800/30">
                     {row.map((c, ci) => {
                       if (isCalc(c)) {
-                        return <td key={ci} className="px-2.5 py-1.5 border-b border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/70 text-right font-bold text-slate-800 dark:text-slate-100 whitespace-nowrap">{calcText(c, ctx)}</td>;
+                        let tone: Tone | null = null;
+                        try { tone = c.tone ? c.tone(ctx) : null; } catch { tone = null; }
+                        return <td key={ci} className={`px-2.5 py-1.5 border-b border-slate-200 dark:border-slate-800 text-right font-bold whitespace-nowrap ${tone ? TONE_CLASS[tone] : 'bg-slate-100 dark:bg-slate-800/70 text-slate-800 dark:text-slate-100'}`}>{calcText(c, ctx)}</td>;
                       }
                       if (!isInput(c)) {
                         const numeric = typeof c === 'object';
@@ -360,7 +435,28 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
                 ))}
               </tbody>
             </table>
-          </div>
+          </div>}
+          {t.legend && (
+            <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold">
+              <span className="text-slate-500">Code couleur :</span>
+              {t.legend.map((l) => <span key={l.tone} className={`rounded-md px-2 py-0.5 ${TONE_CLASS[l.tone]}`}>{l.label}</span>)}
+            </p>
+          )}
+          {t.chart && <EisenhowerView chart={t.chart} ctx={ctx} />}
+          {t.writing && (() => {
+            const w = t.writing, key = tableWritingKey(w.id), value = answers[key] || '', n = wordCount(value);
+            const bad = n < w.minWords || (w.maxWords !== undefined && n > w.maxWords);
+            return (
+              <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
+                <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300"><PenLine className="w-4 h-4" />Rédaction · {w.title}</span>
+                <div className="el-text mt-2" dangerouslySetInnerHTML={{ __html: w.prompt }} />
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
+                <NoPasteTextarea id={`w-${ex.id}-${w.id}`} value={value} onChange={(v) => set(key, v)} rows={9} placeholder="Rédigez votre texte ici." />
+                <p className={`mt-1 text-xs ${bad ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{n} mots · {w.maxWords !== undefined ? `entre ${w.minWords} et ${w.maxWords}` : `${w.minWords} au minimum`}</p>
+                {checked && tableWritings[w.id] && <WritingFeedback result={tableWritings[w.id]} minWords={w.minWords} maxWords={w.maxWords} showAnswers={showAnswers} />}
+              </div>
+            );
+          })()}
         </div>
       ))}
 
@@ -413,9 +509,17 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
 
 function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
   const [text, setText] = useState(entry.text || '');
+  const [parts, setParts] = useState<Record<string, string>>(entry.answers || {});
   const [checked, setChecked] = useState(entry.score !== undefined);
-  const result = useMemo(() => gradeWriting(ex, text), [ex, text]);
-  const words = wordCount(text);
+  const result = useMemo(() => gradeWritingEntry(ex, text, parts), [ex, text, parts]);
+  const words = ex.sections ? ex.sections.reduce((n, s) => n + wordCount(parts[sectionKey(s.id)] || ''), 0) : wordCount(text);
+  const empty = ex.sections ? !ex.sections.some((s) => (parts[sectionKey(s.id)] || '').trim()) : !text.trim();
+  const changePart = (id: string, v: string) => {
+    const next = { ...parts, [sectionKey(id)]: v };
+    setParts(next);
+    if (checked) setChecked(false);
+    onChange({ ...entry, answers: next, text, pending: true });
+  };
 
   const change = (v: string) => {
     setText(v);
@@ -423,11 +527,11 @@ function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise
     onChange({ ...entry, answers: entry.answers || {}, text: v, pending: true });
   };
   const validate = () => {
-    const r = gradeWriting(ex, text);
+    const r = gradeWritingEntry(ex, text, parts);
     setChecked(true);
-    onChange({ ...entry, answers: entry.answers || {}, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1 });
+    onChange({ ...entry, answers: parts, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1 });
   };
-  const restart = () => { setText(''); setChecked(false); onChange({ ...entry, answers: entry.answers || {}, text: '', pending: false }); };
+  const restart = () => { setText(''); setParts({}); setChecked(false); onChange({ ...entry, answers: {}, text: '', pending: false }); };
 
   return (
     <div className={`${card} p-5 sm:p-7`}>
@@ -435,11 +539,29 @@ function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise
       <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">{ex.title}</h1>
       <div className="el-text mt-3" dangerouslySetInnerHTML={{ __html: ex.prompt }} />
       <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre rédaction est acceptée à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
-      <label htmlFor={`w-${ex.id}`} className="mt-4 block text-xs font-extrabold tracking-wide uppercase text-slate-600 dark:text-slate-300">Votre réponse</label>
-      <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={change} />
-      <p className={`mt-1 text-xs ${words >= ex.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{words} mot{words > 1 ? 's' : ''} · {ex.minWords} au minimum</p>
+      {ex.sections ? (
+        <div className="mt-4 space-y-4">
+          {ex.sections.map((s) => {
+            const v = parts[sectionKey(s.id)] || '', n = wordCount(v);
+            return (
+              <div key={s.id} className="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
+                <label htmlFor={`w-${ex.id}-${s.id}`} className="block font-extrabold text-brand-blue dark:text-sky-300">{s.title}</label>
+                {s.hint && <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">{s.hint}</p>}
+                <NoPasteTextarea id={`w-${ex.id}-${s.id}`} value={v} onChange={(x) => changePart(s.id, x)} rows={5} placeholder="Rédigez cette partie du rapport." />
+                <p className="mt-1 text-xs text-slate-500">{n} mot{n > 1 ? 's' : ''}</p>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <>
+          <label htmlFor={`w-${ex.id}`} className="mt-4 block text-xs font-extrabold tracking-wide uppercase text-slate-600 dark:text-slate-300">Votre réponse</label>
+          <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={change} />
+        </>
+      )}
+      <p className={`mt-1 text-xs ${words >= ex.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{ex.sections ? 'Total : ' : ''}{words} mot{words > 1 ? 's' : ''} · {ex.minWords} au minimum</p>
       <div className="mt-4 flex flex-wrap gap-3">
-        <button onClick={validate} disabled={!text.trim()} className={primary}><CheckCircle2 className="w-4 h-4" />Valider ma rédaction</button>
+        <button onClick={validate} disabled={empty} className={primary}><CheckCircle2 className="w-4 h-4" />Valider ma rédaction</button>
         {checked && result.score < PASS && <button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer à zéro</button>}
       </div>
       {checked && <WritingFeedback result={result} minWords={ex.minWords} showAnswers={showAnswers} />}

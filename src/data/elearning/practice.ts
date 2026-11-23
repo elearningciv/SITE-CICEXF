@@ -23,11 +23,39 @@ export interface ChoiceInput { id: string; options: string[]; answer?: Dyn<strin
 /** Free text typed by the learner (e.g. an observation); used by the checks */
 export interface TextInput { id: string; text: true; placeholder?: string }
 /** Cell calculated automatically from the others (like a spreadsheet formula) */
-export interface CalcCell { id: string; calc: (c: Ctx) => number | string | null; fmt?: Fmt }
+/** Colour band of a calculated cell (load level): under-load, balanced, tight, overload */
+export type Tone = 'low' | 'ok' | 'high' | 'over';
+export interface CalcCell { id: string; calc: (c: Ctx) => number | string | null; fmt?: Fmt; tone?: (c: Ctx) => Tone | null }
 
 export type SheetCell = string | { v: number; fmt?: Fmt } | NumInput | ChoiceInput | TextInput | CalcCell;
 
-export interface SheetTable { title?: string; columns: string[]; rows: SheetCell[][] }
+/** Eisenhower chart drawn from the learner's entries: each item is placed in its quadrant
+ *  (1 important and urgent, 2 important not urgent, 3 urgent not important, 4 neither), sized by its value */
+export interface EisenhowerChart {
+  kind: 'eisenhower';
+  items: (c: Ctx) => { label: string; value: number; quadrant: 1 | 2 | 3 | 4 }[];
+  /** Unit of the values (e.g. « j ») */
+  unit: string;
+  /** Shown when there is nothing to place yet */
+  empty: string;
+  /** Short note under the chart (HTML), e.g. how the activities are classified */
+  note?: string;
+}
+
+/** A table, optionally followed by a colour legend, a chart and a writing (an empty `columns` list draws no grid) */
+export interface SheetTable {
+  title?: string;
+  columns: string[];
+  rows: SheetCell[][];
+  legend?: { tone: Tone; label: string }[];
+  /** Rows shown only when this returns true (e.g. the activities of one person); hidden rows keep their answers */
+  showRow?: (c: Ctx, rowIndex: number) => boolean;
+  /** Shown instead of the grid when no row is shown */
+  emptyText?: string;
+  chart?: EisenhowerChart;
+  /** Writing placed right under this table; its text is stored with the answers */
+  writing?: SheetWriting & { id: string; title: string };
+}
 
 /** Overall condition checked at correction time (e.g. every activity fully assigned) */
 export interface SheetCheck { label: string; test: (c: Ctx) => boolean }
@@ -55,6 +83,8 @@ export interface SheetExercise {
 export interface SheetWriting {
   prompt: string;
   minWords: number;
+  /** Longest accepted text (words) */
+  maxWords?: number;
   criteria: WritingCriterion[];
   /** Criteria that depend on what the learner declared in the tables */
   dynamicCriteria?: (c: Ctx) => WritingCriterion[];
@@ -68,14 +98,20 @@ export interface WritingCriterion {
   need?: number;
 }
 
+/** One part of a long writing (e.g. a section of a report), written in its own box and corrected on its own criteria */
+export interface WritingSection { id: string; title: string; hint?: string; criteria: WritingCriterion[] }
+
 export interface WritingExercise {
   kind: 'writing';
   id: string;
   title: string;
   skill: string;
   prompt: string;
+  /** Whole text (all sections together) */
   minWords: number;
   criteria: WritingCriterion[];
+  /** Writing split into sections: each has its own box and criteria (`criteria` then stays empty) */
+  sections?: WritingSection[];
 }
 
 export type PracticeExercise = SheetExercise | WritingExercise;

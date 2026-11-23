@@ -1,6 +1,6 @@
 // Correction of the practical work: spreadsheet cells (numbers, calculations, choices) and written answers
 // (key ideas found from expected words, accents and case ignored).
-import { gradedCells, isCalc, isChoice, type CalcCell, type ChoiceInput, type Ctx, type Dyn, type Fmt, type NumInput, type SheetCell, type SheetExercise, type WritingCriterion } from '../data/elearning/practice';
+import { gradedCells, isCalc, isChoice, type CalcCell, type ChoiceInput, type Ctx, type Dyn, type Fmt, type NumInput, type SheetCell, type SheetExercise, type SheetWriting, type WritingCriterion, type WritingExercise } from '../data/elearning/practice';
 
 // ---------------------------------------------------------------------------------------------
 // Numbers and calculations typed by the learner: "1 650 000", "1650000 FCFA", "33,3 %", "=4*550000", "(12/30)*100"
@@ -187,6 +187,7 @@ export interface WritingResult {
   score: number;
   words: number;
   tooShort: boolean;
+  tooLong?: boolean;
   criteria: { label: string; met: boolean; found: string[]; keywords: string[] }[];
 }
 
@@ -199,7 +200,7 @@ export const hasKeyword = (norm: string, keyword: string) => {
 };
 
 /** A criterion is met when enough of its words (or word beginnings) appear in the answer */
-export function gradeWriting(ex: { criteria: WritingCriterion[]; minWords: number }, text: string): WritingResult {
+export function gradeWriting(ex: { criteria: WritingCriterion[]; minWords: number; maxWords?: number }, text: string): WritingResult {
   const norm = normalizeText(text);
   const words = wordCount(text);
   const criteria = ex.criteria.map((c) => {
@@ -208,16 +209,46 @@ export function gradeWriting(ex: { criteria: WritingCriterion[]; minWords: numbe
   });
   const met = criteria.filter((c) => c.met).length;
   const tooShort = words < ex.minWords;
+  const tooLong = ex.maxWords !== undefined && words > ex.maxWords;
   let score = Math.round((met / criteria.length) * 100);
-  // A list of key words is not a written answer: a too short text is capped at half the points
-  if (tooShort) score = Math.min(score, 50);
-  return { score, words, tooShort, criteria };
+  // A list of key words is not a written answer: a too short text is capped at half the points; so is a text
+  // longer than the limit asked
+  if (tooShort || tooLong) score = Math.min(score, 50);
+  return { score, words, tooShort, tooLong, criteria };
 }
 
 /** Writing asked below the tables: fixed criteria plus those that depend on the learner's tables */
 export function gradeSheetWriting(ex: SheetExercise, answers: Record<string, string>, text: string): WritingResult | null {
   if (!ex.writing) return null;
+  return gradeWithCtx(ex.writing, makeCtx(ex, answers), text);
+}
+
+function gradeWithCtx(w: SheetWriting, ctx: Ctx, text: string): WritingResult {
   let dyn: WritingCriterion[] = [];
-  try { dyn = ex.writing.dynamicCriteria ? ex.writing.dynamicCriteria(makeCtx(ex, answers)) : []; } catch { dyn = []; }
-  return gradeWriting({ criteria: [...ex.writing.criteria, ...dyn], minWords: ex.writing.minWords }, text);
+  try { dyn = w.dynamicCriteria ? w.dynamicCriteria(ctx) : []; } catch { dyn = []; }
+  return gradeWriting({ criteria: [...w.criteria, ...dyn], minWords: w.minWords, maxWords: w.maxWords }, text);
+}
+
+/** Key under which the text of one section of a writing is stored with the answers */
+export const sectionKey = (id: string) => `sec:${id}`;
+
+/** A writing exercise, in one box or in sections (each section is corrected on its own criteria) */
+export function gradeWritingEntry(ex: WritingExercise, text: string, answers: Record<string, string>): WritingResult {
+  if (!ex.sections?.length) return gradeWriting(ex, text);
+  const parts = ex.sections.map((s) => ({ s, r: gradeWriting({ criteria: s.criteria, minWords: 0 }, answers[sectionKey(s.id)] || '') }));
+  const criteria = parts.flatMap(({ s, r }) => r.criteria.map((c) => ({ ...c, label: `${s.title} : ${c.label}` })));
+  const words = parts.reduce((n, p) => n + p.r.words, 0);
+  const tooShort = words < ex.minWords;
+  let score = Math.round((criteria.filter((c) => c.met).length / Math.max(1, criteria.length)) * 100);
+  if (tooShort) score = Math.min(score, 50);
+  return { score, words, tooShort, criteria };
+}
+
+/** Key under which the text of a writing placed under a table is stored with the answers */
+export const tableWritingKey = (id: string) => `txt:${id}`;
+
+/** Writings placed under the tables, each with its own correction */
+export function gradeTableWritings(ex: SheetExercise, answers: Record<string, string>): { id: string; result: WritingResult }[] {
+  const ctx = makeCtx(ex, answers);
+  return ex.tables.flatMap((t) => (t.writing ? [{ id: t.writing.id, result: gradeWithCtx(t.writing, ctx, answers[tableWritingKey(t.writing.id)] || '') }] : []));
 }

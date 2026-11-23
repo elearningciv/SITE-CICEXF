@@ -2,7 +2,7 @@
 // Dossier reconstitué à partir des documents du cas PGC-Vie (offre financière, classeurs de suivi budgétaire,
 // supports de formation du CICEXF). Situation fictive construite pour la formation ; aucun nom de personne.
 // Les réponses attendues sont calculées ici à partir des données, pour éviter toute erreur de calcul.
-import type { Ctx, PracticeSet, SheetCell, Fmt } from '../practice';
+import type { Ctx, PracticeSet, SheetCell, Fmt, Tone } from '../practice';
 
 const fcfa = (n: number) => `${Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ')} FCFA`;
 const r1 = (n: number) => Math.round(n * 10) / 10;
@@ -183,6 +183,32 @@ ${table(['Équipement', 'Effectif requis', 'Base de calcul (TDR, moyens à mobil
 `;
 
 
+/** Cadre logique des résultats, repris du rapport de démarrage (tableaux 5 et 6) */
+const LOGFRAME_COLS = ['Niveau', 'Résumé narratif', 'Indicateurs et cibles à 6 mois', 'Sources de vérification', 'Hypothèses et risques'];
+const DOSSIER_CADRE_LOGIQUE = `
+<p>Extrait du rapport de démarrage. Les produits ci-dessous servent de trame au rapport à mi-parcours.</p>
+<h3>Tableau 5 : cadre logique des résultats de la mission 1 (animation communautaire et mobilisation sociale)</h3>
+${table(LOGFRAME_COLS, [
+  ['Résultat 1', 'Les parties prenantes locales sont informées, sensibilisées et mobilisées autour du projet.', 'Taux de participation aux activités ≥ 60 % ; ≥ 50 % de femmes parmi les participants ; ≥ 95 % de la population cible informée', 'Listes de présence, enquête de satisfaction', 'Les communautés restent disponibles malgré le calendrier agricole ; les leaders adhèrent au projet'],
+  ['Produit 1.1', 'La cartographie des acteurs est réalisée et tenue à jour.', '1 base de données transmise à l\'UCP et actualisée en continu', 'Base de données, accusé de réception de l\'UCP', 'Les autorités et les acteurs acceptent de partager l\'information'],
+  ['Produit 1.2', 'Les événements communautaires majeurs sont organisés.', '6 événements réalisés', 'PV, photos, comptes rendus', 'Les conditions de sécurité et la météo permettent la tenue des événements'],
+  ['Produit 1.3', 'Les émissions radio sont produites et diffusées en français et en langue locale.', '6 émissions diffusées', 'Attestations de diffusion', 'Les radios locales sont disponibles et couvrent la commune'],
+  ['Produit 1.4', 'Les causeries, focus groups et séances de théâtre-forum sont animés.', '≥ 24 séances de sensibilisation ; 1 causerie par mois et par quartier', 'Rapports mensuels, listes de présence', 'Les relais communautaires sont mobilisés dans chaque quartier'],
+  ['Produit 1.5', 'Les supports de communication sont produits et distribués.', '8 500 supports produits (500 affiches, 3 000 dépliants MGP, 5 000 flyers, 12 kakémonos, 20 banderoles, 1 000 T-shirts, 300 chasubles)', 'Bons de livraison, rapport de distribution', 'Les validations de l\'UCP et les autorisations d\'affichage sont obtenues à temps'],
+  ['Produit 1.6', 'Le CCL fonctionne avec l\'appui de l\'ONG.', '6 séances mensuelles avec PV', 'PV de réunion', 'Les membres du CCL sont désignés et disponibles']
+])}
+<h3>Tableau 6 : cadre logique du résultat 2 (mission 2 : appui au MGP et prévention des EAS/HS/VBG)</h3>
+${table(LOGFRAME_COLS, [
+  ['Résultat 2', 'Un MGP accessible et fonctionnel est en place, et les risques d\'EAS/HS/VBG sont prévenus.', 'Notoriété du MGP ≥ 80 % ; plaintes ordinaires traitées dans les délais ≥ 90 % ; satisfaction des plaignants ≥ 80 % ; 100 % des plaintes sensibles transmises à l\'UCP sous 24 h', 'Registre MGP, registre confidentiel, enquêtes de satisfaction', 'Les populations osent déposer des plaintes ; les normes sociales ne freinent pas la dénonciation des VBG'],
+  ['Produit 2.1', 'Le MGP local est opérationnel.', '5 boîtes à suggestions installées ; 2 lignes téléphoniques activées', 'Photos, attestations d\'installation et d\'activation', 'Les emplacements sont acceptés par les communautés'],
+  ['Produit 2.2', 'Les plaintes sont enregistrées, catégorisées et traitées.', 'Nombre de plaintes reçues (suivi continu) ; nombre de cas VBG/EAS/HS référencés (suivi continu)', 'Registre MGP, base de données MGP, rapport mensuel', 'Les niveaux de traitement du MGP répondent dans les délais'],
+  ['Produit 2.3', 'Les membres du CLGP et du CCL sont formés.', '30 membres formés', 'PV de formation, listes de présence, résultats des tests', 'Les membres sont disponibles aux dates prévues'],
+  ['Produit 2.4', 'Les travailleurs de chantier sont sensibilisés aux codes de conduite.', '6 sessions réalisées ; 50 personnels d\'entreprises formés', 'Rapports de session, listes de présence', 'Les entreprises libèrent leurs travailleurs et signent les codes de conduite'],
+  ['Produit 2.5', 'Les points focaux sont dotés de kits et d\'outils de collecte.', '30 points focaux formés et équipés', 'Fiches de remise, PV de formation', 'Les outils numériques fonctionnent avec la couverture réseau locale'],
+  ['Produit 2.6', 'La coordination avec les structures de prise en charge des VBG est établie.', '1 protocole de référencement validé ; 1 annuaire des services à jour', 'Protocole, annuaire, rapports de coordination', 'Les services de santé, psychosociaux et juridiques acceptent de collaborer']
+])}
+`;
+
 const DOSSIER_DICTIONNAIRE = `
 <p>Le dictionnaire précise, pour chaque indicateur, ce qu'il mesure exactement et comment on le renseigne. Deux personnes doivent obtenir la même valeur en l'appliquant.</p>
 ${table(['Indicateur', 'Définition et mode de calcul', 'Source de vérification', 'Fréquence', 'Responsable', 'Désagrégation', 'Cible'], [
@@ -242,7 +268,7 @@ const BENEVOLES = [6, 7, 8, 9];
 const MOIS = [1, 2, 3, 4];
 /** Disponibilité mensuelle donnée dans l'énoncé : jours disponibles, congés ou absences, réunions et coordination */
 const DISPO: [number, number, number][] = [[22, 2, 2], [22, 0, 2], [22, 1, 2], [22, 2, 1], [22, 1, 1], [11, 0, 1], [10, 0, 1], [10, 0, 1], [10, 0, 1], [10, 0, 1]];
-/** Activité, charge prévue en jours pour les mois 1 à 4 */
+/** Activité, exemple d'estimation des jours pour les mois 1 à 4 (tests seulement : l'apprenant estime lui-même les charges) */
 const ACTS: [string, number[]][] = [
   ['Pilotage, supervision et rapports', [8, 6, 6, 6]],
   ['Cartographie des acteurs', [6, 2, 0, 0]],
@@ -260,10 +286,34 @@ const ROLES = ['Responsable', 'Appui (facultatif)'];
 const LECTURES = ['Sous-charge', 'Équilibré', 'Tendu', 'Surcharge'];
 const lectureOf = (t: number) => (t < 60 ? 'Sous-charge' : t <= 90 ? 'Équilibré' : t <= 100 ? 'Tendu' : 'Surcharge');
 const cell0 = (c: Ctx, id: string) => c.num(id) ?? 0;
+/** Jours ouvrés du mois : une seule saisie, reprise pour tous les intervenants */
+const OUVRES = 22;
 const workedOf = (c: Ctx, p: number) => {
-  const o = c.num(`o${p}`), a = c.num(`c${p}`), r = c.num(`r${p}`);
+  // Bénévoles : 10 jours de présence dont 1 de coordination, donnés dans l'énoncé (hors tableau de disponibilité)
+  if (BENEVOLES.includes(p)) return DISPO[p][0] - DISPO[p][1] - DISPO[p][2];
+  const o = c.num('ouvres'), a = c.num(`c${p}`), r = c.num(`r${p}`);
   return o === null ? null : o - (a ?? 0) - (r ?? 0);
 };
+/** Jours non disponibles attendus : temps partiel (jours ouvrés − jours de présence) + congés et absences */
+const unavailableOf = (p: number) => OUVRES - DISPO[p][0] + DISPO[p][1];
+const toneOf = (t: number): Tone => (t < 60 ? 'low' : t <= 90 ? 'ok' : t <= 100 ? 'high' : 'over');
+/** Mots qui désignent chaque poste dans une rédaction */
+const POSTE_KEYS = [['chef de mission', 'chef'], ['charge de projet'], ['specialiste', 'vbg'], ['animateur communautaire 1', 'animateur 1'], ['animateur communautaire 2', 'animateur 2'],
+  ['appui comptable', 'comptable'], ['benevole 1', 'benevole'], ['benevole 2', 'benevole'], ['benevole 3', 'benevole'], ['benevole 4', 'benevole']];
+/** Tri des activités du chef de mission au mois 1, selon le modèle « Tâches de la semaine : tri selon la matrice
+ *  d'Eisenhower révisée » : urgence retenue = min(3, urgence + 1 si l'activité bloque un collègue) ; sécurité d'une
+ *  personne = cadran 1 ; sinon importance ≥ 2 et urgence retenue ≥ 2 = 1, importance ≥ 2 = 2, urgence retenue ≥ 2 = 3, sinon 4 */
+const ACT_KEYS = ['pilotage', 'cartographie', 'support', 'logistique', 'mgp', 'formation', 'causerie', 'evenement', 'radio', 'comptab'];
+const chefDaysM1 = (c: Ctx, i: number) => ROLES.reduce((k, _r, j) => k + (c.text(`p${i}${j}`) === POSTES[0] ? cell0(c, `d${i}${j}m1`) : 0), 0);
+const urgRetOf = (c: Ctx, i: number) => { const u = level(c.text(`eu${i}`)); return u === null ? null : Math.min(3, u + (c.text(`eb${i}`) === 'Oui' ? 1 : 0)); };
+const chefQuad = (c: Ctx, i: number): 1 | 2 | 3 | 4 | null => {
+  if (c.text(`es${i}`) === 'Oui') return 1;
+  const imp = level(c.text(`ei${i}`)), u = urgRetOf(c, i);
+  if (imp === null || u === null) return null;
+  return imp >= 2 && u >= 2 ? 1 : imp >= 2 ? 2 : u >= 2 ? 3 : 4;
+};
+const DELAIS = ['Sous 48 h', 'Cette semaine ou ce mois', 'Réponse sous 24 h', 'Revue mensuelle'];
+const fr = (v: number) => r1(v).toLocaleString('fr-FR');
 /** Jours affectés à un poste pour un mois, sur toutes les lignes où ce poste est choisi */
 const chargeOf = (c: Ctx, p: number, m: number) =>
   ACTS.reduce((n, _a, i) => n + ROLES.reduce((k, _r, j) => k + (c.text(`p${i}${j}`) === POSTES[p] ? cell0(c, `d${i}${j}m${m}`) : 0), 0), 0);
@@ -298,8 +348,11 @@ const SAMPLE3: [number, number[]][][] = [
 ];
 const sample3 = () => {
   const s: Record<string, string> = {};
-  POSTES.forEach((_p, p) => { s[`o${p}`] = String(DISPO[p][0]); s[`c${p}`] = String(DISPO[p][1]); s[`r${p}`] = String(DISPO[p][2]); });
+  s.ouvres = String(OUVRES);
+  POSTES.forEach((_p, p) => { if (!BENEVOLES.includes(p)) { s[`c${p}`] = String(unavailableOf(p)); s[`r${p}`] = String(DISPO[p][2]); } });
   SAMPLE3.forEach((lines, i) => lines.forEach(([p, days], j) => { s[`p${i}${j}`] = POSTES[p]; days.forEach((d, k) => { s[`d${i}${j}m${k + 1}`] = d ? String(d) : ''; }); }));
+  // Tri d'Eisenhower des activités du chef de mission au mois 1 (pilotage, cartographie, radio)
+  ([[0, 3, 3], [1, 3, 1], [8, 2, 1]] as const).forEach(([i, imp, urg]) => { s[`ei${i}`] = IMPORTANCES[imp - 1]; s[`eu${i}`] = IMPORTANCES[urg - 1]; s[`eb${i}`] = 'Non'; s[`es${i}`] = 'Non'; });
   return s;
 };
 
@@ -343,7 +396,8 @@ const quadFromEntries = (c: Ctx, i: number) => {
 const QUAD_LABELS = ['1 · Important et urgent', '2 · Important, pas urgent', '3 · Urgent, peu important', '4 · Ni urgent ni important'];
 
 // Exercice 5 : tableau de bord des indicateurs (fin M3), comparés à la cible prévue à date selon le chronogramme
-/** Indicateur, cible de fin de mission, mois prévus (chronogramme), réalisé à la fin du mois 3 */
+/** Indicateur, cible de fin de mission, mois prévus (chronogramme), exemple de réalisé à la fin du mois 3 (tests seulement :
+ *  l'apprenant saisit lui-même le réalisé relevé sur le terrain) */
 const IND: [string, number, number[], number][] = [
   ['Causeries éducatives réalisées', 30, [1, 2, 3, 4, 5, 6], 12],
   ['Émissions radio diffusées', 6, [1, 2, 3, 4, 5, 6], 3],
@@ -358,7 +412,18 @@ const IND: [string, number, number[], number][] = [
 const IND_KEYS = ['causerie', 'radio', 'points focaux', 'comite', 'travailleur', 'theatre', 'tournoi', 'ceremonie'];
 const TRAJ = ['Dans la trajectoire', 'Léger retard', 'Retard important'];
 const trajOf = (t: number) => (t >= 90 ? 'Dans la trajectoire' : t >= 60 ? 'Léger retard' : 'Retard important');
-const indRate = (c: Ctx, i: number) => { const pv = c.num(`pv${i}`); return pv && pv > 0 ? (IND[i][3] / pv) * 100 : null; };
+/** Cible prévue à la fin du mois 3 d'après le chronogramme (donnée dans le tableau) */
+const indPlanned = (i: number) => r1(IND[i][1] * shareAt(IND[i][2], 3));
+const indRate = (c: Ctx, i: number) => { const rv = c.num(`rv${i}`), pv = indPlanned(i); return rv === null || pv <= 0 ? null : (rv / pv) * 100; };
+/** Indicateurs de qualité du MGP : indicateur, base du calcul, cible (%), exemple de réalisé et de base (tests seulement) */
+const MGP_IND: [string, string, number, number, number][] = [
+  ['Plaintes ordinaires traitées dans les délais', 'plaintes ordinaires reçues', 90, 18, 20],
+  ['Plaintes sensibles transmises à l\'UCP sous 24 heures', 'plaintes sensibles reçues', 100, 3, 3],
+  ['Notoriété du MGP (enquête de mi-parcours) : personnes qui citent au moins un canal', 'personnes enquêtées', 80, 252, 400]
+];
+const MGP_KEYS = [['delai'], ['sensible', '24 heures', '24h'], ['notoriete']];
+const MGP_TRAJ = ['Cible atteinte', 'En dessous de la cible'];
+const mgpVal = (c: Ctx, k: number) => { const n = c.num(`mn${k}`), b = c.num(`mb${k}`); return n === null || b === null || b <= 0 ? null : r1((n / b) * 100); };
 
 // Exercice 6 : suivi budgétaire (fin M3). L'apprenant calcule le budget prévu à date d'après le chronogramme, ventile
 // le journal des dépenses dans les lignes et les mois ; le total, le solde, l'écart et le taux se calculent ; il choisit
@@ -415,7 +480,8 @@ const set: PracticeSet = {
   dossier: [
     { id: 'tdr', title: 'Termes de référence de la mission', html: DOSSIER_TDR },
     { id: 'offre', title: 'Offre financière de la mission', html: DOSSIER_OFFRE },
-    { id: 'dictionnaire', title: 'Dictionnaire des indicateurs', html: DOSSIER_DICTIONNAIRE }
+    { id: 'dictionnaire', title: 'Dictionnaire des indicateurs', html: DOSSIER_DICTIONNAIRE },
+    { id: 'cadre-logique', title: 'Cadre logique des résultats (rapport de démarrage)', html: DOSSIER_CADRE_LOGIQUE }
   ],
   exercises: [
     {
@@ -472,8 +538,8 @@ const set: PracticeSet = {
       id: 'diagnostic-logistique',
       title: 'Exercice 2 : diagnostic des moyens logistiques',
       skill: 'Démarrage du projet',
-      intro: "<p>Pour chaque équipement, reportez la quantité requise (TDR, section « Moyens à mobiliser », et effectifs du tableau des devis dans l'offre financière). Reportez ensuite la quantité disponible d'après l'inventaire ci-dessous, choisissez le mode d'obtention et saisissez le prix unitaire retenu dans l'offre financière (prix des devis). L'écart, le taux de couverture, le coût de l'écart et le statut se calculent automatiquement.</p><p><strong>Inventaire réalisé au démarrage :</strong> l'ONG dispose déjà d'une moto en état de marche, de deux ordinateurs portables, d'une armoire sécurisée et de deux trousses de premiers secours. Elle n'a ni smartphone de service, ni tablette, ni kit pour les points focaux, ni boîte à plaintes.</p>",
-      rules: "<p>Saisissez des nombres dans les cases blanches et choisissez le mode d'obtention dans la liste. Les colonnes grisées se calculent seules. Un statut « Incohérent » signale que le mode d'obtention contredit les quantités : corrigez-le.</p>",
+      intro: "<p>Pour chaque équipement, reportez la quantité requise (TDR, section « Moyens à mobiliser », et effectifs du tableau des devis dans l'offre financière). Reportez ensuite la quantité disponible d'après l'inventaire ci-dessous, choisissez le mode d'obtention et saisissez le prix unitaire constaté sur le terrain : les prix des devis de l'offre financière servent de repère, mais ils ont pu changer depuis. L'écart, le taux de couverture, le coût de l'écart et le statut se calculent automatiquement.</p><p><strong>Inventaire réalisé au démarrage :</strong> l'ONG dispose déjà d'une moto en état de marche, de deux ordinateurs portables, d'une armoire sécurisée et de deux trousses de premiers secours. Elle n'a ni smartphone de service, ni tablette, ni kit pour les points focaux, ni boîte à plaintes.</p>",
+      rules: "<p>Saisissez des nombres dans les cases blanches et choisissez le mode d'obtention dans la liste. Le prix unitaire est libre (prix terrain) : il n'est pas noté, mais il doit être saisi pour chaque équipement à acquérir, car il sert au calcul du coût de l'écart. Les colonnes grisées se calculent seules. Un statut « Incohérent » signale que le mode d'obtention contredit les quantités : corrigez-le.</p>",
       tables: [{
         columns: ['Équipement', 'Quantité requise', 'Quantité disponible', 'Mode d\'obtention', 'Prix unitaire (FCFA)', 'Écart', 'Taux de couverture', 'Coût de l\'écart (FCFA)', 'Statut'],
         rows: [
@@ -482,7 +548,8 @@ const set: PracticeSet = {
             { id: `q${i}`, answer: req, tol: 0 },
             { id: `d${i}`, answer: dispo, tol: 0 },
             { id: `m${i}`, answer: dispo >= req ? 'Existant' : 'À acquérir', options: MODES },
-            { id: `p${i}`, answer: pu, fmt: 'fcfa', tol: Math.round(pu * 0.1) },
+            // Prix terrain : saisie libre (les prix peuvent avoir changé depuis les devis)
+            { id: `p${i}`, fmt: 'fcfa' },
             { id: `e${i}`, calc: (c) => ecartOf(c, i) },
             { id: `t${i}`, fmt: 'pct', calc: (c) => {
               const q = c.num(`q${i}`), d = c.num(`d${i}`);
@@ -497,6 +564,11 @@ const set: PracticeSet = {
           ['Coût total de l\'écart', '', '', '', '', '', '', { id: 'total', fmt: 'fcfa', calc: (c) => LOG.reduce((n, _l, i) => n + (c.num(`k${i}`) ?? 0), 0) }, '']
         ]
       }],
+      checks: [{
+        label: 'Un prix unitaire terrain est saisi pour chaque équipement à acquérir',
+        test: (c) => LOG.some((_l, i) => (ecartOf(c, i) ?? 0) > 0) && LOG.every((_l, i) => (ecartOf(c, i) ?? 0) === 0 || (c.num(`p${i}`) ?? 0) > 0)
+      }],
+      sample: Object.fromEntries(LOG.map(([, , , pu], i) => [`p${i}`, String(pu)])),
       explanation: "<p>Les quantités se déduisent des TDR : une moto et un smartphone pour chacun des quatre agents de terrain, un ordinateur pour chacune des six personnes de l'équipe, une tablette pour trois points focaux (soit 10), un kit par point focal (30), une boîte à plaintes par quartier (5), deux armoires distinctes (archives et registre confidentiel) et deux trousses (bureau et déplacements). Seules les trousses sont entièrement couvertes : elles sont « Existant ». Le transport et l'informatique concentrent l'essentiel du coût de l'écart : ce sont les achats à budgéter en premier.</p>"
     },
     {
@@ -504,63 +576,152 @@ const set: PracticeSet = {
       id: 'plan-de-charge',
       title: 'Exercice 3 : plan de charge sur quatre mois',
       skill: 'Management des équipes',
-      intro: "<p>Construisez le plan de charge de l'équipe pour les mois 1 à 4, comme dans la matrice des charges.</p><p><strong>Disponibilité :</strong> chaque mois compte 22 jours ouvrés pour le personnel salarié. Le chef de mission prend en moyenne 2 jours de congé et consacre 2 jours aux réunions de coordination par mois. Le chargé de projet n'a pas de congé et 2 jours de coordination. La spécialiste VBG/MGP a 1 jour d'absence et 2 jours de coordination. L'animateur communautaire 1 prend 2 jours de congé et a 1 jour de coordination. L'animateur communautaire 2 a 1 jour d'absence et 1 jour de coordination. L'appui comptable travaille à mi-temps : 11 jours disponibles par mois, sans congé, dont 1 jour de coordination. Les quatre animateurs bénévoles sont disponibles 10 jours par mois chacun, sans congé, et participent à 1 jour de coordination.</p><p><strong>Affectation :</strong> pour chaque activité, choisissez dans la liste le poste responsable et, si besoin, un poste d'appui, puis indiquez les jours de travail de chacun pour chaque mois. Les jours affectés à une activité doivent correspondre à sa charge prévue. La charge et le taux de charge de chaque personne se calculent automatiquement, mois par mois.</p>",
-      rules: "<p>Les colonnes grisées se calculent seules : jours travaillés = jours disponibles − congés et absences − réunions et coordination ; charge du mois = somme des jours affectés à la personne ; taux de charge = charge ÷ jours travaillés. Lecture : sous-charge en dessous de 60 % ; équilibré de 60 à 90 % ; tendu de 91 à 100 % ; surcharge au-delà de 100 %. Les animateurs bénévoles peuvent appuyer les activités de terrain, mais pas le traitement des plaintes, qui est confidentiel.</p>",
+      intro: "<p>Construisez le plan de charge de l'équipe pour les mois 1 à 4, comme dans la matrice des charges.</p><p><strong>Disponibilité :</strong> chaque mois compte 22 jours ouvrés. Le chef de mission prend en moyenne 2 jours de congé et consacre 2 jours aux réunions de coordination par mois. Le chargé de projet n'a pas de congé et 2 jours de coordination. La spécialiste VBG/MGP a 1 jour d'absence et 2 jours de coordination. L'animateur communautaire 1 prend 2 jours de congé et a 1 jour de coordination. L'animateur communautaire 2 a 1 jour d'absence et 1 jour de coordination. L'appui comptable travaille à mi-temps : il n'est présent que 11 jours par mois, sans congé, dont 1 jour de coordination. Les quatre animateurs bénévoles sont présents 10 jours par mois chacun, dont 1 jour de coordination : leurs 9 jours travaillés sont déjà comptés dans le tableau 4 (ils ne figurent pas dans le tableau de disponibilité).</p><p><strong>Affectation :</strong> pour chaque activité, choisissez le poste responsable et, si besoin, un poste d'appui, puis estimez vous-même les jours de travail de chacun pour chaque mois. La charge et le taux de charge de chaque personne se calculent automatiquement et se colorent selon le niveau de charge. Une surcharge est acceptée : vous la traitez ensuite dans votre plan d'équilibre. Enfin, classez les activités du chef de mission au mois 1 selon la matrice d'Eisenhower révisée : le graphique se dessine à partir de vos choix ; commentez-le.</p>",
+      rules: "<p>Saisissez une seule fois le nombre de jours ouvrés du mois : il est repris automatiquement pour tous les intervenants. Pour chaque personne, indiquez les jours non disponibles (temps partiel, congés, absences) et les jours de réunion et de coordination. Les colonnes grisées se calculent seules : jours travaillés = jours ouvrés − jours non disponibles − réunions et coordination ; charge du mois = somme des jours affectés à la personne ; taux de charge = charge ÷ jours travaillés. Code couleur : gris, sous-charge (moins de 60 %) ; bleu, équilibré (60 à 90 %) ; or, tendu (91 à 100 %) ; bordeaux, surcharge (plus de 100 %). Les animateurs bénévoles peuvent appuyer les activités de terrain, mais pas le traitement des plaintes, qui est confidentiel. Tableau 6 (modèle « Tâches de la semaine : tri selon la matrice d'Eisenhower révisée ») : importance et urgence de 1 à 3 ; une activité qui bloque un collègue gagne un niveau d'urgence (au plus 3) ; une activité qui touche la sécurité d'une personne passe au cadran 1, sans calcul ; sinon, importance ≥ 2 et urgence retenue ≥ 2 = faire maintenant (sous 48 h) ; importance ≥ 2 seule = planifier (cette semaine ou ce mois) ; urgence ≥ 2 seule = déléguer ou décliner (réponse sous 24 h) ; ni l'un ni l'autre = éliminer, regrouper ou reporter (revue mensuelle).</p>",
       tables: [
         {
-          title: '1. Disponibilité mensuelle de chaque personne',
-          columns: ['Poste', 'Jours disponibles par mois', 'Congés et absences', 'Réunions et coordination', 'Jours travaillés par mois'],
-          rows: POSTES.map((p, i): SheetCell[] => [
-            p,
-            { id: `o${i}`, answer: DISPO[i][0], tol: 0 },
-            { id: `c${i}`, answer: DISPO[i][1], tol: 0 },
-            { id: `r${i}`, answer: DISPO[i][2], tol: 0 },
-            { id: `w${i}`, calc: (c) => workedOf(c, i) }
-          ])
+          title: '1. Jours ouvrés du mois (une seule saisie, reprise pour tous les intervenants)',
+          columns: ['Élément', 'Valeur'],
+          rows: [['Nombre de jours ouvrés par mois', { id: 'ouvres', answer: OUVRES, tol: 0 }]]
         },
         {
-          title: '2. Matrice d\'affectation des activités (jours de travail par mois)',
-          columns: ['Activité (charge prévue M1 · M2 · M3 · M4)', 'Rôle', 'Poste', 'Mois 1', 'Mois 2', 'Mois 3', 'Mois 4', 'Reste à affecter (M1 · M2 · M3 · M4)'],
-          rows: ACTS.flatMap(([a, plan], i) => ROLES.map((role, j): SheetCell[] => [
-            j === 0 ? `${a} (${plan.join(' · ')} j)` : '',
+          title: '2. Disponibilité mensuelle de chaque personne',
+          columns: ['Poste', 'Jours ouvrés (repris de la saisie)', 'Jours non disponibles (temps partiel, congés, absences)', 'Réunions et coordination', 'Jours travaillés par mois'],
+          rows: POSTES.flatMap((p, i): SheetCell[][] => BENEVOLES.includes(i) ? [] : [[
+            p,
+            { id: `oj${i}`, calc: (c) => c.num('ouvres') },
+            { id: `c${i}`, answer: unavailableOf(i), tol: 0 },
+            { id: `r${i}`, answer: DISPO[i][2], tol: 0 },
+            { id: `w${i}`, calc: (c) => workedOf(c, i) }
+          ]])
+        },
+        {
+          title: '3. Matrice d\'affectation des activités (jours de travail par mois, à estimer)',
+          columns: ['Activité', 'Rôle', 'Poste', 'Mois 1', 'Mois 2', 'Mois 3', 'Mois 4'],
+          rows: ACTS.flatMap(([a], i) => ROLES.map((role, j): SheetCell[] => [
+            j === 0 ? a : '',
             role,
             { id: `p${i}${j}`, options: POSTES },
-            ...MOIS.map((m): SheetCell => ({ id: `d${i}${j}m${m}` })),
-            j === 0 ? '' : { id: `x${i}`, calc: (c) => MOIS.map((m) => r1(plan[m - 1] - assignedOf(c, i, m))).join(' · ') }
+            ...MOIS.map((m): SheetCell => ({ id: `d${i}${j}m${m}` }))
           ]))
         },
         {
-          title: '3. Charge et taux de charge de chaque personne, mois par mois',
+          title: '4. Charge et taux de charge de chaque personne, mois par mois',
           columns: ['Poste', 'Jours travaillés par mois', 'Mois 1', 'Mois 2', 'Mois 3', 'Mois 4'],
           rows: POSTES.map((p, i): SheetCell[] => [
             p,
             { id: `ww${i}`, calc: (c) => workedOf(c, i) },
             ...MOIS.map((m): SheetCell => ({
               id: `t${i}m${m}`,
-              calc: (c) => { const t = rateOf(c, i, m); return t === null ? null : `${chargeOf(c, i, m)} j · ${r1(t).toLocaleString('fr-FR')} % · ${lectureOf(t)}`; }
+              calc: (c) => { const t = rateOf(c, i, m); return t === null ? null : `${chargeOf(c, i, m)} j · ${fr(t)} % · ${lectureOf(t)}`; },
+              tone: (c) => { const t = rateOf(c, i, m); return t === null || !anyAssigned(c) ? null : toneOf(t); }
             }))
-          ])
+          ]),
+          legend: [
+            { tone: 'low', label: 'Sous-charge : moins de 60 %' },
+            { tone: 'ok', label: 'Équilibré : 60 à 90 %' },
+            { tone: 'high', label: 'Tendu : 91 à 100 %' },
+            { tone: 'over', label: 'Surcharge : plus de 100 %' }
+          ],
+          writing: {
+            id: 'plan-equilibre',
+            title: 'Plan d\'équilibre de la charge',
+            prompt: "<p>À partir des taux de charge du tableau 4, rédigez le plan d'équilibre de l'équipe : pour chaque poste en surcharge (en bordeaux), indiquez les jours que vous déplacez, vers qui ou vers quel mois, et avec quel levier (décaler, déléguer, mutualiser, renforcer) ; signalez les postes en sous-charge qui peuvent reprendre du travail, et le taux visé après rééquilibrage.</p>",
+            minWords: 80,
+            criteria: [
+              { label: 'Les leviers utilisés (décaler, déléguer, mutualiser, renforcer)', keywords: ['decal', 'deleg', 'mutualis', 'renforc', 'report', 'transfer', 'confi'], need: 2 },
+              { label: 'Les mois concernés', keywords: ['mois 1', 'mois 2', 'mois 3', 'mois 4', 'm1$', 'm2$', 'm3$', 'm4$'] },
+              { label: 'Le taux visé après rééquilibrage (au plus 100 %, idéalement de 60 à 90 %)', keywords: ['100 %', '100%', '90 %', '90%', '60 %', '60%', 'equilibr', 'taux'], need: 2 }
+            ],
+            // Selon les taux de l'apprenant : chaque poste en surcharge doit être traité ; un poste en sous-charge doit être sollicité
+            dynamicCriteria: (c) => {
+              if (!anyAssigned(c)) return [];
+              const over = POSTES.map((_p, p) => p).filter((p) => MOIS.some((m) => (rateOf(c, p, m) ?? 0) > 100));
+              if (!over.length) return [{ label: 'Aucun poste n\'est en surcharge dans votre plan : vous le constatez et vous gardez une marge', keywords: ['aucun', 'pas de surcharge', 'marge', 'equilibr'] }];
+              const out = over.map((p) => ({
+                label: `Le poste « ${POSTES[p]} », en surcharge (${MOIS.filter((m) => (rateOf(c, p, m) ?? 0) > 100).map((m) => `mois ${m} : ${fr(rateOf(c, p, m)!)} %`).join(' ; ')}), est rééquilibré`,
+                keywords: POSTE_KEYS[p]
+              }));
+              const under = POSTES.map((_p, p) => p).filter((p) => !over.includes(p) && MOIS.some((m) => { const t = rateOf(c, p, m); return t !== null && t < 60; }));
+              if (under.length) out.push({ label: `Au moins un poste en sous-charge reprend une partie du travail (${under.map((p) => POSTES[p]).join(', ')})`, keywords: [...new Set(under.flatMap((p) => POSTE_KEYS[p]))] });
+              return out;
+            }
+          }
         },
         {
-          title: '4. Décision',
+          title: '5. Décision',
           columns: ['Question', 'Réponse'],
           rows: [
             ['D\'après votre plan, quel poste a le taux de charge le plus élevé au mois 1 ?', { id: 'plus', options: POSTES, answer: (c) => extremeOf(c, 1, 1) }],
             ['D\'après votre plan, quel poste a le taux de charge le plus élevé au mois 2 ?', { id: 'plus2', options: POSTES, answer: (c) => extremeOf(c, 2, 1) }],
             ['Si un poste dépassait 100 %, quel levier utiliser en premier ?', { id: 'levier', options: ['Décaler', 'Déléguer', 'Mutualiser', 'Renforcer'], answer: 'Décaler' }]
           ]
+        },
+        {
+          title: '6. Tri des activités du chef de mission au mois 1 (matrice d\'Eisenhower révisée)',
+          columns: ['Activité', 'Jours du chef de mission (mois 1)', 'Importance (1-3)', 'Urgence (1-3)', 'Bloque un collègue ?', 'Touche la sécurité d\'une personne ?', 'Urgence retenue', 'Cadran', 'Décision', 'Délai de traitement'],
+          rows: ACTS.map(([a], i): SheetCell[] => [
+            a,
+            { id: `ej${i}`, calc: (c) => chefDaysM1(c, i) },
+            { id: `ei${i}`, options: IMPORTANCES },
+            { id: `eu${i}`, options: IMPORTANCES },
+            { id: `eb${i}`, options: OUI_NON },
+            { id: `es${i}`, options: OUI_NON },
+            { id: `er${i}`, calc: (c) => urgRetOf(c, i) },
+            { id: `eq${i}`, calc: (c) => { const q = chefQuad(c, i); return q === null ? null : QUAD_LABELS[q - 1]; } },
+            { id: `ed${i}`, calc: (c) => { const q = chefQuad(c, i); return q === null ? null : DECISIONS[q - 1]; } },
+            { id: `et${i}`, calc: (c) => { const q = chefQuad(c, i); return q === null ? null : c.text(`es${i}`) === 'Oui' ? 'Immédiat : règle de sécurité' : DELAIS[q - 1]; } }
+          ]),
+          showRow: (c, i) => chefDaysM1(c, i) > 0,
+          emptyText: 'Affectez d\'abord des jours au chef de mission pour le mois 1 dans la matrice (tableau 3) : ses activités apparaîtront ici.',
+          chart: {
+            kind: 'eisenhower',
+            unit: 'j',
+            empty: 'Le graphique se dessine dès que les activités du chef de mission au mois 1 sont classées (importance et urgence).',
+            note: 'Taille des bulles : jours du chef de mission au mois 1. Cadrans calculés à partir de votre tri, selon le modèle « Tâches de la semaine : tri selon la matrice d\'Eisenhower révisée ».',
+            items: (c) => ACTS.flatMap(([a], i) => { const q = chefQuad(c, i), v = chefDaysM1(c, i); return q === null || v <= 0 ? [] : [{ label: a, value: v, quadrant: q }]; })
+          },
+          writing: {
+            id: 'eisenhower-chef',
+            title: 'Commentaire du graphique (200 mots au maximum)',
+            prompt: "<p>Commentez le graphique d'Eisenhower du chef de mission au mois 1, en 200 mots au maximum : quelle part de son temps va à chaque cadran, ce qu'il doit garder et faire lui-même, ce qu'il doit planifier, et ce qu'il doit déléguer ou abandonner, et à qui.</p>",
+            minWords: 60,
+            maxWords: 200,
+            criteria: [
+              { label: 'La répartition de son temps entre les cadrans (jours ou pourcentages)', keywords: ['cadran', 'quadrant', '%', 'jours', 'part$', 'moitie', 'essentiel'], need: 2 },
+              { label: 'Ce qu\'il garde et fait lui-même (cadran 1)', keywords: ['garde', 'lui meme', 'faire maintenant', 'cadran 1', 'priorit', 'pilotage', 'rapport', 'plainte'], need: 2 },
+              { label: 'Ce qu\'il planifie (cadran 2)', keywords: ['planifi', 'agenda', 'programm', 'cadran 2', 'calendrier'] },
+              { label: 'Ce qu\'il délègue, et à qui', keywords: ['deleg', 'confi', 'charge de projet', 'animateur', 'appui comptable', 'specialiste', 'benevole'], need: 2 }
+            ],
+            // Selon le tri de l'apprenant : chaque activité qu'il a classée aux cadrans 3 ou 4 doit être discutée
+            dynamicCriteria: (c) => ACTS.flatMap(([a], i) => {
+              const q = chefQuad(c, i);
+              if (q === null || q < 3 || chefDaysM1(c, i) <= 0) return [];
+              return [{ label: `L'activité « ${a} », que vous avez classée au cadran ${q} (${fr(chefDaysM1(c, i))} j au mois 1) : ${q === 3 ? 'à déléguer' : 'à éliminer, regrouper ou reporter'}`, keywords: [ACT_KEYS[i]] }];
+            })
+          }
         }
       ],
       checks: [
-        { label: 'Chaque activité a un poste responsable', test: (c) => ACTS.every((_a, i) => !!c.text(`p${i}0`)) },
-        { label: 'Chaque mois, les jours affectés à chaque activité correspondent à sa charge prévue (aucun reste à affecter)', test: (c) => ACTS.every(([, plan], i) => MOIS.every((m) => Math.abs(plan[m - 1] - assignedOf(c, i, m)) < 0.01)) },
-        { label: 'Le MGP est confié pour l\'essentiel à la spécialiste VBG/MGP', test: (c) => MOIS.every((m) => ROLES.reduce((k, _r, j) => k + (c.text(`p${MGP_ACT}${j}`) === POSTES[2] ? cell0(c, `d${MGP_ACT}${j}m${m}`) : 0), 0) >= ACTS[MGP_ACT][1][m - 1] / 2) },
+        { label: 'Chaque activité a un poste responsable et des jours affectés', test: (c) => ACTS.every((_a, i) => !!c.text(`p${i}0`) && MOIS.some((m) => assignedOf(c, i, m) > 0)) },
+        {
+          label: 'Le MGP est confié pour l\'essentiel à la spécialiste VBG/MGP',
+          test: (c) => {
+            const all = MOIS.reduce((n, m) => n + assignedOf(c, MGP_ACT, m), 0);
+            const spec = MOIS.reduce((n, m) => n + ROLES.reduce((k, _r, j) => k + (c.text(`p${MGP_ACT}${j}`) === POSTES[2] ? cell0(c, `d${MGP_ACT}${j}m${m}`) : 0), 0), 0);
+            return all > 0 && spec >= all / 2;
+          }
+        },
         { label: 'Aucun animateur bénévole n\'est affecté au MGP (confidentialité des plaintes)', test: (c) => anyAssigned(c) && ROLES.every((_r, j) => !BENEVOLES.some((b) => c.text(`p${MGP_ACT}${j}`) === POSTES[b])) },
         { label: 'La comptabilité et les justificatifs sont confiés à l\'appui comptable', test: (c) => c.text(`p${COMPTA_ACT}0`) === POSTES[5] },
-        { label: 'Aucun poste ne dépasse 100 % de charge, quel que soit le mois', test: (c) => anyAssigned(c) && POSTES.every((_p, p) => MOIS.every((m) => { const t = rateOf(c, p, m); return t !== null && t <= 100; })) }
+        {
+          label: 'Chaque activité du chef de mission au mois 1 est triée (importance, urgence, blocage, sécurité)',
+          test: (c) => ACTS.some((_a, i) => chefDaysM1(c, i) > 0)
+            && ACTS.every((_a, i) => chefDaysM1(c, i) <= 0 || ['ei', 'eu', 'eb', 'es'].every((k) => !!c.text(`${k}${i}`)))
+        }
       ],
       sample: sample3(),
-      explanation: "<p>Si le chef de mission garde seul le pilotage, la cartographie et la radio, il dépasse sa capacité au mois 1 (19 jours pour 18 jours travaillés). On rééquilibre en confiant une partie de la cartographie à un animateur bénévole et une partie de la radio et du comité de liaison à l'animateur communautaire 2. Les bénévoles renforcent utilement les causeries et les événements, mais jamais le MGP, qui reste chez la spécialiste pour la confidentialité des plaintes. La comptabilité reste à l'appui comptable.</p>"
+      explanation: "<p>Il n'y a pas de plan unique : chacun estime ses charges, et une surcharge n'est pas une faute tant qu'elle est vue et traitée. Le chef de mission est le premier exposé : s'il garde seul le pilotage, la cartographie et la radio, il dépasse sa capacité dès le mois 1. Le plan d'équilibre utilise d'abord le décalage (une activité moins urgente glisse d'un mois), puis la délégation (cartographie à un animateur bénévole, logistique au chargé de projet), la mutualisation et, en dernier recours, le renfort. Les bénévoles appuient les causeries et les événements, jamais le MGP, qui reste chez la spécialiste pour la confidentialité des plaintes ; la comptabilité reste à l'appui comptable. Le tri d'Eisenhower du mois 1 montre si le temps du chef de mission va bien d'abord aux cadrans 1 et 2 ; une activité classée au cadran 3 se délègue, une activité du cadran 4 s'élimine, se regroupe ou se reporte.</p>"
     },
     {
       kind: 'sheet',
@@ -667,53 +828,74 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       id: 'tableau-de-bord',
       title: 'Exercice 5 : tableau de bord des indicateurs à mi-parcours',
       skill: 'Suivi-évaluation',
-      intro: "<p>Nous sommes à la fin du mois 3. Chaque indicateur se compare à ce qui était prévu à cette date d'après le chronogramme (dans le dossier du projet), et non à la cible de fin de mission : une activité prévue aux mois 1 et 2 doit être entièrement réalisée, une activité répartie sur les six mois doit l'être à moitié, une activité prévue aux mois 3 et 5 pour moitié. Calculez la cible prévue à fin M3 de chaque indicateur et choisissez son appréciation, puis complétez les indicateurs de qualité du MGP.</p>",
-      rules: "<p>Cible prévue à fin M3 = cible de fin de mission × (nombre de mois prévus jusqu'au mois 3 ÷ nombre total de mois prévus). Le taux par rapport au prévu se calcule seul. Appréciation : <strong>dans la trajectoire</strong> à partir de 90 % du prévu ; <strong>léger retard</strong> de 60 à 89 % ; <strong>retard important</strong> en dessous de 60 %. Pour les indicateurs du MGP : taux = numérateur ÷ dénominateur ; écart à la cible en points = valeur − cible.</p>",
+      intro: "<p>Nous sommes à la fin du mois 3. Chaque indicateur se compare à ce qui était prévu à cette date d'après le chronogramme (dans le dossier du projet), et non à la cible de fin de mission : la cible prévue à fin M3 vous est donnée dans le tableau. Saisissez la valeur réalisée à la fin du mois 3, telle que vous la relevez sur le terrain (listes de présence, rapports d'activités) ; le taux par rapport au prévu se calcule seul ; choisissez ensuite l'appréciation de chaque indicateur.</p><p>Pour les indicateurs de qualité du MGP, saisissez le nombre réalisé et la base (registre des plaintes, enquête de notoriété) : la valeur et l'écart à la cible se calculent seuls ; choisissez l'appréciation.</p>",
+      rules: "<p>Cible prévue à fin M3 = cible de fin de mission × (nombre de mois prévus jusqu'au mois 3 ÷ nombre total de mois prévus). Taux par rapport au prévu = réalisé ÷ cible prévue à fin M3. Appréciation : <strong>dans la trajectoire</strong> à partir de 90 % du prévu ; <strong>léger retard</strong> de 60 à 89 % ; <strong>retard important</strong> en dessous de 60 %. Pour les indicateurs du MGP : valeur = nombre réalisé ÷ base ; écart à la cible en points = valeur − cible ; <strong>cible atteinte</strong> si la valeur est au moins égale à la cible, sinon <strong>en dessous de la cible</strong>.</p>",
       tables: [
         {
           title: 'Indicateurs d\'activités',
           columns: ['Indicateur', 'Cible fin M6', 'Mois prévus (chronogramme)', 'Cible prévue à fin M3', 'Réalisé fin M3', 'Taux par rapport au prévu', 'Appréciation'],
-          rows: IND.map(([n, cible, months, done], i): SheetCell[] => [
+          rows: IND.map(([n, cible, months], i): SheetCell[] => [
             n, num(cible), monthsText(months),
-            { id: `pv${i}`, answer: r1(cible * shareAt(months, 3)), tol: 0.01 },
-            num(done),
+            num(indPlanned(i)),
+            { id: `rv${i}` },
             { id: `t${i}`, fmt: 'pct', calc: (c) => { const t = indRate(c, i); return t === null ? null : r1(t); } },
             { id: `a${i}`, options: TRAJ, answer: (c) => { const t = indRate(c, i); return t === null ? null : trajOf(t); } }
           ])
         },
         {
           title: 'Indicateurs de qualité du MGP',
-          columns: ['Indicateur', 'Données', 'Valeur (%)', 'Cible (%)', 'Écart à la cible (points)'],
-          rows: [
-            ['Plaintes ordinaires traitées dans les délais', '18 sur 20 plaintes reçues', inp('mgp1', 90, 'pct'), num(90, 'pct'), inp('mgp1e', 0, 'n', 0.6)],
-            ['Plaintes sensibles transmises à l\'UCP sous 24 heures', '3 sur 3', inp('mgp2', 100, 'pct'), num(100, 'pct'), inp('mgp2e', 0, 'n', 0.6)],
-            ['Notoriété du MGP (enquête de mi-parcours)', '252 personnes sur 400 citent au moins un canal', inp('mgp3', 63, 'pct'), num(80, 'pct'), inp('mgp3e', -17, 'n', 0.6)]
-          ]
+          columns: ['Indicateur', 'Base du calcul', 'Réalisé fin M3 (nombre)', 'Base (nombre)', 'Valeur (%)', 'Cible (%)', 'Écart à la cible (points)', 'Appréciation'],
+          rows: MGP_IND.map(([n, base, cible], k): SheetCell[] => [
+            n, base,
+            { id: `mn${k}` },
+            { id: `mb${k}` },
+            { id: `mv${k}`, fmt: 'pct', calc: (c) => mgpVal(c, k) },
+            num(cible, 'pct'),
+            { id: `me${k}`, calc: (c) => { const v = mgpVal(c, k); return v === null ? null : r1(v - cible); } },
+            { id: `ma${k}`, options: MGP_TRAJ, answer: (c) => { const v = mgpVal(c, k); return v === null ? null : v >= cible ? MGP_TRAJ[0] : MGP_TRAJ[1]; } }
+          ])
         }
       ],
+      checks: [{
+        label: 'Les données du MGP sont cohérentes : base saisie et nombre réalisé compris entre 0 et la base',
+        test: (c) => MGP_IND.every((_m, k) => { const n = c.num(`mn${k}`), bs = c.num(`mb${k}`); return n !== null && bs !== null && bs > 0 && n >= 0 && n <= bs; })
+      }],
+      sample: {
+        ...Object.fromEntries(IND.map(([, , , done], i) => [`rv${i}`, String(done)])),
+        ...Object.fromEntries(MGP_IND.flatMap(([, , , n, bs], k) => [[`mn${k}`, String(n)], [`mb${k}`, String(bs)]]))
+      },
       writing: {
         prompt: "<p><strong>Note d'analyse à mi-parcours (une page).</strong> À partir de votre tableau de bord, du chronogramme et du dictionnaire des indicateurs (dans le dossier du projet), rédigez la note que le chef de mission transmettra à l'UCP : situation à mi-parcours par rapport à ce qui était prévu, indicateurs dans la trajectoire, indicateurs en retard et leurs causes probables, qualité du mécanisme de gestion des plaintes, fiabilité des données (sources, fréquence, responsables, désagrégation) et recommandations concrètes.</p>",
         minWords: 250,
         criteria: [
           { label: 'La situation à mi-parcours (fin du mois 3)', keywords: ['mi-parcours', 'mi parcours', 'mois 3', 'moitie', 'temps ecoule'] },
           { label: 'La comparaison avec ce qui était prévu à date selon le chronogramme', keywords: ['chronogramme', 'prevu', 'planifie', 'a date'] },
-          { label: 'Les indicateurs dans la trajectoire (émissions radio, points focaux, cérémonie de lancement)', keywords: ['radio', 'points focaux', 'ceremonie', 'lancement', 'trajectoire'], need: 2 },
-          { label: 'Les retards importants (théâtre-forum, tournoi sportif)', keywords: ['theatre', 'tournoi'], need: 2 },
-          { label: 'Les légers retards (causeries, sessions avec les travailleurs, membres des comités)', keywords: ['causerie', 'travailleur', 'chantier', 'comite'], need: 2 },
-          { label: 'La notoriété du MGP (63 % pour une cible de 80 %)', keywords: ['notoriete', '63'], need: 2 },
-          { label: 'La qualité du traitement des plaintes (90 % dans les délais, 100 % des plaintes sensibles sous 24 heures)', keywords: ['delai', '90', '24 heures', '24h', 'sensible'], need: 2 },
+          { label: 'La qualité du mécanisme de gestion des plaintes (traitement dans les délais, plaintes sensibles sous 24 heures, notoriété)', keywords: ['plainte', 'mgp', 'delai', 'sensible', '24 heures', '24h', 'notoriete'], need: 3 },
           { label: 'La fiabilité des données selon le dictionnaire (sources, fréquence, responsables)', keywords: ['source', 'frequence', 'responsable', 'liste de presence', 'registre', 'enquete', 'dictionnaire'], need: 2 },
           { label: 'La désagrégation des données (sexe, âge, quartier)', keywords: ['desagreg', 'sexe', 'age$', 'ages$', 'quartier'] },
           { label: "Des recommandations concrètes (replanifier, accélérer, renforcer l'annonce des canaux…)", keywords: ['recommand', 'replanif', 'accelerer', 'renforcer', 'proposons', 'mesure', 'action'], need: 2 }
         ],
-        // Selon la déclaration de l'apprenant : chaque indicateur qu'il a jugé en retard doit être commenté
-        dynamicCriteria: (c) => IND.flatMap(([n], i) => {
-          const a = c.text(`a${i}`);
-          if (a !== 'Retard important' && a !== 'Léger retard') return [];
-          return [{ label: `L'indicateur « ${n} », que vous avez jugé en ${a === 'Léger retard' ? 'léger retard' : 'retard important'}, est commenté`, keywords: [IND_KEYS[i]] }];
-        })
+        // Selon les valeurs et les appréciations de l'apprenant : indicateurs dans la trajectoire cités, chaque indicateur
+        // jugé en retard ou sous sa cible commenté, notoriété citée avec sa valeur
+        dynamicCriteria: (c) => {
+          const onTrack = IND.map((_n, i) => i).filter((i) => c.text(`a${i}`) === 'Dans la trajectoire');
+          const out: { label: string; keywords: string[]; need?: number }[] = onTrack.length ? [{
+            label: `Les indicateurs que vous avez jugés dans la trajectoire sont cités (${onTrack.map((i) => IND[i][0].toLowerCase()).join(', ')})`,
+            keywords: onTrack.map((i) => IND_KEYS[i]), need: Math.min(2, onTrack.length)
+          }] : [];
+          IND.forEach(([n], i) => {
+            const a = c.text(`a${i}`);
+            if (a === 'Retard important' || a === 'Léger retard') out.push({ label: `L'indicateur « ${n} », que vous avez jugé en ${a === 'Léger retard' ? 'léger retard' : 'retard important'}, est commenté`, keywords: [IND_KEYS[i]] });
+          });
+          MGP_IND.forEach(([n], k) => {
+            if (k < 2 && c.text(`ma${k}`) === MGP_TRAJ[1]) out.push({ label: `L'indicateur « ${n} », en dessous de sa cible, est commenté`, keywords: MGP_KEYS[k] });
+          });
+          const v = mgpVal(c, 2);
+          if (v !== null) out.push({ label: `La notoriété du MGP (${v.toLocaleString('fr-FR')} % pour une cible de 80 %)`, keywords: ['notoriete', `${Math.round(v)}`], need: 2 });
+          return out;
+        }
       },
-      explanation: "<p>Le chronogramme change la lecture : les points focaux et la cérémonie de lancement, prévus aux mois 1 et 2, sont entièrement réalisés, comme attendu. Les membres des comités devaient tous être formés à la fin du mois 2 : 24 sur 30, c'est un léger retard. Les causeries (12 pour 15 prévues) et les sessions avec les travailleurs (4 pour 6 prévues) sont en léger retard. Le théâtre-forum (1 séance pour 2 prévues) et le tournoi sportif, prévu au mois 3 et non réalisé, sont en retard important : à replanifier tout de suite. La notoriété du MGP (63 %) est loin de la cible de 80 % : renforcer l'annonce des canaux avant l'enquête finale.</p>"
+      explanation: "<p>Le chronogramme change la lecture : une activité prévue aux mois 1 et 2 doit être entièrement réalisée à la fin du mois 3 ; une activité répartie sur les six mois, à moitié ; une activité prévue aux mois 3 et 5, pour moitié. Comparer le réalisé à la cible de fin de mission ferait croire à des retards qui n'en sont pas. Un indicateur en retard important se replanifie tout de suite ; un léger retard se rattrape en accélérant le rythme. Pour le MGP, un indicateur sous sa cible appelle une mesure précise : par exemple, une notoriété faible se corrige en renforçant l'annonce des canaux avant l'enquête finale.</p>",
     },
     {
       kind: 'writing',
@@ -787,22 +969,76 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       id: 'rapport-mi-parcours',
       title: 'Rédaction 6 : le rapport à mi-parcours',
       skill: 'Rapport à mi-parcours',
-      prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP (une à deux pages). Appuyez-vous sur les travaux que vous avez déjà réalisés : la compréhension de la mission (rédaction 1), le diagnostic des moyens logistiques (exercice 2), le plan de charge (exercice 3), le suivi budgétaire (exercice 6), le tableau de bord des indicateurs (exercice 5) et la règle de répartition des sorties (rédaction 4).</p><p><strong>Plan attendu :</strong> 1. résumé ; 2. rappel du contexte et des objectifs ; 3. activités réalisées et état des indicateurs par rapport au chronogramme ; 4. mécanisme de gestion des plaintes ; 5. exécution budgétaire ; 6. moyens, organisation et charge de l'équipe ; 7. difficultés, risques et leçons apprises ; 8. plan d'action pour les mois 4 à 6, avec des responsables et des échéances.</p>",
-      minWords: 300,
-      criteria: [
-        { label: 'Un résumé en tête du rapport', keywords: ['resume', 'synthese', 'en bref', 'points cles', 'messages cles', 'en somme'] },
-        { label: 'Le rappel du contexte et des objectifs de la mission (animation et mobilisation communautaire, gestion des plaintes, Akoupé)', keywords: ['contexte', 'objectif', 'akoupe', 'pgc', 'mobilisation', 'animation'], need: 2 },
-        { label: 'La situation à la fin du mois 3, comparée à ce que prévoyait le chronogramme', keywords: ['mi parcours', 'mois 3', 'chronogramme', 'prevu', 'a date'], need: 2 },
-        { label: 'Les activités dans la trajectoire (émissions radio, points focaux, cérémonie de lancement)', keywords: ['radio', 'points focaux', 'ceremonie', 'lancement', 'trajectoire'], need: 2 },
-        { label: 'Les activités en retard (théâtre-forum, tournoi sportif, causeries, sessions avec les travailleurs, comités) et leurs causes', keywords: ['theatre', 'tournoi', 'causerie', 'travailleur', 'comite', 'retard'], need: 3 },
-        { label: 'Le mécanisme de gestion des plaintes (90 % traitées dans les délais, plaintes sensibles sous 24 heures, notoriété de 63 % pour une cible de 80 %)', keywords: ['plainte', 'mgp', 'notoriete', '63', '24 heures', '24h', 'sensible'], need: 3 },
-        { label: "L'exécution budgétaire et son rythme (dépenses supérieures d'environ 10 % au prévu à fin M3 : rythme trop rapide)", keywords: ['trop rapide', 'rythme', '10 %', '10%', 'execution budgetaire', 'taux d execution', 'au dessus du prevu'], need: 2 },
-        { label: 'Les lignes budgétaires à surveiller (cérémonie dépassée de 35 000 FCFA, coût unitaire du théâtre-forum) et la mesure prise', keywords: ['35 000', '35000', 'depass', 'cout unitaire', 'transfert', 'compens', 'justifi'], need: 2 },
-        { label: 'Les moyens logistiques (motos, smartphones, ordinateurs, tablettes, kits, boîtes à plaintes)', keywords: ['moto', 'smartphone', 'ordinateur', 'tablette', 'kit', 'logistique', 'equipement'], need: 2 },
-        { label: "L'organisation et la charge de l'équipe (plan de charge, aucun poste au-delà de 100 %, délégation, bénévoles tenus hors du MGP)", keywords: ['plan de charge', 'taux de charge', 'surcharge', '100 %', '100%', 'deleg', 'benevole'], need: 2 },
-        { label: "L'équité dans l'équipe (règle de répartition des sorties et des indemnités)", keywords: ['equit', 'indemnit', 'rotation', 'bareme', 'sorties'], need: 2 },
-        { label: 'Les difficultés, les risques et les leçons apprises', keywords: ['difficult', 'risque', 'contrainte', 'lecon', 'enseignement', 'pluie'], need: 2 },
-        { label: "Un plan d'action pour les mois 4 à 6 (mesures, responsables, échéances)", keywords: ['plan d action', 'mois 4', 'mois 5', 'mois 6', 'responsable', 'echeance', 'replanif', 'accelerer'], need: 3 }
+      prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP, partie par partie, dans les zones ci-dessous. Rendez compte de chaque produit du cadre logique (dossier du projet, tableaux 5 et 6 du rapport de démarrage) et appuyez-vous sur vos travaux : compréhension de la mission (rédaction 1), diagnostic logistique (exercice 2), plan de charge (exercice 3), suivi budgétaire (exercice 6), tableau de bord (exercice 5) et règle de répartition des sorties (rédaction 4).</p>",
+      minWords: 350,
+      criteria: [],
+      sections: [
+        {
+          id: 'resume', title: '1. Résumé', hint: 'Les messages clés du rapport en quelques lignes.',
+          criteria: [
+            { label: 'L\'état d\'avancement global à la fin du mois 3', keywords: ['mois 3', 'mi parcours', 'avance', 'retard', 'globalement', 'realise'], need: 2 },
+            { label: 'Les principales difficultés et les mesures proposées', keywords: ['difficult', 'retard', 'mesure', 'recommand', 'propos', 'depass'], need: 2 }
+          ]
+        },
+        {
+          id: 'contexte', title: '2. Contexte et objectifs de la mission', hint: 'Le projet, la zone, les deux résultats attendus.',
+          criteria: [
+            { label: 'Le contexte (travaux, cadre de vie, Akoupé)', keywords: ['contexte', 'akoupe', 'pgc', 'travaux', 'cadre de vie'], need: 2 },
+            { label: 'Les deux résultats attendus : mobilisation communautaire ; MGP et prévention des EAS/HS/VBG', keywords: ['mobilisation', 'animation', 'mgp', 'plainte', 'vbg', 'eas$'], need: 3 }
+          ]
+        },
+        {
+          id: 'resultat1', title: '3. Résultat 1 : animation communautaire et mobilisation sociale (produits 1.1 à 1.6)', hint: 'Pour chaque produit du tableau 5 : ce qui est réalisé à la fin du mois 3, comparé au prévu, et les écarts.',
+          criteria: [
+            { label: 'Produit 1.1 : la cartographie des acteurs (base de données transmise à l\'UCP)', keywords: ['cartographie', 'base de donnees'] },
+            { label: 'Produit 1.2 : les événements communautaires (lancement, tournoi…)', keywords: ['evenement', 'ceremonie', 'lancement', 'tournoi'] },
+            { label: 'Produit 1.3 : les émissions radio', keywords: ['radio', 'emission'] },
+            { label: 'Produit 1.4 : les causeries, focus groups et séances de théâtre-forum', keywords: ['causerie', 'theatre', 'focus'] },
+            { label: 'Produit 1.5 : les supports de communication produits et distribués', keywords: ['support', 'affiche', 'depliant', 'flyer', 'kakemono', 'banderole'] },
+            { label: 'Produit 1.6 : le comité communal de liaison (CCL)', keywords: ['ccl', 'comite communal', 'liaison'] },
+            { label: 'La comparaison avec le prévu à fin M3 et les indicateurs du résultat 1 (participation, part des femmes)', keywords: ['prevu', 'chronogramme', 'participation', 'femme', 'trajectoire', 'retard'], need: 2 }
+          ]
+        },
+        {
+          id: 'resultat2', title: '4. Résultat 2 : MGP et prévention des EAS/HS/VBG (produits 2.1 à 2.6)', hint: 'Pour chaque produit du tableau 6 : ce qui est réalisé, les indicateurs du MGP et les écarts.',
+          criteria: [
+            { label: 'Produit 2.1 : le MGP opérationnel (boîtes à suggestions, lignes téléphoniques)', keywords: ['boite', 'ligne', 'telephon', 'operationnel'] },
+            { label: 'Produit 2.2 : les plaintes enregistrées, catégorisées et traitées', keywords: ['plainte', 'registre', 'enregistr', 'trait', 'categoris'], need: 2 },
+            { label: 'Produit 2.3 : la formation des membres du CLGP et du CCL', keywords: ['clgp', 'comite', 'membres', 'form'], need: 2 },
+            { label: 'Produit 2.4 : la sensibilisation des travailleurs de chantier aux codes de conduite', keywords: ['travailleur', 'chantier', 'code de conduite'] },
+            { label: 'Produit 2.5 : les points focaux formés et équipés', keywords: ['points focaux', 'point focal', 'kit'] },
+            { label: 'Produit 2.6 : le référencement vers les structures de prise en charge des VBG', keywords: ['referencement', 'prise en charge', 'protocole', 'annuaire'] },
+            { label: 'Les indicateurs du résultat 2 (notoriété, traitement dans les délais, plaintes sensibles sous 24 heures)', keywords: ['notoriete', 'delai', '24 h', '24h', '24 heures', 'sensible', 'satisfaction'], need: 2 }
+          ]
+        },
+        {
+          id: 'budget', title: '5. Exécution budgétaire', hint: 'Le rythme des dépenses par rapport au chronogramme et les lignes à surveiller (exercice 6).',
+          criteria: [
+            { label: 'L\'exécution budgétaire et son rythme (dépenses supérieures d\'environ 10 % au prévu à fin M3 : rythme trop rapide)', keywords: ['trop rapide', 'rythme', '10 %', '10%', 'execution', 'taux d execution', 'au dessus du prevu'], need: 2 },
+            { label: 'Les lignes budgétaires à surveiller (cérémonie dépassée de 35 000 FCFA, coût unitaire du théâtre-forum) et la mesure prise', keywords: ['35 000', '35000', 'depass', 'cout unitaire', 'transfert', 'compens', 'justifi'], need: 2 }
+          ]
+        },
+        {
+          id: 'equipe', title: '6. Moyens, organisation et charge de l\'équipe', hint: 'Les moyens logistiques, le plan de charge et l\'équité dans l\'équipe (exercices 2 et 3, rédaction 4).',
+          criteria: [
+            { label: 'Les moyens logistiques (motos, smartphones, ordinateurs, tablettes, kits)', keywords: ['moto', 'smartphone', 'ordinateur', 'tablette', 'kit', 'logistique', 'equipement'], need: 2 },
+            { label: 'La charge de l\'équipe (plan de charge, surcharge, délégation, bénévoles tenus hors du MGP)', keywords: ['plan de charge', 'taux de charge', 'surcharge', '100 %', '100%', 'deleg', 'benevole'], need: 2 },
+            { label: 'L\'équité dans l\'équipe (règle de répartition des sorties et des indemnités)', keywords: ['equit', 'indemnit', 'rotation', 'bareme', 'sorties'], need: 2 }
+          ]
+        },
+        {
+          id: 'difficultes', title: '7. Difficultés, risques et leçons apprises', hint: 'Ce qui a freiné la mission, les risques pour la suite et ce que l\'équipe en retient.',
+          criteria: [
+            { label: 'Les difficultés, les risques et les leçons apprises', keywords: ['difficult', 'risque', 'contrainte', 'lecon', 'enseignement', 'pluie'], need: 2 }
+          ]
+        },
+        {
+          id: 'plan', title: '8. Plan d\'action des mois 4 à 6', hint: 'Les mesures, avec un responsable et une échéance pour chacune.',
+          criteria: [
+            { label: 'Des mesures concrètes pour les mois 4 à 6', keywords: ['mois 4', 'mois 5', 'mois 6', 'replanif', 'accelerer', 'renforcer', 'rattrap'], need: 2 },
+            { label: 'Un responsable et une échéance pour chaque mesure', keywords: ['responsable', 'chef de mission', 'charge de projet', 'specialiste', 'animateur', 'echeance', 'avant le', 'd ici', 'fin du mois', 'semaine'], need: 2 }
+          ]
+        }
       ]
     }
   ]
