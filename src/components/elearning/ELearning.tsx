@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, Clock, Download, GraduationCap, Library, Loader2, Lock, LogOut, PauseCircle, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
+import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, ClipboardList, Clock, Download, GraduationCap, Library, Loader2, Lock, LogOut, PauseCircle, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
 import {
   CATALOG, COMING_SOON, PASS, courseStatus, isExam, loadCourse, statsLine, stepQuestionCount,
   type Course, type CourseMeta, type CourseStatus, type CourseStep
@@ -9,13 +9,16 @@ import {
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
+import { hasPractice } from '../../data/elearning/practice';
 
 const ElearningPlayer = lazy(() => import('./ElearningPlayer'));
+const PracticeView = lazy(() => import('./PracticeView'));
 
 /**
  * E-learning tab (/e-learning): free online certifications built on the CICEXF themes.
  * Views are kept in the URL hash: #inscription (account), #connexion, #espace, #certifications,
- * #inscrire/<course>, #parcours/<course>, #etape/<course>/<step>, #certificat/<course>, #verifier/<n°>.
+ * #inscrire/<course>, #parcours/<course>, #etape/<course>/<step>, #certificat/<course>, #verifier/<n°>,
+ * #pratique/<course>[/<exercise>] (practical work of the courses that have some).
  */
 
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm transition-colors';
@@ -31,6 +34,7 @@ function parseRoute(route: string): { view: string; courseId?: string; stepId?: 
   const [view, a, b] = route.split('/');
   if (view === 'etape') return b ? { view, courseId: a, stepId: b } : { view, courseId: DEFAULT_COURSE, stepId: a };
   if (view === 'parcours' || view === 'certificat' || view === 'inscrire') return { view, courseId: a || DEFAULT_COURSE };
+  if (view === 'pratique') return { view, courseId: a || DEFAULT_COURSE, stepId: b };
   return { view: route.startsWith('verifier') ? 'verifier' : view };
 }
 
@@ -163,7 +167,7 @@ export default function ELearning() {
   if (view === 'inscription' && !signedIn) return shell(<SignupForm api={api} onDone={() => go('certifications')} onLogin={() => go('connexion')} />);
   if (view === 'connexion' && !signedIn) return shell(<LoginForm api={api} onDone={() => go('espace')} onSignup={() => go('inscription')} />);
 
-  const needAccount = ['espace', 'certifications', 'parcours', 'certificat', 'profil', 'etape', 'inscrire'].includes(view);
+  const needAccount = ['espace', 'certifications', 'parcours', 'certificat', 'profil', 'etape', 'inscrire', 'pratique'].includes(view);
   if (needAccount && !signedIn) return shell(<LoginForm api={api} onDone={() => go(route)} onSignup={() => go('inscription')} />);
 
   if (signedIn && view === 'profil') {
@@ -220,6 +224,14 @@ export default function ELearning() {
             onCertificate={() => go(`certificat/${course.id}`)}
             onRestart={async () => { await api.clearDraft(course.id); setDraftFor(course.id, null); setAttempt((n) => n + 1); }}
           />
+        </Suspense>
+      );
+    }
+    if (view === 'pratique') {
+      if (!hasPractice(course.id)) return path();
+      return shell(
+        <Suspense fallback={<p className="flex justify-center py-24"><Loader2 className="w-5 h-5 animate-spin" /></p>}>
+          <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} go={go} />
         </Suspense>
       );
     }
@@ -734,6 +746,16 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
         </p>
       )}
       {notice && <p className="mb-4 rounded-2xl bg-amber-50 border-l-4 border-amber-400 px-4 py-3 text-sm font-bold text-slate-800">{notice}</p>}
+      {hasPractice(course.id) && !locked && (
+        <div className={`${card} mb-4 p-5 flex flex-wrap items-center gap-4 border-l-4 border-l-[#C9933F]`}>
+          <ClipboardList className="w-8 h-8 text-[#C9933F] shrink-0" />
+          <div className="flex-1 min-w-[220px]">
+            <strong className="block text-base sm:text-lg text-brand-blue dark:text-sky-300">Travaux pratiques sur le projet PGC-Vie</strong>
+            <span className="text-sm text-slate-600 dark:text-slate-400">Dossier du projet (TDR et offre financière), tableaux à remplir et rédactions corrigés directement sur le site. Accessibles à tout moment, ils ne comptent pas pour le certificat.</span>
+          </div>
+          <button onClick={() => go(`pratique/${course.id}`)} className={primary}>Ouvrir les travaux pratiques</button>
+        </div>
+      )}
       {course.parts.map((p) => (
         <div key={p.id} className={`${card} mb-4 overflow-hidden`}>
           <h2 className="px-4 sm:px-5 py-3 text-base sm:text-lg text-white font-extrabold bg-gradient-to-r from-brand-blue to-brand-blue-light">{p.title}</h2>

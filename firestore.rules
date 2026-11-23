@@ -122,6 +122,16 @@ service cloud.firestore {
           && request.resource.data.state is string && request.resource.data.state.size() < 30000
           && request.resource.data.savedAt == request.time;
       }
+      // Travaux pratiques (tableaux et rédactions corrigés sur le site) : réservés à l'apprenant
+      match /practice/{courseId} {
+        allow read: if (request.auth != null && request.auth.uid == uid) || isAdmin();
+        allow delete: if request.auth != null && request.auth.uid == uid;
+        allow create, update: if request.auth != null && request.auth.uid == uid
+          && courseId.matches('^[a-z0-9-]{3,60}$')
+          && request.resource.data.keys().hasOnly(['state', 'savedAt'])
+          && request.resource.data.state is string && request.resource.data.state.size() < 120000
+          && request.resource.data.savedAt == request.time;
+      }
     }
     // Suivi des parcours dans l'administration
     match /{path=**}/progress/{courseId} {

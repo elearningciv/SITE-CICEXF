@@ -90,7 +90,15 @@ export interface ElearningApi {
   getCourseStatuses(): Promise<Record<string, CourseStatus>>;
   /** Answer key of a course (control accounts only): index of the right answer in the public file order */
   getAnswerKey(courseId: string): Promise<Record<string, number[][]>>;
+  /** Practical work of a course (answers, best and last scores) */
+  getPractice(courseId: string): Promise<PracticeState>;
+  /** Saved at once in this browser, and in the account a moment later */
+  savePractice(courseId: string, state: PracticeState): void;
 }
+
+/** Practical work: one entry per exercise (cells or text typed, last and best scores) */
+export interface PracticeEntry { answers: Record<string, string>; text?: string; score?: number; best?: number; submittedAt?: string; attempts?: number }
+export type PracticeState = Record<string, PracticeEntry>;
 
 export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null };
 
@@ -122,6 +130,16 @@ export const stepCleared = (p: Progress, stepId: string, pass: number) =>
   p.simulation ? p.scores[stepId] !== undefined : (p.scores[stepId] || 0) >= pass;
 
 export class ElearningError extends Error {}
+
+const practiceKey = (uid: string, courseId: string) => `cicexf_el_practice_${uid}_${courseId}`;
+export const localPractice = {
+  get(uid: string, courseId: string): PracticeState {
+    try { return JSON.parse(localStorage.getItem(practiceKey(uid, courseId)) || '{}') || {}; } catch { return {}; }
+  },
+  set(uid: string, courseId: string, state: PracticeState) {
+    try { localStorage.setItem(practiceKey(uid, courseId), JSON.stringify(state)); } catch {}
+  }
+};
 
 const draftKey = (uid: string, courseId: string) => `cicexf_el_draft_${uid}_${courseId}`;
 export const localDraft = {
@@ -177,6 +195,8 @@ async function createFirebaseApi(): Promise<ElearningApi> {
   const { doc, getDoc, getDocs, setDoc, deleteDoc, collection, serverTimestamp } = fs;
   const draftTimers: Record<string, ReturnType<typeof setTimeout>> = {};
   const draftRef = (uid: string, courseId: string) => doc(learnerDb, 'learners', uid, 'drafts', courseId);
+  const practiceRef = (uid: string, courseId: string) => doc(learnerDb, 'learners', uid, 'practice', courseId);
+  const practiceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
   const call = async <T,>(body: Record<string, unknown>): Promise<T> => {
     const user = learnerAuth.currentUser;
@@ -307,6 +327,33 @@ async function createFirebaseApi(): Promise<ElearningApi> {
       await deleteDoc(draftRef(u.uid, courseId)).catch(() => {});
     },
     getAnswerKey: (courseId) => call<{ key: Record<string, number[][]> }>({ action: 'review', courseId }).then((r) => r.key),
+    async getPractice(courseId) {
+      const u = learnerAuth.currentUser;
+      if (!u) return {};
+      const local = localPractice.get(u.uid, courseId);
+      try {
+        const snap = await getDoc(practiceRef(u.uid, courseId));
+        const remote: PracticeState = snap.exists() ? JSON.parse(snap.data().state) : {};
+        // Exercise by exercise, the most recent attempt wins
+        const merged: PracticeState = { ...remote };
+        for (const [id, e] of Object.entries(local)) {
+          if (!merged[id] || (e.submittedAt || '') >= (merged[id].submittedAt || '')) merged[id] = e;
+        }
+        return merged;
+      } catch {
+        return local;
+      }
+    },
+    savePractice(courseId, state) {
+      const u = learnerAuth.currentUser;
+      if (!u) return;
+      localPractice.set(u.uid, courseId, state);
+      clearTimeout(practiceTimers[courseId]);
+      practiceTimers[courseId] = setTimeout(() => {
+        setDoc(practiceRef(u.uid, courseId), { state: JSON.stringify(state), savedAt: serverTimestamp() })
+          .catch((e) => console.warn('Travaux pratiques non enregistrés en ligne :', e?.code));
+      }, 2000);
+    },
     async getCourseStatuses() {
       const valid = (entries: [string, unknown][]) =>
         Object.fromEntries(entries.filter(([, st]) => ['open', 'closed', 'deleted'].includes(st as string))) as Record<string, CourseStatus>;

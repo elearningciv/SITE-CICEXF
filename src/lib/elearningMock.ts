@@ -3,7 +3,7 @@
 import { PASS } from '../data/elearning';
 import type { Answers, Certificate, ElearningApi, LearnerProfile, LearnerSession, Progress } from './elearningApi';
 import type { CourseStatus } from '../data/elearning';
-import { EMPTY_PROGRESS, ElearningError, isReviewerEmail, localDraft } from './elearningApi';
+import { EMPTY_PROGRESS, ElearningError, isReviewerEmail, localDraft, localPractice } from './elearningApi';
 
 interface ServerCourse {
   id: string;
@@ -207,6 +207,14 @@ export function createMockApi(): ElearningApi {
     async clearDraft(courseId) {
       const me = current();
       if (me) localDraft.clear(me.uid, courseId);
+    },
+    async getPractice(courseId) {
+      const me = current();
+      return me ? localPractice.get(me.uid, courseId) : {};
+    },
+    savePractice(courseId, state) {
+      const me = current();
+      if (me) localPractice.set(me.uid, courseId, state);
     },
     async verifyCertificate(number) {
       await wait();
