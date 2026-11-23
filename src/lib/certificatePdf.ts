@@ -4,7 +4,7 @@ import { certificateFileName, drawCertificate, type CertificateImage } from './c
 
 export { certificateName, certificateVerifyUrl, formatFrenchDate } from './certificateDraw';
 
-async function imageData(url: string): Promise<CertificateImage | null> {
+export async function imageData(url: string): Promise<CertificateImage | null> {
   try {
     const res = await fetch(url);
     if (!res.ok || !(res.headers.get('content-type') || '').startsWith('image/')) return null;

@@ -112,6 +112,8 @@ export interface WritingExercise {
   criteria: WritingCriterion[];
   /** Writing split into sections: each has its own box and criteria (`criteria` then stays empty) */
   sections?: WritingSection[];
+  /** The sections can be downloaded together as one structured PDF document */
+  download?: { title: string; subtitle: string; details: string[]; footer: string; fileName: string };
 }
 
 export type PracticeExercise = SheetExercise | WritingExercise;

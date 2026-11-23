@@ -20,10 +20,12 @@ interface Props {
   reviewer?: boolean;
   /** Administrators and authorised accounts: the right answers are shown with the correction */
   showAnswers?: boolean;
+  /** First name and name of the learner, written as the author of the downloaded reports */
+  learnerName?: string;
   go: (h: string) => void;
 }
 
-export default function PracticeView({ api, courseId, courseTitle, exerciseId, reviewer, showAnswers, go }: Props) {
+export default function PracticeView({ api, courseId, courseTitle, exerciseId, reviewer, showAnswers, learnerName, go }: Props) {
   const [set, setSet] = useState<PracticeSet | null | undefined>(undefined);
   const [state, setState] = useState<PracticeState | null>(null);
 
@@ -75,7 +77,7 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
         <Dossier set={set} compact />
         {ex.kind === 'sheet'
           ? <SheetView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
-          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />}
+          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} learnerName={learnerName} onChange={(e) => update(ex.id, e)} />}
         <Next set={set} current={ex.id} locked={inProgress?.id === ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
       </div>
     );
@@ -507,13 +509,33 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
 // ---------------------------------------------------------------------------------------------
 // Written answers
 
-function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
+function WritingView({ ex, entry, showAnswers, learnerName, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; learnerName?: string; onChange: (e: PracticeEntry) => void; key?: string }) {
   const [text, setText] = useState(entry.text || '');
   const [parts, setParts] = useState<Record<string, string>>(entry.answers || {});
   const [checked, setChecked] = useState(entry.score !== undefined);
   const result = useMemo(() => gradeWritingEntry(ex, text, parts), [ex, text, parts]);
   const words = ex.sections ? ex.sections.reduce((n, s) => n + wordCount(parts[sectionKey(s.id)] || ''), 0) : wordCount(text);
   const empty = ex.sections ? !ex.sections.some((s) => (parts[sectionKey(s.id)] || '').trim()) : !text.trim();
+  // The report can be downloaded once every section is written
+  const missing = ex.sections ? ex.sections.filter((s) => !(parts[sectionKey(s.id)] || '').trim()) : [];
+  const [pdfState, setPdfState] = useState<'idle' | 'busy' | 'error'>('idle');
+  const downloadPdf = async () => {
+    if (!ex.download || !ex.sections || missing.length) return;
+    setPdfState('busy');
+    try {
+      const { downloadReportPdf } = await import('../../lib/reportPdf');
+      const who = (learnerName || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      await downloadReportPdf({
+        ...ex.download,
+        author: learnerName ? `${learnerName}, chef de mission` : undefined,
+        sections: ex.sections.map((s) => ({ title: s.title, text: parts[sectionKey(s.id)] || '' })),
+        fileName: `${ex.download.fileName}${who ? `-${who}` : ''}.pdf`
+      });
+      setPdfState('idle');
+    } catch {
+      setPdfState('error');
+    }
+  };
   const changePart = (id: string, v: string) => {
     const next = { ...parts, [sectionKey(id)]: v };
     setParts(next);
@@ -562,8 +584,17 @@ function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise
       <p className={`mt-1 text-xs ${words >= ex.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{ex.sections ? 'Total : ' : ''}{words} mot{words > 1 ? 's' : ''} · {ex.minWords} au minimum</p>
       <div className="mt-4 flex flex-wrap gap-3">
         <button onClick={validate} disabled={empty} className={primary}><CheckCircle2 className="w-4 h-4" />Valider ma rédaction</button>
+        {ex.download && (
+          <button onClick={downloadPdf} disabled={missing.length > 0 || pdfState === 'busy'} className={`${ghost} disabled:opacity-50 disabled:cursor-not-allowed`}>
+            {pdfState === 'busy' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}Télécharger le rapport (PDF)
+          </button>
+        )}
         {checked && result.score < PASS && <button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer à zéro</button>}
       </div>
+      {ex.download && missing.length > 0 && !empty && (
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Pour télécharger le rapport en PDF, rédigez toutes les parties. Il reste : {missing.map((s) => s.title.replace(/ \(.*\)$/, '')).join(' ; ')}.</p>
+      )}
+      {pdfState === 'error' && <p className="mt-2 text-sm font-bold text-brand-emerald">Le PDF n'a pas pu être créé. Réessayez.</p>}
       {checked && <WritingFeedback result={result} minWords={ex.minWords} showAnswers={showAnswers} />}
     </div>
   );

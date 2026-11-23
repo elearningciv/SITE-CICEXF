@@ -972,6 +972,13 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP, partie par partie, dans les zones ci-dessous. Rendez compte de chaque produit du cadre logique (dossier du projet, tableaux 5 et 6 du rapport de démarrage) et appuyez-vous sur vos travaux : compréhension de la mission (rédaction 1), diagnostic logistique (exercice 2), plan de charge (exercice 3), suivi budgétaire (exercice 6), tableau de bord (exercice 5) et règle de répartition des sorties (rédaction 4).</p>",
       minWords: 350,
       criteria: [],
+      download: {
+        title: 'Rapport à mi-parcours',
+        subtitle: 'Mission d\'animation communautaire et d\'appui au mécanisme de gestion des plaintes (MGP) — Projet PGC-Vie, commune d\'Akoupé',
+        details: ['Période couverte : mois 1 à 3 (situation à la fin du mois 3)', 'Destinataire : Unité de coordination du projet (UCP)'],
+        footer: 'Rapport à mi-parcours — PGC-Vie, Akoupé · Travaux pratiques CICEXF',
+        fileName: 'rapport-mi-parcours-pgc-vie'
+      },
       sections: [
         {
           id: 'resume', title: '1. Résumé', hint: 'Les messages clés du rapport en quelques lignes.',

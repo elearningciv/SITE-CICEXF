@@ -234,7 +234,7 @@ export default function ELearning() {
       if (!hasPractice(course.id)) return path();
       return shell(
         <Suspense fallback={<p className="flex justify-center py-24"><Loader2 className="w-5 h-5 animate-spin" /></p>}>
-          <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} showAnswers={reviewer || answerViewer} go={go} />
+          <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} showAnswers={reviewer || answerViewer} learnerName={profile ? `${profile.prenom} ${profile.nom.toLocaleUpperCase('fr-FR')}` : undefined} go={go} />
         </Suspense>,
         true
       );
