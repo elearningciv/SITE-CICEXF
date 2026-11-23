@@ -1,12 +1,13 @@
 // Practical work of a course: project file, spreadsheet-like exercises corrected cell by cell,
 // written answers corrected from their key ideas. Formative: the correction is shown after each attempt.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Lock, PenLine, RotateCcw, XCircle } from 'lucide-react';
-import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, PRACTICE_PASS, PRACTICE_WEIGHTS, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
+import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Lock, PenLine, RotateCcw, Users, XCircle } from 'lucide-react';
+import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, PRACTICE_PASS, PRACTICE_WEIGHTS, type CaseExercise, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
 import { practiceResult } from '../../lib/practiceScore';
 import { PASS } from '../../data/elearning';
-import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, sheetTableText, tableWritingKey, wordCount } from '../../lib/practiceGrading';
+import { calcText, expectedText, formatValue, gradeCase, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, tableWritingKey, wordCount } from '../../lib/practiceGrading';
+import { midtermReport } from '../../lib/practiceReport';
 
 const card = 'rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm';
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm transition-colors';
@@ -78,6 +79,8 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
         <Dossier set={set} compact />
         {ex.kind === 'sheet'
           ? <SheetView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
+          : ex.kind === 'case'
+          ? <CaseView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
           : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} learnerName={learnerName} practice={{ set, state }} onChange={(e) => update(ex.id, e)} />}
         <Next set={set} current={ex.id} locked={inProgress?.id === ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
       </div>
@@ -117,7 +120,7 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
           return (
             <div key={e.id} className={`${card} p-5 flex flex-col`}>
               <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">
-                {e.kind === 'sheet' ? <FileSpreadsheet className="w-4 h-4" /> : <PenLine className="w-4 h-4" />}{e.kind === 'sheet' ? 'Tableau à remplir' : 'Rédaction'} · {e.skill}
+                {e.kind === 'sheet' ? <FileSpreadsheet className="w-4 h-4" /> : e.kind === 'case' ? <Users className="w-4 h-4" /> : <PenLine className="w-4 h-4" />}{e.kind === 'sheet' ? 'Tableau à remplir' : e.kind === 'case' ? 'Cas pratique' : 'Rédaction'} · {e.skill}
               </span>
               <h2 className="mt-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{e.title}</h2>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 flex-1">
@@ -517,6 +520,90 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
 }
 
 // ---------------------------------------------------------------------------------------------
+// Practical case: situation, questions about it, then a writing about it
+
+function CaseView({ ex, entry, showAnswers, onChange }: { ex: CaseExercise; entry: PracticeEntry; showAnswers?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
+  const [answers, setAnswers] = useState<Record<string, string>>(entry.answers || {});
+  const [text, setText] = useState(entry.text || '');
+  const [checked, setChecked] = useState(entry.score !== undefined);
+  const result = useMemo(() => gradeCase(ex, answers, text), [ex, answers, text]);
+  const answered = ex.questions.filter((_q, i) => (answers[`q${i}`] ?? '') !== '').length;
+  const words = wordCount(text);
+
+  const choose = (i: number, a: number) => {
+    const next = { ...answers, [`q${i}`]: String(a) };
+    setAnswers(next);
+    if (checked) setChecked(false);
+    onChange({ ...entry, answers: next, text, pending: true });
+  };
+  const write = (v: string) => {
+    setText(v);
+    if (checked) setChecked(false);
+    onChange({ ...entry, answers, text: v, pending: true });
+  };
+  const validate = () => {
+    const r = gradeCase(ex, answers, text);
+    setChecked(true);
+    onChange({ ...entry, answers, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0), writingScore: r.writing.score, submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1 });
+  };
+  const restart = () => { setAnswers({}); setText(''); setChecked(false); onChange({ ...entry, answers: {}, text: '', pending: false }); };
+
+  return (
+    <div className={`${card} p-5 sm:p-7`}>
+      <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300"><Users className="w-4 h-4" />Cas pratique · {ex.skill}</span>
+      <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">{ex.title}</h1>
+      <div className="el-text mt-3" dangerouslySetInnerHTML={{ __html: ex.situation }} />
+
+      <h2 className="mt-7 text-lg font-extrabold text-brand-blue dark:text-sky-300">Partie 1 : {ex.questions.length} questions sur la situation</h2>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Une seule bonne réponse par question ; les propositions se ressemblent volontairement : lisez chaque mot.</p>
+      <ol className="mt-3 space-y-4">
+        {ex.questions.map((q, i) => {
+          const mine = answers[`q${i}`];
+          const wrong = checked && !result.ok[i];
+          return (
+            <li key={i} className={`rounded-2xl border p-4 ${wrong ? 'border-brand-emerald bg-brand-emerald/5' : checked ? 'border-brand-blue/40 bg-brand-blue/[0.03]' : 'border-slate-200 dark:border-slate-800'}`}>
+              <p className="font-bold text-slate-900 dark:text-white">{i + 1}. {q.question}</p>
+              <div role="radiogroup" className="mt-2 space-y-1.5">
+                {q.answers.map((a, k) => (
+                  <label key={k} className={`flex items-start gap-2.5 rounded-xl border px-3 py-2 cursor-pointer text-sm ${mine === String(k) ? 'border-brand-blue bg-sky-50 dark:bg-sky-950/40' : 'border-slate-200 dark:border-slate-700'}`}>
+                    <input type="radio" name={`${ex.id}-q${i}`} checked={mine === String(k)} onChange={() => choose(i, k)} className="mt-0.5 w-4 h-4 accent-[#003B6F] shrink-0" />
+                    <span className="text-slate-800 dark:text-slate-100">{a}</span>
+                  </label>
+                ))}
+              </div>
+              {wrong && (
+                <p className="mt-2 flex items-center gap-1 text-xs font-bold text-brand-emerald dark:text-[#E9A091]"><XCircle className="w-3.5 h-3.5" />{mine === undefined || mine === '' ? 'Sans réponse' : 'Réponse incorrecte'}{showAnswers ? ` · attendu : ${q.answers[q.good]}` : ''}</p>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      <h2 className="mt-7 text-lg font-extrabold text-brand-blue dark:text-sky-300">Partie 2 : votre rédaction</h2>
+      <div className="el-text mt-1" dangerouslySetInnerHTML={{ __html: ex.writing.prompt }} />
+      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
+      <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={write} rows={12} placeholder="Rédigez votre réponse de chef de mission ici." />
+      <p className={`mt-1 text-xs ${words >= ex.writing.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{words} mot{words > 1 ? 's' : ''} · {ex.writing.minWords} au minimum</p>
+
+      <div className="mt-5 flex flex-wrap items-center gap-3">
+        <button onClick={validate} disabled={answered === 0 && !text.trim()} className={primary}><CheckCircle2 className="w-4 h-4" />Valider mes réponses</button>
+        <span className="text-sm text-slate-500">{answered} / {ex.questions.length} questions répondues</span>
+      </div>
+      {checked && (
+        <Result score={result.score}>
+          <p className="mt-1 text-slate-700 dark:text-slate-300">
+            <strong>Questions : {result.good} sur {result.total} ({result.quizPct} %) · rédaction : {result.writing.score} %.</strong> La note du cas pratique est la moyenne des deux parties.
+            {result.good < result.total ? ' Les questions marquées sont à revoir : relisez les faits et les règles de référence.' : ''}
+          </p>
+          <div className="mt-4"><button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer</button></div>
+        </Result>
+      )}
+      {checked && <WritingFeedback result={result.writing} minWords={ex.writing.minWords} showAnswers={showAnswers} />}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------------------------
 // Written answers
 
 function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; learnerName?: string; practice?: { set: PracticeSet; state: PracticeState }; onChange: (e: PracticeEntry) => void; key?: string }) {
@@ -533,24 +620,10 @@ function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }
     if (!ex.download || !ex.sections || missing.length) return;
     setPdfState('busy');
     try {
+      const report = practice && midtermReport(practice.set, { ...practice.state, [ex.id]: { answers: parts } }, learnerName);
+      if (!report) throw new Error('rapport introuvable');
       const { downloadReportPdf } = await import('../../lib/reportPdf');
-      const who = (learnerName || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      await downloadReportPdf({
-        ...ex.download,
-        author: learnerName ? `${learnerName}, chef de mission` : undefined,
-        sections: ex.sections.map((s) => ({
-          title: s.title,
-          text: parts[sectionKey(s.id)] || '',
-          // Tables of the exercises the learner has done, under the matching part of the report
-          tables: (ex.download!.tables || []).filter((t) => t.section === s.id).flatMap((t) => {
-            const sheet = practice?.set.exercises.find((e) => e.id === t.exercise);
-            if (!sheet || sheet.kind !== 'sheet') return [];
-            const data = sheetTableText(sheet, t.table, practice!.state[t.exercise]?.answers || {}, t.columns, t.rows);
-            return data.filled ? [{ title: t.title, columns: data.columns, rows: data.rows }] : [];
-          })
-        })),
-        fileName: `${ex.download.fileName}${who ? `-${who}` : ''}.pdf`
-      });
+      await downloadReportPdf(report.input);
       setPdfState('idle');
     } catch {
       setPdfState('error');

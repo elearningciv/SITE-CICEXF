@@ -21,7 +21,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/data/elearning/practice/management-pilotage-communautaire.ts
-var fcfa, r1, num, inp, table, MONTHS, PERSONNEL, CHARGES, personnelTotal, ACTIVITIES, activitiesTotal, ACHATS, achatsTotal, FONCTIONNEMENT, FRAIS, TVA, direct, frais, ht, tva, CHRONO, shareAt, monthsText, DOSSIER_TDR, DOSSIER_OFFRE, LOGFRAME_COLS, DOSSIER_CADRE_LOGIQUE, DOSSIER_DICTIONNAIRE, LINES1, LOG, MODES, statutOf, ecartOf, POSTES, BENEVOLES, MOIS, DISPO, ACTS, MGP_ACT, COMPTA_ACT, ROLES, lectureOf, cell0, OUVRES, workedOf, unavailableOf, toneOf, POSTE_KEYS, ACT_KEYS, chefDaysM1, urgRetOf, chefQuad, DELAIS, fr, chargeOf, rateOf, assignedOf, anyAssigned, extremeOf, SAMPLE3, sample3, TASKS, IMPORTANCES, URGENCES, OUI_NON, DECISIONS, urgOf, quadOf, level, urgFromEntries, quadFromEntries, QUAD_LABELS, IND, IND_KEYS, TRAJ, trajOf, indPlanned, indRate, MGP_IND, MGP_KEYS, MGP_TRAJ, mgpVal, BUD_LINES, JOURNAL, spentIn, SITUATIONS, situationOf, RYTHMES, rythmeOf, lineSpent, plannedOf, lineSituation, budTotal, totalSpent, totalPlanned, gapPct, words, plain, set, management_pilotage_communautaire_default;
+var fcfa, r1, num, inp, table, MONTHS, PERSONNEL, CHARGES, personnelTotal, ACTIVITIES, activitiesTotal, ACHATS, achatsTotal, FONCTIONNEMENT, FRAIS, TVA, direct, frais, ht, tva, CHRONO, shareAt, monthsText, DOSSIER_TDR, DOSSIER_OFFRE, LOGFRAME_COLS, DOSSIER_CADRE_LOGIQUE, DOSSIER_DICTIONNAIRE, LINES1, LOG, MODES, statutOf, ecartOf, POSTES, BENEVOLES, MOIS, DISPO, ACTS, MGP_ACT, COMPTA_ACT, ROLES, lectureOf, cell0, OUVRES, workedOf, unavailableOf, toneOf, POSTE_KEYS, ACT_KEYS, chefDaysM1, urgRetOf, chefQuad, DELAIS, fr, chargeOf, rateOf, assignedOf, anyAssigned, extremeOf, SAMPLE3, sample3, TASKS, IMPORTANCES, URGENCES, OUI_NON, DECISIONS, urgOf, quadOf, level, urgFromEntries, quadFromEntries, QUAD_LABELS, CASE_PERSONS, CASE_EPISODES, CASE_RULES, CASE_SITUATION, CASE_QUESTIONS, IND, IND_KEYS, TRAJ, trajOf, indPlanned, indRate, MGP_IND, MGP_KEYS, MGP_TRAJ, mgpVal, BUD_LINES, JOURNAL, spentIn, SITUATIONS, situationOf, RYTHMES, rythmeOf, lineSpent, plannedOf, lineSituation, budTotal, totalSpent, totalPlanned, gapPct, words, plain, set, management_pilotage_communautaire_default;
 var init_management_pilotage_communautaire = __esm({
   "src/data/elearning/practice/management-pilotage-communautaire.ts"() {
     fcfa = (n) => `${Math.round(n).toLocaleString("fr-FR").replace(/ | /g, " ")} FCFA`;
@@ -409,6 +409,150 @@ ${table(["Indicateur", "Définition et mode de calcul", "Source de vérification
       return imp === null || urg === null || !s ? null : quadOf(imp, urg, s === "Oui");
     };
     QUAD_LABELS = ["1 · Important et urgent", "2 · Important, pas urgent", "3 · Urgent, peu important", "4 · Ni urgent ni important"];
+    CASE_PERSONS = [
+      ["Chef de Mission", "Responsable de l'équipe, proche de l'Animateur Communautaire 1 dont il apprécie les résultats"],
+      ["Chargé de Projet/Programme", "Coordonne normalement le terrain ; se sent écarté par une décision du Chef de Mission"],
+      ["Spécialiste VBG/MGP", "Responsable du mécanisme de gestion des plaintes ; reçoit le signalement"],
+      ["Animateur Communautaire 1", "Animateur de quartier, bons résultats ; mis en cause par un signalement"],
+      ["Animateur Communautaire 2", "Animateur de quartier, contrat de six mois renouvelable ; pris entre deux collègues"],
+      ["L'habitante concernée", "Participante aux séances de sensibilisation ; auteure du signalement"],
+      ["Responsable du suivi de l'UCP", "Reçoit le signalement et demande un rapport"],
+      ["Direction de l'ONG", "Supérieure du Chef de Mission ; peut désigner un responsable du traitement"],
+      ["Points focaux et chefs de quartier", "Relais communautaires ; reçoivent la rumeur"]
+    ];
+    CASE_EPISODES = [
+      ["1 · Début du mois", "Le Chef de Mission confie à l'Animateur Communautaire 1, apprécié pour ses résultats, la coordination des deux animateurs et la représentation du projet auprès des points focaux. Il le lui annonce oralement, sans note écrite, sans informer l'équipe et sans consulter le Chargé de Projet/Programme, dont les fonctions comprennent normalement la coordination du terrain."],
+      ["2 · Deux semaines plus tard", "Le Chargé de Projet/Programme apprend la décision par un point focal : « Ton adjoint nous a dit que… ». Il se sent écarté et le dit en privé au Chef de Mission, qui répond : « Ce n'est pas officiel, ne dramatise pas. » Aucune clarification écrite n'est faite."],
+      ["3 · Lundi de la semaine suivante", "Une habitante, participante aux séances de sensibilisation, vient voir la Spécialiste VBG/MGP. Elle dit que l'Animateur Communautaire 1 tient à son égard des propos à connotation sexuelle et lui pose plusieurs fois la main sur l'épaule après les séances. Elle craint d'être exclue de la prochaine distribution si elle se plaint. Elle accepte que le signalement soit enregistré et transmis, à condition que son nom ne circule pas dans le quartier."],
+      ["4 · Lundi, même jour", "La Spécialiste enregistre le cas dans le registre confidentiel, en informe le Chef de Mission (qui y a accès selon la charte) et prévoit de transmettre le signalement à l'UCP le lendemain."],
+      ["5 · Mardi", "Le Chef de Mission, qui s'appuie sur l'Animateur Communautaire 1, demande à la Spécialiste d'attendre « d'y voir clair » et de ne rien transmettre avant son retour de la préfecture, jeudi, « pour ne pas ruiner l'équipe sur une rumeur ». Il demande au Chargé de Projet/Programme de « vérifier discrètement » auprès des animateurs."],
+      ["6 · Mercredi", "Mal à l'aise, le Chargé de Projet/Programme interroge l'Animateur Communautaire 2 sans préciser le contenu du signalement, mais en évoquant « une habitante du quartier de la mairie ». L'Animateur Communautaire 2 comprend et, par loyauté, prévient son collègue."],
+      ["7 · Mercredi soir", "L'Animateur Communautaire 1 écrit dans le groupe WhatsApp de l'équipe : « Certains montent des histoires contre moi parce qu'ils ne supportent pas que je sois reconnu. La Spécialiste VBG/MGP devrait s'occuper de ses dossiers, pas de ma vie. » Il cite le quartier de la mairie et le jour de la dernière séance."],
+      ["8 · Jeudi", "De retour, le Chef de Mission ne retire pas le message et ne répond pas dans le groupe. En privé, il reproche à la Spécialiste d'avoir « laissé fuiter ». Elle répond qu'elle n'a parlé qu'à lui. Le Chargé de Projet/Programme ne dit rien de sa démarche de la veille."],
+      ["9 · Jeudi, après-midi", "La Spécialiste transmet le signalement à l'UCP, avec copie au Chef de Mission, en écrivant : « Je ne peux plus attendre. » Le Chef de Mission lui dit qu'elle a « contourné la hiérarchie » et lui retire la supervision des animateurs pour le MGP."],
+      ["10 · Vendredi", "La rumeur circule dans le quartier : un point focal appelle l'Animateur Communautaire 2 pour demander « si c'est vrai que l'animateur de la mairie a des problèmes ». L'habitante, entendant des commentaires et se faisant dire par une voisine qu'elle cherche à nuire au projet, retire son consentement et dit qu'elle ne viendra plus aux séances."],
+      ["11 · Samedi", "L'Animateur Communautaire 1 menace de démissionner. Il dit à l'Animateur Communautaire 2 que, s'il ne le soutient pas, il ne le recommandera pas pour le renouvellement de son contrat. L'Animateur Communautaire 2, pris entre deux collègues, s'absente le lundi."],
+      ["12 · Lundi", "Le Responsable du suivi de l'UCP, informé par la Spécialiste et par un point focal, écrit au Chef de Mission : il demande un rapport écrit sous 48 heures, avec copie à la direction de l'ONG, et indique que l'UCP « prendra en charge le suivi du signalement »."],
+      ["13 · Mardi", "Le Chef de Mission convoque l'équipe et demande à chacun de « choisir son camp ou de partir ». La Spécialiste annonce qu'elle quittera l'équipe à la fin du mois. Le Chargé de Projet/Programme dit qu'il « n'a rien à voir avec ça ». L'Animateur Communautaire 2 n'est pas venu."]
+    ];
+    CASE_RULES = [
+      "Charte d'équipe, article 6 : le registre confidentiel est limité à la Spécialiste VBG/MGP et au Chef de Mission ; les plaintes sensibles sont transmises à l'UCP sous 24 heures, avec l'accord de la personne concernée.",
+      "Charte d'équipe, article 9 : trois niveaux de traitement des désaccords ; un manquement à la confidentialité est traité en priorité.",
+      "Principe IASC n° 5 : tout soupçon d'exploitation ou d'abus sexuel par un collègue se signale par les voies prévues.",
+      "Principe IASC n° 6 : les responsables, à tous niveaux, ont une responsabilité particulière dans l'environnement de l'équipe.",
+      "Principes directeurs des violences basées sur le genre : sécurité, confidentialité, respect des souhaits et de la dignité, non-discrimination."
+    ];
+    CASE_SITUATION = `
+<p>Nous sommes au mois 4 du projet PGC-Vie. Plusieurs conflits se mêlent : certains relèvent du management et de la médiation, d'autres d'une procédure de signalement qui ne se négocie pas. Vous êtes le chef de mission (le manager) : il vous faut les distinguer, dire qui est responsable de quoi, et décider dans le bon ordre. Lisez attentivement : chaque détail compte.</p>
+<h3>Les personnes concernées</h3>
+${table(["Personne", "Rôle dans le cas"], CASE_PERSONS)}
+<h3>Les règles de référence</h3>
+<ul>${CASE_RULES.map((r) => `<li>${r}</li>`).join("")}</ul>
+<h3>Les faits</h3>
+${table(["Épisode", "Ce qui se passe"], CASE_EPISODES)}
+`;
+    CASE_QUESTIONS = [
+      {
+        "question": "Quelle est la cause racine du climat de défiance qui existait avant le signalement ?",
+        "answers": [
+          "Le caractère de l'Animateur Communautaire 1",
+          "Un rôle de coordination confié à l'oral à l'Animateur Communautaire 1, sans note écrite ni information de l'équipe",
+          "Un rôle de coordination confié par écrit à l'Animateur Communautaire 1, sans consulter le Chargé de Projet/Programme",
+          "L'absence de toute coordination du terrain dans l'équipe"
+        ],
+        "good": 1
+      },
+      {
+        "question": "Comment qualifier le signalement de l'habitante ?",
+        "answers": [
+          "Un désaccord de travail à traiter par médiation",
+          "Une allégation de comportement à caractère sexuel déplacé, à traiter d'abord par un entretien entre l'Animateur Communautaire 1 et la Spécialiste VBG/MGP",
+          "Une plainte non sensible sur la qualité des séances",
+          "Une allégation de comportement à caractère sexuel déplacé, à traiter par la procédure de signalement et non par médiation"
+        ],
+        "good": 3
+      },
+      {
+        "question": "Quelle est la première décision du Chef de Mission qui constitue un manquement ?",
+        "answers": [
+          "Demander de différer la transmission pour protéger l'équipe",
+          "Informer la Spécialiste VBG/MGP qu'il consulterait l'UCP avant toute transmission",
+          "Demander de différer la transmission en raison de son déplacement, puis s'en remettre à l'UCP",
+          "Demander à la Spécialiste VBG/MGP de transmettre dès le lendemain"
+        ],
+        "good": 0
+      },
+      {
+        "question": "Qui est le plus directement en situation de conflit d'intérêts dans le traitement du signalement ?",
+        "answers": [
+          "La Spécialiste VBG/MGP, qui a reçu l'habitante",
+          "Le Chargé de Projet/Programme, qui se sent écarté par la décision",
+          "Le Chef de Mission, qui s'appuie sur l'animateur mis en cause et lui a confié un rôle",
+          "L'Animateur Communautaire 2, collègue direct de l'animateur mis en cause"
+        ],
+        "good": 2
+      },
+      {
+        "question": "Qui est responsable de la rumeur dans le quartier ?",
+        "answers": [
+          "La Spécialiste VBG/MGP seule, qui a enregistré le cas",
+          "Une chaîne : demande de « vérifier discrètement », entretien avec l'Animateur Communautaire 2, message dans le groupe",
+          "L'Animateur Communautaire 1 seul, par son message",
+          "L'Animateur Communautaire 2 seul, qui a prévenu son collègue"
+        ],
+        "good": 1
+      },
+      {
+        "question": "Que représente le retrait à la Spécialiste VBG/MGP de la supervision des animateurs pour le MGP ?",
+        "answers": [
+          "Une sanction déguisée après un signalement, donc une représaille à examiner par l'UCP",
+          "Une mesure organisationnelle normale",
+          "Une mesure de protection de l'Animateur Communautaire 1",
+          "Une mesure conservatoire acceptable pendant l'examen"
+        ],
+        "good": 0
+      },
+      {
+        "question": "Que représente la phrase du Chef de Mission : « Choisissez votre camp ou partez » ?",
+        "answers": [
+          "Une façon de clarifier les positions",
+          "Une clarification nécessaire avant une médiation",
+          "Un ultimatum acceptable en cas de blocage",
+          "Une pression qui transforme un signalement en conflit de loyauté et contredit la neutralité attendue d'un manager"
+        ],
+        "good": 3
+      },
+      {
+        "question": "Quelle est la priorité absolue dans les 24 heures qui suivent ?",
+        "answers": [
+          "Rétablir l'unité de l'équipe par une réunion générale",
+          "Protéger la réputation du projet auprès des points focaux",
+          "Protéger l'habitante concernée et sécuriser la procédure de signalement",
+          "Obtenir la version de l'Animateur Communautaire 1 pour équilibrer"
+        ],
+        "good": 2
+      },
+      {
+        "question": "Qui doit conduire le traitement du signalement concernant l'Animateur Communautaire 1 ?",
+        "answers": [
+          "L'UCP et la direction de l'ONG, hors de l'équipe, car le Chef de Mission est en conflit d'intérêts",
+          "Le Chef de Mission, avec la Spécialiste VBG/MGP",
+          "Le Chargé de Projet/Programme, plus neutre",
+          "Un médiateur choisi par l'équipe"
+        ],
+        "good": 0
+      },
+      {
+        "question": "Comment traiter le conflit de rôles entre le Chef de Mission et le Chargé de Projet/Programme ?",
+        "answers": [
+          "Par un entretien amical sans trace écrite",
+          "Par une clarification écrite des rôles de coordination, après le traitement du signalement, avec l'appui de la direction",
+          "Par une clarification dans le groupe WhatsApp, pour que tout le monde la voie",
+          "En laissant les rôles tels quels"
+        ],
+        "good": 1
+      }
+    ];
     IND = [
       ["Causeries éducatives réalisées", 30, [1, 2, 3, 4, 5, 6], 12],
       ["Émissions radio diffusées", 6, [1, 2, 3, 4, 5, 6], 3],
@@ -1010,6 +1154,30 @@ ${table(["Date", "Libellé", "Montant"], JOURNAL.map(([m, d, l, a]) => [`Mois ${
           ]
         },
         {
+          kind: "case",
+          id: "cas-conflits",
+          title: "Cas pratique : « L'adjoint officieux, le signalement et la rumeur »",
+          skill: "Gestion des conflits dans l'équipe",
+          situation: CASE_SITUATION,
+          questions: CASE_QUESTIONS,
+          writing: {
+            prompt: "<p><strong>Vous êtes le Chef de Mission.</strong> Le mardi soir (épisode 13), vous prenez la mesure de la situation. Rédigez la note que vous adressez à la direction de l'ONG et au Responsable du suivi de l'UCP pour gérer la crise : ce que vous reconnaissez, ce que vous confiez à d'autres et pourquoi, les mesures pour chaque personne concernée, le message à l'équipe et les règles que vous rétablissez, puis les mesures de prévention. Restez factuel et ne divulguez aucun détail sur l'habitante.</p>",
+            minWords: 180,
+            criteria: [
+              { label: "Reconnaître votre conflit d'intérêts et confier le traitement du signalement à l'UCP et à la direction de l'ONG", keywords: ["conflit d interet", "ucp", "direction", "me retire", "hors de l equipe", "confie"], need: 2 },
+              { label: "Distinguer le signalement (procédure, pas de médiation) du conflit de rôles et de la rupture de confidentialité", keywords: ["procedure", "mediation", "conflit de roles", "separement", "distingu", "confidentialite"], need: 2 },
+              { label: "Protéger l'habitante : sécurité, confidentialité, orientation vers les services, respect de ses souhaits", keywords: ["habitante", "proteg", "confidential", "services", "souhaits", "securite"], need: 2 },
+              { label: "Rétablir la Spécialiste VBG/MGP dans ses fonctions et la protéger contre les représailles", keywords: ["specialiste", "retabl", "fonctions", "represaille", "remerci"], need: 2 },
+              { label: "Une mesure conservatoire non punitive pour l'Animateur Communautaire 1, décidée par l'organisation", keywords: ["conservatoire", "animateur communautaire 1", "animateur 1", "contact", "non punitive", "suspend"], need: 2 },
+              { label: "Protéger l'Animateur Communautaire 2 des pressions (contrat) et le faire entendre comme témoin par l'UCP ou la direction", keywords: ["animateur communautaire 2", "animateur 2", "pression", "contrat", "temoin", "entendu"], need: 2 },
+              { label: "Le rapport écrit à l'UCP sous 48 heures, factuel et daté", keywords: ["rapport", "48", "factuel", "date"], need: 2 },
+              { label: "Un message à l'équipe sans détail sur le cas, qui retire ou recadre le message du groupe et rappelle la charte", keywords: ["message", "charte", "sans detail", "rappel", "groupe", "whatsapp", "retir"], need: 2 },
+              { label: "La clarification écrite des rôles de coordination, après le traitement du signalement", keywords: ["clarification", "roles", "note ecrite", "par ecrit", "coordination", "charge de projet"], need: 2 },
+              { label: "Des mesures de prévention (formation de l'équipe, règle écrite sur toute délégation, circuit de signalement)", keywords: ["prevention", "formation", "former", "regle ecrite", "delegation", "circuit"], need: 2 }
+            ]
+          }
+        },
+        {
           kind: "writing",
           id: "plan-action-correctif",
           title: "Rédaction 5 : le plan d'action correctif de la supervision",
@@ -1338,6 +1506,13 @@ function gradeWithCtx(w, ctx, text) {
   }
   return gradeWriting({ criteria: [...w.criteria, ...dyn], minWords: w.minWords, maxWords: w.maxWords }, text);
 }
+function gradeCase(ex, answers, text) {
+  const ok = ex.questions.map((q, i) => (answers[`q${i}`] ?? "") !== "" && Number(answers[`q${i}`]) === q.good);
+  const good = ok.filter(Boolean).length;
+  const quizPct = Math.round(good / ex.questions.length * 100);
+  const writing = gradeWriting(ex.writing, text);
+  return { ok, good, total: ex.questions.length, quizPct, writing, score: Math.round((quizPct + writing.score) / 2) };
+}
 var sectionKey = (id) => `sec:${id}`;
 function gradeWritingEntry(ex, text, answers) {
   if (!ex.sections?.length) return gradeWriting(ex, text);
@@ -1360,6 +1535,7 @@ var isValidated = (e) => !!e && e.score !== void 0 && !e.pending;
 function exerciseScore(ex, e) {
   const answers = e.answers || {};
   if (ex.kind === "writing") return gradeWritingEntry(ex, e.text || "", answers).score;
+  if (ex.kind === "case") return gradeCase(ex, answers, e.text || "").score;
   const table2 = gradeSheet(ex, answers).score;
   const writings = [
     ...ex.writing ? [gradeSheetWriting(ex, answers, e.text || "").score] : [],

@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { collection, collectionGroup, getDocs, Timestamp } from 'firebase/firestore';
-import { Archive, Award, Ban, Download, ExternalLink, GraduationCap, Loader2, PauseCircle, PlayCircle, RefreshCw, Search, Trash2, Users } from 'lucide-react';
+import { Archive, Award, Ban, ClipboardList, Download, ExternalLink, GraduationCap, Loader2, PauseCircle, PlayCircle, RefreshCw, Search, Trash2, Users } from 'lucide-react';
 import { db } from '../firebase';
-import { CATALOG, PASS, courseStatus, type CourseStatus } from '../data/elearning';
+import { CATALOG, PASS, courseStatus, passOf, type CourseStatus } from '../data/elearning';
+import { hasPractice } from '../data/elearning/practice';
+
+// Practical work of one learner (answers, note, mid-term report), loaded only when opened
+const AdminPractice = lazy(() => import('./AdminPractice'));
 import { setCourseStatus, useCourseStatuses } from '../lib/elearningCourses';
 import type { Certificate } from '../lib/elearningApi';
 
@@ -34,6 +38,7 @@ export default function AdminLearners() {
   const [search, setSearch] = useState('');
   const [reload, setReload] = useState(0);
   const [section, setSection] = useState<'learners' | 'courses' | 'archive'>('learners');
+  const [practiceOf, setPracticeOf] = useState<{ uid: string; name: string; courseId: string } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,8 +93,10 @@ export default function AdminLearners() {
       const key = `${l.uid}/${meta.id}`;
       const p = progress.get(key);
       if (!p && !enrolledAt.has(key)) return null;
-      const done = p ? meta.steps.filter((s) => (p.scores?.[s.id] || 0) >= PASS).length : 0;
-      const current = meta.steps.find((s) => (p?.scores?.[s.id] || 0) < PASS);
+      const pass = passOf(meta);
+      const cleared = (id: string) => p?.scores?.[id] !== undefined && p.scores[id] >= pass;
+      const done = p ? meta.steps.filter((s) => cleared(s.id)).length : 0;
+      const current = meta.steps.find((s) => !cleared(s.id));
       return { meta, p, done, current, enrolledOn: enrolledAt.get(key) };
     }).filter((x): x is NonNullable<typeof x> => !!x);
     return { l, courses, enrolled: courses.length > 0 };
@@ -191,6 +198,12 @@ export default function AdminLearners() {
                     {courses.map(({ meta, p, done, current, enrolledOn }) => (
                       <div key={meta.id} className="mb-2 last:mb-0">
                         <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{meta.title}</div>
+                        {hasPractice(meta.id) && (
+                          <button onClick={() => setPracticeOf({ uid: l.uid, name: `${l.prenom} ${l.nom.toLocaleUpperCase('fr-FR')}`, courseId: meta.id })}
+                            className="my-1 inline-flex items-center gap-1 rounded-lg border border-brand-blue/40 px-2 py-1 text-[11px] font-bold text-brand-blue dark:text-sky-300 hover:bg-brand-blue/5">
+                            <ClipboardList className="w-3.5 h-3.5" />Travaux pratiques et rapport
+                          </button>
+                        )}
                         <div className="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><i className="block h-full bg-brand-blue" style={{ width: `${(done / meta.steps.length) * 100}%` }} /></div>
                         <div className="mt-0.5 text-xs text-slate-600 dark:text-slate-300">{done}/{meta.steps.length} étapes{p && current ? ` · en cours : ${current.title.split(' : ')[0]}${p.scores?.[current.id] !== undefined ? ` (${p.scores[current.id]} %)` : ''}` : !p ? ' · pas commencé' : ''}{enrolledOn ? ` · inscrit le ${fmt(enrolledOn)}` : ''}</div>
                       </div>
@@ -206,6 +219,11 @@ export default function AdminLearners() {
         </div>
       )}
 
+      {practiceOf && (
+        <Suspense fallback={null}>
+          <AdminPractice uid={practiceOf.uid} name={practiceOf.name} courseId={practiceOf.courseId} onClose={() => setPracticeOf(null)} />
+        </Suspense>
+      )}
     </div>
   );
 }

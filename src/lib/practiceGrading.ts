@@ -1,6 +1,6 @@
 // Correction of the practical work: spreadsheet cells (numbers, calculations, choices) and written answers
 // (key ideas found from expected words, accents and case ignored).
-import { gradedCells, isCalc, isChoice, type CalcCell, type ChoiceInput, type Ctx, type Dyn, type Fmt, type NumInput, type SheetCell, type SheetExercise, type SheetWriting, type WritingCriterion, type WritingExercise } from '../data/elearning/practice';
+import { gradedCells, isCalc, isChoice, type CalcCell, type ChoiceInput, type Ctx, type Dyn, type Fmt, type NumInput, type SheetCell, type SheetExercise, type SheetWriting, type WritingCriterion, type WritingExercise, type CaseExercise } from '../data/elearning/practice';
 
 // ---------------------------------------------------------------------------------------------
 // Numbers and calculations typed by the learner: "1 650 000", "1650000 FCFA", "33,3 %", "=4*550000", "(12/30)*100"
@@ -252,6 +252,15 @@ export function sheetTableText(ex: SheetExercise, tableIndex: number, answers: R
     rows: picked.map((i) => columns.map((j) => text(t.rows[i][j] ?? ''))),
     filled: picked.length > 0 && Object.values(answers).some((v) => (v || '').trim() !== '')
   };
+}
+
+/** Practical case: the questions (answers stored as « q0 », « q1 »… = index of the chosen answer) and the writing */
+export function gradeCase(ex: CaseExercise, answers: Record<string, string>, text: string) {
+  const ok = ex.questions.map((q, i) => (answers[`q${i}`] ?? '') !== '' && Number(answers[`q${i}`]) === q.good);
+  const good = ok.filter(Boolean).length;
+  const quizPct = Math.round((good / ex.questions.length) * 100);
+  const writing = gradeWriting(ex.writing, text);
+  return { ok, good, total: ex.questions.length, quizPct, writing, score: Math.round((quizPct + writing.score) / 2) };
 }
 
 /** Key under which the text of one section of a writing is stored with the answers */

@@ -758,16 +758,6 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
         </p>
       )}
       {notice && <p className="mb-4 rounded-2xl bg-amber-50 border-l-4 border-amber-400 px-4 py-3 text-sm font-bold text-slate-800">{notice}</p>}
-      {hasPractice(course.id) && !locked && (
-        <div className={`${card} mb-4 p-5 flex flex-wrap items-center gap-4 border-l-4 border-l-[#C9933F]`}>
-          <ClipboardList className="w-8 h-8 text-[#C9933F] shrink-0" />
-          <div className="flex-1 min-w-[220px]">
-            <strong className="block text-base sm:text-lg text-brand-blue dark:text-sky-300">Travaux pratiques sur le projet PGC-Vie</strong>
-            <span className="text-sm text-slate-600 dark:text-slate-400">Dossier du projet (TDR et offre financière), tableaux à remplir et rédactions corrigés directement sur le site. Accessibles à tout moment, ils comptent pour {Math.round((PRACTICE_WEIGHTS[course.id] ?? 0) * 100)} % de la note du certificat : tous les exercices doivent être validés, avec une note d'au moins {PRACTICE_PASS} %.</span>
-          </div>
-          <button onClick={() => go(`pratique/${course.id}`)} className={primary}>Ouvrir les travaux pratiques</button>
-        </div>
-      )}
       {course.parts.map((p) => (
         <div key={p.id} className={`${card} mb-4 overflow-hidden`}>
           <h2 className="px-4 sm:px-5 py-3 text-base sm:text-lg text-white font-extrabold bg-gradient-to-r from-brand-blue to-brand-blue-light">{p.title}</h2>
@@ -790,6 +780,16 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
           )}
         </div>
       ))}
+      {hasPractice(course.id) && !locked && (
+        <div className={`${card} mb-4 p-5 flex flex-wrap items-center gap-4 border-l-4 border-l-[#C9933F]`}>
+          <ClipboardList className="w-8 h-8 text-[#C9933F] shrink-0" />
+          <div className="flex-1 min-w-[220px]">
+            <strong className="block text-base sm:text-lg text-brand-blue dark:text-sky-300">Travaux pratiques sur le projet PGC-Vie</strong>
+            <span className="text-sm text-slate-600 dark:text-slate-400">Dossier du projet (TDR et offre financière), tableaux à remplir et rédactions corrigés directement sur le site. Accessibles à tout moment, ils comptent pour {Math.round((PRACTICE_WEIGHTS[course.id] ?? 0) * 100)} % de la note du certificat : tous les exercices doivent être validés, avec une note d'au moins {PRACTICE_PASS} %.</span>
+          </div>
+          <button onClick={() => go(`pratique/${course.id}`)} className={primary}>Ouvrir les travaux pratiques</button>
+        </div>
+      )}
       {course.glossary && course.glossary.length > 0 && (
         <details className={`${card} group overflow-hidden`}>
           <summary className="flex items-center gap-2 px-4 sm:px-5 py-3 cursor-pointer text-sm sm:text-base font-extrabold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800/60">

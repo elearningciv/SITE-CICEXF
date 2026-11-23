@@ -120,7 +120,20 @@ export interface WritingExercise {
   };
 }
 
-export type PracticeExercise = SheetExercise | WritingExercise;
+/** Practical case: a situation (facts), questions with one right answer each, then a writing about the situation.
+ *  The note is the average of the two parts. */
+export interface CaseExercise {
+  kind: 'case';
+  id: string;
+  title: string;
+  skill: string;
+  /** Situation: people, rules of reference and facts (HTML) */
+  situation: string;
+  questions: { question: string; answers: string[]; good: number }[];
+  writing: { prompt: string; minWords: number; maxWords?: number; criteria: WritingCriterion[] };
+}
+
+export type PracticeExercise = SheetExercise | WritingExercise | CaseExercise;
 
 export interface PracticeSet {
   courseId: string;

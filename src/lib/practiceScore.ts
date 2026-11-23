@@ -3,7 +3,7 @@
 // (functions/practice/score.cjs) to compute it again when it issues the certificate, so that a note stored by the
 // browser is never trusted. It must not use browser APIs.
 import type { PracticeExercise, PracticeSet } from '../data/elearning/practice';
-import { gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWritingEntry } from './practiceGrading';
+import { gradeCase, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWritingEntry } from './practiceGrading';
 
 /** What the site saves for one exercise (only these fields are used) */
 export interface SavedEntry { answers?: Record<string, string>; text?: string; score?: number; pending?: boolean }
@@ -22,10 +22,12 @@ export interface PracticeResult {
 /** An exercise counts once it has been validated and nothing has been typed since */
 export const isValidated = (e?: SavedEntry) => !!e && e.score !== undefined && !e.pending;
 
-/** Note of one exercise: the table, or the table and its writings (half each), or the writing */
+/** Note of one exercise: the table, or the table and its writings (half each), the writing, or for a practical case
+ *  the questions and the writing (half each) */
 export function exerciseScore(ex: PracticeExercise, e: SavedEntry): number {
   const answers = e.answers || {};
   if (ex.kind === 'writing') return gradeWritingEntry(ex, e.text || '', answers).score;
+  if (ex.kind === 'case') return gradeCase(ex, answers, e.text || '').score;
   const table = gradeSheet(ex, answers).score;
   const writings = [
     ...(ex.writing ? [gradeSheetWriting(ex, answers, e.text || '')!.score] : []),
