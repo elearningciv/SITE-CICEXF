@@ -1,6 +1,6 @@
 // Correction of the practical work: spreadsheet cells (numbers, calculations, choices) and written answers
 // (key ideas found from expected words, accents and case ignored).
-import { inputCells, type Fmt, type SheetExercise, type WritingExercise } from '../data/elearning/practice';
+import { gradedCells, isCalc, isChoice, type CalcCell, type ChoiceInput, type Ctx, type Dyn, type Fmt, type NumInput, type SheetCell, type SheetExercise, type WritingCriterion } from '../data/elearning/practice';
 
 // ---------------------------------------------------------------------------------------------
 // Numbers and calculations typed by the learner: "1 650 000", "1650000 FCFA", "33,3 %", "=4*550000", "(12/30)*100"
@@ -78,19 +78,100 @@ export const formatValue = (v: number, fmt?: Fmt) => {
   return fmt === 'pct' ? `${s} %` : s;
 };
 
-export interface SheetResult { score: number; good: number; total: number; ok: Record<string, boolean> }
+/** Values of the cells (typed or calculated), as a spreadsheet would compute them */
+export function makeCtx(ex: SheetExercise, answers: Record<string, string>): Ctx {
+  const byId = new Map<string, SheetCell>();
+  for (const t of ex.tables) for (const row of t.rows) for (const c of row) if (typeof c === 'object' && 'id' in c) byId.set(c.id, c);
+  const memo = new Map<string, number | string | null>();
+  const busy = new Set<string>();
+  const ctx: Ctx = {
+    num(id) {
+      const c = byId.get(id);
+      if (!c) return null;
+      if (isCalc(c)) {
+        const v = calcValue(id, c);
+        return typeof v === 'number' && Number.isFinite(v) ? v : null;
+      }
+      const raw = (answers[id] || '').trim();
+      return raw ? evaluate(raw) : null;
+    },
+    text(id) {
+      const c = byId.get(id);
+      if (!c) return '';
+      if (isCalc(c)) { const v = calcValue(id, c); return v === null ? '' : String(v); }
+      return (answers[id] || '').trim();
+    }
+  };
+  const calcValue = (id: string, c: CalcCell) => {
+    if (memo.has(id)) return memo.get(id)!;
+    if (busy.has(id)) return null; // circular reference
+    busy.add(id);
+    let v: number | string | null = null;
+    try { v = c.calc(ctx); } catch { v = null; }
+    busy.delete(id);
+    memo.set(id, v);
+    return v;
+  };
+  return ctx;
+}
+
+const resolve = <T,>(d: Dyn<T> | undefined, ctx: Ctx): T | null | undefined => (typeof d === 'function' ? (d as (c: Ctx) => T | null)(ctx) : d);
+
+/** Text shown as the expected value of a cell after correction */
+export function expectedText(c: NumInput | ChoiceInput, ctx: Ctx): string {
+  if (isChoice(c)) { const a = resolve(c.answer, ctx); return Array.isArray(a) ? a.join(' ou ') : a ?? ''; }
+  if (c.range) return `entre ${formatValue(c.range[0], c.fmt)} et ${formatValue(c.range[1], c.fmt)}`;
+  const a = resolve(c.answer, ctx);
+  return a === null || a === undefined ? '' : formatValue(a, c.fmt);
+}
+
+/** Text shown in a calculated cell */
+export function calcText(c: CalcCell, ctx: Ctx): string {
+  const n = ctx.num(c.id);
+  if (n !== null) return formatValue(n, c.fmt);
+  return ctx.text(c.id) || '—';
+}
+
+export interface SheetResult {
+  score: number;
+  good: number;
+  total: number;
+  ok: Record<string, boolean>;
+  checks: { label: string; ok: boolean }[];
+}
 
 export function gradeSheet(ex: SheetExercise, answers: Record<string, string>): SheetResult {
-  const cells = inputCells(ex);
+  const ctx = makeCtx(ex, answers);
   const ok: Record<string, boolean> = {};
-  for (const c of cells) {
-    const raw = (answers[c.id] || '').trim();
-    ok[c.id] = typeof c.answer === 'number'
-      ? numericOk(raw, c.answer, 'fmt' in c ? c.fmt : undefined, 'tol' in c ? c.tol : undefined)
-      : raw === c.answer;
+  // An empty cell counts as 0 (as in a spreadsheet) only when another cell of the same row is filled in
+  const rowStarted = new Set<string>();
+  for (const t of ex.tables) for (const row of t.rows) {
+    const ids = row.filter((c): c is SheetCell & { id: string } => typeof c === 'object' && 'id' in c && !isCalc(c)).map((c) => c.id);
+    if (ids.some((id) => (answers[id] || '').trim())) ids.forEach((id) => rowStarted.add(id));
   }
-  const good = Object.values(ok).filter(Boolean).length;
-  return { score: cells.length ? Math.round((good / cells.length) * 100) : 0, good, total: cells.length, ok };
+  for (const c of gradedCells(ex)) {
+    const raw = (answers[c.id] || '').trim();
+    if (isChoice(c)) {
+      const a = resolve(c.answer, ctx);
+      ok[c.id] = !!raw && a !== null && a !== undefined && (Array.isArray(a) ? a.includes(raw) : raw === a);
+    } else if (c.range) {
+      const v = ctx.num(c.id);
+      ok[c.id] = v !== null && v >= c.range[0] - 1e-9 && v <= c.range[1] + 1e-9;
+    } else {
+      const a = resolve(c.answer, ctx);
+      ok[c.id] = a !== null && a !== undefined && (raw === '' ? a === 0 && rowStarted.has(c.id) : numericOk(raw, a, c.fmt, c.tol));
+    }
+  }
+  const checks = (ex.checks || []).map((k) => {
+    let pass = false;
+    try { pass = !!k.test(ctx); } catch { pass = false; }
+    return { label: k.label, ok: pass };
+  });
+  // Cells marked noScore are shown right or wrong but only the checks give their points
+  const scored = gradedCells(ex).filter((c) => !c.noScore).map((c) => c.id);
+  const good = scored.filter((id) => ok[id]).length + checks.filter((k) => k.ok).length;
+  const total = scored.length + checks.length;
+  return { score: total ? Math.round((good / total) * 100) : 0, good, total, ok, checks };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -118,7 +199,7 @@ export const hasKeyword = (norm: string, keyword: string) => {
 };
 
 /** A criterion is met when enough of its words (or word beginnings) appear in the answer */
-export function gradeWriting(ex: WritingExercise, text: string): WritingResult {
+export function gradeWriting(ex: { criteria: WritingCriterion[]; minWords: number }, text: string): WritingResult {
   const norm = normalizeText(text);
   const words = wordCount(text);
   const criteria = ex.criteria.map((c) => {
@@ -131,4 +212,12 @@ export function gradeWriting(ex: WritingExercise, text: string): WritingResult {
   // A list of key words is not a written answer: a too short text is capped at half the points
   if (tooShort) score = Math.min(score, 50);
   return { score, words, tooShort, criteria };
+}
+
+/** Writing asked below the tables: fixed criteria plus those that depend on the learner's tables */
+export function gradeSheetWriting(ex: SheetExercise, answers: Record<string, string>, text: string): WritingResult | null {
+  if (!ex.writing) return null;
+  let dyn: WritingCriterion[] = [];
+  try { dyn = ex.writing.dynamicCriteria ? ex.writing.dynamicCriteria(makeCtx(ex, answers)) : []; } catch { dyn = []; }
+  return gradeWriting({ criteria: [...ex.writing.criteria, ...dyn], minWords: ex.writing.minWords }, text);
 }

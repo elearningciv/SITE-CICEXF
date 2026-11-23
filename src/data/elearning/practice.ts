@@ -1,18 +1,36 @@
 // Practical work attached to some e-learning courses: a project file to read, spreadsheet-like exercises
-// filled in on the site and corrected cell by cell, and written answers corrected from the key ideas they
-// must contain. This work is formative: the correction and the model answer are shown after each attempt,
-// and it does not count for the certificate.
+// filled in on the site (with cells calculated automatically, as in a spreadsheet) and corrected, and
+// written answers corrected from the key ideas they must contain. This work is formative: the correction
+// and the model answer are shown after each attempt, and it does not count for the certificate.
 
 export type Fmt = 'fcfa' | 'pct' | 'n';
 
-/** Fixed text, fixed number, numeric answer or choice in a list */
-export type SheetCell =
-  | string
-  | { v: number; fmt?: Fmt }
-  | { id: string; answer: number; fmt?: Fmt; tol?: number }
-  | { id: string; answer: string; options: string[] };
+/** Read access to the other cells of the exercise, for calculated cells, answers and checks */
+export interface Ctx {
+  /** Numeric value of a cell (typed number or calculation, calculated cell), null if empty or invalid */
+  num(id: string): number | null;
+  /** Text of a cell (choice, calculated text) */
+  text(id: string): string;
+}
+/** A fixed expected value, or one that depends on what the learner typed elsewhere */
+export type Dyn<T> = T | ((c: Ctx) => T | null);
+
+/** Number typed by the learner: corrected against `answer` (with `tol`) or `range`; neither = free entry.
+ *  `noScore`: the cell is shown right or wrong but does not count alone (the points come from the checks). */
+export interface NumInput { id: string; answer?: Dyn<number>; fmt?: Fmt; tol?: number; range?: [number, number]; noScore?: boolean }
+/** Choice in a drop-down list: corrected against `answer` (one value or the list of accepted values); no answer = free choice */
+export interface ChoiceInput { id: string; options: string[]; answer?: Dyn<string | string[]>; noScore?: boolean }
+/** Free text typed by the learner (e.g. an observation); used by the checks */
+export interface TextInput { id: string; text: true; placeholder?: string }
+/** Cell calculated automatically from the others (like a spreadsheet formula) */
+export interface CalcCell { id: string; calc: (c: Ctx) => number | string | null; fmt?: Fmt }
+
+export type SheetCell = string | { v: number; fmt?: Fmt } | NumInput | ChoiceInput | TextInput | CalcCell;
 
 export interface SheetTable { title?: string; columns: string[]; rows: SheetCell[][] }
+
+/** Overall condition checked at correction time (e.g. every activity fully assigned) */
+export interface SheetCheck { label: string; test: (c: Ctx) => boolean }
 
 export interface SheetExercise {
   kind: 'sheet';
@@ -22,11 +40,24 @@ export interface SheetExercise {
   skill: string;
   /** Statement (HTML) */
   intro: string;
-  /** Calculation rules reminded under the statement (HTML) */
+  /** How to fill in the table (HTML) */
   rules?: string;
   tables: SheetTable[];
-  /** Commentary shown with the correction (HTML) */
+  checks?: SheetCheck[];
+  /** Example of a complete answer for the free cells (used by the tests, never shown) */
+  sample?: Record<string, string>;
+  /** Writing asked below the tables (e.g. an analysis note), corrected like the writing exercises */
+  writing?: SheetWriting;
+  /** Commentary shown once the table is entirely right (HTML) */
   explanation: string;
+}
+
+export interface SheetWriting {
+  prompt: string;
+  minWords: number;
+  criteria: WritingCriterion[];
+  /** Criteria that depend on what the learner declared in the tables */
+  dynamicCriteria?: (c: Ctx) => WritingCriterion[];
 }
 
 export interface WritingCriterion {
@@ -45,8 +76,6 @@ export interface WritingExercise {
   prompt: string;
   minWords: number;
   criteria: WritingCriterion[];
-  /** Model answer shown after the first attempt (HTML) */
-  model: string;
 }
 
 export type PracticeExercise = SheetExercise | WritingExercise;
@@ -66,6 +95,14 @@ const SETS: Record<string, () => Promise<PracticeSet>> = {
 export const hasPractice = (courseId: string) => courseId in SETS;
 export const loadPractice = (courseId: string): Promise<PracticeSet | null> => (SETS[courseId] ? SETS[courseId]() : Promise.resolve(null));
 
-/** Input cells of an exercise (spreadsheet) */
-export const inputCells = (ex: SheetExercise) =>
-  ex.tables.flatMap((t) => t.rows.flat()).filter((c): c is Extract<SheetCell, { id: string }> => typeof c === 'object' && 'id' in c);
+export const isCalc = (c: SheetCell): c is CalcCell => typeof c === 'object' && 'calc' in c;
+export const isChoice = (c: SheetCell): c is ChoiceInput => typeof c === 'object' && 'options' in c;
+export const isTextInput = (c: SheetCell): c is TextInput => typeof c === 'object' && 'text' in c;
+export const isNumInput = (c: SheetCell): c is NumInput => typeof c === 'object' && 'id' in c && !('calc' in c) && !('options' in c) && !('text' in c);
+export const isInput = (c: SheetCell): c is NumInput | ChoiceInput | TextInput => isNumInput(c) || isChoice(c) || isTextInput(c);
+
+/** Cells the learner fills in */
+export const inputCells = (ex: SheetExercise) => ex.tables.flatMap((t) => t.rows.flat()).filter(isInput);
+/** Cells that are corrected one by one */
+export const gradedCells = (ex: SheetExercise) =>
+  inputCells(ex).filter((c): c is NumInput | ChoiceInput => !isTextInput(c) && (c.answer !== undefined || (isNumInput(c) && c.range !== undefined)));
