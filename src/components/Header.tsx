@@ -277,17 +277,8 @@ export default function Header({
               className="flex items-center space-x-2 cursor-pointer group shrink-0"
               onClick={() => handleNavClick('home')}
             >
-              <div className="w-9 h-9 bg-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-base shadow-sm group-hover:scale-105 transition-transform shrink-0">
-                CX
-              </div>
-              <div className="shrink-0 flex items-center leading-none">
-                <span className="font-display font-extrabold text-lg tracking-tight text-brand-blue">
-                  CIC
-                </span>
-                <span className="font-display font-extrabold text-lg tracking-tight text-brand-emerald">
-                  EXF
-                </span>
-              </div>
+              <img src="/logo-cicexf-header.png" alt="CICEXF, Cabinet International de Consultance, d'Expertise et de Formation" width={173} height={112}
+                className="h-10 w-auto shrink-0 group-hover:scale-105 transition-transform" />
             </div>
 
             {/* Mobile Controls in exact order: 1. Recherche, 2. IA, 3. Menu */}
@@ -345,19 +336,10 @@ export default function Header({
                 className="flex items-center space-x-2 xl:space-x-2.5 cursor-pointer group shrink-0 mr-2 lg:mr-3"
                 onClick={() => handleNavClick('home')}
               >
-                <div className="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 bg-white/10 rounded-lg flex items-center justify-center text-white font-bold text-xs lg:text-sm xl:text-base shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white/10 shrink-0">
-                  CX
-                </div>
-                <div className="shrink-0">
-                  <div className="flex items-center">
-                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-white">
-                      CIC
-                    </span>
-                    <span className="font-display font-black text-xs xl:text-sm tracking-wider text-orange-300">
-                      EXF
-                    </span>
-                  </div>
-                </div>
+                <span className="flex items-center bg-white rounded-lg px-1.5 py-0.5 shadow-sm group-hover:scale-105 transition-transform duration-300 shrink-0">
+                  <img src="/logo-cicexf-header.png" alt="CICEXF, Cabinet International de Consultance, d'Expertise et de Formation" width={173} height={112}
+                    className="h-7 lg:h-8 xl:h-9 w-auto" />
+                </span>
               </div>
 
               {/* Boutons WhatsApp et Mail directs du CICEXF pour nous contacter directement */}

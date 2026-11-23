@@ -31,6 +31,10 @@ export interface Course {
   modules: Record<string, ModuleContent>;
   /** Acronyms used in the course, with their definition */
   glossary?: { s: string; d: string }[];
+  /** Threshold of the quizzes when it is not 80 % (0 = no threshold: a step is cleared once sent) */
+  pass?: number;
+  /** The right answers are shown once the learner has sent a quiz */
+  showAnswers?: boolean;
 }
 
 /** Short description of a course, enough for the cards and the training space */
@@ -46,7 +50,12 @@ export interface CourseMeta {
   defaultStatus?: CourseStatus;
   stats: { parts: number; chapters: number; modules: number; quizzes: number; exams: number; tests?: number; questions?: number };
   steps: { id: string; kind: CourseStep['kind']; title: string; modules: number }[];
+  pass?: number;
+  showAnswers?: boolean;
 }
+
+/** Threshold of the quizzes of a course (80 % unless the course sets its own) */
+export const passOf = (c?: { pass?: number } | null) => (typeof c?.pass === 'number' ? c.pass : PASS);
 
 /** open: visible and playable; closed: hidden for now (progress kept); deleted: removed for good */
 export type CourseStatus = 'open' | 'closed' | 'deleted';
@@ -155,7 +164,9 @@ export const stepQuestionCount = (course: Course, s: CourseStep) =>
 export const courseHours = (course: Course) =>
   Math.round(course.steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 0) / 60);
 /** One-line description of a course (cards and registration) */
-export const statsLine = (st: CourseMeta['stats'], hours: number) => st.tests
+export const statsLine = (st: CourseMeta['stats'], hours: number) => !st.chapters && st.questions
+  ? `${st.parts} parties · ${st.exams} quiz · ${st.questions} questions · travaux pratiques · ${hours} h environ`
+  : st.tests
   ? `${st.parts} parties · ${st.chapters} chapitres · ${st.modules} modules · ${st.tests} tests de chapitre · ${st.exams} examens · ${st.questions} questions · ${hours} h environ`
   : `${st.chapters} chapitres · ${st.modules} modules · ${st.quizzes} quiz · ${st.exams} examen${st.exams > 1 ? 's' : ''} · ${hours} h environ`;
 export const courseStats = (course: Course) => {

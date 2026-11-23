@@ -1,6 +1,9 @@
 // Development only: a local simulation of the E-learning services (accounts, grading, certificates),
 // stored in this browser. It is never part of the production build (see getElearningApi).
 import { PASS } from '../data/elearning';
+import { PRACTICE_PASS, PRACTICE_WEIGHTS, loadPractice } from '../data/elearning/practice';
+import { passOf } from '../data/elearning';
+import { combinedNote, practiceResult } from './practiceScore';
 import type { Answers, Certificate, ElearningApi, LearnerProfile, LearnerSession, Progress } from './elearningApi';
 import type { CourseStatus } from '../data/elearning';
 import { EMPTY_PROGRESS, ElearningError, isReviewerEmail, localDraft, localPractice } from './elearningApi';
@@ -13,6 +16,8 @@ interface ServerCourse {
   hours: number;
   steps: { id: string; kind: string; modules: string[] }[];
   key: Record<string, number[][]>;
+  pass?: number;
+  showAnswers?: boolean;
 }
 interface Store {
   users: Record<string, { uid: string; password: string; profile: LearnerProfile | null }>;
@@ -123,7 +128,7 @@ export function createMockApi(): ElearningApi {
       const prev = s.progress[id]?.[courseId] || { ...EMPTY_PROGRESS };
       const index = course.steps.findIndex((x) => x.id === stepId);
       if (index < 0) throw new ElearningError('Étape introuvable');
-      if (!reviewer && !course.steps.slice(0, index).every((x) => (sim ? prev.scores[x.id] !== undefined : (prev.scores[x.id] || 0) >= PASS))) throw new ElearningError("Cette étape n'est pas encore débloquée");
+      if (!reviewer && !course.steps.slice(0, index).every((x) => prev.scores[x.id] !== undefined && (sim || prev.scores[x.id] >= passOf(course)))) throw new ElearningError("Cette étape n'est pas encore débloquée");
       const step = course.steps[index];
       const modules = step.modules.map((modId) => {
         let good = 0, total = 0;
@@ -131,7 +136,7 @@ export function createMockApi(): ElearningApi {
         return { id: modId, good, total, pct: Math.round((good / total) * 100) };
       });
       const good = modules.reduce((n, m) => n + m.good, 0), total = modules.reduce((n, m) => n + m.total, 0);
-      const pct = Math.round((good / total) * 100), passed = pct >= PASS;
+      const pct = Math.round((good / total) * 100), passed = pct >= passOf(course);
       const now = new Date().toISOString();
       const progress: Progress = {
         ...prev,
@@ -143,7 +148,7 @@ export function createMockApi(): ElearningApi {
       };
       s.progress[id] = { ...(s.progress[id] || {}), [courseId]: progress };
       save(s);
-      return { pct, good, total, passed, best: progress.scores[stepId], modules, progress };
+      return { pct, good, total, passed, best: progress.scores[stepId], modules, progress, ...(course.showAnswers ? { correct: Object.fromEntries(step.modules.map((mid) => [mid, course.key[mid]])) } : {}) };
     },
     async issueCertificate(courseId) {
       await wait();
@@ -154,7 +159,17 @@ export function createMockApi(): ElearningApi {
       if (prog?.certificate && s.certificates[prog.certificate]) return s.certificates[prog.certificate];
       const reviewer = await isReviewerEmail(me.email);
       const sim = reviewer || isSim(courseId);
-      if (!prog || (reviewer ? prog.scores.FINAL === undefined : !course.steps.every((x) => (sim ? prog.scores[x.id] !== undefined : (prog.scores[x.id] || 0) >= PASS)))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
+      if (!prog || (reviewer ? prog.scores.FINAL === undefined : !course.steps.every((x) => prog.scores[x.id] !== undefined && (sim || prog.scores[x.id] >= passOf(course))))) throw new ElearningError('Toutes les étapes doivent être validées avec 80 % au moins');
+      // Travaux pratiques comptés dans la note (même règle que le serveur)
+      const weight = PRACTICE_WEIGHTS[courseId];
+      const set = weight ? await loadPractice(courseId) : null;
+      const practice = set ? practiceResult(set, localPractice.get(me.uid, courseId)) : null;
+      if (practice && practice.missing.length && !reviewer) {
+        throw new ElearningError(`Les travaux pratiques comptent pour ${Math.round(weight * 100)} % de la note du certificat : validez d'abord tous les exercices (${practice.done} sur ${practice.total}). Il reste : ${practice.missing.join(' ; ')}.`);
+      }
+      if (practice && practice.average < PRACTICE_PASS && !reviewer) {
+        throw new ElearningError(`La note des travaux pratiques doit atteindre ${PRACTICE_PASS} % pour obtenir le certificat (elle est de ${practice.average} %). Reprenez les exercices les plus faibles, puis validez-les de nouveau.`);
+      }
       const profile = s.users[me.email].profile!;
       s.counter += 1;
       const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -167,7 +182,9 @@ export function createMockApi(): ElearningApi {
         uid: me.uid, number, courseId, courseTitle: course.certTitle,
         lastName: profile.nom, firstName: profile.prenom,
         startedAt: prog.startedAt!, finishedAt: prog.finishedAt!, issuedAt: new Date().toISOString(),
-        average: Math.round(values.reduce((a, b) => a + b, 0) / values.length), hours: course.hours,
+        average: practice ? combinedNote(Math.round(values.reduce((a, b) => a + b, 0) / values.length), practice.average, weight) : Math.round(values.reduce((a, b) => a + b, 0) / values.length),
+        ...(practice ? { quizAverage: Math.round(values.reduce((a, b) => a + b, 0) / values.length), practiceAverage: practice.average, practiceWeight: weight } : {}),
+        hours: course.hours,
         simulation: sim,
         stats: {
           parts: course.steps.filter((x) => x.kind === 'examen').length,

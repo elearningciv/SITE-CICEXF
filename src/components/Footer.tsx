@@ -62,12 +62,10 @@ export default function Footer({
           
           {/* Identity & Legal Info */}
           <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 bg-white text-[#8A2E1C] rounded-lg flex items-center justify-center font-black text-sm shadow-md shrink-0">
-                CX
-              </div>
-              <span className="font-display font-extrabold text-base tracking-tight text-white">
-                CIC<span className="text-yellow-400">EXF</span>
+            <div className="flex items-center">
+              <span className="inline-flex bg-white rounded-xl px-2.5 py-1.5 shadow-md">
+                <img src="/logo-cicexf.png" alt="CICEXF, Cabinet International de Consultance, d'Expertise et de Formation" width={341} height={200}
+                  loading="lazy" className="h-16 w-auto" />
               </span>
             </div>
             <div className="pt-1 text-xs space-y-1 font-sans">

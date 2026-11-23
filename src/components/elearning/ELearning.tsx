@@ -1,7 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Award, BadgeCheck, BookOpen, CheckCircle2, ChevronDown, ClipboardCheck, ClipboardList, Clock, Download, GraduationCap, Library, Loader2, Lock, LogOut, PauseCircle, Play, Search, ShieldCheck, UserRound } from 'lucide-react';
 import {
-  CATALOG, COMING_SOON, PASS, courseStatus, isExam, loadCourse, statsLine, stepQuestionCount,
+  CATALOG, COMING_SOON, PASS, courseStatus, isExam, loadCourse, passOf, statsLine, stepQuestionCount,
   type Course, type CourseMeta, type CourseStatus, type CourseStep
 } from '../../data/elearning';
 import {
@@ -9,7 +9,7 @@ import {
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
-import { hasPractice } from '../../data/elearning/practice';
+import { hasPractice, PRACTICE_WEIGHTS, PRACTICE_PASS } from '../../data/elearning/practice';
 
 const ElearningPlayer = lazy(() => import('./ElearningPlayer'));
 const PracticeView = lazy(() => import('./PracticeView'));
@@ -150,7 +150,7 @@ export default function ELearning() {
   const statusOf = (id: string): CourseStatus => { const m = metaOf(id); return m ? courseStatus(m, statuses) : 'deleted'; };
   const openMetas = CATALOG.filter((c) => (reviewer ? statusOf(c.id) !== 'deleted' : statusOf(c.id) === 'open'));
   const noteOf = (id: string) => (reviewer && statusOf(id) !== 'open' ? 'Fermée au public : visible en mode contrôle administrateur' : undefined);
-  const finishedCourse = (id: string) => stepCleared(progressOf(id), 'FINAL', PASS);
+  const finishedCourse = (id: string) => stepCleared(progressOf(id), 'FINAL', passOf(metaOf(id)));
   const mySpace = CATALOG.filter((c) => isEnrolled(c.id) && (statusOf(c.id) !== 'deleted' || finishedCourse(c.id)));
   const bar = signedIn ? <LearnerBar api={api} profile={profile!} go={go} /> : null;
   const shell = (children: ReactNode, wide?: boolean) => <Shell simulated={api.simulated} bar={bar} wide={wide}>{children}</Shell>;
@@ -202,7 +202,7 @@ export default function ELearning() {
     const course = courses[courseId];
     if (!course) return spinner;
     const progress = progressOf(courseId), draft = draftOf(courseId);
-    const passed = (id: string) => stepCleared(progress, id, PASS);
+    const passed = (id: string) => stepCleared(progress, id, passOf(course));
     const closedNotice = status === 'open' || reviewer ? undefined
       : passed('FINAL') ? 'Cette certification est fermée aux nouvelles inscriptions. Votre certificat reste disponible.'
       : 'Cette certification est momentanément fermée. Votre progression est conservée : vous pourrez la reprendre dès sa réouverture.';
@@ -538,9 +538,9 @@ function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, pr
 
   const rows = metas.map((c) => {
     const p = progressOf(c.id), d = draftOf(c.id);
-    const done = c.steps.filter((s) => stepCleared(p, s.id, PASS)).length;
-    const finished = stepCleared(p, 'FINAL', PASS);
-    const current = c.steps.find((s) => !stepCleared(p, s.id, PASS));
+    const done = c.steps.filter((s) => stepCleared(p, s.id, passOf(c))).length;
+    const finished = stepCleared(p, 'FINAL', passOf(c));
+    const current = c.steps.find((s) => !stepCleared(p, s.id, passOf(c)));
     return { c, p, d, done, finished, current, pct: Math.round((done / c.steps.length) * 100) };
   });
   const inProgress = rows.filter((r) => !r.finished);
@@ -660,7 +660,8 @@ function EspaceView({ api, metas, statusOf, enrollments, progressOf, draftOf, pr
 function PathView({ course, meta, progress, draft, go, notice, locked, reviewer }: {
   course: Course; meta: CourseMeta; progress: Progress; draft: Draft | null; go: (h: string) => void; notice?: string; locked?: boolean; reviewer?: boolean;
 }) {
-  const passed = (id: string) => stepCleared(progress, id, PASS);
+  const pass = passOf(course);
+  const passed = (id: string) => stepCleared(progress, id, pass);
   const isOpen = (i: number) => !locked && (reviewer || course.steps.slice(0, i).every((s) => passed(s.id)));
   const done = course.steps.filter((s) => passed(s.id)).length;
   const pct = Math.round((done / course.steps.length) * 100);
@@ -669,7 +670,7 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
     const n = stepQuestionCount(course, s);
     if (s.kind === 'module') return `Texte de cours et quiz de ${n} questions · ${PASS} % requis`;
     if (s.kind === 'test') return `Test de chapitre · ${n} questions · ${PASS} % requis`;
-    if (isExam(s)) return `${n} questions · ${PASS} % requis`;
+    if (isExam(s)) return pass === 0 ? `Quiz de ${n} questions · sans seuil · bonnes réponses affichées après l'envoi` : `${n} questions · ${PASS} % requis`;
     return `${s.modules.length} modules · ${s.modules.reduce((k, m) => k + course.modules[m.id].quizzes.length, 0)} quiz · ${PASS} % requis`;
   };
 
@@ -690,7 +691,7 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
             <span className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">{subtitle(s)}</span>
             {resuming && <span className="block mt-0.5 text-xs sm:text-sm font-bold text-brand-emerald">En cours : {draftWhere(meta, draft!)}</span>}
           </div>
-          {sc !== undefined && <span className={`text-sm font-extrabold ${sc >= PASS ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{sc} %</span>}
+          {sc !== undefined && <span className={`text-sm font-extrabold ${sc >= pass ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{sc} %</span>}
           {open && (
             <button onClick={(e) => { e.stopPropagation(); go(target); }}
               className={`ml-12 sm:ml-0 inline-flex items-center justify-center rounded-xl px-4 py-2 font-extrabold text-sm transition-colors ${ok && !resuming ? 'border-2 border-brand-blue text-brand-blue dark:border-sky-300 dark:text-sky-300 hover:bg-brand-blue hover:text-white' : 'bg-brand-emerald hover:bg-brand-emerald-dark text-white'}`}>
@@ -740,6 +741,12 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
         {passed('FINAL') && <button onClick={() => go(`certificat/${course.id}`)} className={primary}><Award className="w-4 h-4" />Mon certificat</button>}
       </div>
 
+      {pass === 0 && (
+        <p className="mb-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-l-4 border-brand-blue px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
+          <strong>Comment se compose votre note :</strong> trois quiz de questions générales sur ce qui est vu au cours, sans seuil à atteindre ; les bonnes réponses s'affichent après l'envoi de chaque quiz.
+          {hasPractice(course.id) && ` Les quiz comptent pour ${Math.round((1 - (PRACTICE_WEIGHTS[course.id] ?? 0)) * 100)} % de la note finale et les travaux pratiques pour ${Math.round((PRACTICE_WEIGHTS[course.id] ?? 0) * 100)} % ; la note des travaux pratiques doit atteindre ${PRACTICE_PASS} % pour obtenir le certificat.`}
+        </p>
+      )}
       {course.chapters && (
         <p className="mb-4 rounded-2xl bg-sky-50 dark:bg-sky-950/40 border-l-4 border-brand-blue px-4 py-3 text-sm text-slate-800 dark:text-slate-200">
           <strong>Progression contrôlée :</strong> chaque module se valide avec {PASS} % au moins pour ouvrir le suivant ; chaque chapitre se termine par un test et chaque partie par un examen, à réussir avec {PASS} % au moins. L'examen final de certification compte {stepQuestionCount(course, finalStep)} questions.
@@ -756,7 +763,7 @@ function PathView({ course, meta, progress, draft, go, notice, locked, reviewer 
           <ClipboardList className="w-8 h-8 text-[#C9933F] shrink-0" />
           <div className="flex-1 min-w-[220px]">
             <strong className="block text-base sm:text-lg text-brand-blue dark:text-sky-300">Travaux pratiques sur le projet PGC-Vie</strong>
-            <span className="text-sm text-slate-600 dark:text-slate-400">Dossier du projet (TDR et offre financière), tableaux à remplir et rédactions corrigés directement sur le site. Accessibles à tout moment, ils ne comptent pas pour le certificat.</span>
+            <span className="text-sm text-slate-600 dark:text-slate-400">Dossier du projet (TDR et offre financière), tableaux à remplir et rédactions corrigés directement sur le site. Accessibles à tout moment, ils comptent pour {Math.round((PRACTICE_WEIGHTS[course.id] ?? 0) * 100)} % de la note du certificat : tous les exercices doivent être validés, avec une note d'au moins {PRACTICE_PASS} %.</span>
           </div>
           <button onClick={() => go(`pratique/${course.id}`)} className={primary}>Ouvrir les travaux pratiques</button>
         </div>
@@ -847,14 +854,22 @@ function CertificateView({ api, course, profile, progress, onProgress, go }: {
     <div className="max-w-3xl mx-auto">
       <div className={`${card} p-7 text-center`}>
         <Award className="w-12 h-12 mx-auto text-amber-500" />
-        <h2 className="mt-2 text-2xl font-extrabold text-emerald-700 dark:text-emerald-400">Félicitations, {profile.prenom} !</h2>
+        <h2 className="mt-2 text-2xl font-extrabold text-emerald-700 dark:text-emerald-400">{error && /travaux pratiques/.test(error) ? `Encore une étape, ${profile.prenom} !` : `Félicitations, ${profile.prenom} !`}</h2>
         {!cert && !error && <p className="mt-4 inline-flex items-center gap-2 text-slate-500"><Loader2 className="w-4 h-4 animate-spin" />Préparation de votre certificat…</p>}
         {error && <p className="mt-4 font-bold text-brand-emerald">{error}</p>}
+        {error && /travaux pratiques/.test(error) && hasPractice(course.id) && (
+          <button onClick={() => go(`pratique/${course.id}`)} className={`${primary} mt-4`}><ClipboardList className="w-4 h-4" />Ouvrir les travaux pratiques</button>
+        )}
         {cert && (
           <>
             {cert.simulation
               ? <p className="mt-2 rounded-xl bg-violet-50 dark:bg-violet-950/40 px-3 py-2 text-violet-800 dark:text-violet-300 font-bold">Mode simulation : voici un certificat spécimen (moyenne {cert.average} %), sans valeur officielle, pour voir comment il est délivré.</p>
-              : <p className="mt-2 text-slate-600 dark:text-slate-300">Vous avez validé toutes les étapes avec une moyenne de {cert.average} %. Votre certificat est prêt.</p>}
+              : <p className="mt-2 text-slate-600 dark:text-slate-300">Vous avez validé toutes les étapes avec une note finale de {cert.average} %. Votre certificat est prêt.</p>}
+            {cert.practiceAverage !== undefined && cert.quizAverage !== undefined && cert.practiceWeight !== undefined && (
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                Note finale {cert.average} % = quiz et examens {cert.quizAverage} % (pour {Math.round((1 - cert.practiceWeight) * 100)} %) + travaux pratiques {cert.practiceAverage} % (pour {Math.round(cert.practiceWeight * 100)} %).
+              </p>
+            )}
             <dl className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left text-sm">
               <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 p-4"><dt className="text-slate-500">Titulaire</dt><dd className="font-extrabold text-slate-900 dark:text-white">{`${cert.lastName} ${cert.firstName}`.toLocaleUpperCase('fr-FR')}</dd></div>
               <div className="rounded-2xl bg-slate-50 dark:bg-slate-800 p-4"><dt className="text-slate-500">Numéro</dt><dd className="font-extrabold text-slate-900 dark:text-white">{cert.number}</dd></div>

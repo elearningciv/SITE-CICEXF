@@ -2,8 +2,9 @@
 // written answers corrected from their key ideas. Formative: the correction is shown after each attempt.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Lock, PenLine, RotateCcw, XCircle } from 'lucide-react';
-import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
+import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, PRACTICE_PASS, PRACTICE_WEIGHTS, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
+import { practiceResult } from '../../lib/practiceScore';
 import { PASS } from '../../data/elearning';
 import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, sheetTableText, tableWritingKey, wordCount } from '../../lib/practiceGrading';
 
@@ -84,6 +85,9 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
   }
 
   const done = set.exercises.filter((e) => state[e.id]?.score !== undefined).length;
+  // Note counted in the certificate (the server computes it again from the saved answers)
+  const weight = PRACTICE_WEIGHTS[courseId] ?? 0;
+  const note = practiceResult(set, state);
   return (
     <div className="w-full">
       <button onClick={() => go(`parcours/${courseId}`)} className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue dark:text-sky-300 underline"><ArrowLeft className="w-4 h-4" />Retour au parcours</button>
@@ -92,6 +96,12 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
         <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2"><ClipboardList className="w-6 h-6 text-[#C9933F]" />{set.title}</h1>
         <p className="mt-2 text-slate-600 dark:text-slate-300">{set.intro}</p>
         <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-200">{done} exercice{done > 1 ? 's' : ''} réalisé{done > 1 ? 's' : ''} sur {set.exercises.length}</p>
+        {weight > 0 && (
+          <p className="mt-3 rounded-xl bg-brand-blue/[0.06] dark:bg-sky-950/40 border-l-4 border-brand-blue px-3 py-2 text-sm text-slate-800 dark:text-slate-100">
+            <strong>Note des travaux pratiques : {note.average} %</strong> ({note.done} exercice{note.done > 1 ? 's' : ''} validé{note.done > 1 ? 's' : ''} sur {note.total}, un exercice non validé compte 0 %).
+            Elle compte pour {Math.round(weight * 100)} % de la note finale du certificat, les quiz pour {Math.round((1 - weight) * 100)} %. Le certificat n'est délivré qu'une fois tous les exercices validés, avec une note des travaux pratiques d'au moins {PRACTICE_PASS} %.
+          </p>
+        )}
       </div>
       {inProgress && (
         <div className="mb-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-[#C9933F] px-4 py-3 flex flex-wrap items-center gap-3">

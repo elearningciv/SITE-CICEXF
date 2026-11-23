@@ -1,7 +1,7 @@
 // Practical work attached to some e-learning courses: a project file to read, spreadsheet-like exercises
 // filled in on the site (with cells calculated automatically, as in a spreadsheet) and corrected, and
-// written answers corrected from the key ideas they must contain. This work is formative: the correction
-// and the model answer are shown after each attempt, and it does not count for the certificate.
+// written answers corrected from the key ideas they must contain. For the courses listed in PRACTICE_WEIGHTS,
+// the practical work counts in the note of the certificate (computed again by the server, see practiceScore.ts).
 
 export type Fmt = 'fcfa' | 'pct' | 'n';
 
@@ -135,6 +135,12 @@ const SETS: Record<string, () => Promise<PracticeSet>> = {
 };
 
 export const hasPractice = (courseId: string) => courseId in SETS;
+
+/** Weight of the practical work in the note of the certificate (the quizzes and exams make up the rest); every
+ *  exercise must be validated before the certificate is issued */
+export const PRACTICE_WEIGHTS: Record<string, number> = { 'management-pilotage-communautaire': 0.6 };
+/** Note of the practical work (average of the exercises) required for the certificate */
+export const PRACTICE_PASS = 80;
 export const loadPractice = (courseId: string): Promise<PracticeSet | null> => (SETS[courseId] ? SETS[courseId]() : Promise.resolve(null));
 
 export const isCalc = (c: SheetCell): c is CalcCell => typeof c === 'object' && 'calc' in c;

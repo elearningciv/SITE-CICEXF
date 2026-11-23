@@ -44,8 +44,20 @@ const permutation = (n) => {
 // With COURSE.structure === 'modules', every module is a step of its own (80 % to open the next module),
 // each chapter ends with a chapter test and each part with a part exam (80 % to move on each time).
 const granular = COURSE.structure === 'modules';
+// With COURSE.structure === 'quiz', there is no lesson: one quiz per part, the last part being the final exam
+// (its result opens the certificate). COURSE.pass sets the threshold of the quizzes (0 = no threshold) and
+// COURSE.showAnswers shows the right answers once the learner has sent a quiz.
+const quizOnly = COURSE.structure === 'quiz';
 const steps = [];
-for (const p of COURSE.parts) {
+if (quizOnly) {
+  COURSE.parts.forEach((p, i) => {
+    const last = i === COURSE.parts.length - 1;
+    const id = last ? 'FINAL' : p.id + 'E';
+    const title = 'Quiz de la ' + p.title.split(' : ')[0].toLowerCase();
+    steps.push({ id, kind: last ? 'final' : 'examen', part: p.id, title, modules: [{ id, title, minutes: p.minutes ?? 20 }] });
+  });
+}
+for (const p of quizOnly ? [] : COURSE.parts) {
   for (const c of p.chapters) {
     if (!granular) { steps.push({ id: c.id, kind: 'chapitre', part: p.id, title: c.title, modules: c.modules }); continue; }
     for (const m of c.modules) steps.push({ id: m.id, kind: 'module', part: p.id, chapter: c.id, title: m.title, modules: [m] });
@@ -57,7 +69,9 @@ for (const p of COURSE.parts) {
   const title = 'Examen de la ' + p.title.split(' : ')[0].toLowerCase();
   steps.push({ id: p.id + 'E', kind: 'examen', part: p.id, title, modules: [{ id: p.id + 'E', title, minutes: granular ? 25 : 20 }] });
 }
-steps.push({ id: 'FINAL', kind: 'final', part: null, title: 'Examen final de certification', modules: [{ id: 'FINAL', title: 'Examen final de certification', minutes: COURSE.finalMinutes ?? 40 }] });
+if (!quizOnly) steps.push({ id: 'FINAL', kind: 'final', part: null, title: 'Examen final de certification', modules: [{ id: 'FINAL', title: 'Examen final de certification', minutes: COURSE.finalMinutes ?? 40 }] });
+// Quiz rules of the course (kept only when they differ from the usual 80 % and hidden answers)
+const rules = { ...(typeof COURSE.pass === 'number' ? { pass: COURSE.pass } : {}), ...(COURSE.showAnswers ? { showAnswers: true } : {}) };
 
 const modules = {};
 const key = {};
@@ -94,6 +108,7 @@ const course = {
   summary: COURSE.summary || "Lire une carte, maîtriser les coordonnées, analyser l'espace et produire des cartes professionnelles avec QGIS.",
   parts: COURSE.parts.map((p) => ({ id: p.id, title: p.title, ...(p.sources ? { sources: p.sources } : {}) })),
   ...(granular ? { chapters: COURSE.parts.flatMap((p) => p.chapters.map((c) => ({ id: c.id, title: c.title, part: p.id }))) } : {}),
+  ...rules,
   steps,
   modules
 };
@@ -101,6 +116,9 @@ const course = {
 const undefinedAcronyms = applyAcronyms(course);
 if (undefinedAcronyms.length) console.log('Sigles sans définition :', undefinedAcronyms.join(', '));
 const minutes = steps.flatMap((s) => s.modules).reduce((n, m) => n + m.minutes, 0);
+// Duration shown on the cards and the certificate: the course's own figure when it is given (e.g. a training
+// whose time is spent on practical work rather than in the quizzes)
+const hours = COURSE.hours ?? Math.max(1, Math.round(minutes / 60));
 // Course code used in certificate numbers (3 characters)
 const words = COURSE.id.toUpperCase().split('-');
 const code = COURSE.code || (words.length >= 3 ? words.slice(0, 3).map((w) => w[0]).join('') : words.length === 2 ? words[0][0] + words[1].slice(0, 2) : words[0].slice(0, 3));
@@ -113,7 +131,8 @@ const server = {
   code,
   defaultStatus,
   certTitle: COURSE.certTitle,
-  hours: Math.max(1, Math.round(minutes / 60)),
+  hours,
+  ...rules,
   parts: COURSE.parts.length,
   steps: steps.map((s) => ({ id: s.id, kind: s.kind, modules: s.modules.map((m) => m.id) })),
   key
@@ -129,7 +148,9 @@ fs.writeFileSync(out2, JSON.stringify(server));
 // Catalogue entry (kept small: loaded with the E-learning tab, the full course only when needed)
 const chapters = steps.filter((s) => s.kind === 'chapitre');
 const moduleSteps = steps.filter((s) => s.kind === 'module');
-const stats = granular ? {
+const stats = quizOnly ? {
+  parts: COURSE.parts.length, chapters: 0, modules: 0, quizzes: steps.length, exams: steps.length, questions
+} : granular ? {
   parts: COURSE.parts.length,
   chapters: COURSE.parts.reduce((n, p) => n + p.chapters.length, 0),
   modules: moduleSteps.length,
@@ -151,7 +172,8 @@ const meta = {
   certTitle: COURSE.certTitle,
   domain: COURSE.domain,
   summary: course.summary,
-  hours: Math.max(1, Math.round(minutes / 60)),
+  hours,
+  ...rules,
   defaultStatus,
   stats,
   steps: steps.map((s) => ({ id: s.id, kind: s.kind, title: s.title, modules: s.modules.length }))
@@ -159,6 +181,6 @@ const meta = {
 const next = [...catalog.filter((c) => c.id !== meta.id), meta].sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
 fs.writeFileSync(catalogFile, JSON.stringify(next, null, 1));
 const positions = Object.values(key).flat(2).reduce((a, g) => ((a[g] = (a[g] || 0) + 1), a), {});
-console.log(`${COURSE.id} : ${steps.length} étapes, ${Object.keys(modules).length} modules, ${questions} questions, ${Math.round(minutes / 60)} h`);
+console.log(`${COURSE.id} : ${steps.length} étapes, ${Object.keys(modules).length} modules, ${questions} questions, ${hours} h`);
 console.log('Position des bonnes réponses :', positions);
 console.log(`→ ${out1} (${(fs.statSync(out1).size / 1024).toFixed(0)} Ko)\n→ ${out2}`);

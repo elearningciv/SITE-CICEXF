@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpenCheck, CheckCircle2, Eye, EyeOff, Loader2, LogOut, RotateCcw, XCircle } from 'lucide-react';
-import { PASS, isExam, stepQuestionCount, stepWords, type Course, type CourseStep } from '../../data/elearning';
+import { isExam, passOf, stepQuestionCount, stepWords, type Course, type CourseStep } from '../../data/elearning';
 import type { Answers, Draft, ElearningApi, GradeResult, Progress } from '../../lib/elearningApi';
 import { learnerErrorMessage } from '../../lib/elearningApi';
 
@@ -270,7 +270,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
               </details>
             )}
             <div className="mt-6 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 px-5 py-4 text-sm text-slate-800 dark:text-slate-200">
-              <strong>Avant de commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} :</strong> ce module comporte {content.quizzes.length > 1 ? `${content.quizzes.length} quiz de ${content.quizzes[0].questions.length} questions` : `un quiz de ${content.quizzes[0].questions.length} questions`}{step.kind === 'module' ? `, à réussir avec ${PASS} % au moins pour débloquer l'étape suivante` : ''}.
+              <strong>Avant de commencer {content.quizzes.length > 1 ? 'les quiz' : 'le quiz'} :</strong> ce module comporte {content.quizzes.length > 1 ? `${content.quizzes.length} quiz de ${content.quizzes[0].questions.length} questions` : `un quiz de ${content.quizzes[0].questions.length} questions`}{step.kind === 'module' ? `, à réussir avec ${passOf(course)} % au moins pour débloquer l'étape suivante` : ''}.
               Dès que vous commencez, <strong>ce texte se ferme</strong> et vous ne pourrez plus le consulter pendant les questions. Prenez le temps de bien le lire.
             </div>
             <div className="mt-5 flex justify-end">
@@ -286,7 +286,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
             <p className="text-xs font-extrabold tracking-widest uppercase text-brand-emerald">{exam ? course.title : mod.title}</p>
             <h2 className="mt-1 text-2xl font-extrabold text-brand-blue dark:text-sky-300">{quiz.title}</h2>
             <p className="mt-3 text-slate-700 dark:text-slate-300">{quiz.questions.length} questions, une à la fois. Choisissez une réponse puis passez à la suivante : il n'est pas possible de revenir en arrière.</p>
-            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Aucune correction n'est affichée pendant {exam ? words.the : 'le quiz'}. Votre résultat sera calculé à la fin {words.of}.</p>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Aucune correction n'est affichée pendant {exam ? words.the : 'le quiz'}. Votre résultat sera calculé à la fin {words.of}{course.showAnswers ? ', puis les bonnes réponses s’afficheront' : ''}.</p>
             <button onClick={() => { setK(0); setPhase('quiz'); }} className="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark text-white px-6 py-3 font-extrabold text-sm">
               {exam ? `Commencer ${words.the}` : `Commencer le ${quiz.title.split(' : ')[0].toLowerCase()}`} <ArrowRight className="w-4 h-4" />
             </button>
@@ -334,7 +334,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
             {!sending && result && (
               <>
                 <p className={`mt-2 text-5xl font-extrabold ${result.passed ? 'text-emerald-700 dark:text-emerald-400' : 'text-brand-emerald'}`}>{result.pct} %</p>
-                <p className="mt-1 text-slate-700 dark:text-slate-300"><strong>{result.good} bonnes réponses sur {result.total}.</strong> Seuil requis : {PASS} %.</p>
+                <p className="mt-1 text-slate-700 dark:text-slate-300"><strong>{result.good} bonnes réponses sur {result.total}.</strong> {passOf(course) === 0 ? 'Pas de seuil à atteindre : votre résultat est enregistré et compte dans la note finale.' : `Seuil requis : ${passOf(course)} %.`}</p>
                 {!exam && result.modules.length > 1 && (
                   <table className="w-full mt-5 text-sm text-left">
                     <thead><tr className="border-b border-slate-200 dark:border-slate-700"><th className="py-2 pr-3">Module</th><th className="py-2 text-right">Résultat</th></tr></thead>
@@ -352,7 +352,9 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                   <>
                     <p className="mt-5 inline-flex items-center gap-2 font-extrabold text-emerald-700 dark:text-emerald-400">
                       <CheckCircle2 className="w-5 h-5" />
-                      Félicitations : {words.done}. {step.kind === 'final' ? 'Votre certificat est prêt.' : nextTitle(course, step)}
+                      {passOf(course) === 0
+                        ? (step.kind === 'final' ? 'Dernier quiz envoyé : vous pouvez demander votre certificat.' : `Quiz envoyé. ${nextTitle(course, step)}`)
+                        : `Félicitations : ${words.done}. ${step.kind === 'final' ? 'Votre certificat est prêt.' : nextTitle(course, step)}`}
                     </p>
                     <div className="mt-5 flex justify-center">
                       {step.kind === 'final'
@@ -364,7 +366,7 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                   <>
                     <p className="mt-5 inline-flex items-center gap-2 font-extrabold text-brand-emerald">
                       <XCircle className="w-5 h-5" />
-                      Vous n'avez pas atteint les {PASS} % requis pour {words.next}.
+                      Vous n'avez pas atteint les {passOf(course)} % requis pour {words.next}.
                     </p>
                     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
                       {step.kind === 'module' ? 'Relisez attentivement le texte du module, puis recommencez-le.' : step.kind === 'test' ? 'Revoyez les modules du chapitre, puis repassez le test.' : exam ? "Révisez les chapitres concernés, puis repassez l'examen." : 'Relisez les modules où votre résultat est le plus faible, puis recommencez le chapitre.'} Vous pouvez recommencer autant de fois que nécessaire.
@@ -383,11 +385,44 @@ export default function ElearningPlayer({ api, course, step, onProgress, onExit,
                     </div>
                   </>
                 )}
+                {result.correct && <Correction course={course} step={step} answers={answers} correct={result.correct} />}
               </>
             )}
           </div>
         )}
       </article>
+    </div>
+  );
+}
+
+/** Right answers shown once the quiz has been sent (courses that show them): each question, the learner's answer
+ *  and, when it was wrong, the right one */
+function Correction({ course, step, answers, correct }: { course: Course; step: CourseStep; answers: Answers; correct: Record<string, number[][]> }) {
+  let n = 0;
+  return (
+    <div className="mt-8 text-left">
+      <h3 className="text-lg font-extrabold text-brand-blue dark:text-sky-300">Corrigé</h3>
+      <div className="mt-3 space-y-3">
+        {step.modules.flatMap((m) => course.modules[m.id].quizzes.flatMap((z, qi) => z.questions.map((q, k) => {
+          n += 1;
+          const good = correct[m.id]?.[qi]?.[k];
+          const mine = answers[m.id]?.[qi]?.[k];
+          const ok = mine !== undefined && mine === good;
+          return (
+            <div key={`${m.id}-${qi}-${k}`} className={`rounded-2xl border-l-4 px-4 py-3 ${ok ? 'border-brand-blue bg-sky-50 dark:bg-sky-950/30' : 'border-brand-emerald bg-brand-emerald/5 dark:bg-red-950/20'}`}>
+              <p className="font-bold text-slate-900 dark:text-white">{n}. {q.question}</p>
+              {ok ? (
+                <p className="mt-1 flex items-start gap-1.5 text-sm text-slate-700 dark:text-slate-200"><CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0 text-brand-blue dark:text-sky-300" />Bonne réponse : {q.answers[good]}</p>
+              ) : (
+                <>
+                  <p className="mt-1 flex items-start gap-1.5 text-sm text-slate-700 dark:text-slate-200"><XCircle className="w-4 h-4 mt-0.5 shrink-0 text-brand-emerald" />Votre réponse : {mine !== undefined ? q.answers[mine] : 'aucune'}</p>
+                  {good !== undefined && <p className="mt-0.5 flex items-start gap-1.5 text-sm font-bold text-slate-900 dark:text-white"><CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0 text-brand-blue dark:text-sky-300" />Bonne réponse : {q.answers[good]}</p>}
+                </>
+              )}
+            </div>
+          );
+        })))}
+      </div>
     </div>
   );
 }

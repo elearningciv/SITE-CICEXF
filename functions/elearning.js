@@ -27,6 +27,14 @@ if (fs.existsSync(keysDir)) {
   }
 }
 
+// Travaux pratiques comptés dans la note du certificat : correction recalculée ici à partir des réponses
+// enregistrées (copie de la correction du site, functions/practice/score.cjs, générée par
+// scripts/build-practice-function.mjs). Si cette copie manque, ces parcours refusent le certificat plutôt que
+// de l'accorder sans les travaux pratiques.
+const PRACTICE_REQUIRED = ['management-pilotage-communautaire'];
+let PRACTICE = null;
+try { PRACTICE = require('./practice/score.cjs'); } catch (e) { logger.error('Correction des travaux pratiques introuvable', e); }
+
 // Mode simulation (temporaire) : pour les comptes et parcours listés dans elearning/simulation.json
 // (fichier non publié), les étapes se débloquent dès qu'elles ont été tentées, même sous 80 %,
 // et le certificat délivré est un spécimen à numérotation de test, sans valeur officielle.
@@ -42,8 +50,10 @@ let REVIEWERS = [];
 const reviewersFile = path.join(__dirname, 'elearning', 'reviewers.json');
 if (fs.existsSync(reviewersFile)) REVIEWERS = (JSON.parse(fs.readFileSync(reviewersFile, 'utf8')).emails || []).map((e) => String(e).toLowerCase());
 const isReviewer = (email) => !!email && REVIEWERS.includes(String(email).toLowerCase());
-// Étape franchie : 80 % au moins, ou simplement tentée en mode simulation
-const cleared = (scores, stepId, sim) => (sim ? scores[stepId] !== undefined : (scores[stepId] || 0) >= PASS);
+// Seuil des quiz d'un parcours : 80 %, sauf seuil propre (0 = pas de seuil, l'étape est franchie une fois envoyée)
+const passOf = (course) => (typeof course.pass === 'number' ? course.pass : PASS);
+// Étape franchie : envoyée avec le seuil du parcours atteint, ou simplement tentée en mode simulation
+const cleared = (scores, stepId, sim, course) => scores[stepId] !== undefined && (sim || scores[stepId] >= passOf(course));
 
 const hits = new Map();
 function rateLimited(uid, max = 60) {
@@ -76,7 +86,7 @@ function certificateNumber(course, sim) {
   const day = new Date().toISOString().slice(2, 10).replace(/-/g, ''); // AAMMJJ (heure d'Abidjan = UTC)
   return `${sim ? 'SP' : 'CX'}-${courseCode(course)}-${day}-${randomBlock()}-${randomBlock()}`;
 }
-const isOpen = (course, scores, index, sim) => course.steps.slice(0, index).every((s) => cleared(scores, s.id, sim));
+const isOpen = (course, scores, index, sim) => course.steps.slice(0, index).every((s) => cleared(scores, s.id, sim, course));
 
 // Note d'une étape : bonnes réponses par module puis pour l'ensemble
 function grade(course, step, answers) {
@@ -128,7 +138,7 @@ async function handleGrade(uid, email, body) {
 
     const result = grade(course, step, body.answers);
     const best = Math.max(result.pct, scores[step.id] || 0);
-    const passed = result.pct >= PASS;
+    const passed = result.pct >= passOf(course);
     const now = Timestamp.now();
     const update = {
       courseId: course.id,
@@ -141,7 +151,9 @@ async function handleGrade(uid, email, body) {
     };
     if (step.kind === 'final' && (passed || sim) && !prev.finishedAt) update.finishedAt = now;
     tx.set(ref, update, { merge: true });
-    return [200, { ...result, passed, best, progress: publicProgress({ ...prev, ...update }) }];
+    // Bonnes réponses de l'étape, renvoyées après la correction pour les parcours qui les montrent
+    const correct = course.showAnswers ? Object.fromEntries(step.modules.map((m) => [m, course.key[m]])) : undefined;
+    return [200, { ...result, passed, best, progress: publicProgress({ ...prev, ...update }), ...(correct ? { correct } : {}) }];
   });
 }
 
@@ -154,6 +166,18 @@ async function handleCertificate(uid, email, courseId) {
     if (!learnerSnap.exists) return [403, { error: 'Compte apprenant incomplet' }];
     const learner = learnerSnap.data();
 
+    // Travaux pratiques : note recalculée à partir des réponses enregistrées par l'apprenant
+    let practice = null;
+    if (PRACTICE_REQUIRED.includes(course.id) || (PRACTICE && PRACTICE.PRACTICE_COURSES.includes(course.id))) {
+      if (!PRACTICE) return [503, { error: 'La correction des travaux pratiques est momentanément indisponible. Réessayez plus tard.' }];
+      let state = {};
+      try {
+        const ps = await db.doc(`learners/${uid}/practice/${course.id}`).get();
+        if (ps.exists) state = JSON.parse(ps.data().state || '{}');
+      } catch (e) { state = {}; }
+      practice = PRACTICE.practiceFor(course.id, state);
+    }
+
     return db.runTransaction(async (tx) => {
       const ref = progressRef(uid, course.id);
       const snap = await tx.get(ref);
@@ -163,8 +187,18 @@ async function handleCertificate(uid, email, courseId) {
         if (cert.exists) return [200, { certificate: serializeCertificate(cert.data()) }];
       }
       const scores = prog.scores || {};
-      if (reviewer ? scores.FINAL === undefined : !course.steps.every((s) => cleared(scores, s.id, sim))) {
-        return [403, { error: sim ? 'Toutes les étapes doivent avoir été passées' : 'Toutes les étapes doivent être validées avec 80 % au moins' }];
+      if (reviewer ? scores.FINAL === undefined : !course.steps.every((s) => cleared(scores, s.id, sim, course))) {
+        return [403, { error: sim || passOf(course) === 0 ? 'Toutes les étapes doivent avoir été passées' : `Toutes les étapes doivent être validées avec ${passOf(course)} % au moins` }];
+      }
+
+      if (practice && practice.missing.length && !reviewer) {
+        return [403, {
+          error: `Les travaux pratiques comptent pour ${Math.round(practice.weight * 100)} % de la note du certificat : validez d'abord tous les exercices (${practice.done} sur ${practice.total}). Il reste : ${practice.missing.join(' ; ')}.`,
+          practiceMissing: practice.missing
+        }];
+      }
+      if (practice && practice.average < practice.pass && !reviewer) {
+        return [403, { error: `La note des travaux pratiques doit atteindre ${practice.pass} % pour obtenir le certificat (elle est de ${practice.average} %). Reprenez les exercices les plus faibles, puis validez-les de nouveau.` }];
       }
 
       // Numéro aléatoire, vérifié comme inédit (les spécimens de simulation commencent par SP-)
@@ -175,6 +209,9 @@ async function handleCertificate(uid, email, courseId) {
       }
       if (!number) throw new Error('Numéro de certificat indisponible');
       const values = course.steps.map((s) => scores[s.id]);
+      const quizAverage = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+      // Note finale : quiz et examens, pondérés avec les travaux pratiques quand ils comptent
+      const average = practice ? Math.round(quizAverage * (1 - practice.weight) + practice.average * practice.weight) : quizAverage;
       const now = Timestamp.now();
       const cert = {
         number,
@@ -187,7 +224,8 @@ async function handleCertificate(uid, email, courseId) {
         startedAt: prog.startedAt || now,
         finishedAt: prog.finishedAt || now,
         issuedAt: now,
-        average: Math.round(values.reduce((a, b) => a + b, 0) / values.length),
+        average,
+        ...(practice ? { quizAverage, practiceAverage: practice.average, practiceWeight: practice.weight } : {}),
         hours: course.hours,
         stats: certificateStats(course),
         simulation: sim
@@ -225,6 +263,7 @@ function serializeCertificate(c) {
     finishedAt: toIso(c.finishedAt),
     issuedAt: toIso(c.issuedAt),
     average: c.average,
+    ...(c.practiceAverage !== undefined ? { quizAverage: c.quizAverage, practiceAverage: c.practiceAverage, practiceWeight: c.practiceWeight } : {}),
     hours: c.hours,
     stats: c.stats,
     simulation: !!c.simulation

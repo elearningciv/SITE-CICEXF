@@ -1335,9 +1335,9 @@ export default function AdminPanel({
         <div className="max-w-md w-full space-y-6">
           {/* Logo & Brand */}
           <div className="text-center">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-brand-blue rounded-2xl text-white font-extrabold text-2xl shadow-lg mb-3">
-              CX
-            </div>
+            <span className="inline-flex bg-white rounded-2xl px-3 py-2 shadow-lg mb-3">
+              <img src="/logo-cicexf.png" alt="CICEXF" width={341} height={200} className="h-20 w-auto" />
+            </span>
             <h2 className="text-2xl font-display font-extrabold text-slate-900 dark:text-white tracking-tight">
               Console d'Administration CICEXF
             </h2>

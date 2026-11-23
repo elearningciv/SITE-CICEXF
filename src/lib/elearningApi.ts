@@ -35,6 +35,8 @@ export interface GradeResult {
   best: number;
   modules: { id: string; good: number; total: number; pct: number }[];
   progress: Progress;
+  /** Right answers of the step, sent after the correction for the courses that show them: correct[module][quiz][question] */
+  correct?: Record<string, number[][]>;
 }
 export interface Certificate {
   number: string;
@@ -45,7 +47,12 @@ export interface Certificate {
   startedAt: string;
   finishedAt: string;
   issuedAt: string;
+  /** Final note (with the practical work when it counts) */
   average: number;
+  /** Detail when the practical work counts: average of the quizzes and exams, note of the practical work, its weight */
+  quizAverage?: number;
+  practiceAverage?: number;
+  practiceWeight?: number;
   hours: number;
   stats: { parts: number; chapters: number; modules: number; quizzes: number };
   /** Specimen issued in simulation mode, with no official value */
@@ -142,9 +149,10 @@ export async function isReviewerEmail(email: string | null | undefined): Promise
   return REVIEWER_HASHES.includes(hex);
 }
 
-/** A step counts as cleared at 80 % or more, or once attempted in simulation mode */
+/** A step counts as cleared once sent with the threshold of the course reached (80 %, or 0 for the courses
+ *  without threshold), or once attempted in simulation mode */
 export const stepCleared = (p: Progress, stepId: string, pass: number) =>
-  p.simulation ? p.scores[stepId] !== undefined : (p.scores[stepId] || 0) >= pass;
+  p.scores[stepId] !== undefined && (p.simulation || p.scores[stepId] >= pass);
 
 export class ElearningError extends Error {}
 
