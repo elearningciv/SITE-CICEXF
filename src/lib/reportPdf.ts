@@ -100,7 +100,9 @@ export async function downloadReportPdf(input: ReportPdfInput) {
         return Math.max(0, ...pdfText(s).split(/\s+/).map((x) => doc.getTextWidth(x)));
       };
       // Narrowest width that never cuts a word, and the width the content would like
-      const minimal = t.columns.map((h, j) => Math.min(Math.max(longestWord(h, true), ...t.rows.map((r) => longestWord(r[j] || '', false))), 45) + 2 * PADX + 1);
+      // A number (« 1 650 000 », « 33,3 % ») is never cut: its whole width counts
+      const unbreakable = (s: string) => { if (!numeric(s)) return longestWord(s, false); doc.setFont('helvetica', 'normal'); return doc.getTextWidth(pdfText(s)); };
+      const minimal = t.columns.map((h, j) => Math.min(Math.max(longestWord(h, true), ...t.rows.map((r) => unbreakable(r[j] || ''))), 45) + 2 * PADX + 1);
       const natural = t.columns.map((h, j) => {
         doc.setFont('helvetica', 'normal');
         let w = 0;

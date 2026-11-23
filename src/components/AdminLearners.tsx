@@ -7,6 +7,7 @@ import { hasPractice } from '../data/elearning/practice';
 
 // Practical work of one learner (answers, note, mid-term report), loaded only when opened
 const AdminPractice = lazy(() => import('./AdminPractice'));
+const PracticeFollowUp = lazy(() => import('./AdminPractice').then((m) => ({ default: m.PracticeFollowUp })));
 import { setCourseStatus, useCourseStatuses } from '../lib/elearningCourses';
 import type { Certificate } from '../lib/elearningApi';
 
@@ -37,7 +38,7 @@ export default function AdminLearners() {
   const [warning, setWarning] = useState('');
   const [search, setSearch] = useState('');
   const [reload, setReload] = useState(0);
-  const [section, setSection] = useState<'learners' | 'courses' | 'archive'>('learners');
+  const [section, setSection] = useState<'learners' | 'practice' | 'courses' | 'archive'>('learners');
   const [practiceOf, setPracticeOf] = useState<{ uid: string; name: string; courseId: string } | null>(null);
 
   useEffect(() => {
@@ -134,6 +135,7 @@ export default function AdminLearners() {
 
   const tabs = [
     { id: 'learners' as const, label: 'Apprenants', icon: Users },
+    { id: 'practice' as const, label: 'Suivi des travaux pratiques', icon: ClipboardList },
     { id: 'courses' as const, label: 'Certifications (ouverture)', icon: GraduationCap },
     { id: 'archive' as const, label: `Archives des certificats (${certificates.length})`, icon: Archive }
   ];
@@ -148,6 +150,13 @@ export default function AdminLearners() {
     </div>
   );
   const warn = warning ? <p className="rounded-xl bg-amber-50 p-3 text-sm font-bold text-amber-900">{warning} <button onClick={() => setReload((n) => n + 1)} className="underline">Réessayer</button></p> : null;
+  if (section === 'practice') return (
+    <div className="space-y-5">{nav}{warn}
+      <Suspense fallback={<p className="flex items-center gap-2 py-8 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" />Chargement…</p>}>
+        <PracticeFollowUp learners={learners} progress={progress} enrolledAt={enrolledAt} />
+      </Suspense>
+    </div>
+  );
   if (section === 'courses') return <div className="space-y-5">{nav}{warn}<CoursesAdmin progress={progress} enrolledAt={enrolledAt} certificates={certificates} /></div>;
   if (section === 'archive') return <div className="space-y-5">{nav}{warn}<CertificateArchive certificates={certificates} onReload={() => setReload((n) => n + 1)} /></div>;
 

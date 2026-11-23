@@ -253,45 +253,18 @@ function Result({ score, children }: { score: number; children?: ReactNode }) {
 
 const fixedText = (c: SheetCell) => (typeof c === 'string' ? c : 'v' in c ? formatValue(c.v, c.fmt) : '');
 
-/** Characters that a single keystroke can add; more at once means a paste (or an inserted text) */
-const MAX_INSERT = 40;
-
-/** Writing area where the answer must be typed: paste, drop and sudden long insertions are refused (for everyone) */
-function NoPasteTextarea({ id, value, onChange, rows = 12, placeholder }: { id: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string }) {
-  const area = useRef<HTMLTextAreaElement>(null);
-  const [warning, setWarning] = useState(false);
-  const warn = () => { setWarning(true); window.setTimeout(() => setWarning(false), 4500); };
-  useEffect(() => {
-    const el = area.current;
-    if (!el) return;
-    const block = (e: Event) => { e.preventDefault(); warn(); };
-    const beforeInput = (e: InputEvent) => {
-      if (/^insertFrom(Paste|Drop|Yank|PasteAsQuotation)/.test(e.inputType) || (e.inputType === 'insertText' && (e.data || '').length > MAX_INSERT)) block(e);
-    };
-    el.addEventListener('paste', block);
-    el.addEventListener('drop', block);
-    el.addEventListener('beforeinput', beforeInput);
-    return () => {
-      el.removeEventListener('paste', block);
-      el.removeEventListener('drop', block);
-      el.removeEventListener('beforeinput', beforeInput);
-    };
-  }, []);
+/** Answer box of the writings */
+function WritingArea({ id, value, onChange, rows = 12, placeholder }: { id: string; value: string; onChange: (v: string) => void; rows?: number; placeholder?: string }) {
   return (
-    <>
-      <textarea ref={area} id={id} value={value} rows={rows} autoComplete="off" spellCheck placeholder={placeholder || 'Rédigez votre réponse ici, en phrases complètes.'}
-        onChange={(e) => {
-          // Safety net for browsers that do not report the paste: a sudden long insertion is refused
-          if (e.target.value.length - value.length > MAX_INSERT) { warn(); return; }
-          onChange(e.target.value);
-        }}
-        className="mt-1.5 w-full rounded-xl border-[1.5px] border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-slate-900 dark:text-white leading-relaxed focus:outline-none focus:border-brand-blue" />
-      {warning && <p className="mt-1 text-xs font-bold text-brand-emerald">Le copier-coller est désactivé : saisissez votre réponse directement ici.</p>}
-    </>
+    <textarea id={id} value={value} onChange={(e) => onChange(e.target.value)} rows={rows} placeholder={placeholder} spellCheck lang="fr"
+      className="mt-1.5 w-full rounded-2xl border-[1.5px] border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-950 px-4 py-3 text-slate-900 dark:text-white leading-relaxed" />
   );
 }
 
-/** Result of a writing: accepted from 80 %, expected elements listed, missing ones highlighted (no model answer) */
+/** Expected length of a writing, as a range of words */
+const lengthRange = (min: number, max?: number) => (max !== undefined ? `${min} à ${max} mots` : `au moins ${min} mots`);
+const outOfRange = (n: number, min: number, max?: number) => n < min || (max !== undefined && n > max);
+
 function WritingFeedback({ result, minWords, maxWords, showAnswers }: { result: ReturnType<typeof gradeWriting>; minWords: number; maxWords?: number; showAnswers?: boolean }) {
   const accepted = result.score >= PASS;
   return (
@@ -301,8 +274,8 @@ function WritingFeedback({ result, minWords, maxWords, showAnswers }: { result: 
       ) : (
         <p className="mt-1 font-extrabold text-brand-emerald dark:text-[#E9A091]">Rédaction non acceptée : il faut au moins {PASS} %. Complétez votre texte avec les éléments surlignés ci-dessous, puis validez à nouveau.</p>
       )}
-      {result.tooShort && <p className="mt-1 font-bold text-brand-emerald">Réponse trop courte ({result.words} mots pour {minWords} attendus) : le résultat est limité à 50 %.</p>}
-      {result.tooLong && <p className="mt-1 font-bold text-brand-emerald">Réponse trop longue ({result.words} mots pour {maxWords} au maximum) : raccourcissez-la ; le résultat est limité à 50 %.</p>}
+      {result.tooShort && <p className="mt-1 font-bold text-brand-emerald">Réponse trop courte ({result.words} mots ; longueur attendue : {lengthRange(minWords, maxWords)}) : le résultat est limité à 50 %.</p>}
+      {result.tooLong && <p className="mt-1 font-bold text-brand-emerald">Réponse trop longue ({result.words} mots ; longueur attendue : {lengthRange(minWords, maxWords)}) : raccourcissez-la ; le résultat est limité à 50 %.</p>}
       <p className="mt-3 font-bold text-slate-800 dark:text-slate-100">Les éléments recherchés dans votre texte :</p>
       <ul className="mt-2 space-y-1.5">
         {result.criteria.map((c) => (
@@ -460,14 +433,14 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
           {t.chart && <EisenhowerView chart={t.chart} ctx={ctx} />}
           {t.writing && (() => {
             const w = t.writing, key = tableWritingKey(w.id), value = answers[key] || '', n = wordCount(value);
-            const bad = n < w.minWords || (w.maxWords !== undefined && n > w.maxWords);
+            const bad = outOfRange(n, w.minWords, w.maxWords);
             return (
               <div className="mt-4 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
                 <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300"><PenLine className="w-4 h-4" />Rédaction · {w.title}</span>
                 <div className="el-text mt-2" dangerouslySetInnerHTML={{ __html: w.prompt }} />
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
-                <NoPasteTextarea id={`w-${ex.id}-${w.id}`} value={value} onChange={(v) => set(key, v)} rows={9} placeholder="Rédigez votre texte ici." />
-                <p className={`mt-1 text-xs ${bad ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{n} mots · {w.maxWords !== undefined ? `entre ${w.minWords} et ${w.maxWords}` : `${w.minWords} au minimum`}</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus.</p>
+                <WritingArea id={`w-${ex.id}-${w.id}`} value={value} onChange={(v) => set(key, v)} rows={9} placeholder="Rédigez votre texte ici." />
+                <p className={`mt-1 text-xs ${bad ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{n} mot{n > 1 ? 's' : ''} · longueur attendue : {lengthRange(w.minWords, w.maxWords)}</p>
                 {checked && tableWritings[w.id] && <WritingFeedback result={tableWritings[w.id]} minWords={w.minWords} maxWords={w.maxWords} showAnswers={showAnswers} />}
               </div>
             );
@@ -479,9 +452,9 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
         <div className="mt-6 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 sm:p-5">
           <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300"><PenLine className="w-4 h-4" />Rédaction</span>
           <div className="el-text mt-2" dangerouslySetInnerHTML={{ __html: ex.writing.prompt }} />
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre note est acceptée à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
-          <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={write} rows={16} placeholder="Rédigez votre note d'analyse ici (une page)." />
-          <p className={`mt-1 text-xs ${wordCount(text) >= ex.writing.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{wordCount(text)} mots · {ex.writing.minWords} au minimum</p>
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre note est acceptée à partir de {PASS} % des éléments attendus.</p>
+          <WritingArea id={`w-${ex.id}`} value={text} onChange={write} rows={16} placeholder="Rédigez votre note d'analyse ici (une page)." />
+          <p className={`mt-1 text-xs ${outOfRange(wordCount(text), ex.writing.minWords, ex.writing.maxWords) ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{wordCount(text)} mots · longueur attendue : {lengthRange(ex.writing.minWords, ex.writing.maxWords)}</p>
         </div>
       )}
 
@@ -514,7 +487,7 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
           </div>
         </Result>
       )}
-      {checked && writingResult && ex.writing && <WritingFeedback result={writingResult} minWords={ex.writing.minWords} showAnswers={showAnswers} />}
+      {checked && writingResult && ex.writing && <WritingFeedback result={writingResult} minWords={ex.writing.minWords} maxWords={ex.writing.maxWords} showAnswers={showAnswers} />}
     </div>
   );
 }
@@ -581,9 +554,9 @@ function CaseView({ ex, entry, showAnswers, onChange }: { ex: CaseExercise; entr
 
       <h2 className="mt-7 text-lg font-extrabold text-brand-blue dark:text-sky-300">Partie 2 : votre rédaction</h2>
       <div className="el-text mt-1" dangerouslySetInnerHTML={{ __html: ex.writing.prompt }} />
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
-      <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={write} rows={12} placeholder="Rédigez votre réponse de chef de mission ici." />
-      <p className={`mt-1 text-xs ${words >= ex.writing.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{words} mot{words > 1 ? 's' : ''} · {ex.writing.minWords} au minimum</p>
+      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre texte est accepté à partir de {PASS} % des éléments attendus.</p>
+      <WritingArea id={`w-${ex.id}`} value={text} onChange={write} rows={12} placeholder="Rédigez votre réponse de chef de mission ici." />
+      <p className={`mt-1 text-xs ${outOfRange(words, ex.writing.minWords, ex.writing.maxWords) ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{words} mot{words > 1 ? 's' : ''} · longueur attendue : {lengthRange(ex.writing.minWords, ex.writing.maxWords)}</p>
 
       <div className="mt-5 flex flex-wrap items-center gap-3">
         <button onClick={validate} disabled={answered === 0 && !text.trim()} className={primary}><CheckCircle2 className="w-4 h-4" />Valider mes réponses</button>
@@ -598,7 +571,7 @@ function CaseView({ ex, entry, showAnswers, onChange }: { ex: CaseExercise; entr
           <div className="mt-4"><button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer</button></div>
         </Result>
       )}
-      {checked && <WritingFeedback result={result.writing} minWords={ex.writing.minWords} showAnswers={showAnswers} />}
+      {checked && <WritingFeedback result={result.writing} minWords={ex.writing.minWords} maxWords={ex.writing.maxWords} showAnswers={showAnswers} />}
     </div>
   );
 }
@@ -653,7 +626,7 @@ function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }
       <span className="inline-flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300"><PenLine className="w-4 h-4" />Rédaction · {ex.skill}</span>
       <h1 className="mt-1 text-2xl font-extrabold text-slate-900 dark:text-white">{ex.title}</h1>
       <div className="el-text mt-3" dangerouslySetInnerHTML={{ __html: ex.prompt }} />
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre rédaction est acceptée à partir de {PASS} % des éléments attendus. Rédigez directement dans la zone ci-dessous : le copier-coller est désactivé.</p>
+      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Votre rédaction est acceptée à partir de {PASS} % des éléments attendus.</p>
       {ex.sections ? (
         <div className="mt-4 space-y-4">
           {ex.sections.map((s) => {
@@ -662,7 +635,7 @@ function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }
               <div key={s.id} className="rounded-2xl border border-slate-200 dark:border-slate-800 p-4">
                 <label htmlFor={`w-${ex.id}-${s.id}`} className="block font-extrabold text-brand-blue dark:text-sky-300">{s.title}</label>
                 {s.hint && <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">{s.hint}</p>}
-                <NoPasteTextarea id={`w-${ex.id}-${s.id}`} value={v} onChange={(x) => changePart(s.id, x)} rows={5} placeholder="Rédigez cette partie du rapport." />
+                <WritingArea id={`w-${ex.id}-${s.id}`} value={v} onChange={(x) => changePart(s.id, x)} rows={5} placeholder="Rédigez cette partie du rapport." />
                 <p className="mt-1 text-xs text-slate-500">{n} mot{n > 1 ? 's' : ''}</p>
               </div>
             );
@@ -671,10 +644,10 @@ function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }
       ) : (
         <>
           <label htmlFor={`w-${ex.id}`} className="mt-4 block text-xs font-extrabold tracking-wide uppercase text-slate-600 dark:text-slate-300">Votre réponse</label>
-          <NoPasteTextarea id={`w-${ex.id}`} value={text} onChange={change} />
+          <WritingArea id={`w-${ex.id}`} value={text} onChange={change} />
         </>
       )}
-      <p className={`mt-1 text-xs ${words >= ex.minWords ? 'text-slate-500' : 'text-brand-emerald font-bold'}`}>{ex.sections ? 'Total : ' : ''}{words} mot{words > 1 ? 's' : ''} · {ex.minWords} au minimum</p>
+      <p className={`mt-1 text-xs ${outOfRange(words, ex.minWords, ex.maxWords) ? 'text-brand-emerald font-bold' : 'text-slate-500'}`}>{ex.sections ? 'Total : ' : ''}{words} mot{words > 1 ? 's' : ''} · longueur attendue : {lengthRange(ex.minWords, ex.maxWords)}</p>
       <div className="mt-4 flex flex-wrap gap-3">
         <button onClick={validate} disabled={empty} className={primary}><CheckCircle2 className="w-4 h-4" />Valider ma rédaction</button>
         {ex.download && (
@@ -688,7 +661,7 @@ function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }
         <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Pour télécharger le rapport en PDF, rédigez toutes les parties. Il reste : {missing.map((s) => s.title.replace(/ \(.*\)$/, '')).join(' ; ')}.</p>
       )}
       {pdfState === 'error' && <p className="mt-2 text-sm font-bold text-brand-emerald">Le PDF n'a pas pu être créé. Réessayez.</p>}
-      {checked && <WritingFeedback result={result} minWords={ex.minWords} showAnswers={showAnswers} />}
+      {checked && <WritingFeedback result={result} minWords={ex.minWords} maxWords={ex.maxWords} showAnswers={showAnswers} />}
     </div>
   );
 }

@@ -273,9 +273,10 @@ export function gradeWritingEntry(ex: WritingExercise, text: string, answers: Re
   const criteria = parts.flatMap(({ s, r }) => r.criteria.map((c) => ({ ...c, label: `${s.title} : ${c.label}` })));
   const words = parts.reduce((n, p) => n + p.r.words, 0);
   const tooShort = words < ex.minWords;
+  const tooLong = ex.maxWords !== undefined && words > ex.maxWords;
   let score = Math.round((criteria.filter((c) => c.met).length / Math.max(1, criteria.length)) * 100);
-  if (tooShort) score = Math.min(score, 50);
-  return { score, words, tooShort, criteria };
+  if (tooShort || tooLong) score = Math.min(score, 50);
+  return { score, words, tooShort, tooLong, criteria };
 }
 
 /** Key under which the text of a writing placed under a table is stored with the answers */

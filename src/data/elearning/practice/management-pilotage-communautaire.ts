@@ -400,7 +400,8 @@ const QUAD_LABELS = ['1 · Important et urgent', '2 · Important, pas urgent', '
  *  l'apprenant saisit lui-même le réalisé relevé sur le terrain) */
 // Cas pratique : conflits dans l'équipe, d'après le document du CICEXF « Cas complexe de conflits interpersonnels :
 // L'adjoint officieux, le signalement et la rumeur » (projet PGC-Vie, cas fictif). 10 des 24 questions à choix du
-// document (gestion par le chef de mission) et une rédaction dont les critères reprennent le corrigé du formateur.
+// document (gestion par le chef de mission) et une rédaction sur la gestion de la crise au sein de l'équipe, dont les
+// critères s'inspirent du corrigé du formateur.
 const CASE_PERSONS: string[][] = [
   ["Chef de Mission", "Responsable de l'équipe, proche de l'Animateur Communautaire 1 dont il apprécie les résultats"],
   ["Chargé de Projet/Programme", "Coordonne normalement le terrain ; se sent écarté par une décision du Chef de Mission"],
@@ -639,6 +640,7 @@ const set: PracticeSet = {
       skill: 'Offre technique',
       prompt: "<p>À partir des termes de référence du dossier, rédigez la section « Compréhension du contexte et de la mission » de votre offre technique (10 à 15 lignes). Montrez que vous avez compris les enjeux, la zone et les bénéficiaires, les deux missions, les résultats attendus, les contraintes et les livrables, sans recopier les TDR.</p>",
       minWords: 90,
+      maxWords: 220,
       criteria: [
         { label: 'Le contexte et les enjeux du projet (travaux, cadre de vie, aspects sociaux)', keywords: ['cadre de vie', 'travaux', 'chantier', 'aspects sociaux', 'acceptation', 'enjeu', 'nuisance'] },
         { label: 'La zone et les bénéficiaires (quartiers, femmes, jeunes, groupes vulnérables)', keywords: ['quartier', 'akoupe', 'beneficiair', 'femme', 'jeune', 'vulnerab', 'population', 'habitant'] },
@@ -776,6 +778,7 @@ const set: PracticeSet = {
             title: 'Plan d\'équilibre de la charge',
             prompt: "<p>À partir des taux de charge du tableau 4, rédigez le plan d'équilibre de l'équipe : pour chaque poste en surcharge (en bordeaux), indiquez les jours que vous déplacez, vers qui ou vers quel mois, et avec quel levier (décaler, déléguer, mutualiser, renforcer) ; signalez les postes en sous-charge qui peuvent reprendre du travail, et le taux visé après rééquilibrage.</p>",
             minWords: 80,
+            maxWords: 250,
             criteria: [
               { label: 'Les leviers utilisés (décaler, déléguer, mutualiser, renforcer)', keywords: ['decal', 'deleg', 'mutualis', 'renforc', 'report', 'transfer', 'confi'], need: 2 },
               { label: 'Les mois concernés', keywords: ['mois 1', 'mois 2', 'mois 3', 'mois 4', 'm1$', 'm2$', 'm3$', 'm4$'] },
@@ -831,8 +834,8 @@ const set: PracticeSet = {
           },
           writing: {
             id: 'eisenhower-chef',
-            title: 'Commentaire du graphique (200 mots au maximum)',
-            prompt: "<p>Commentez le graphique d'Eisenhower du chef de mission au mois 1, en 200 mots au maximum : quelle part de son temps va à chaque cadran, ce qu'il doit garder et faire lui-même, ce qu'il doit planifier, et ce qu'il doit déléguer ou abandonner, et à qui.</p>",
+            title: 'Commentaire du graphique (60 à 200 mots)',
+            prompt: "<p>Commentez le graphique d'Eisenhower du chef de mission au mois 1, en 60 à 200 mots : quelle part de son temps va à chaque cadran, ce qu'il doit garder et faire lui-même, ce qu'il doit planifier, et ce qu'il doit déléguer ou abandonner, et à qui.</p>",
             minWords: 60,
             maxWords: 200,
             criteria: [
@@ -1015,6 +1018,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       writing: {
         prompt: "<p><strong>Note d'analyse à mi-parcours (une page).</strong> À partir de votre tableau de bord, du chronogramme et du dictionnaire des indicateurs (dans le dossier du projet), rédigez la note que le chef de mission transmettra à l'UCP : situation à mi-parcours par rapport à ce qui était prévu, indicateurs dans la trajectoire, indicateurs en retard et leurs causes probables, qualité du mécanisme de gestion des plaintes, fiabilité des données (sources, fréquence, responsables, désagrégation) et recommandations concrètes.</p>",
         minWords: 250,
+        maxWords: 600,
         criteria: [
           { label: 'La situation à mi-parcours (fin du mois 3)', keywords: ['mi-parcours', 'mi parcours', 'mois 3', 'moitie', 'temps ecoule'] },
           { label: 'La comparaison avec ce qui était prévu à date selon le chronogramme', keywords: ['chronogramme', 'prevu', 'planifie', 'a date'] },
@@ -1052,6 +1056,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       skill: 'Équité dans l\'équipe',
       prompt: "<p>Les deux animateurs reçoivent la même indemnité, alors que l'un accompagne les visites de l'UCP et que l'autre fait les sorties les plus longues. Rédigez la règle écrite de répartition équitable des sorties et des indemnités de l'équipe.</p>",
       minWords: 60,
+      maxWords: 200,
       criteria: [
         { label: 'Des critères objectifs (distance, durée, difficulté, visibilité)', keywords: ['distance', 'duree', 'difficulte', 'visibilite', 'eloign', 'kilometre'] },
         { label: 'Une rotation des sorties', keywords: ['rotation', 'tour de role', 'altern', 'tournant', 'chacun son tour', 'a tour'] },
@@ -1068,6 +1073,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       skill: 'Délégation',
       prompt: "<p>Vous êtes chef de mission. Rédigez la note par laquelle vous déléguez la rédaction du rapport trimestriel au chargé de projet, dont la charge est déjà à 120 %. Votre note doit être complète.</p>",
       minWords: 70,
+      maxWords: 200,
       criteria: [
         { label: "L'objectif et le livrable attendu", keywords: ['objectif', 'livrable', 'rapport trimestriel', 'attendu'] },
         { label: 'Le délai et les étapes', keywords: ['delai', 'date', 'echeance', 'etape', 'avant le', 'au plus tard', 'jalon', 'version provisoire'] },
@@ -1085,6 +1091,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       skill: 'Retour d\'information',
       prompt: "<p>L'animateur communautaire 2, chargé des quartiers éloignés, arrive en retard et rend des fiches incomplètes depuis deux semaines, après qu'on a refusé devant l'équipe de le remplacer sur une sortie lointaine. Rédigez votre entretien individuel avec lui en utilisant la méthode SCI : cadre posé, situation, comportement, impact, écoute de son besoin, reconnaissance de votre part et engagements.</p>",
       minWords: 80,
+      maxWords: 250,
       criteria: [
         { label: 'Un cadre posé : en privé, dans l\'écoute, sans jugement', keywords: ['prive', 'ecoute', 'confidentiel', 'sans jugement', 'entre nous', 'tete a tete', 'calme'] },
         { label: 'La situation datée', keywords: ['semaine', 'depuis', 'mardi', 'lundi', 'jeudi', 'date', 'derniere', 'mois'] },
@@ -1103,19 +1110,20 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       situation: CASE_SITUATION,
       questions: CASE_QUESTIONS,
       writing: {
-        prompt: "<p><strong>Vous êtes le Chef de Mission.</strong> Le mardi soir (épisode 13), vous prenez la mesure de la situation. Rédigez la note que vous adressez à la direction de l'ONG et au Responsable du suivi de l'UCP pour gérer la crise : ce que vous reconnaissez, ce que vous confiez à d'autres et pourquoi, les mesures pour chaque personne concernée, le message à l'équipe et les règles que vous rétablissez, puis les mesures de prévention. Restez factuel et ne divulguez aucun détail sur l'habitante.</p>",
+        prompt: "<p><strong>Vous êtes le Chef de Mission.</strong> Le mardi soir (épisode 13), vous prenez la mesure de la situation. Expliquez comment vous comptez gérer cette crise au sein de votre équipe : ce que vous reconnaissez de votre part, ce que vous faites pour chaque personne concernée, comment vous rétablissez la confiance et les règles de l'équipe, et ce que vous mettez en place pour que cela ne se reproduise pas. Ne divulguez aucun détail sur l'habitante.</p>",
         minWords: 180,
+        maxWords: 400,
         criteria: [
-          { label: 'Reconnaître votre conflit d\'intérêts et confier le traitement du signalement à l\'UCP et à la direction de l\'ONG', keywords: ['conflit d interet', 'ucp', 'direction', 'me retire', 'hors de l equipe', 'confie'], need: 2 },
-          { label: 'Distinguer le signalement (procédure, pas de médiation) du conflit de rôles et de la rupture de confidentialité', keywords: ['procedure', 'mediation', 'conflit de roles', 'separement', 'distingu', 'confidentialite'], need: 2 },
-          { label: 'Protéger l\'habitante : sécurité, confidentialité, orientation vers les services, respect de ses souhaits', keywords: ['habitante', 'proteg', 'confidential', 'services', 'souhaits', 'securite'], need: 2 },
-          { label: 'Rétablir la Spécialiste VBG/MGP dans ses fonctions et la protéger contre les représailles', keywords: ['specialiste', 'retabl', 'fonctions', 'represaille', 'remerci'], need: 2 },
-          { label: 'Une mesure conservatoire non punitive pour l\'Animateur Communautaire 1, décidée par l\'organisation', keywords: ['conservatoire', 'animateur communautaire 1', 'animateur 1', 'contact', 'non punitive', 'suspend'], need: 2 },
-          { label: 'Protéger l\'Animateur Communautaire 2 des pressions (contrat) et le faire entendre comme témoin par l\'UCP ou la direction', keywords: ['animateur communautaire 2', 'animateur 2', 'pression', 'contrat', 'temoin', 'entendu'], need: 2 },
-          { label: 'Le rapport écrit à l\'UCP sous 48 heures, factuel et daté', keywords: ['rapport', '48', 'factuel', 'date'], need: 2 },
-          { label: 'Un message à l\'équipe sans détail sur le cas, qui retire ou recadre le message du groupe et rappelle la charte', keywords: ['message', 'charte', 'sans detail', 'rappel', 'groupe', 'whatsapp', 'retir'], need: 2 },
-          { label: 'La clarification écrite des rôles de coordination, après le traitement du signalement', keywords: ['clarification', 'roles', 'note ecrite', 'par ecrit', 'coordination', 'charge de projet'], need: 2 },
-          { label: 'Des mesures de prévention (formation de l\'équipe, règle écrite sur toute délégation, circuit de signalement)', keywords: ['prevention', 'formation', 'former', 'regle ecrite', 'delegation', 'circuit'], need: 2 }
+          { label: 'Reconnaître votre part (rôle confié à l\'oral, demande d\'attendre, « choisissez votre camp »)', keywords: ['je reconnais', 'ma part', 'mon erreur', 'j aurais du', 'ma responsabilite', 'je retire', 'excuse'], need: 1 },
+          { label: 'Laisser le signalement à sa procédure, sans enquête ni débat dans l\'équipe, séparément des conflits d\'équipe', keywords: ['procedure', 'signalement', 'mediation', 'enquet', 'separ', 'distingu', 'ucp'], need: 2 },
+          { label: 'Protéger l\'habitante : aucune information ne circule, confidentialité et sécurité', keywords: ['habitante', 'confidential', 'proteg', 'aucun detail', 'securite', 'nom'], need: 2 },
+          { label: 'Rétablir la Spécialiste VBG/MGP dans ses fonctions et la soutenir, sans représailles', keywords: ['specialiste', 'retabl', 'fonctions', 'represaille', 'soutien', 'soutenir', 'remerci'], need: 2 },
+          { label: 'L\'Animateur Communautaire 1 : recadrer son message dans le groupe et l\'écarter du quartier concerné pendant l\'examen, sans le juger', keywords: ['animateur communautaire 1', 'animateur 1', 'message', 'ecart', 'conservatoire', 'recadr', 'sans le juger'], need: 2 },
+          { label: 'L\'Animateur Communautaire 2 : un entretien individuel pour l\'écouter et le protéger des pressions sur son contrat', keywords: ['animateur communautaire 2', 'animateur 2', 'pression', 'contrat', 'entretien', 'rassur', 'ecout'], need: 2 },
+          { label: 'Le Chargé de Projet/Programme : un entretien pour qu\'il reconnaisse sa part dans la fuite et lui rendre la coordination du terrain', keywords: ['charge de projet', 'coordination', 'entretien', 'sa part', 'fuite', 'rend'], need: 2 },
+          { label: 'Une réunion d\'équipe qui rétablit les règles sans parler du cas (charte, confidentialité, groupe WhatsApp, pas de représailles)', keywords: ['reunion', 'charte', 'regle', 'groupe', 'whatsapp', 'sans detail', 'confidentialite'], need: 2 },
+          { label: 'Clarifier les rôles de coordination par écrit', keywords: ['par ecrit', 'note ecrite', 'roles', 'clarifi', 'coordination'], need: 2 },
+          { label: 'Des mesures de prévention et de suivi (formation, règle écrite de délégation, points réguliers)', keywords: ['prevention', 'formation', 'former', 'delegation', 'suivi', 'point regulier', 'chaque semaine'], need: 2 }
         ]
       }
     },
@@ -1126,6 +1134,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       skill: 'Supervision',
       prompt: "<p>La supervision du mois 4 a relevé : 300 participants rapportés pour les causeries du quartier 3 mais seulement 240 noms sur les listes de présence ; des fiches sans âge ni sexe ; une boîte à plaintes installée dans la cour d'un leader, peu accessible aux femmes ; 6 pièces justificatives manquantes sur 40 ; 3 recommandations de la supervision précédente non mises en œuvre. Rédigez le plan d'action correctif : pour chaque constat, une mesure, un responsable et une échéance.</p>",
       minWords: 80,
+      maxWords: 250,
       criteria: [
         { label: 'La correction des données surdéclarées', keywords: ['liste de presence', 'surdeclar', 'ecart', '240', '300', 'corrig', 'rectif'] },
         { label: 'La désagrégation (âge et sexe obligatoires)', keywords: ['age$', 'ages$', 'sexe', 'obligatoire', 'desagreg', 'champ'] },
@@ -1143,6 +1152,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       skill: 'Rapport à mi-parcours',
       prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP, partie par partie, dans les zones ci-dessous. Rendez compte de chaque produit du cadre logique (dossier du projet, tableaux 5 et 6 du rapport de démarrage) et appuyez-vous sur vos travaux : compréhension de la mission (rédaction 1), diagnostic logistique (exercice 2), plan de charge (exercice 3), suivi budgétaire (exercice 6), tableau de bord (exercice 5) et règle de répartition des sorties (rédaction 4).</p><p>Une fois toutes les parties rédigées, téléchargez votre rapport en PDF : les tableaux de vos exercices (indicateurs, MGP, budget, moyens logistiques, charge de l'équipe) y sont ajoutés automatiquement, sous la partie correspondante. Vous pouvez aussi insérer vos propres tableaux : une ligne par rangée, colonnes séparées par « | », la première ligne donnant les titres.</p>",
       minWords: 350,
+      maxWords: 1500,
       criteria: [],
       download: {
         title: 'Rapport à mi-parcours',

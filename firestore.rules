@@ -140,6 +140,10 @@ service cloud.firestore {
     match /{path=**}/enrollments/{courseId} {
       allow read: if isAdmin();
     }
+    // Travaux pratiques de tous les apprenants (onglet « Suivi des travaux pratiques ») : lecture admin
+    match /{path=**}/practice/{courseId} {
+      allow read: if isAdmin();
+    }
     // Ouverture des certifications e-learning : lecture publique, choix de l'administrateur.
     // Une certification supprimée ne peut plus être rouverte (suppression définitive).
     match /elearning_courses/{courseId} {

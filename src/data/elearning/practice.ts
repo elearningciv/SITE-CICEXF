@@ -107,8 +107,9 @@ export interface WritingExercise {
   title: string;
   skill: string;
   prompt: string;
-  /** Whole text (all sections together) */
+  /** Expected length of the whole text (all sections together): from minWords to maxWords */
   minWords: number;
+  maxWords?: number;
   criteria: WritingCriterion[];
   /** Writing split into sections: each has its own box and criteria (`criteria` then stays empty) */
   sections?: WritingSection[];
