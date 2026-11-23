@@ -36,7 +36,7 @@ export const SEO_PAGES: Record<string, SeoPage> = {
   },
   elearning: {
     path: '/e-learning',
-    title: 'E-learning gratuit et certifiant | CICEXF',
+    title: 'E-learning et certification au CICEXF',
     description: "Parcours en ligne gratuits sur les thématiques du CICEXF : textes de cours, quiz, examens et certificat PDF vérifiable. Première certification : cartographie et géomatique avec QGIS.",
     priority: 0.8,
     changefreq: 'monthly'
