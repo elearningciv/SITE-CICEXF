@@ -187,7 +187,7 @@ export interface WritingResult {
   score: number;
   words: number;
   tooShort: boolean;
-  criteria: { label: string; met: boolean; found: string[] }[];
+  criteria: { label: string; met: boolean; found: string[]; keywords: string[] }[];
 }
 
 /** Does the (normalized) answer contain this key word? "mot" matches the words starting with "mot";
@@ -204,7 +204,7 @@ export function gradeWriting(ex: { criteria: WritingCriterion[]; minWords: numbe
   const words = wordCount(text);
   const criteria = ex.criteria.map((c) => {
     const found = c.keywords.filter((k) => hasKeyword(norm, k));
-    return { label: c.label, met: found.length >= (c.need ?? 1), found };
+    return { label: c.label, met: found.length >= (c.need ?? 1), found, keywords: c.keywords };
   });
   const met = criteria.filter((c) => c.met).length;
   const tooShort = words < ex.minWords;

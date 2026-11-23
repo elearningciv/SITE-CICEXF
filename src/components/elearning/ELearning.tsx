@@ -5,7 +5,7 @@ import {
   type Course, type CourseMeta, type CourseStatus, type CourseStep
 } from '../../data/elearning';
 import {
-  CERTIFICATE_EXAMPLE, CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, isReviewerEmail, learnerErrorMessage, stepCleared,
+  CERTIFICATE_EXAMPLE, CERTIFICATE_RE, EMPTY_PROGRESS, getElearningApi, isAnswerViewerEmail, isReviewerEmail, learnerErrorMessage, stepCleared,
   type Certificate, type Draft, type ElearningApi, type Enrollment, type LearnerProfile, type LearnerSession, type Progress
 } from '../../lib/elearningApi';
 import { LoginForm, SignupForm } from './ElearningForms';
@@ -50,6 +50,8 @@ export default function ELearning() {
   const [statuses, setStatuses] = useState<Record<string, CourseStatus> | null>(null);
   // Administrator (control account): every certification and every step open, without the 80 % condition
   const [reviewer, setReviewer] = useState(false);
+  // Right answers of the practical work: administrators and the authorised accounts only
+  const [answerViewer, setAnswerViewer] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [attempt, setAttempt] = useState(0);
 
@@ -115,6 +117,7 @@ export default function ELearning() {
   useEffect(() => {
     let live = true;
     isReviewerEmail(session?.email).then((r) => live && setReviewer(r)).catch(() => live && setReviewer(false));
+    isAnswerViewerEmail(session?.email).then((r) => live && setAnswerViewer(r)).catch(() => live && setAnswerViewer(false));
     return () => { live = false; };
   }, [session]);
 
@@ -231,7 +234,7 @@ export default function ELearning() {
       if (!hasPractice(course.id)) return path();
       return shell(
         <Suspense fallback={<p className="flex justify-center py-24"><Loader2 className="w-5 h-5 animate-spin" /></p>}>
-          <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} go={go} />
+          <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} showAnswers={reviewer || answerViewer} go={go} />
         </Suspense>
       );
     }

@@ -5,7 +5,7 @@ import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, File
 import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type PracticeSet, type SheetCell, type SheetExercise, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
 import { PASS } from '../../data/elearning';
-import { calcText, formatValue, gradeSheet, gradeSheetWriting, gradeWriting, makeCtx, wordCount } from '../../lib/practiceGrading';
+import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeWriting, makeCtx, wordCount } from '../../lib/practiceGrading';
 
 const card = 'rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm';
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm transition-colors';
@@ -18,10 +18,12 @@ interface Props {
   courseTitle: string;
   exerciseId?: string;
   reviewer?: boolean;
+  /** Administrators and authorised accounts: the right answers are shown with the correction */
+  showAnswers?: boolean;
   go: (h: string) => void;
 }
 
-export default function PracticeView({ api, courseId, courseTitle, exerciseId, reviewer, go }: Props) {
+export default function PracticeView({ api, courseId, courseTitle, exerciseId, reviewer, showAnswers, go }: Props) {
   const [set, setSet] = useState<PracticeSet | null | undefined>(undefined);
   const [state, setState] = useState<PracticeState | null>(null);
 
@@ -51,10 +53,11 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
     return (
       <div className="max-w-6xl mx-auto">
         <button onClick={back} className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue dark:text-sky-300 underline"><ArrowLeft className="w-4 h-4" />Tous les travaux pratiques</button>
+        {showAnswers && <AdminNotice />}
         <Dossier set={set} compact />
         {ex.kind === 'sheet'
-          ? <SheetView key={ex.id} ex={ex} entry={entry} onChange={(e) => update(ex.id, e)} />
-          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} onChange={(e) => update(ex.id, e)} />}
+          ? <SheetView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
+          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />}
         <Next set={set} current={ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
       </div>
     );
@@ -93,6 +96,12 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
     </div>
   );
 }
+
+const AdminNotice = () => (
+  <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 px-4 py-3 text-sm font-bold text-violet-900 dark:text-violet-200">
+    Affichage administrateur : les bonnes réponses et le corrigé sont visibles pour ce compte uniquement. Les apprenants ne voient que les réponses incorrectes signalées.
+  </p>
+);
 
 /** Project file (terms of reference, financial offer) */
 function Dossier({ set, compact }: { set: PracticeSet; compact?: boolean }) {
@@ -172,7 +181,7 @@ function NoPasteTextarea({ id, value, onChange, rows = 12, placeholder }: { id: 
 }
 
 /** Result of a writing: accepted from 80 %, expected elements listed, missing ones highlighted (no model answer) */
-function WritingFeedback({ result, minWords }: { result: ReturnType<typeof gradeWriting>; minWords: number }) {
+function WritingFeedback({ result, minWords, showAnswers }: { result: ReturnType<typeof gradeWriting>; minWords: number; showAnswers?: boolean }) {
   const accepted = result.score >= PASS;
   return (
     <Result score={result.score}>
@@ -187,7 +196,7 @@ function WritingFeedback({ result, minWords }: { result: ReturnType<typeof grade
         {result.criteria.map((c) => (
           <li key={c.label} className={`flex items-start gap-2 rounded-lg px-2.5 py-1.5 text-sm ${c.met ? 'text-slate-800 dark:text-slate-200' : 'bg-[#C9933F]/15 border border-[#C9933F]/50 font-bold text-[#7A5312] dark:text-amber-200'}`}>
             {c.met ? <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0 text-brand-blue dark:text-sky-300" /> : <XCircle className="w-4 h-4 mt-0.5 shrink-0 text-[#B07A1F] dark:text-amber-300" />}
-            <span>{c.met ? c.label : `À ajouter : ${c.label}`}</span>
+            <span>{c.met ? c.label : `À ajouter : ${c.label}`}{showAnswers && <span className="block text-[11px] font-normal text-violet-700 dark:text-violet-300">Mots recherchés : {c.keywords.map((k) => k.replace(/\$$/, '')).join(', ')}{c.found.length ? ` · trouvés : ${c.found.map((k) => k.replace(/\$$/, '')).join(', ')}` : ''}</span>}</span>
           </li>
         ))}
       </ul>
@@ -196,10 +205,11 @@ function WritingFeedback({ result, minWords }: { result: ReturnType<typeof grade
   );
 }
 
-function SheetView({ ex, entry, onChange }: { ex: SheetExercise; entry: PracticeEntry; onChange: (e: PracticeEntry) => void; key?: string }) {
+function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; entry: PracticeEntry; showAnswers?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
   const [answers, setAnswers] = useState<Record<string, string>>(entry.answers || {});
   const [text, setText] = useState(entry.text || '');
   const [checked, setChecked] = useState(entry.score !== undefined);
+  const [showKey, setShowKey] = useState(false);
   // Cells calculated live from what is typed, as in a spreadsheet
   const ctx = useMemo(() => makeCtx(ex, answers), [ex, answers]);
   const result = useMemo(() => gradeSheet(ex, answers), [ex, answers]);
@@ -304,7 +314,12 @@ function SheetView({ ex, entry, onChange }: { ex: SheetExercise; entry: Practice
                               className={`w-full ${c.fmt === 'fcfa' ? 'min-w-[8.5rem]' : 'min-w-[4.5rem]'} rounded-lg border-[1.5px] px-2 py-1.5 text-right text-slate-900 dark:text-white ${border}`} />
                           )}
                           {state === 'ko' && (
-                            <span className="mt-0.5 flex items-center gap-1 text-[11px] font-bold whitespace-nowrap text-brand-emerald dark:text-[#E9A091]"><XCircle className="w-3.5 h-3.5" />Réponse incorrecte</span>
+                            <span className="mt-0.5 flex items-center gap-1 text-[11px] font-bold whitespace-nowrap text-brand-emerald dark:text-[#E9A091]"><XCircle className="w-3.5 h-3.5" />Réponse incorrecte{showAnswers && !isTextInput(c) ? ` · attendu : ${expectedText(c, ctx) || 'complétez le tableau'}` : ''}</span>
+                          )}
+                          {showAnswers && checked && showKey && state !== 'ko' && (
+                            <span className="mt-0.5 block text-[11px] font-bold whitespace-nowrap text-violet-700 dark:text-violet-300">
+                              {graded.has(c.id) && !isTextInput(c) ? `Attendu : ${expectedText(c, ctx)}` : ex.sample?.[c.id] !== undefined ? `Exemple : ${ex.sample[c.id] || '0'}` : ''}
+                            </span>
                           )}
                         </td>
                       );
@@ -349,11 +364,14 @@ function SheetView({ ex, entry, onChange }: { ex: SheetExercise; entry: Practice
               </ul>
             </>
           )}
-          {result.score === 100 && <div className="el-text mt-3 text-sm" dangerouslySetInnerHTML={{ __html: ex.explanation }} />}
-          <div className="mt-4"><button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer</button></div>
+          {(result.score === 100 || showAnswers) && <div className="el-text mt-3 text-sm" dangerouslySetInnerHTML={{ __html: ex.explanation }} />}
+          <div className="mt-4 flex flex-wrap gap-3">
+            {showAnswers && <button onClick={() => setShowKey((v) => !v)} className={ghost}>{showKey ? 'Masquer le corrigé complet' : 'Voir le corrigé complet (administrateur)'}</button>}
+            <button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer</button>
+          </div>
         </Result>
       )}
-      {checked && writingResult && ex.writing && <WritingFeedback result={writingResult} minWords={ex.writing.minWords} />}
+      {checked && writingResult && ex.writing && <WritingFeedback result={writingResult} minWords={ex.writing.minWords} showAnswers={showAnswers} />}
     </div>
   );
 }
@@ -361,7 +379,7 @@ function SheetView({ ex, entry, onChange }: { ex: SheetExercise; entry: Practice
 // ---------------------------------------------------------------------------------------------
 // Written answers
 
-function WritingView({ ex, entry, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
+function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; onChange: (e: PracticeEntry) => void; key?: string }) {
   const [text, setText] = useState(entry.text || '');
   const [checked, setChecked] = useState(entry.score !== undefined);
   const result = useMemo(() => gradeWriting(ex, text), [ex, text]);
@@ -392,7 +410,7 @@ function WritingView({ ex, entry, onChange }: { ex: WritingExercise; entry: Prac
         <button onClick={validate} disabled={!text.trim()} className={primary}><CheckCircle2 className="w-4 h-4" />Valider ma rédaction</button>
         {checked && result.score < PASS && <button onClick={restart} className={ghost}><RotateCcw className="w-4 h-4" />Recommencer à zéro</button>}
       </div>
-      {checked && <WritingFeedback result={result} minWords={ex.minWords} />}
+      {checked && <WritingFeedback result={result} minWords={ex.minWords} showAnswers={showAnswers} />}
     </div>
   );
 }

@@ -118,6 +118,19 @@ const REVIEWER_HASHES = [
   '3932f8b3097248dffe7eef25da0038e10d4a66dd71439600d83e6f96d1c14912',
   ...(import.meta.env.DEV ? ['7c1174a877c6fb78f60f8fec7192fa7f5f3ad6e5109465611ddb1d5250c62146'] : []) // local test account
 ];
+/** Accounts that may see the right answers of the practical work besides the administrators (SHA-256 of the
+ *  address only: the repository is public, so the address itself is never written here) */
+const ANSWER_VIEWER_HASHES = ['3932f8b3097248dffe7eef25da0038e10d4a66dd71439600d83e6f96d1c14912'];
+
+/** Right answers of the practical work: administrators (control accounts) and the accounts listed above */
+export async function isAnswerViewerEmail(email: string | null | undefined): Promise<boolean> {
+  if (!email) return false;
+  if (await isReviewerEmail(email)) return true;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  return ANSWER_VIEWER_HASHES.includes(hex);
+}
+
 export async function isReviewerEmail(email: string | null | undefined): Promise<boolean> {
   if (!email || !globalThis.crypto?.subtle) return false;
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.trim().toLowerCase()));
