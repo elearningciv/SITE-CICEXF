@@ -321,7 +321,7 @@ const TASKS: [string, number[], number, boolean, boolean][] = [
 const IMPORTANCES = ['1 · faible', '2 · moyenne', '3 · forte'];
 const URGENCES = ['1 · plus de 15 jours', '2 · de 3 à 15 jours', '3 · moins de 3 jours'];
 const OUI_NON = ['Oui', 'Non'];
-const DECISIONS = ['Faire maintenant', 'Planifier', 'Déléguer ou décliner', 'Éliminer ou reporter'];
+const DECISIONS = ['Faire maintenant', 'Planifier', 'Déléguer ou décliner', 'Éliminer, regrouper ou reporter'];
 const urgOf = (days: number, blocks: boolean) => Math.min(3, (days > 15 ? 1 : days >= 3 ? 2 : 3) + (blocks ? 1 : 0));
 const quadOf = (imp: number, urg: number, safety: boolean) => (safety ? 1 : imp >= 2 ? (urg >= 2 ? 1 : 2) : urg >= 2 ? 3 : 4);
 const level = (t: string) => { const n = parseInt(t, 10); return n >= 1 && n <= 3 ? n : null; };
@@ -545,19 +545,19 @@ const set: PracticeSet = {
       id: 'matrice-eisenhower',
       title: 'Exercice 4 : matrice d\'Eisenhower révisée',
       skill: 'Priorités de la semaine',
-      intro: "<p>Lundi matin, l'équipe du PGC-Vie liste les tâches de la semaine. Pour chaque tâche, à partir de sa description : choisissez le niveau d'importance, saisissez l'échéance en jours, indiquez si la tâche bloque un collègue et si elle touche la sécurité d'une personne, puis choisissez le niveau d'urgence. Le cadran se calcule automatiquement à partir de vos choix ; décidez enfin de ce que vous faites de la tâche.</p><p>Une tâche ne rapporte son point que si toute la ligne est cohérente : importance défendable, échéance, blocage et sécurité conformes à la description, urgence conforme à la règle et décision conforme au cadran.</p>",
-      rules: "<p><strong>Importance</strong> : 3 si la tâche contribue directement à un résultat, à un indicateur, à la conformité avec l'UCP ou à la protection des personnes ; 2 si elle y contribue indirectement ; 1 si elle n'a pas d'effet sur les résultats. <strong>Urgence</strong> : 1 si l'échéance est à plus de 15 jours ; 2 de 3 à 15 jours ; 3 à moins de 3 jours ; une tâche qui bloque un collègue gagne un niveau (au maximum 3). <strong>Cadran</strong> : 1 si importance 2 ou 3 et urgence 2 ou 3 ; 2 si importance 2 ou 3 et urgence 1 ; 3 si importance 1 et urgence 2 ou 3 ; 4 si importance 1 et urgence 1 ; toute tâche qui touche la sécurité d'une personne passe au cadran 1. <strong>Décision</strong> : cadran 1, faire maintenant ; cadran 2, planifier ; cadran 3, déléguer ou décliner ; cadran 4, éliminer ou reporter.</p>",
+      intro: "<p>Lundi matin, l'équipe du PGC-Vie liste les tâches de la semaine. Pour chaque tâche, à partir de sa description : saisissez l'échéance en jours, choisissez le niveau d'importance et le niveau d'urgence, puis indiquez si la tâche bloque un collègue et si elle touche la sécurité d'une personne. Le cadran et la décision se calculent automatiquement à partir de vos choix, comme dans le classeur Excel de la matrice.</p><p>Une tâche ne rapporte son point que si toute la ligne est cohérente : échéance, blocage et sécurité conformes à la description, importance défendable et urgence conforme à la règle. La décision affichée découle alors du bon cadran.</p>",
+      rules: "<p><strong>Importance</strong> : 3 si la tâche contribue directement à un résultat, à un indicateur, à la conformité avec l'UCP ou à la protection des personnes ; 2 si elle y contribue indirectement ; 1 si elle n'a pas d'effet sur les résultats. <strong>Urgence</strong> : 1 si l'échéance est à plus de 15 jours ; 2 de 3 à 15 jours ; 3 à moins de 3 jours ; une tâche qui bloque un collègue gagne un niveau (au maximum 3). <strong>Cadran</strong> : 1 si importance 2 ou 3 et urgence 2 ou 3 ; 2 si importance 2 ou 3 et urgence 1 ; 3 si importance 1 et urgence 2 ou 3 ; 4 si importance 1 et urgence 1 ; toute tâche qui touche la sécurité d'une personne passe au cadran 1. <strong>Décision</strong> : cadran 1, faire maintenant ; cadran 2, planifier ; cadran 3, déléguer ou décliner ; cadran 4, éliminer, regrouper ou reporter. Elle est calculée automatiquement.</p>",
       tables: [{
-        columns: ['Tâche', 'Importance', 'Échéance (jours)', 'Bloque un collègue', 'Sécurité d\'une personne', 'Urgence', 'Cadran (calculé)', 'Décision'],
+        columns: ['Tâche', 'Échéance (jours)', 'Importance', 'Urgence', 'Bloque un collègue', 'Sécurité d\'une personne', 'Cadran (calculé)', 'Décision (calculée)'],
         rows: TASKS.map(([t, imps, days, blocks, safety], i): SheetCell[] => [
           t,
-          { id: `i${i}`, options: IMPORTANCES, answer: imps.map((n) => IMPORTANCES[n - 1]), noScore: true },
           { id: `j${i}`, answer: days, tol: 0, noScore: true },
+          { id: `i${i}`, options: IMPORTANCES, answer: imps.map((n) => IMPORTANCES[n - 1]), noScore: true },
+          { id: `u${i}`, options: URGENCES, answer: (c) => { const u = urgFromEntries(c, i); return u === null ? null : URGENCES[u - 1]; }, noScore: true },
           { id: `b${i}`, options: OUI_NON, answer: blocks ? 'Oui' : 'Non', noScore: true },
           { id: `s${i}`, options: OUI_NON, answer: safety ? 'Oui' : 'Non', noScore: true },
-          { id: `u${i}`, options: URGENCES, answer: (c) => { const u = urgFromEntries(c, i); return u === null ? null : URGENCES[u - 1]; }, noScore: true },
           { id: `q${i}`, calc: (c) => { const q = quadFromEntries(c, i); return q === null ? null : QUAD_LABELS[q - 1]; } },
-          { id: `d${i}`, options: DECISIONS, answer: (c) => { const q = quadFromEntries(c, i); return q === null ? null : DECISIONS[q - 1]; }, noScore: true }
+          { id: `d${i}`, calc: (c) => { const q = quadFromEntries(c, i); return q === null ? null : DECISIONS[q - 1]; } }
         ])
       }],
       checks: TASKS.map(([t, imps, days, blocks, safety], i) => ({
@@ -569,7 +569,7 @@ const set: PracticeSet = {
             && c.text(`b${i}`) === (blocks ? 'Oui' : 'Non')
             && c.text(`s${i}`) === (safety ? 'Oui' : 'Non')
             && urg === urgOf(days, blocks)
-            && q !== null && c.text(`d${i}`) === DECISIONS[q - 1];
+            && q !== null;
         }
       })),
       explanation: "<p>Trois pièges : la validation des maquettes, l'installation des boîtes à plaintes et le forfait internet bloquent un collègue, ce qui monte leur urgence d'un niveau ; la visite du quartier 4 a une échéance lointaine mais passe au cadran 1 parce qu'elle touche la sécurité des personnes ; la commande de fournitures est urgente mais peu importante : on la délègue. Les tâches du cadran 1 reçoivent un responsable avant la fin de la journée, celles du cadran 2 une date dans l'agenda.</p>"
