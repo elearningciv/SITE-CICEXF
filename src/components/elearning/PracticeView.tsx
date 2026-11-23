@@ -1,7 +1,7 @@
 // Practical work of a course: project file, spreadsheet-like exercises corrected cell by cell,
 // written answers corrected from their key ideas. Formative: the correction is shown after each attempt.
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, PenLine, RotateCcw, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Lock, PenLine, RotateCcw, XCircle } from 'lucide-react';
 import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type PracticeSet, type SheetCell, type SheetExercise, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
 import { PASS } from '../../data/elearning';
@@ -48,24 +48,42 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
 
   const ex = set.exercises.find((e) => e.id === exerciseId);
   const back = () => go(`pratique/${courseId}`);
+  // Every exercise can be read freely; once something is typed in one, it must be validated before another
+  // one is opened (administrators excepted)
+  const inProgress = reviewer ? undefined : set.exercises.find((e) => isStarted(state[e.id]));
+  const resume = (id: string) => go(`pratique/${courseId}/${id}`);
+  if (ex && inProgress && inProgress.id !== ex.id) {
+    return (
+      <div className="w-full">
+        <button onClick={back} className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue dark:text-sky-300 underline"><ArrowLeft className="w-4 h-4" />Tous les travaux pratiques</button>
+        <div className={`${card} p-6 sm:p-8 text-center`}>
+          <Lock className="mx-auto w-9 h-9 text-[#C9933F]" />
+          <h1 className="mt-3 text-xl font-extrabold text-slate-900 dark:text-white">Validez d'abord l'exercice commencé</h1>
+          <p className="mt-2 text-slate-600 dark:text-slate-300">Vous avez commencé « {inProgress.title} ». Validez-le avant d'ouvrir « {ex.title} ».</p>
+          <button onClick={() => resume(inProgress.id)} className={`${primary} mt-5`}>Reprendre l'exercice commencé</button>
+        </div>
+      </div>
+    );
+  }
+
   if (ex) {
     const entry = state[ex.id] || { answers: {} };
     return (
-      <div className="max-w-6xl mx-auto">
+      <div className="w-full">
         <button onClick={back} className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue dark:text-sky-300 underline"><ArrowLeft className="w-4 h-4" />Tous les travaux pratiques</button>
         {showAnswers && <AdminNotice />}
         <Dossier set={set} compact />
         {ex.kind === 'sheet'
           ? <SheetView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
           : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />}
-        <Next set={set} current={ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
+        <Next set={set} current={ex.id} locked={inProgress?.id === ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
       </div>
     );
   }
 
   const done = set.exercises.filter((e) => state[e.id]?.score !== undefined).length;
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full">
       <button onClick={() => go(`parcours/${courseId}`)} className="mb-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-blue dark:text-sky-300 underline"><ArrowLeft className="w-4 h-4" />Retour au parcours</button>
       <div className={`${card} p-5 sm:p-7 mb-5`}>
         <span className="text-[11px] font-extrabold tracking-wider uppercase text-brand-blue dark:text-sky-300">{courseTitle}</span>
@@ -73,6 +91,13 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
         <p className="mt-2 text-slate-600 dark:text-slate-300">{set.intro}</p>
         <p className="mt-3 text-sm font-bold text-slate-700 dark:text-slate-200">{done} exercice{done > 1 ? 's' : ''} réalisé{done > 1 ? 's' : ''} sur {set.exercises.length}</p>
       </div>
+      {inProgress && (
+        <div className="mb-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-l-4 border-[#C9933F] px-4 py-3 flex flex-wrap items-center gap-3">
+          <Lock className="w-5 h-5 text-[#C9933F] shrink-0" />
+          <p className="flex-1 min-w-[220px] text-sm font-bold text-slate-800 dark:text-slate-100">Exercice en cours : « {inProgress.title} ». Validez-le avant d'ouvrir un autre exercice.</p>
+          <button onClick={() => resume(inProgress.id)} className={primary}>Reprendre</button>
+        </div>
+      )}
       <Dossier set={set} />
       <div className="grid gap-4 sm:grid-cols-2 mt-5">
         {set.exercises.map((e) => {
@@ -84,10 +109,12 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
               </span>
               <h2 className="mt-1.5 text-lg font-extrabold text-slate-900 dark:text-white">{e.title}</h2>
               <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 flex-1">
-                {st?.score !== undefined ? <>Dernier résultat : <strong className={scoreColor(st.score)}>{st.score} %</strong>{st.best !== undefined && st.best !== st.score ? ` · meilleur : ${st.best} %` : ''}{e.kind === 'writing' ? (st.score >= PASS ? ' · rédaction acceptée' : ' · à refaire') : st.writingScore !== undefined ? (st.writingScore >= PASS ? ' · note acceptée' : ' · note à refaire') : ''}</> : 'Pas encore réalisé'}
+                {isStarted(st) ? <strong className="text-[#A6762C] dark:text-amber-300">Commencé : à valider</strong> : st?.score !== undefined ? <>Dernier résultat : <strong className={scoreColor(st.score)}>{st.score} %</strong>{st.best !== undefined && st.best !== st.score ? ` · meilleur : ${st.best} %` : ''}{e.kind === 'writing' ? (st.score >= PASS ? ' · rédaction acceptée' : ' · à refaire') : st.writingScore !== undefined ? (st.writingScore >= PASS ? ' · note acceptée' : ' · note à refaire') : ''}</> : 'Pas encore réalisé'}
               </p>
               <div className="mt-3">
-                <button onClick={() => go(`pratique/${courseId}/${e.id}`)} className={st?.score !== undefined ? ghost : primary}>{st?.score !== undefined ? 'Revoir ou recommencer' : 'Commencer'}</button>
+                {inProgress && inProgress.id !== e.id
+                  ? <button disabled className={`${ghost} opacity-60 cursor-not-allowed`}><Lock className="w-4 h-4" />Après validation de l'exercice en cours</button>
+                  : <button onClick={() => go(`pratique/${courseId}/${e.id}`)} className={inProgress?.id === e.id || st?.score === undefined ? primary : ghost}>{inProgress?.id === e.id ? 'Reprendre et valider' : st?.score !== undefined ? 'Revoir ou recommencer' : 'Commencer'}</button>}
               </div>
             </div>
           );
@@ -96,6 +123,10 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
     </div>
   );
 }
+
+/** Something typed since the last validation */
+const isStarted = (e?: PracticeEntry) =>
+  !!e?.pending && (Object.values(e.answers || {}).some((v) => (v || '').trim() !== '') || (e.text || '').trim() !== '');
 
 const AdminNotice = () => (
   <p className="mb-4 rounded-2xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-900 px-4 py-3 text-sm font-bold text-violet-900 dark:text-violet-200">
@@ -120,10 +151,11 @@ function Dossier({ set, compact }: { set: PracticeSet; compact?: boolean }) {
   );
 }
 
-function Next({ set, current, go }: { set: PracticeSet; current: string; go: (id: string) => void }) {
+function Next({ set, current, locked, go }: { set: PracticeSet; current: string; locked?: boolean; go: (id: string) => void }) {
   const i = set.exercises.findIndex((e) => e.id === current);
   const next = set.exercises[i + 1];
   if (!next) return null;
+  if (locked) return <p className="mt-5 text-right text-sm font-bold text-slate-500 dark:text-slate-400"><Lock className="inline w-4 h-4 mr-1 -mt-0.5" />Validez cet exercice pour passer au suivant : {next.title}</p>;
   return <p className="mt-5 text-right"><button onClick={() => go(next.id)} className="text-sm font-bold text-brand-blue dark:text-sky-300 underline">Exercice suivant : {next.title} →</button></p>;
 }
 
@@ -222,23 +254,23 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
     const next = { ...answers, [id]: v };
     setAnswers(next);
     if (checked) setChecked(false);
-    onChange({ ...entry, answers: next, text });
+    onChange({ ...entry, answers: next, text, pending: true });
   };
   const write = (v: string) => {
     setText(v);
     if (checked) setChecked(false);
-    onChange({ ...entry, answers, text: v });
+    onChange({ ...entry, answers, text: v, pending: true });
   };
   const validate = () => {
     const r = gradeSheet(ex, answers);
     const w = gradeSheetWriting(ex, answers, text);
     setChecked(true);
     onChange({
-      ...entry, answers, text, score: r.score, best: Math.max(r.score, entry.best ?? 0),
+      ...entry, answers, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0),
       ...(w ? { writingScore: w.score } : {}), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1
     });
   };
-  const restart = () => { setAnswers({}); setText(''); setChecked(false); onChange({ ...entry, answers: {}, text: '' }); };
+  const restart = () => { setAnswers({}); setText(''); setChecked(false); onChange({ ...entry, answers: {}, text: '', pending: false }); };
 
   const exportCsv = () => {
     const esc = (s: string) => `"${s.replace(/"/g, '""')}"`;
@@ -388,14 +420,14 @@ function WritingView({ ex, entry, showAnswers, onChange }: { ex: WritingExercise
   const change = (v: string) => {
     setText(v);
     if (checked) setChecked(false);
-    onChange({ ...entry, answers: entry.answers || {}, text: v });
+    onChange({ ...entry, answers: entry.answers || {}, text: v, pending: true });
   };
   const validate = () => {
     const r = gradeWriting(ex, text);
     setChecked(true);
-    onChange({ ...entry, answers: entry.answers || {}, text, score: r.score, best: Math.max(r.score, entry.best ?? 0), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1 });
+    onChange({ ...entry, answers: entry.answers || {}, text, pending: false, score: r.score, best: Math.max(r.score, entry.best ?? 0), submittedAt: new Date().toISOString(), attempts: (entry.attempts || 0) + 1 });
   };
-  const restart = () => { setText(''); setChecked(false); onChange({ ...entry, answers: entry.answers || {}, text: '' }); };
+  const restart = () => { setText(''); setChecked(false); onChange({ ...entry, answers: entry.answers || {}, text: '', pending: false }); };
 
   return (
     <div className={`${card} p-5 sm:p-7`}>

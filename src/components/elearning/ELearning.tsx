@@ -153,7 +153,7 @@ export default function ELearning() {
   const finishedCourse = (id: string) => stepCleared(progressOf(id), 'FINAL', PASS);
   const mySpace = CATALOG.filter((c) => isEnrolled(c.id) && (statusOf(c.id) !== 'deleted' || finishedCourse(c.id)));
   const bar = signedIn ? <LearnerBar api={api} profile={profile!} go={go} /> : null;
-  const shell = (children: ReactNode) => <Shell simulated={api.simulated} bar={bar}>{children}</Shell>;
+  const shell = (children: ReactNode, wide?: boolean) => <Shell simulated={api.simulated} bar={bar} wide={wide}>{children}</Shell>;
   const spinner = shell(<p className="flex justify-center items-center gap-2 py-24 text-slate-500"><Loader2 className="w-5 h-5 animate-spin" /> Chargement du parcours…</p>);
 
   // Signed in without a profile (rare: interrupted sign-up): complete it first
@@ -235,7 +235,8 @@ export default function ELearning() {
       return shell(
         <Suspense fallback={<p className="flex justify-center py-24"><Loader2 className="w-5 h-5 animate-spin" /></p>}>
           <PracticeView api={api} courseId={course.id} courseTitle={course.title} exerciseId={stepId} reviewer={reviewer} showAnswers={reviewer || answerViewer} go={go} />
-        </Suspense>
+        </Suspense>,
+        true
       );
     }
     if (view === 'certificat') {
@@ -267,9 +268,10 @@ const NoOpenCourse = () => (
   </p>
 );
 
-function Shell({ children, simulated, bar }: { children: ReactNode; simulated?: boolean; bar?: ReactNode }) {
+function Shell({ children, simulated, bar, wide }: { children: ReactNode; simulated?: boolean; bar?: ReactNode; wide?: boolean }) {
+  // Practical work (wide tables): the whole width of the screen
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div className={wide ? 'w-full px-3 sm:px-5 lg:px-8 py-6 sm:py-8' : 'max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8'}>
       {simulated && (
         <p className="mb-4 rounded-xl bg-amber-100 text-amber-900 text-center text-xs font-bold px-3 py-2">
           Mode test local : comptes, notes et certificats sont simulés dans ce navigateur (rien n'est enregistré en ligne).

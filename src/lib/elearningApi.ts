@@ -97,7 +97,11 @@ export interface ElearningApi {
 }
 
 /** Practical work: one entry per exercise (cells or text typed, last and best scores) */
-export interface PracticeEntry { answers: Record<string, string>; text?: string; score?: number; best?: number; submittedAt?: string; attempts?: number; writingScore?: number }
+export interface PracticeEntry {
+  answers: Record<string, string>; text?: string; score?: number; best?: number; submittedAt?: string; attempts?: number; writingScore?: number;
+  /** Something was typed since the last validation: the exercise must be validated before another one is opened */
+  pending?: boolean;
+}
 export type PracticeState = Record<string, PracticeEntry>;
 
 export const EMPTY_PROGRESS: Progress = { scores: {}, attempts: {}, startedAt: null, finishedAt: null, certificate: null };

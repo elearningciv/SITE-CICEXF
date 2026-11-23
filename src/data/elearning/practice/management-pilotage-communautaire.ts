@@ -162,11 +162,16 @@ ${table(['Rubrique', 'Désignation', 'Unité', 'Quantité', 'Prix unitaire', 'Mo
 <h3>4. Achats et équipements</h3>
 ${table(['Catégorie', 'Montant'], ACHATS.map(([c, v]) => [c, fcfa(v)]))}
 <h3>5. Prix unitaires retenus pour les équipements (devis)</h3>
-${table(['Équipement', 'Prix unitaire'], [
-  ['Moto 125 cc tout-terrain', fcfa(550000)], ['Casque de moto homologué', fcfa(25000)], ['Smartphone de service', fcfa(45000)],
-  ['Ordinateur portable (Core i5, 8 Go)', fcfa(630000)], ['Tablette Android pour KoboToolbox', fcfa(85000)],
-  ['Kit de point focal (sac, chasuble, carnet, fiches)', fcfa(15000)], ['Boîte à plaintes métallique avec cadenas', fcfa(35000)],
-  ['Armoire métallique sécurisée à serrure', fcfa(95000)], ['Trousse de premiers secours', fcfa(20000)]
+${table(['Équipement', 'Effectif requis', 'Base de calcul (TDR, moyens à mobiliser)', 'Prix unitaire'], [
+  ['Moto 125 cc tout-terrain', '4', 'Une par agent de terrain', fcfa(550000)],
+  ['Casque de moto homologué', '4', 'Un par moto', fcfa(25000)],
+  ['Smartphone de service', '4', 'Un par agent de terrain', fcfa(45000)],
+  ['Ordinateur portable (Core i5, 8 Go)', '6', 'Un par membre de l\'équipe, appui comptable compris', fcfa(630000)],
+  ['Tablette Android pour KoboToolbox', '10', 'Une pour trois points focaux (30 ÷ 3)', fcfa(85000)],
+  ['Kit de point focal (sac, chasuble, carnet, fiches)', '30', 'Un par point focal', fcfa(15000)],
+  ['Boîte à plaintes métallique avec cadenas', '5', 'Une par quartier ciblé', fcfa(35000)],
+  ['Armoire métallique sécurisée à serrure', '2', 'Archives et registre confidentiel des plaintes sensibles', fcfa(95000)],
+  ['Trousse de premiers secours', '2', 'Une au bureau, une pour les déplacements', fcfa(20000)]
 ])}
 <h3>6. Hypothèses</h3>
 <ul>
@@ -406,13 +411,30 @@ const plain = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g
 const set: PracticeSet = {
   courseId: 'management-pilotage-communautaire',
   title: 'Travaux pratiques : projet PGC-Vie',
-  intro: "Ces exercices vous mettent en situation sur un même projet. Lisez d'abord le dossier du projet (termes de référence et offre financière), puis remplissez les tableaux et rédigez vos réponses directement sur le site. Chaque tableau est corrigé dès que vous le validez, avec son corrigé. Chaque rédaction est acceptée à partir de 80 % des éléments attendus ; sinon, la correction vous indique ce qui manque et vous la refaites. Ces travaux pratiques ne comptent pas pour le certificat.",
+  intro: "Ces exercices vous mettent en situation sur un même projet. Lisez d'abord le dossier du projet (termes de référence et offre financière), puis remplissez les tableaux et rédigez vos réponses directement sur le site. Chaque tableau est corrigé dès que vous le validez : les réponses incorrectes vous sont signalées. Chaque rédaction est acceptée à partir de 80 % des éléments attendus ; sinon, la correction vous indique ce qui manque et vous la refaites. Vous pouvez parcourir librement tous les exercices ; dès que vous commencez à en remplir un, validez-le avant de passer à un autre. Ces travaux pratiques ne comptent pas pour le certificat.",
   dossier: [
     { id: 'tdr', title: 'Termes de référence de la mission', html: DOSSIER_TDR },
     { id: 'offre', title: 'Offre financière de la mission', html: DOSSIER_OFFRE },
     { id: 'dictionnaire', title: 'Dictionnaire des indicateurs', html: DOSSIER_DICTIONNAIRE }
   ],
   exercises: [
+    {
+      kind: 'writing',
+      id: 'comprehension-tdr',
+      title: 'Rédaction 1 : la compréhension de la mission',
+      skill: 'Offre technique',
+      prompt: "<p>À partir des termes de référence du dossier, rédigez la section « Compréhension du contexte et de la mission » de votre offre technique (10 à 15 lignes). Montrez que vous avez compris les enjeux, la zone et les bénéficiaires, les deux missions, les résultats attendus, les contraintes et les livrables, sans recopier les TDR.</p>",
+      minWords: 90,
+      criteria: [
+        { label: 'Le contexte et les enjeux du projet (travaux, cadre de vie, aspects sociaux)', keywords: ['cadre de vie', 'travaux', 'chantier', 'aspects sociaux', 'acceptation', 'enjeu', 'nuisance'] },
+        { label: 'La zone et les bénéficiaires (quartiers, femmes, jeunes, groupes vulnérables)', keywords: ['quartier', 'akoupe', 'beneficiair', 'femme', 'jeune', 'vulnerab', 'population', 'habitant'] },
+        { label: 'La mission 1 : animation et mobilisation communautaire', keywords: ['animation', 'mobilisation', 'sensibilis', 'causerie', 'evenement', 'radio', 'theatre'] },
+        { label: 'La mission 2 : gestion des plaintes et prévention des violences', keywords: ['plainte', 'mgp', 'vbg', 'violence', 'eas$', 'harcelement', 'referencement'] },
+        { label: 'Les résultats attendus et les indicateurs (notoriété, satisfaction, 80 %)', keywords: ['notoriete', 'satisfaction', '80', 'indicateur', 'cible', 'resultat'] },
+        { label: 'Les contraintes ou les risques (pluies, délai de 24 heures, confidentialité, durée courte)', keywords: ['contrainte', 'risque', 'pluie', '24', 'confidential', 'six mois', '6 mois', 'delai'] },
+        { label: 'Les livrables (rapport de démarrage, rapports mensuels, rapport final)', keywords: ['rapport', 'livrable', 'demarrage', 'mensuel', 'final', 'enquete'] }
+      ]
+    },
     {
       kind: 'sheet',
       id: 'offre-financiere',
@@ -450,7 +472,7 @@ const set: PracticeSet = {
       id: 'diagnostic-logistique',
       title: 'Exercice 2 : diagnostic des moyens logistiques',
       skill: 'Démarrage du projet',
-      intro: "<p>À partir de votre lecture des TDR (section « Moyens à mobiliser »), indiquez pour chaque équipement la quantité requise. Reportez ensuite la quantité disponible d'après l'inventaire ci-dessous, choisissez le mode d'obtention et saisissez le prix unitaire retenu dans l'offre financière (prix des devis). L'écart, le taux de couverture, le coût de l'écart et le statut se calculent automatiquement.</p><p><strong>Inventaire réalisé au démarrage :</strong> l'ONG dispose déjà d'une moto en état de marche, de deux ordinateurs portables, d'une armoire sécurisée et de deux trousses de premiers secours. Elle n'a ni smartphone de service, ni tablette, ni kit pour les points focaux, ni boîte à plaintes.</p>",
+      intro: "<p>Pour chaque équipement, reportez la quantité requise (TDR, section « Moyens à mobiliser », et effectifs du tableau des devis dans l'offre financière). Reportez ensuite la quantité disponible d'après l'inventaire ci-dessous, choisissez le mode d'obtention et saisissez le prix unitaire retenu dans l'offre financière (prix des devis). L'écart, le taux de couverture, le coût de l'écart et le statut se calculent automatiquement.</p><p><strong>Inventaire réalisé au démarrage :</strong> l'ONG dispose déjà d'une moto en état de marche, de deux ordinateurs portables, d'une armoire sécurisée et de deux trousses de premiers secours. Elle n'a ni smartphone de service, ni tablette, ni kit pour les points focaux, ni boîte à plaintes.</p>",
       rules: "<p>Saisissez des nombres dans les cases blanches et choisissez le mode d'obtention dans la liste. Les colonnes grisées se calculent seules. Un statut « Incohérent » signale que le mode d'obtention contredit les quantités : corrigez-le.</p>",
       tables: [{
         columns: ['Équipement', 'Quantité requise', 'Quantité disponible', 'Mode d\'obtention', 'Prix unitaire (FCFA)', 'Écart', 'Taux de couverture', 'Coût de l\'écart (FCFA)', 'Statut'],
@@ -576,59 +598,6 @@ const set: PracticeSet = {
     },
     {
       kind: 'sheet',
-      id: 'tableau-de-bord',
-      title: 'Exercice 5 : tableau de bord des indicateurs à mi-parcours',
-      skill: 'Suivi-évaluation',
-      intro: "<p>Nous sommes à la fin du mois 3. Chaque indicateur se compare à ce qui était prévu à cette date d'après le chronogramme (dans le dossier du projet), et non à la cible de fin de mission : une activité prévue aux mois 1 et 2 doit être entièrement réalisée, une activité répartie sur les six mois doit l'être à moitié, une activité prévue aux mois 3 et 5 pour moitié. Calculez la cible prévue à fin M3 de chaque indicateur et choisissez son appréciation, puis complétez les indicateurs de qualité du MGP.</p>",
-      rules: "<p>Cible prévue à fin M3 = cible de fin de mission × (nombre de mois prévus jusqu'au mois 3 ÷ nombre total de mois prévus). Le taux par rapport au prévu se calcule seul. Appréciation : <strong>dans la trajectoire</strong> à partir de 90 % du prévu ; <strong>léger retard</strong> de 60 à 89 % ; <strong>retard important</strong> en dessous de 60 %. Pour les indicateurs du MGP : taux = numérateur ÷ dénominateur ; écart à la cible en points = valeur − cible.</p>",
-      tables: [
-        {
-          title: 'Indicateurs d\'activités',
-          columns: ['Indicateur', 'Cible fin M6', 'Mois prévus (chronogramme)', 'Cible prévue à fin M3', 'Réalisé fin M3', 'Taux par rapport au prévu', 'Appréciation'],
-          rows: IND.map(([n, cible, months, done], i): SheetCell[] => [
-            n, num(cible), monthsText(months),
-            { id: `pv${i}`, answer: r1(cible * shareAt(months, 3)), tol: 0.01 },
-            num(done),
-            { id: `t${i}`, fmt: 'pct', calc: (c) => { const t = indRate(c, i); return t === null ? null : r1(t); } },
-            { id: `a${i}`, options: TRAJ, answer: (c) => { const t = indRate(c, i); return t === null ? null : trajOf(t); } }
-          ])
-        },
-        {
-          title: 'Indicateurs de qualité du MGP',
-          columns: ['Indicateur', 'Données', 'Valeur (%)', 'Cible (%)', 'Écart à la cible (points)'],
-          rows: [
-            ['Plaintes ordinaires traitées dans les délais', '18 sur 20 plaintes reçues', inp('mgp1', 90, 'pct'), num(90, 'pct'), inp('mgp1e', 0, 'n', 0.6)],
-            ['Plaintes sensibles transmises à l\'UCP sous 24 heures', '3 sur 3', inp('mgp2', 100, 'pct'), num(100, 'pct'), inp('mgp2e', 0, 'n', 0.6)],
-            ['Notoriété du MGP (enquête de mi-parcours)', '252 personnes sur 400 citent au moins un canal', inp('mgp3', 63, 'pct'), num(80, 'pct'), inp('mgp3e', -17, 'n', 0.6)]
-          ]
-        }
-      ],
-      writing: {
-        prompt: "<p><strong>Note d'analyse à mi-parcours (une page).</strong> À partir de votre tableau de bord, du chronogramme et du dictionnaire des indicateurs (dans le dossier du projet), rédigez la note que le chef de mission transmettra à l'UCP : situation à mi-parcours par rapport à ce qui était prévu, indicateurs dans la trajectoire, indicateurs en retard et leurs causes probables, qualité du mécanisme de gestion des plaintes, fiabilité des données (sources, fréquence, responsables, désagrégation) et recommandations concrètes.</p>",
-        minWords: 250,
-        criteria: [
-          { label: 'La situation à mi-parcours (fin du mois 3)', keywords: ['mi-parcours', 'mi parcours', 'mois 3', 'moitie', 'temps ecoule'] },
-          { label: 'La comparaison avec ce qui était prévu à date selon le chronogramme', keywords: ['chronogramme', 'prevu', 'planifie', 'a date'] },
-          { label: 'Les indicateurs dans la trajectoire (émissions radio, points focaux, cérémonie de lancement)', keywords: ['radio', 'points focaux', 'ceremonie', 'lancement', 'trajectoire'], need: 2 },
-          { label: 'Les retards importants (théâtre-forum, tournoi sportif)', keywords: ['theatre', 'tournoi'], need: 2 },
-          { label: 'Les légers retards (causeries, sessions avec les travailleurs, membres des comités)', keywords: ['causerie', 'travailleur', 'chantier', 'comite'], need: 2 },
-          { label: 'La notoriété du MGP (63 % pour une cible de 80 %)', keywords: ['notoriete', '63'], need: 2 },
-          { label: 'La qualité du traitement des plaintes (90 % dans les délais, 100 % des plaintes sensibles sous 24 heures)', keywords: ['delai', '90', '24 heures', '24h', 'sensible'], need: 2 },
-          { label: 'La fiabilité des données selon le dictionnaire (sources, fréquence, responsables)', keywords: ['source', 'frequence', 'responsable', 'liste de presence', 'registre', 'enquete', 'dictionnaire'], need: 2 },
-          { label: 'La désagrégation des données (sexe, âge, quartier)', keywords: ['desagreg', 'sexe', 'age$', 'ages$', 'quartier'] },
-          { label: "Des recommandations concrètes (replanifier, accélérer, renforcer l'annonce des canaux…)", keywords: ['recommand', 'replanif', 'accelerer', 'renforcer', 'proposons', 'mesure', 'action'], need: 2 }
-        ],
-        // Selon la déclaration de l'apprenant : chaque indicateur qu'il a jugé en retard doit être commenté
-        dynamicCriteria: (c) => IND.flatMap(([n], i) => {
-          const a = c.text(`a${i}`);
-          if (a !== 'Retard important' && a !== 'Léger retard') return [];
-          return [{ label: `L'indicateur « ${n} », que vous avez jugé en ${a === 'Léger retard' ? 'léger retard' : 'retard important'}, est commenté`, keywords: [IND_KEYS[i]] }];
-        })
-      },
-      explanation: "<p>Le chronogramme change la lecture : les points focaux et la cérémonie de lancement, prévus aux mois 1 et 2, sont entièrement réalisés, comme attendu. Les membres des comités devaient tous être formés à la fin du mois 2 : 24 sur 30, c'est un léger retard. Les causeries (12 pour 15 prévues) et les sessions avec les travailleurs (4 pour 6 prévues) sont en léger retard. Le théâtre-forum (1 séance pour 2 prévues) et le tournoi sportif, prévu au mois 3 et non réalisé, sont en retard important : à replanifier tout de suite. La notoriété du MGP (63 %) est loin de la cible de 80 % : renforcer l'annonce des canaux avant l'enquête finale.</p>"
-    },
-    {
-      kind: 'sheet',
       id: 'suivi-budgetaire',
       title: 'Exercice 6 : suivi budgétaire à la fin du mois 3',
       skill: 'Pilotage budgétaire',
@@ -694,20 +663,72 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       explanation: "<p>Le chronogramme change la lecture : la cérémonie et la formation des comités devaient avoir consommé tout leur budget à la fin du mois 2 ; la radio, les causeries et les sessions la moitié ; le théâtre-forum la moitié (une période sur deux). La cérémonie est dépassée de 35 000 FCFA. Les causeries et le théâtre-forum dépensent plus vite que prévu : le coût unitaire du théâtre-forum est très supérieur à la prévision. Les sessions avec les travailleurs sont en retard. Le carburant (90 000 FCFA) relève du fonctionnement et ne se saisit dans aucune des six lignes. Au total, les dépenses dépassent d'environ 10 % ce qui était prévu à fin M3 : le rythme est trop rapide.</p>"
     },
     {
+      kind: 'sheet',
+      id: 'tableau-de-bord',
+      title: 'Exercice 5 : tableau de bord des indicateurs à mi-parcours',
+      skill: 'Suivi-évaluation',
+      intro: "<p>Nous sommes à la fin du mois 3. Chaque indicateur se compare à ce qui était prévu à cette date d'après le chronogramme (dans le dossier du projet), et non à la cible de fin de mission : une activité prévue aux mois 1 et 2 doit être entièrement réalisée, une activité répartie sur les six mois doit l'être à moitié, une activité prévue aux mois 3 et 5 pour moitié. Calculez la cible prévue à fin M3 de chaque indicateur et choisissez son appréciation, puis complétez les indicateurs de qualité du MGP.</p>",
+      rules: "<p>Cible prévue à fin M3 = cible de fin de mission × (nombre de mois prévus jusqu'au mois 3 ÷ nombre total de mois prévus). Le taux par rapport au prévu se calcule seul. Appréciation : <strong>dans la trajectoire</strong> à partir de 90 % du prévu ; <strong>léger retard</strong> de 60 à 89 % ; <strong>retard important</strong> en dessous de 60 %. Pour les indicateurs du MGP : taux = numérateur ÷ dénominateur ; écart à la cible en points = valeur − cible.</p>",
+      tables: [
+        {
+          title: 'Indicateurs d\'activités',
+          columns: ['Indicateur', 'Cible fin M6', 'Mois prévus (chronogramme)', 'Cible prévue à fin M3', 'Réalisé fin M3', 'Taux par rapport au prévu', 'Appréciation'],
+          rows: IND.map(([n, cible, months, done], i): SheetCell[] => [
+            n, num(cible), monthsText(months),
+            { id: `pv${i}`, answer: r1(cible * shareAt(months, 3)), tol: 0.01 },
+            num(done),
+            { id: `t${i}`, fmt: 'pct', calc: (c) => { const t = indRate(c, i); return t === null ? null : r1(t); } },
+            { id: `a${i}`, options: TRAJ, answer: (c) => { const t = indRate(c, i); return t === null ? null : trajOf(t); } }
+          ])
+        },
+        {
+          title: 'Indicateurs de qualité du MGP',
+          columns: ['Indicateur', 'Données', 'Valeur (%)', 'Cible (%)', 'Écart à la cible (points)'],
+          rows: [
+            ['Plaintes ordinaires traitées dans les délais', '18 sur 20 plaintes reçues', inp('mgp1', 90, 'pct'), num(90, 'pct'), inp('mgp1e', 0, 'n', 0.6)],
+            ['Plaintes sensibles transmises à l\'UCP sous 24 heures', '3 sur 3', inp('mgp2', 100, 'pct'), num(100, 'pct'), inp('mgp2e', 0, 'n', 0.6)],
+            ['Notoriété du MGP (enquête de mi-parcours)', '252 personnes sur 400 citent au moins un canal', inp('mgp3', 63, 'pct'), num(80, 'pct'), inp('mgp3e', -17, 'n', 0.6)]
+          ]
+        }
+      ],
+      writing: {
+        prompt: "<p><strong>Note d'analyse à mi-parcours (une page).</strong> À partir de votre tableau de bord, du chronogramme et du dictionnaire des indicateurs (dans le dossier du projet), rédigez la note que le chef de mission transmettra à l'UCP : situation à mi-parcours par rapport à ce qui était prévu, indicateurs dans la trajectoire, indicateurs en retard et leurs causes probables, qualité du mécanisme de gestion des plaintes, fiabilité des données (sources, fréquence, responsables, désagrégation) et recommandations concrètes.</p>",
+        minWords: 250,
+        criteria: [
+          { label: 'La situation à mi-parcours (fin du mois 3)', keywords: ['mi-parcours', 'mi parcours', 'mois 3', 'moitie', 'temps ecoule'] },
+          { label: 'La comparaison avec ce qui était prévu à date selon le chronogramme', keywords: ['chronogramme', 'prevu', 'planifie', 'a date'] },
+          { label: 'Les indicateurs dans la trajectoire (émissions radio, points focaux, cérémonie de lancement)', keywords: ['radio', 'points focaux', 'ceremonie', 'lancement', 'trajectoire'], need: 2 },
+          { label: 'Les retards importants (théâtre-forum, tournoi sportif)', keywords: ['theatre', 'tournoi'], need: 2 },
+          { label: 'Les légers retards (causeries, sessions avec les travailleurs, membres des comités)', keywords: ['causerie', 'travailleur', 'chantier', 'comite'], need: 2 },
+          { label: 'La notoriété du MGP (63 % pour une cible de 80 %)', keywords: ['notoriete', '63'], need: 2 },
+          { label: 'La qualité du traitement des plaintes (90 % dans les délais, 100 % des plaintes sensibles sous 24 heures)', keywords: ['delai', '90', '24 heures', '24h', 'sensible'], need: 2 },
+          { label: 'La fiabilité des données selon le dictionnaire (sources, fréquence, responsables)', keywords: ['source', 'frequence', 'responsable', 'liste de presence', 'registre', 'enquete', 'dictionnaire'], need: 2 },
+          { label: 'La désagrégation des données (sexe, âge, quartier)', keywords: ['desagreg', 'sexe', 'age$', 'ages$', 'quartier'] },
+          { label: "Des recommandations concrètes (replanifier, accélérer, renforcer l'annonce des canaux…)", keywords: ['recommand', 'replanif', 'accelerer', 'renforcer', 'proposons', 'mesure', 'action'], need: 2 }
+        ],
+        // Selon la déclaration de l'apprenant : chaque indicateur qu'il a jugé en retard doit être commenté
+        dynamicCriteria: (c) => IND.flatMap(([n], i) => {
+          const a = c.text(`a${i}`);
+          if (a !== 'Retard important' && a !== 'Léger retard') return [];
+          return [{ label: `L'indicateur « ${n} », que vous avez jugé en ${a === 'Léger retard' ? 'léger retard' : 'retard important'}, est commenté`, keywords: [IND_KEYS[i]] }];
+        })
+      },
+      explanation: "<p>Le chronogramme change la lecture : les points focaux et la cérémonie de lancement, prévus aux mois 1 et 2, sont entièrement réalisés, comme attendu. Les membres des comités devaient tous être formés à la fin du mois 2 : 24 sur 30, c'est un léger retard. Les causeries (12 pour 15 prévues) et les sessions avec les travailleurs (4 pour 6 prévues) sont en léger retard. Le théâtre-forum (1 séance pour 2 prévues) et le tournoi sportif, prévu au mois 3 et non réalisé, sont en retard important : à replanifier tout de suite. La notoriété du MGP (63 %) est loin de la cible de 80 % : renforcer l'annonce des canaux avant l'enquête finale.</p>"
+    },
+    {
       kind: 'writing',
-      id: 'comprehension-tdr',
-      title: 'Rédaction 1 : la compréhension de la mission',
-      skill: 'Offre technique',
-      prompt: "<p>À partir des termes de référence du dossier, rédigez la section « Compréhension du contexte et de la mission » de votre offre technique (10 à 15 lignes). Montrez que vous avez compris les enjeux, la zone et les bénéficiaires, les deux missions, les résultats attendus, les contraintes et les livrables, sans recopier les TDR.</p>",
-      minWords: 90,
+      id: 'regle-repartition',
+      title: 'Rédaction 4 : la règle de répartition des sorties',
+      skill: 'Équité dans l\'équipe',
+      prompt: "<p>Les deux animateurs reçoivent la même indemnité, alors que l'un accompagne les visites de l'UCP et que l'autre fait les sorties les plus longues. Rédigez la règle écrite de répartition équitable des sorties et des indemnités de l'équipe.</p>",
+      minWords: 60,
       criteria: [
-        { label: 'Le contexte et les enjeux du projet (travaux, cadre de vie, aspects sociaux)', keywords: ['cadre de vie', 'travaux', 'chantier', 'aspects sociaux', 'acceptation', 'enjeu', 'nuisance'] },
-        { label: 'La zone et les bénéficiaires (quartiers, femmes, jeunes, groupes vulnérables)', keywords: ['quartier', 'akoupe', 'beneficiair', 'femme', 'jeune', 'vulnerab', 'population', 'habitant'] },
-        { label: 'La mission 1 : animation et mobilisation communautaire', keywords: ['animation', 'mobilisation', 'sensibilis', 'causerie', 'evenement', 'radio', 'theatre'] },
-        { label: 'La mission 2 : gestion des plaintes et prévention des violences', keywords: ['plainte', 'mgp', 'vbg', 'violence', 'eas$', 'harcelement', 'referencement'] },
-        { label: 'Les résultats attendus et les indicateurs (notoriété, satisfaction, 80 %)', keywords: ['notoriete', 'satisfaction', '80', 'indicateur', 'cible', 'resultat'] },
-        { label: 'Les contraintes ou les risques (pluies, délai de 24 heures, confidentialité, durée courte)', keywords: ['contrainte', 'risque', 'pluie', '24', 'confidential', 'six mois', '6 mois', 'delai'] },
-        { label: 'Les livrables (rapport de démarrage, rapports mensuels, rapport final)', keywords: ['rapport', 'livrable', 'demarrage', 'mensuel', 'final', 'enquete'] }
+        { label: 'Des critères objectifs (distance, durée, difficulté, visibilité)', keywords: ['distance', 'duree', 'difficulte', 'visibilite', 'eloign', 'kilometre'] },
+        { label: 'Une rotation des sorties', keywords: ['rotation', 'tour de role', 'altern', 'tournant', 'chacun son tour', 'a tour'] },
+        { label: 'Un calcul identique des indemnités (barème)', keywords: ['bareme', 'identique', 'meme calcul', 'meme taux', 'par kilometre', 'forfait', 'grille'] },
+        { label: 'La transparence (affichage, planning partagé)', keywords: ['affich', 'transparen', 'partage', 'connu de tous', 'publie', 'planning'] },
+        { label: 'Une revue régulière', keywords: ['mensuel', 'chaque mois', 'revue', 'revis', 'bilan'] },
+        { label: 'Une voie de recours en cas de désaccord', keywords: ['recours', 'desaccord', 'reclamation', 'contest', 'mediation'] }
       ]
     },
     {
@@ -746,22 +767,6 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
     },
     {
       kind: 'writing',
-      id: 'regle-repartition',
-      title: 'Rédaction 4 : la règle de répartition des sorties',
-      skill: 'Équité dans l\'équipe',
-      prompt: "<p>Les deux animateurs reçoivent la même indemnité, alors que l'un accompagne les visites de l'UCP et que l'autre fait les sorties les plus longues. Rédigez la règle écrite de répartition équitable des sorties et des indemnités de l'équipe.</p>",
-      minWords: 60,
-      criteria: [
-        { label: 'Des critères objectifs (distance, durée, difficulté, visibilité)', keywords: ['distance', 'duree', 'difficulte', 'visibilite', 'eloign', 'kilometre'] },
-        { label: 'Une rotation des sorties', keywords: ['rotation', 'tour de role', 'altern', 'tournant', 'chacun son tour', 'a tour'] },
-        { label: 'Un calcul identique des indemnités (barème)', keywords: ['bareme', 'identique', 'meme calcul', 'meme taux', 'par kilometre', 'forfait', 'grille'] },
-        { label: 'La transparence (affichage, planning partagé)', keywords: ['affich', 'transparen', 'partage', 'connu de tous', 'publie', 'planning'] },
-        { label: 'Une revue régulière', keywords: ['mensuel', 'chaque mois', 'revue', 'revis', 'bilan'] },
-        { label: 'Une voie de recours en cas de désaccord', keywords: ['recours', 'desaccord', 'reclamation', 'contest', 'mediation'] }
-      ]
-    },
-    {
-      kind: 'writing',
       id: 'plan-action-correctif',
       title: 'Rédaction 5 : le plan d\'action correctif de la supervision',
       skill: 'Supervision',
@@ -775,6 +780,29 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
         { label: 'Le suivi des recommandations antérieures', keywords: ['recommandation', 'anterieur', 'precedent', 'mise en oeuvre', 'suivi des recommandations'] },
         { label: 'Un responsable pour chaque mesure', keywords: ['responsable', 'chef de mission', 'charge de projet', 'specialiste', 'animateur', 'point focal'] },
         { label: 'Une échéance pour chaque mesure', keywords: ['echeance', 'delai', 'avant le', 'd ici', 'semaine', 'jours', 'fin du mois', 'date'] }
+      ]
+    },
+    {
+      kind: 'writing',
+      id: 'rapport-mi-parcours',
+      title: 'Rédaction 6 : le rapport à mi-parcours',
+      skill: 'Rapport à mi-parcours',
+      prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP (une à deux pages). Appuyez-vous sur les travaux que vous avez déjà réalisés : la compréhension de la mission (rédaction 1), le diagnostic des moyens logistiques (exercice 2), le plan de charge (exercice 3), le suivi budgétaire (exercice 6), le tableau de bord des indicateurs (exercice 5) et la règle de répartition des sorties (rédaction 4).</p><p><strong>Plan attendu :</strong> 1. résumé ; 2. rappel du contexte et des objectifs ; 3. activités réalisées et état des indicateurs par rapport au chronogramme ; 4. mécanisme de gestion des plaintes ; 5. exécution budgétaire ; 6. moyens, organisation et charge de l'équipe ; 7. difficultés, risques et leçons apprises ; 8. plan d'action pour les mois 4 à 6, avec des responsables et des échéances.</p>",
+      minWords: 300,
+      criteria: [
+        { label: 'Un résumé en tête du rapport', keywords: ['resume', 'synthese', 'en bref', 'points cles', 'messages cles', 'en somme'] },
+        { label: 'Le rappel du contexte et des objectifs de la mission (animation et mobilisation communautaire, gestion des plaintes, Akoupé)', keywords: ['contexte', 'objectif', 'akoupe', 'pgc', 'mobilisation', 'animation'], need: 2 },
+        { label: 'La situation à la fin du mois 3, comparée à ce que prévoyait le chronogramme', keywords: ['mi parcours', 'mois 3', 'chronogramme', 'prevu', 'a date'], need: 2 },
+        { label: 'Les activités dans la trajectoire (émissions radio, points focaux, cérémonie de lancement)', keywords: ['radio', 'points focaux', 'ceremonie', 'lancement', 'trajectoire'], need: 2 },
+        { label: 'Les activités en retard (théâtre-forum, tournoi sportif, causeries, sessions avec les travailleurs, comités) et leurs causes', keywords: ['theatre', 'tournoi', 'causerie', 'travailleur', 'comite', 'retard'], need: 3 },
+        { label: 'Le mécanisme de gestion des plaintes (90 % traitées dans les délais, plaintes sensibles sous 24 heures, notoriété de 63 % pour une cible de 80 %)', keywords: ['plainte', 'mgp', 'notoriete', '63', '24 heures', '24h', 'sensible'], need: 3 },
+        { label: "L'exécution budgétaire et son rythme (dépenses supérieures d'environ 10 % au prévu à fin M3 : rythme trop rapide)", keywords: ['trop rapide', 'rythme', '10 %', '10%', 'execution budgetaire', 'taux d execution', 'au dessus du prevu'], need: 2 },
+        { label: 'Les lignes budgétaires à surveiller (cérémonie dépassée de 35 000 FCFA, coût unitaire du théâtre-forum) et la mesure prise', keywords: ['35 000', '35000', 'depass', 'cout unitaire', 'transfert', 'compens', 'justifi'], need: 2 },
+        { label: 'Les moyens logistiques (motos, smartphones, ordinateurs, tablettes, kits, boîtes à plaintes)', keywords: ['moto', 'smartphone', 'ordinateur', 'tablette', 'kit', 'logistique', 'equipement'], need: 2 },
+        { label: "L'organisation et la charge de l'équipe (plan de charge, aucun poste au-delà de 100 %, délégation, bénévoles tenus hors du MGP)", keywords: ['plan de charge', 'taux de charge', 'surcharge', '100 %', '100%', 'deleg', 'benevole'], need: 2 },
+        { label: "L'équité dans l'équipe (règle de répartition des sorties et des indemnités)", keywords: ['equit', 'indemnit', 'rotation', 'bareme', 'sorties'], need: 2 },
+        { label: 'Les difficultés, les risques et les leçons apprises', keywords: ['difficult', 'risque', 'contrainte', 'lecon', 'enseignement', 'pluie'], need: 2 },
+        { label: "Un plan d'action pour les mois 4 à 6 (mesures, responsables, échéances)", keywords: ['plan d action', 'mois 4', 'mois 5', 'mois 6', 'responsable', 'echeance', 'replanif', 'accelerer'], need: 3 }
       ]
     }
   ]
