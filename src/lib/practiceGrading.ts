@@ -229,6 +229,31 @@ function gradeWithCtx(w: SheetWriting, ctx: Ctx, text: string): WritingResult {
   return gradeWriting({ criteria: [...w.criteria, ...dyn], minWords: w.minWords, maxWords: w.maxWords }, text);
 }
 
+/** A table of a sheet exercise as plain text, as the learner filled it (for a report): chosen columns and rows,
+ *  hidden rows left out; `filled` is false when the learner has not started the exercise */
+export function sheetTableText(ex: SheetExercise, tableIndex: number, answers: Record<string, string>, columns: number[], rows?: number[]) {
+  const t = ex.tables[tableIndex];
+  const ctx = makeCtx(ex, answers);
+  const text = (c: SheetCell): string => {
+    if (typeof c === 'string') return c;
+    if ('v' in c) return formatValue(c.v, c.fmt);
+    if (isCalc(c)) { const s = calcText(c, ctx); return s === '—' ? '' : s; }
+    const raw = (answers[c.id] || '').trim();
+    if (!raw || isChoice(c) || 'text' in c) return raw;
+    const n = ctx.num(c.id);
+    return n === null ? raw : formatValue(n, (c as NumInput).fmt);
+  };
+  const picked = (rows ?? t.rows.map((_r, i) => i)).filter((i) => {
+    if (!t.showRow) return true;
+    try { return t.showRow(ctx, i); } catch { return true; }
+  });
+  return {
+    columns: columns.map((j) => t.columns[j]),
+    rows: picked.map((i) => columns.map((j) => text(t.rows[i][j] ?? ''))),
+    filled: picked.length > 0 && Object.values(answers).some((v) => (v || '').trim() !== '')
+  };
+}
+
 /** Key under which the text of one section of a writing is stored with the answers */
 export const sectionKey = (id: string) => `sec:${id}`;
 

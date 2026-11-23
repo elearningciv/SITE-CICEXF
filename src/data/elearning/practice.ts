@@ -113,7 +113,11 @@ export interface WritingExercise {
   /** Writing split into sections: each has its own box and criteria (`criteria` then stays empty) */
   sections?: WritingSection[];
   /** The sections can be downloaded together as one structured PDF document */
-  download?: { title: string; subtitle: string; details: string[]; footer: string; fileName: string };
+  download?: {
+    title: string; subtitle: string; details: string[]; footer: string; fileName: string;
+    /** Tables of the learner's exercises added under a section (columns and rows picked by index; empty tables skipped) */
+    tables?: { section: string; exercise: string; table: number; title: string; columns: number[]; rows?: number[] }[];
+  };
 }
 
 export type PracticeExercise = SheetExercise | WritingExercise;

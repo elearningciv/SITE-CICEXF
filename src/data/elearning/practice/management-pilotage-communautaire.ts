@@ -969,7 +969,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
       id: 'rapport-mi-parcours',
       title: 'Rédaction 6 : le rapport à mi-parcours',
       skill: 'Rapport à mi-parcours',
-      prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP, partie par partie, dans les zones ci-dessous. Rendez compte de chaque produit du cadre logique (dossier du projet, tableaux 5 et 6 du rapport de démarrage) et appuyez-vous sur vos travaux : compréhension de la mission (rédaction 1), diagnostic logistique (exercice 2), plan de charge (exercice 3), suivi budgétaire (exercice 6), tableau de bord (exercice 5) et règle de répartition des sorties (rédaction 4).</p>",
+      prompt: "<p>Nous sommes à la fin du mois 3. En tant que chef de mission, rédigez le rapport à mi-parcours que vous transmettrez à l'UCP, partie par partie, dans les zones ci-dessous. Rendez compte de chaque produit du cadre logique (dossier du projet, tableaux 5 et 6 du rapport de démarrage) et appuyez-vous sur vos travaux : compréhension de la mission (rédaction 1), diagnostic logistique (exercice 2), plan de charge (exercice 3), suivi budgétaire (exercice 6), tableau de bord (exercice 5) et règle de répartition des sorties (rédaction 4).</p><p>Une fois toutes les parties rédigées, téléchargez votre rapport en PDF : les tableaux de vos exercices (indicateurs, MGP, budget, moyens logistiques, charge de l'équipe) y sont ajoutés automatiquement, sous la partie correspondante. Vous pouvez aussi insérer vos propres tableaux : une ligne par rangée, colonnes séparées par « | », la première ligne donnant les titres.</p>",
       minWords: 350,
       criteria: [],
       download: {
@@ -977,7 +977,17 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
         subtitle: 'Mission d\'animation communautaire et d\'appui au mécanisme de gestion des plaintes (MGP) — Projet PGC-Vie, commune d\'Akoupé',
         details: ['Période couverte : mois 1 à 3 (situation à la fin du mois 3)', 'Destinataire : Unité de coordination du projet (UCP)'],
         footer: 'Rapport à mi-parcours — PGC-Vie, Akoupé · Travaux pratiques CICEXF',
-        fileName: 'rapport-mi-parcours-pgc-vie'
+        fileName: 'rapport-mi-parcours-pgc-vie',
+        tables: [
+          { section: 'resultat1', exercise: 'tableau-de-bord', table: 0, title: 'Indicateurs du résultat 1 à la fin du mois 3 (tableau de bord, exercice 5)', columns: [0, 3, 4, 5, 6], rows: [0, 1, 5, 6, 7] },
+          { section: 'resultat2', exercise: 'tableau-de-bord', table: 0, title: 'Indicateurs du résultat 2 à la fin du mois 3 (tableau de bord, exercice 5)', columns: [0, 3, 4, 5, 6], rows: [2, 3, 4] },
+          { section: 'resultat2', exercise: 'tableau-de-bord', table: 1, title: 'Qualité du mécanisme de gestion des plaintes (exercice 5)', columns: [0, 2, 3, 4, 5, 6, 7] },
+          { section: 'budget', exercise: 'suivi-budgetaire', table: 0, title: 'Suivi budgétaire par ligne à la fin du mois 3, en FCFA (exercice 6)', columns: [0, 1, 3, 7, 9, 10, 11] },
+          { section: 'budget', exercise: 'suivi-budgetaire', table: 1, title: 'Synthèse budgétaire (exercice 6)', columns: [0, 1] },
+          { section: 'equipe', exercise: 'diagnostic-logistique', table: 0, title: 'Diagnostic des moyens logistiques (exercice 2)', columns: [0, 1, 2, 3, 5, 7, 8] },
+          { section: 'equipe', exercise: 'plan-de-charge', table: 3, title: 'Charge et taux de charge de l\'équipe, mois par mois (exercice 3)', columns: [0, 1, 2, 3, 4, 5] },
+          { section: 'equipe', exercise: 'plan-de-charge', table: 5, title: 'Tri d\'Eisenhower des activités du chef de mission au mois 1 (exercice 3)', columns: [0, 1, 7, 8, 9] }
+        ]
       },
       sections: [
         {
@@ -991,7 +1001,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
           id: 'contexte', title: '2. Contexte et objectifs de la mission', hint: 'Le projet, la zone, les deux résultats attendus.',
           criteria: [
             { label: 'Le contexte (travaux, cadre de vie, Akoupé)', keywords: ['contexte', 'akoupe', 'pgc', 'travaux', 'cadre de vie'], need: 2 },
-            { label: 'Les deux résultats attendus : mobilisation communautaire ; MGP et prévention des EAS/HS/VBG', keywords: ['mobilisation', 'animation', 'mgp', 'plainte', 'vbg', 'eas$'], need: 3 }
+            { label: 'Les deux résultats attendus : mobilisation communautaire ; MGP et prévention des EAS/HS/VBG', keywords: ['mobilis', 'animation', 'sensibilis', 'mgp', 'plainte', 'vbg', 'violence', 'eas$', 'hs$'], need: 3 }
           ]
         },
         {
@@ -1040,7 +1050,7 @@ ${table(['Date', 'Libellé', 'Montant'], JOURNAL.map(([m, d, l, a]) => [`Mois ${
           ]
         },
         {
-          id: 'plan', title: '8. Plan d\'action des mois 4 à 6', hint: 'Les mesures, avec un responsable et une échéance pour chacune.',
+          id: 'plan', title: '8. Plan d\'action des mois 4 à 6', hint: 'Les mesures, avec un responsable et une échéance pour chacune. Vous pouvez les présenter en tableau : une ligne par mesure, colonnes séparées par « | », la première ligne donnant les titres (par exemple : Mesure | Responsable | Échéance).',
           criteria: [
             { label: 'Des mesures concrètes pour les mois 4 à 6', keywords: ['mois 4', 'mois 5', 'mois 6', 'replanif', 'accelerer', 'renforcer', 'rattrap'], need: 2 },
             { label: 'Un responsable et une échéance pour chaque mesure', keywords: ['responsable', 'chef de mission', 'charge de projet', 'specialiste', 'animateur', 'echeance', 'avant le', 'd ici', 'fin du mois', 'semaine'], need: 2 }

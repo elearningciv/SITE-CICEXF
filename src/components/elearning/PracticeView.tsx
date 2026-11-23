@@ -5,7 +5,7 @@ import { ArrowLeft, CheckCircle2, ClipboardList, Download, FileSpreadsheet, File
 import { gradedCells, inputCells, isCalc, isChoice, isInput, isTextInput, loadPractice, type EisenhowerChart, type PracticeSet, type SheetCell, type SheetExercise, type Tone, type WritingExercise } from '../../data/elearning/practice';
 import type { ElearningApi, PracticeEntry, PracticeState } from '../../lib/elearningApi';
 import { PASS } from '../../data/elearning';
-import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, tableWritingKey, wordCount } from '../../lib/practiceGrading';
+import { calcText, expectedText, formatValue, gradeSheet, gradeSheetWriting, gradeTableWritings, gradeWriting, gradeWritingEntry, makeCtx, sectionKey, sheetTableText, tableWritingKey, wordCount } from '../../lib/practiceGrading';
 
 const card = 'rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm';
 const primary = 'inline-flex items-center justify-center gap-2 rounded-xl bg-brand-emerald hover:bg-brand-emerald-dark disabled:opacity-50 text-white px-5 py-3 font-extrabold text-sm transition-colors';
@@ -77,7 +77,7 @@ export default function PracticeView({ api, courseId, courseTitle, exerciseId, r
         <Dossier set={set} compact />
         {ex.kind === 'sheet'
           ? <SheetView key={ex.id} ex={ex} entry={entry} showAnswers={showAnswers} onChange={(e) => update(ex.id, e)} />
-          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} learnerName={learnerName} onChange={(e) => update(ex.id, e)} />}
+          : <WritingView key={ex.id} ex={ex} entry={entry} reviewer={reviewer} showAnswers={showAnswers} learnerName={learnerName} practice={{ set, state }} onChange={(e) => update(ex.id, e)} />}
         <Next set={set} current={ex.id} locked={inProgress?.id === ex.id} go={(id) => go(`pratique/${courseId}/${id}`)} />
       </div>
     );
@@ -509,7 +509,7 @@ function SheetView({ ex, entry, showAnswers, onChange }: { ex: SheetExercise; en
 // ---------------------------------------------------------------------------------------------
 // Written answers
 
-function WritingView({ ex, entry, showAnswers, learnerName, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; learnerName?: string; onChange: (e: PracticeEntry) => void; key?: string }) {
+function WritingView({ ex, entry, showAnswers, learnerName, practice, onChange }: { ex: WritingExercise; entry: PracticeEntry; reviewer?: boolean; showAnswers?: boolean; learnerName?: string; practice?: { set: PracticeSet; state: PracticeState }; onChange: (e: PracticeEntry) => void; key?: string }) {
   const [text, setText] = useState(entry.text || '');
   const [parts, setParts] = useState<Record<string, string>>(entry.answers || {});
   const [checked, setChecked] = useState(entry.score !== undefined);
@@ -528,7 +528,17 @@ function WritingView({ ex, entry, showAnswers, learnerName, onChange }: { ex: Wr
       await downloadReportPdf({
         ...ex.download,
         author: learnerName ? `${learnerName}, chef de mission` : undefined,
-        sections: ex.sections.map((s) => ({ title: s.title, text: parts[sectionKey(s.id)] || '' })),
+        sections: ex.sections.map((s) => ({
+          title: s.title,
+          text: parts[sectionKey(s.id)] || '',
+          // Tables of the exercises the learner has done, under the matching part of the report
+          tables: (ex.download!.tables || []).filter((t) => t.section === s.id).flatMap((t) => {
+            const sheet = practice?.set.exercises.find((e) => e.id === t.exercise);
+            if (!sheet || sheet.kind !== 'sheet') return [];
+            const data = sheetTableText(sheet, t.table, practice!.state[t.exercise]?.answers || {}, t.columns, t.rows);
+            return data.filled ? [{ title: t.title, columns: data.columns, rows: data.rows }] : [];
+          })
+        })),
         fileName: `${ex.download.fileName}${who ? `-${who}` : ''}.pdf`
       });
       setPdfState('idle');

@@ -21,6 +21,17 @@ const SLATE: [number, number, number] = [51, 65, 85];
 const MUTED: [number, number, number] = [71, 85, 105];
 const PT = 0.3528; // 1 pt in mm
 
+/** Exceptional wording for some courses: title printed on the certificate, fixed training period, trainer who signs
+ *  next to the manager. The other courses keep the course title, the learner's own dates and the manager alone. */
+interface CourseCertificate { title?: string; period?: [string, string]; trainer?: string }
+const COURSE_CERTIFICATES: Record<string, CourseCertificate> = {
+  'management-pilotage-communautaire': {
+    title: 'Management et Pilotage Communautaire de Projets',
+    period: ['24 octobre', '28 novembre 2026'],
+    trainer: 'ADJA Konan Henri'
+  }
+};
+
 export const formatFrenchDate = (iso: string | null | undefined) => {
   if (!iso) return '';
   const s = new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Africa/Abidjan' });
@@ -57,6 +68,7 @@ function drawQrCode(doc: any, QRCode: any, text: string, x: number, y: number, s
 export function drawCertificate({ jsPDF, QRCode }: CertificateLibs, c: Certificate, { logo, signature }: CertificateImages) {
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4', compress: true });
   const W = 297, H = 210, CX = W / 2;
+  const special = COURSE_CERTIFICATES[c.courseId] || {};
 
   doc.setProperties({
     title: `Certificat ${c.number}`,
@@ -165,7 +177,7 @@ export function drawCertificate({ jsPDF, QRCode }: CertificateLibs, c: Certifica
   doc.setFont('times', 'bold');
   doc.setFontSize(19);
   doc.setTextColor(...BURGUNDY);
-  const lines: string[] = doc.splitTextToSize(c.courseTitle, 220);
+  const lines: string[] = doc.splitTextToSize(special.title || c.courseTitle, 220);
   y += 3 + 19 * PT * 0.9;
   for (const line of lines) {
     centered(line, y);
@@ -176,7 +188,7 @@ export function drawCertificate({ jsPDF, QRCode }: CertificateLibs, c: Certifica
   y += 1.5;
   doc.setFontSize(11);
   const parts: [string, boolean][] = [
-    ['Formation suivie du ', false], [formatFrenchDate(c.startedAt), true], [' au ', false], [formatFrenchDate(c.finishedAt), true],
+    ['Formation suivie du ', false], [special.period?.[0] || formatFrenchDate(c.startedAt), true], [' au ', false], [special.period?.[1] || formatFrenchDate(c.finishedAt), true],
     [` · durée estimée : ${c.hours} heures`, false]
   ];
   const widthOf = ([t, b]: [string, boolean]) => { doc.setFont('helvetica', b ? 'bold' : 'normal'); return doc.getTextWidth(t); };
@@ -232,20 +244,37 @@ export function drawCertificate({ jsPDF, QRCode }: CertificateLibs, c: Certifica
     doc.text('sans valeur officielle', left, bottom - 18.2);
   }
 
-  drawSeal(doc, CX, bottom - 20, 20);
+  // With a trainer: trainer, seal and manager side by side (the seal moves right and gets a little smaller)
+  const trainer = special.trainer;
+  drawSeal(doc, trainer ? 166 : CX, bottom - 20, trainer ? 17 : 20);
+  if (trainer) {
+    const tX = 122;
+    doc.setDrawColor(...INK);
+    doc.setLineWidth(0.4);
+    doc.line(tX - 20, bottom - 5.2, tX + 20, bottom - 5.2);
+    doc.setFont('times', 'bolditalic');
+    doc.setFontSize(14);
+    doc.setTextColor(...NAVY);
+    doc.text(trainer, tX - doc.getTextWidth(trainer) / 2, bottom - 8.4);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9.6);
+    doc.setTextColor(...INK);
+    doc.text('Le Formateur', tX - doc.getTextWidth('Le Formateur') / 2, bottom - 0.6);
+  }
 
   // Kept clear of the burgundy corner
-  const signX = 205;
+  const signX = trainer ? 216 : 205, half = trainer ? 29 : 34;
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(...MUTED);
   const place = `Fait à Abidjan, le ${formatFrenchDate(c.issuedAt)}`;
   doc.text(place, signX - doc.getTextWidth(place) / 2, bottom - 31);
   doc.setDrawColor(...INK);
   doc.setLineWidth(0.4);
-  doc.line(signX - 34, bottom - 5.2, signX + 34, bottom - 5.2);
+  doc.line(signX - half, bottom - 5.2, signX + half, bottom - 5.2);
   if (signature) {
-    // Stamp and signature of the manager, fitted in a 64 × 24 mm box resting on the line
-    const scale = Math.min(64 / signature.w, 24 / signature.h);
+    // Stamp and signature of the manager, fitted in a box (64 × 24 mm, or 58 × 24 mm next to a trainer) resting on the line
+    const scale = Math.min((trainer ? 58 : 64) / signature.w, 24 / signature.h);
     const w = signature.w * scale, h = signature.h * scale;
     doc.addImage(signature.data, 'PNG', signX - w / 2, bottom - 3.5 - h, w, h);
   }

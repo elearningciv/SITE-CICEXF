@@ -35,6 +35,13 @@ var INK = [15, 23, 42];
 var SLATE = [51, 65, 85];
 var MUTED = [71, 85, 105];
 var PT = 0.3528;
+var COURSE_CERTIFICATES = {
+  "management-pilotage-communautaire": {
+    title: "Management et Pilotage Communautaire de Projets",
+    period: ["24 octobre", "28 novembre 2026"],
+    trainer: "ADJA Konan Henri"
+  }
+};
 var formatFrenchDate = (iso) => {
   if (!iso) return "";
   const s = new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric", timeZone: "Africa/Abidjan" });
@@ -63,6 +70,7 @@ function drawQrCode(doc, QRCode, text, x, y, size) {
 function drawCertificate({ jsPDF, QRCode }, c, { logo, signature }) {
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4", compress: true });
   const W = 297, H = 210, CX = W / 2;
+  const special = COURSE_CERTIFICATES[c.courseId] || {};
   doc.setProperties({
     title: `Certificat ${c.number}`,
     subject: c.courseTitle,
@@ -151,7 +159,7 @@ function drawCertificate({ jsPDF, QRCode }, c, { logo, signature }) {
   doc.setFont("times", "bold");
   doc.setFontSize(19);
   doc.setTextColor(...BURGUNDY);
-  const lines = doc.splitTextToSize(c.courseTitle, 220);
+  const lines = doc.splitTextToSize(special.title || c.courseTitle, 220);
   y += 3 + 19 * PT * 0.9;
   for (const line of lines) {
     centered(line, y);
@@ -161,9 +169,9 @@ function drawCertificate({ jsPDF, QRCode }, c, { logo, signature }) {
   doc.setFontSize(11);
   const parts = [
     ["Formation suivie du ", false],
-    [formatFrenchDate(c.startedAt), true],
+    [special.period?.[0] || formatFrenchDate(c.startedAt), true],
     [" au ", false],
-    [formatFrenchDate(c.finishedAt), true],
+    [special.period?.[1] || formatFrenchDate(c.finishedAt), true],
     [` · durée estimée : ${c.hours} heures`, false]
   ];
   const widthOf = ([t, b]) => {
@@ -217,17 +225,33 @@ function drawCertificate({ jsPDF, QRCode }, c, { logo, signature }) {
     doc.text("Spécimen de démonstration,", left, bottom - 22.4);
     doc.text("sans valeur officielle", left, bottom - 18.2);
   }
-  drawSeal(doc, CX, bottom - 20, 20);
-  const signX = 205;
+  const trainer = special.trainer;
+  drawSeal(doc, trainer ? 166 : CX, bottom - 20, trainer ? 17 : 20);
+  if (trainer) {
+    const tX = 122;
+    doc.setDrawColor(...INK);
+    doc.setLineWidth(0.4);
+    doc.line(tX - 20, bottom - 5.2, tX + 20, bottom - 5.2);
+    doc.setFont("times", "bolditalic");
+    doc.setFontSize(14);
+    doc.setTextColor(...NAVY);
+    doc.text(trainer, tX - doc.getTextWidth(trainer) / 2, bottom - 8.4);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.6);
+    doc.setTextColor(...INK);
+    doc.text("Le Formateur", tX - doc.getTextWidth("Le Formateur") / 2, bottom - 0.6);
+  }
+  const signX = trainer ? 216 : 205, half = trainer ? 29 : 34;
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...MUTED);
   const place = `Fait à Abidjan, le ${formatFrenchDate(c.issuedAt)}`;
   doc.text(place, signX - doc.getTextWidth(place) / 2, bottom - 31);
   doc.setDrawColor(...INK);
   doc.setLineWidth(0.4);
-  doc.line(signX - 34, bottom - 5.2, signX + 34, bottom - 5.2);
+  doc.line(signX - half, bottom - 5.2, signX + half, bottom - 5.2);
   if (signature) {
-    const scale = Math.min(64 / signature.w, 24 / signature.h);
+    const scale = Math.min((trainer ? 58 : 64) / signature.w, 24 / signature.h);
     const w = signature.w * scale, h = signature.h * scale;
     doc.addImage(signature.data, "PNG", signX - w / 2, bottom - 3.5 - h, w, h);
   }
